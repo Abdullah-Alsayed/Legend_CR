@@ -1,0 +1,48 @@
+﻿
+@using LegendCR.BL.Services;
+@using LegendCR.CommonDefinitions.DTO;
+@using LegendCR.CommonDefinitions.DTO.ShipmentDTOs;
+@model List<UserDTO>
+@{
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+}
+
+<table class="table">
+    <thead>
+        <partial name="_ReportHeder" model="11" />
+        <tr>
+            <td colspan="4">
+                <h2><b>@Model[0].Name Orders</b></h2>
+            </td>
+        </tr>
+        <tr>
+            <td>Code</td>
+            <td>Customer</td>
+            <td>Vendor</td>
+            <td>Status</td>
+        </tr>
+    </thead>
+    <tbody>
+
+        @if (Model[0].CourierShipments != null)
+        {
+            foreach (var item in Model[0].CourierShipments)
+            {
+                <tr>
+                    <td><b>@item.RefId</b></td>
+                    <td>@item.CustomerDetailsDTO.CustomerName</td>
+                    <td>@item.VendorDetailsDTO.VendorName</td>
+                    <td class="status-td"><span class="status-Table">@item.StatusDTO.Name</span></td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="20">
+                    <h6 class="text-center text-danger my-5">No data available in table</h6>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

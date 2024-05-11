@@ -1,0 +1,31 @@
+﻿@using LegendCR.CommonDefinitions.DTO;
+@using LegendCR.CommonDefinitions.DTO
+@using LegendCR.Portal.Helpers; 
+@using LegendCR.Helpers; 
+@using LegendCR.BL.Services;
+@using Microsoft.AspNetCore.Http;
+@model List<UserDTO>
+@{
+    string connectionString = @Constants.connectionString;
+    long roleID = 0;
+    if (User.Identity.IsAuthenticated)
+    {
+        roleID = AuthHelper.GetClaimValue(User, "RoleID");
+    }
+
+    var canDelete = BaseService.CheckRoleAccessability(roleID, "DeleteUser", connectionString: connectionString);
+    var canEdit = BaseService.CheckRoleAccessability(roleID, "EditUser", connectionString: connectionString);
+
+    var Path = Context.Request.Path.Value;
+    int pageIndex = ViewBag.pageIndex ?? 0;
+    var noOfPages = (int)ViewBag.noOfPages;
+    var hasMore = (bool)ViewBag.hasMore;
+}
+
+<input type="hidden" value="@Model.Count" id="DataCount" />
+
+
+    
+
+
+

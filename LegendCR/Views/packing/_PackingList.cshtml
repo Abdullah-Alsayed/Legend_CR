@@ -1,0 +1,30 @@
+﻿
+@using LegendCR.CommonDefinitions.DTO;
+@using LegendCR.CommonDefinitions.DTO;
+@model List<PackingDTO>
+
+@if (Model != null && Model.Count > 0)
+{
+    foreach (var item in Model)
+    {
+        <tr id="Tr_@item.id">
+            <td id="id">@item.id</td>
+            <td id="NameEn">@item.NameEn</td>
+            <td id="PackingTypeName"><b>@item.PackingTypeName</b></td>
+            <td id="Size">@item.Size</td>
+            <td></td>
+            <td id="Count">@item.Count</td>
+            <td id="Price">@item.Price</td>
+            <td id="ImgUrl"><img src="/dist/images/@item.ImgUrl" width="50" /></td>
+            <td>
+                <div class="Actions-Buttons">
+                    <ul class="">
+                        <li class="Green-Bg" onclick="OpenEditPackingModel(@item.id,'EditPacking-Model')"><a href="javascript:;"><i class="icon-note F-Medium text-white"></i></a></li>
+                        <li onclick="OpenModal(@item.id ,'DeletePacking-Model')" class="Red-Bg"><i class="icon-trash F-Medium"></i></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    }
+}
+<input type="hidden" value="@(Model != null ? Model.Count : 0)" id="DataCount" />

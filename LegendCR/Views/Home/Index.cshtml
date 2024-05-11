@@ -1,0 +1,851 @@
+﻿
+@using LegendCR.CommonDefinitions.DTO
+@using LegendCR.Helpers;
+@using LegendCR.CommonDefinitions.DTO;
+@model DashboardDTO
+<main>
+    <div class="container-fluid site-width">
+        <!-- START: Breadcrumbs-->
+        <div class="row Red-Row">
+            <div class="col-12 col-lg-12 col-xl-12 col-sm-12  align-self-center">
+                <div class="sub-header pt-0 pb-3 align-self-center d-sm-flex w-100 rounded">
+                    <div class="w-sm-100 mr-auto">
+                        <span class="Header-Titel">Dashboard</span>
+                    </div>
+                    <div class="d-flex Filter-Section col">
+                        <button class="Filter" onclick="OpenFilter()"><img img src="~/dist/images/Icons/Filter.png">Filter</button>
+                    </div>
+                    @{
+                        await Html.RenderPartialAsync("_FilterModal",
+                        new OptionDTO 
+                        { Action = "Index",
+                        Controller = "Home",
+                        ClassName = "Filter-Container-Dashbord",
+                        Columns = 6,
+                        SelectListType = new byte[] { 0 } });
+                    }
+                </div>
+            </div>
+        </div>
+        <!-- END: Breadcrumbs-->
+        <!-- START: Card Data-->
+        <div class="row Red-Row">
+            <div class="col-12 col-sm-12 col-xl-5">
+                <div class="Shipments-Info-section">
+                    <div class="Shipments-Info">
+                        <p>Total Shipment</p>
+                        <span><i class="ion-cube"></i> @Model.AllOrders_Count</span>
+                        <span><i class="ion-card"></i> @Model.AllOrders_Total<sub>EGP</sub></span>
+                        <span class="Shipments-Info-Active"><img src="~/dist/images/Icons/@Model.AllOrders_Arow"> @Model.AllOrders_Percentchanged%</span>
+                    </div>
+                    <div class="Shipments-Info">
+                        <p>Delivered Shipments</p>
+                        <span><i class="ion-cube"></i> @Model.DeliveredOrders_Count</span>
+                        <span><i class="ion-card"></i> @Model.DeliveredOrders_Total<sub>EGP</sub></span>
+                        <span class="Shipments-Info-Active"><img src="~/dist/images/Icons/@Model.DeliveredOrders_Arow"> @Model.DeliveredOrders_Percentchanged%</span>
+                    </div>
+                    <div class="Shipments-Info">
+                        <p>Pending Shipments</p>
+                        <span><i class="ion-cube"></i> @Model.PendingOrders_Count</span>
+                        <span><i class="ion-card"></i> @Model.PendingOrders_Total<sub>EGP</sub></span>
+                        <span class="Shipments-Info-Active"><img src="~/dist/images/Icons/@Model.PendingOrders_Arow"> @Model.PendingOrders_Percentchanged%</span>
+                    </div>
+                    <div class="Shipments-Info">
+                        <p>Cancelled Shipments</p>
+                        <span><i class="ion-cube"></i> @Model.CanceledOrders_Count</span>
+                        <span><i class="ion-card"></i> @Model.CanceledOrders_Total<sub>EGP</sub></span>
+                        <span class="Shipments-Info-Active"><img src="~/dist/images/Icons/@Model.CanceledOrders_Arow"> @Model.CanceledOrders_Percentchanged%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="Delivery-Success-Section d-flex">
+                    <div class="Delivery-Success">
+                        <p>Delivery Success Rate</p>
+                        <input class="knob" data-fgColor="#02C94F" data-thickness=".3" data-linecap=round readonly value="@Model.Success_Rate">
+                        <span class="Percent">%</span>
+                        <div class="status">
+                            <div class="Unsuccessful">
+                                <div></div>
+                                <p class="Delivery-Success-number Unsuccess">@Model.CanceledOrders_Count</p>
+                                <p class="Delivery-Success-Name">Unsuccessful</p>
+                            </div>
+                            <div class="Successful">
+                                <div></div>
+                                <p class="Delivery-Success-number Success">@Model.DeliveredOrders_Count</p>
+                                <p class="Delivery-Success-Name">Successful</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-xl-4">
+                <div class="Available-Balance-Section">
+                    <div class="Available-Balance">
+                        <p>Revenues</p>
+                        <p class="Balance">@Model.Revenues</p>
+                       
+
+                        <p>Expenses</p>
+                        <p class="Balance">@Model.Expenses</p>
+                        <span class="Percentage"><img style="position:initial" src="~/dist/images/Icons/ArowUp.png"> @Model.TotalEarning_Percentchanged %</span>                   
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-xl-8">
+                <div class="Widget-Large">
+                    <div>
+                        <a class="ShowMore" href="#" > Show More</a>
+                        <p class="WidgetLarge-Header">Monthly Performance</p>
+                        <select>
+                            <option>Month</option>
+                        </select>
+                    </div>
+                    <hr />
+                    <div id="Monthly-Performance"></div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-xl-4">
+                <div class="Total-Earning">
+                    <a class="ShowMore" href="#" > Show More</a>
+                    <p class="Total-Earning-p">Total Earning</p>
+                    <span>@Model.TotalEarning_Percentchanged% <i class="@(Model.TotalEarning_Arow == Constants.ArrowType.Up ? "ion-ios-arrow-up" : "ion-ios-arrow-down")"></i></span>
+                   <p class="Earning">@Model.TotalEarning <sub>EGP</sub></p>
+                    <div id="Total-Earning-chart"></div>
+                    <ul>
+                        <li>
+                            <span class="Gold-Point"></span>
+                            <p>Packaging</p>
+                        </li>
+                        <li>
+                            <span class="Green-Point"></span>
+                            <p>Shipping</p>
+                        </li>
+                        <li>
+                            <span class="Blue-Point"></span>
+                            <p>Storage</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-xl-8">
+                <div class="Widget-Large">
+                    <div>
+                        <a class="ShowMore" href="#" data-toggle="modal" data-target="#TopAreas-Model"> Show More</a>
+                        <p class="WidgetLarge-Header">Top 10 Areas</p>
+                        <hr />
+                    </div>
+                    <div id="Top-Areas"></div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-xl-4">
+                <div class="Widget-Small">
+                    <a class="ShowMore" href="#"  data-toggle="modal" data-target="#TopVendors-Model"> Show More</a>
+                    <p class="WidgetSmall-Header">Top 5 Vendors</p>
+                    <hr />
+                    <div id="Top-Vendors"></div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-xl-8">
+                <div class="Widget-Large">
+                    <div>
+                        <a class="ShowMore" href="#"  data-toggle="modal" data-target="#TopDriver-Model"> Show More</a>
+                        <p class="WidgetLarge-Header">Orders</p>
+                        <hr />
+                    </div>
+                    <div id="Top-Driver"></div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-xl-4">
+                <div class="Widget-Small">
+                    <a class="ShowMore" href="#"  data-toggle="modal" data-target="#PackagingStock-Model"> Show More</a>
+                    <p class="WidgetSmall-Header">Packaging Stock</p>
+                    <hr />
+                    <div id="Packaging-Stock"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Top Areas Model -->
+    <div class="modal fade" id="TopAreas-Model" tabindex="-1" role="dialog" aria-labelledby="TopAreasLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div>
+            <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <h2 class="ml-4">Top Areas</h2>
+                <div class="Table-container">
+                    <table class="table text-center">
+                        <thead>
+                            <tr>
+                                <td>Area Name</td>
+                                <td>Orders Delivered</td>
+                                <td>Orders Canceled</td>
+                                <td>Orders Pending</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Chart_TopArea.Count() > 10)
+                            {
+                                foreach (var item in Model.Chart_TopArea.Skip(10).ToList())
+                                {
+                                    <tr>
+                                        <td> @item.Key</td>
+                                        <td> @item.Value2</td>
+                                        <td> @item.Value3</td>
+                                        <td> @item.Value1</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="20">
+                                        <h6 class="text-center text-danger my-5">No data available in table</h6>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+          </div>
+        </div>
+      </div>
+    </div> 
+
+     <!-- Top Couriers Model -->
+    <div class="modal fade" id="TopDriver-Model" tabindex="-1" role="dialog" aria-labelledby="TopDriverLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div>
+            <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+                    <h2 class="ml-4">Top Courier</h2>
+                <div class="Table-container">
+                        <table class="table text-center">
+                            <thead>
+                                <tr>
+                                    <td>Courier Name</td>
+                                    <td>Orders Delivered</td>
+                                    <td>Orders Canceled</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Chart_TopDriver.Count() > 10)
+                                {
+                                    foreach (var item in Model.Chart_TopDriver.Skip(10).ToList())
+                                    {
+                                        <tr>
+                                            <td> @item.Key</td>
+                                            <td> @item.Value2</td>
+                                            <td> @item.Value3</td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="20">
+                                            <h6 class="text-center text-danger my-5">No data available in table</h6>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Vendors Model -->
+    <div class="modal fade" id="TopVendors-Model" tabindex="-1" role="dialog" aria-labelledby="TopVendorsLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div>
+                    <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h2 class="ml-4">Top Vendors</h2>
+                    <div class="Table-container">
+                        <table class="table text-center">
+                            <thead>
+                                <tr>
+                                    <td>Vendor Name</td>
+                                    <td>Orders Delivered</td>
+                                    <td>Orders Canceled</td>
+                                    <td>Orders Pending</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Chart_TopAccount.Count() > 10)
+                                {
+                                    foreach (var item in Model.Chart_TopAccount.Skip(5).ToList())
+                                    {
+                                        <tr>
+                                            <td> @item.Key</td>
+                                            <td> @item.Value2</td>
+                                            <td> @item.Value3</td>
+                                            <td> @item.Value1</td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="20">
+                                            <h6 class="text-center text-danger my-5">No data available in table</h6>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Packaging Stock Model -->
+    <div class="modal fade" id="PackagingStock-Model" tabindex="-1" role="dialog" aria-labelledby="PackagingStockLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div>
+                    <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h2 class="ml-4">Packaging Stock</h2>
+                    <div class="Table-container">
+                        <table class="table text-center">
+                            <thead>
+                                <tr>
+                                    <td>Packaging Name</td>
+                                    <td>Packaging Count</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Chart_PackagingStock.Count() > 5)
+                                {
+                                    foreach (var item in Model.Chart_PackagingStock.Skip(5))
+                                    {
+                                        <tr>
+                                            <td> @item.Key</td>
+                                            <td> @item.Value1</td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="20">
+                                            <h6 class="text-center text-danger my-5">No data available in table</h6>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script src="~/dist/vendors/jquery-knob/jquery.knob.min.js" ></script>
+<script src="~/dist/vendors/apexcharts/apexcharts.min.js"></script>
+<script src="~/dist/js/knob.script.js"></script>
+<script>
+    $(document).ready(function () {
+    let theme = 'light';
+    let primarycolor = getComputedStyle(document.body).getPropertyValue('--primarycolor');
+    let bordercolor = getComputedStyle(document.body).getPropertyValue('--bordercolor');
+    let bodycolor = getComputedStyle(document.body).getPropertyValue('--bodycolor');
+    function OnBegin() {
+        if($('#To').val() < $("#From").val() )
+        {
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: ' Date from should be greater than Date TO',
+                showConfirmButton: false,
+                timer: 3000
+            });
+            return false;
+        }
+        else
+        {
+        $("#Ajaxloader").css("display", "inline-block").fadeIn(20000)
+        $("#Ajaxloader").removeClass("d-none");
+        }
+    }
+    function OnFailure() {
+        alert("Error occured.");
+    }
+    function OnSuccess() 
+    {
+        $("#Ajaxloader").fadeOut(1000);
+    }
+    function OnComplete() {}
+    function loadIndicators(url) {
+        let dateFrom = $("#dateFrom").val();
+        let dateTo = $("#dateTo").val();
+        window.location.href = url + "?" + "From=" + dateFrom + "&To=" + dateTo;
+    }
+        function GetCharts() {
+            /////////////////////////////////// Radial Chart /////////////////////
+            options = {
+                theme: {
+                    mode: theme
+                },
+                chart: {
+                    height: 280,
+                    type: 'radialBar',
+                },
+                plotOptions: {
+                    radialBar: {
+                        dataLabels: {
+                            name: {
+                                fontSize: '16px',
+                                fontWeight: 'bold'
+                            },
+                            value: {
+                                fontSize: '12px',
+                                fontWeight: 'bold'
+                            },
+                        }
+                    }
+                },
+                colors: ['#FFCD1C', '#02C94F', '#1755E7'],
+                series: [@Math.Round(Model.Packaging), @Math.Round(Model.Shipping), @Math.Round(Model.Storage)],
+                labels: ['Packaging', 'Shipping', 'Storage'],
+                stroke: {
+                    lineCap: "round",
+                },
+            }
+            let totalEarningChart = new ApexCharts(
+                document.querySelector("#Total-Earning-chart"),
+                options
+            );
+            totalEarningChart.render();
+            ////////////////////////////Monthly-Performance//////////////////////////
+            let ModelData = @Html.Raw(Json.Serialize(Model.Chart_Year));
+            let mKey, m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m12;
+            for (let i = 0; i < ModelData.length; i++) {
+                mKey = ModelData[i].key;
+                m1 = ModelData[i].value1;
+                m2 = ModelData[i].value2;
+                m3 = ModelData[i].value3;
+                m4 = ModelData[i].value4;
+                m5 = ModelData[i].value5;
+                m6 = ModelData[i].value6;
+                m7 = ModelData[i].value7;
+                m8 = ModelData[i].value8;
+                m9 = ModelData[i].value9;
+                m10 = ModelData[i].value10;
+                m11 = ModelData[i].value11;
+                m12 = ModelData[i].value12;
+            }
+            options = {
+                theme: {
+                    mode: theme
+                },
+                color: 'gradient(356.64deg, rgba(27, 89, 248, 0.8) 48.49%, rgba(239, 49, 56, 0.04) 282.14%)',
+                chart: {
+                    height: 300,
+                    type: 'bar',
+                    color: 'linear-gradient(356.64deg, rgba(27, 89, 248, 0.8) 48.49%, rgba(239, 49, 56, 0.04) 282.14%)',
+                },
+                plotOptions: {
+                    bar: {
+                        horizontal: false,
+                        columnWidth: '18%',
+                        endingShape: 'rounded'
+                    },
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    show: true,
+                    width: 2,
+                    colors: ['transparent']
+                },
+                series: [{
+                    name: '',
+                    data: [m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m12]
+                }],
+                xaxis: {
+                    categories: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
+                    labels: {
+                        style: {
+                            colors: "#838383",
+                            fontSize: '12px',
+                            fontFamily: 'Poppins',
+                            fontWeight: 500,
+                        },
+                    }
+                },
+                yaxis: {
+                    title: {
+                        text: 'Total shipping Count'
+                    }
+                },
+                fill: {
+                    opacity: 1,
+                    color: 'linear-gradient(356.64deg, rgba(27, 89, 248, 0.8) 48.49%, rgba(239, 49, 56, 0.04) 282.14%)',
+
+                },
+                tooltip: {
+                    y: {
+                        formatter: function (val) {
+                            return val + " Total shipping Count"
+                        }
+                    }
+                }
+            }
+            let monthlyPerformance = new ApexCharts(
+                document.querySelector("#Monthly-Performance"),
+                options
+            );
+            monthlyPerformance.render();
+            ////////////////////////////Top-Areas//////////////////////////
+            if ($("#Top-Areas").length > 0) {
+                let ModelData = @Html.Raw(Json.Serialize(Model.Chart_TopArea.Take(10)));
+                let DeliveredCount = [], AreaName = [];
+                for (let i = 0; i < ModelData.length; i++) {
+                    AreaName.push(ModelData[i].key);
+                    DeliveredCount.push(ModelData[i].value1);
+                }
+                options = {
+                    theme: {
+                        mode: theme
+                    },
+                    color: ['#1755E7A3'],
+                    chart: {
+                        height: 300,
+                        type: 'bar',
+                        color: ['#1755E7A3'],
+                    },
+                    plotOptions: {
+                        bar: {
+                            horizontal: false,
+                            columnWidth: '40%',
+                            endingShape: 'rounded',
+                            fontWeight: '500'
+                        },
+                    },
+                    dataLabels: {
+                        enabled: false,
+                        fontWeight: '500'
+                    },
+                    stroke: {
+                        show: true,
+                        width: 2,
+                        colors: ['transparent']
+                    },
+                    colors: ['#da70d6'],
+                    series: [{
+                        data: DeliveredCount,
+                        name: 'Total Shipping Deliverd',
+                    }],
+                    xaxis: {
+                        categories: AreaName,
+                        tickPlacement: 'on',
+                        labels: {
+                            rotate: 45,
+                            style: {
+                                colors: "#969696",
+                                fontSize: '16px',
+                                fontFamily: 'Poppins',
+                                fontWeight: 600,
+                            },
+                        },
+                    },
+                    yaxis: {
+                        title: {
+                            text: ''
+                        }
+                    },
+                    fill: {
+                        opacity: .5,
+                        colors: ['#da70d6'],
+                    },
+
+                    tooltip: {
+                        y: {
+                            formatter: function (val) {
+                                return val
+                            }
+                        }
+                    }
+                }
+
+                let topAreas = new ApexCharts(
+                    document.querySelector("#Top-Areas"),
+                    options
+                );
+
+                topAreas.render();
+            }
+            ////////////////////////////Top-Driver //////////////////////////
+            if ($("#Top-Driver").length > 0) {
+                let ModelData = @Html.Raw(Json.Serialize(Model.Chart_TopDriver.Take(10)));
+                let CourierName = [], DeliveredCount = [];
+                for (let i = 0; i < ModelData.length; i++) {
+                    CourierName.push(ModelData[i].key);
+                    DeliveredCount.push(ModelData[i].value1);
+                }
+                options = {
+                    theme: {
+                        mode: theme
+                    },
+                    color: ['#1755E7CC'],
+                    chart: {
+                        height: 300,
+                        type: 'bar',
+                        color: ['#1755E7CC'],
+                    },
+                    plotOptions: {
+                        bar: {
+                            horizontal: false,
+                            columnWidth: '40%',
+                            endingShape: 'rounded',
+                            fontWeight: '500'
+                        },
+                    },
+                    dataLabels: {
+                        enabled: false,
+                        fontWeight: '500'
+                    },
+                    stroke: {
+                        show: true,
+                        width: 2,
+                        colors: ['transparent']
+                    },
+                    series: [{
+                        data: DeliveredCount,
+                        name: 'Total Shipping Deliverd',
+                    }],
+                    xaxis: {
+                        categories: CourierName,
+                        tickPlacement: 'on',
+                        labels: {
+                            rotate: 0,
+                            style: {
+                                colors: "#969696",
+                                fontSize: '14px',
+                                fontFamily: 'Poppins',
+                                fontWeight: 600,
+                            },
+                        },
+                    },
+                    yaxis: {
+                        title: {
+                            text: ''
+                        }
+                    },
+                    fill: {
+                        opacity: 1,
+                        color: ['#1755E7CC'],
+                    },
+
+                    tooltip: {
+                        y: {
+                            formatter: function (val) {
+                                return val
+                            }
+                        }
+                    }
+                }
+
+                let topDriverchart = new ApexCharts(
+                    document.querySelector("#Top-Driver"),
+                    options
+                );
+
+                topDriverchart.render();
+            }
+            //////////////////////////Top-Vendors///////////////////////////
+            if ($("#Top-Vendors").length > 0) {
+                let ModelData = @Html.Raw(Json.Serialize(Model.Chart_TopAccount.Take(5)));
+                let VendorName = [], DeliveredCount = [];
+                for (let i = 0; i < ModelData.length; i++) {
+                    VendorName.push(ModelData[i].key);
+                    DeliveredCount.push(ModelData[i].value1);
+                }
+                options = {
+                    theme: {
+                        mode: theme
+                    },
+                    color: ['#1755E7A3'],
+                    chart: {
+                        height: 320,
+                        type: 'bar',
+                        color: ['#1755E7A3'],
+                    },
+                    plotOptions: {
+                        bar: {
+                            horizontal: true,
+                            columnWidth: '40%',
+                            endingShape: 'rounded',
+                            fontWeight: '500'
+                        },
+                    },
+                    dataLabels: {
+                        enabled: false,
+                        fontWeight: '500'
+                    },
+                    stroke: {
+                        show: true,
+                        width: 2,
+                        colors: ['transparent']
+                    },
+                    colors: ['#EF3138'],
+                    series: [{
+                        data: DeliveredCount,
+                        name: 'Total Shipping Deliverd',
+
+                    }],
+                    xaxis: {
+                        categories: VendorName,
+                        tickPlacement: 'on',
+                        labels: {
+                            rotate: 45,
+                            style: {
+                                colors: "#969696",
+                                fontSize: '10px',
+                                fontWeight: 400,
+                            },
+                        },
+                        lines: {
+                            show: false,
+                        }
+                    },
+                    yaxis: {
+                        title: {
+                            text: ''
+                        },
+                        lines: {
+                            show: false,
+                        }
+                    },
+                    fill: {
+                        opacity: .6,
+                        colors: ['#EF3138'],
+                    },
+
+                    tooltip: {
+                        y: {
+                            formatter: function (val) {
+                                return val
+                            }
+                        }
+                    }
+                }
+
+                let topVendorschart = new ApexCharts(
+                    document.querySelector("#Top-Vendors"),
+                    options
+                );
+
+                topVendorschart.render();
+            }
+            ///////////////////////Packaging Stock//////////////////////////
+            if ($("#Packaging-Stock").length > 0) {
+                let ModelData = @Html.Raw(Json.Serialize(Model.Chart_PackagingStock.Take(5)))
+                    let Value = [], key = [];
+                for (let i = 0; i < ModelData.length; i++) {
+                    key.push(ModelData[i].key);
+                    Value.push(ModelData[i].value1);
+                }
+                options = {
+                    theme: {
+                        mode: theme
+                    },
+                    color: ['#1755E7A3'],
+                    chart: {
+                        height: 320,
+                        type: 'bar',
+                        color: ['#1755E7A3'],
+                    },
+                    plotOptions: {
+                        bar: {
+                            horizontal: true,
+                            columnWidth: '40%',
+                            endingShape: 'rounded',
+                            fontWeight: '500'
+                        },
+                    },
+                    dataLabels: {
+                        enabled: false,
+                        fontWeight: '500'
+                    },
+                    stroke: {
+                        show: true,
+                        width: 2,
+                        colors: ['transparent']
+                    },
+                    colors: ['#E58025'],
+                    series: [{
+                        data: Value,
+                        name: 'Total Packing Count',
+
+                    }],
+                    xaxis: {
+                        categories: key,
+                        tickPlacement: 'on',
+                        labels: {
+                            rotate: 45,
+                            style: {
+                                colors: "#969696",
+                                fontSize: '10px',
+                                fontWeight: 400,
+                            },
+                        },
+                        lines: {
+                            show: false,
+                        }
+                    },
+                    yaxis: {
+                        title: {
+                            text: ''
+                        },
+                        lines: {
+                            show: false,
+                        }
+                    },
+                    fill: {
+                        opacity: 0.5,
+                        colors: ['#E58025'],
+                    },
+
+                    tooltip: {
+                        y: {
+                            formatter: function (val) {
+                                return val
+                            }
+                        }
+                    }
+                }
+                let packagingStockChart = new ApexCharts(
+                    document.querySelector("#Packaging-Stock"),
+                    options
+                );
+                packagingStockChart.render();
+            }
+        }
+   GetCharts();
+})
+</script>
+    

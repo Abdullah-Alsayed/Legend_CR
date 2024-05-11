@@ -1,0 +1,50 @@
+﻿
+@using LegendCR.CommonDefinitions.DTO.VendorProductDTOs
+@model List<VendorProductDTO>
+
+<h2 class="ml-4 font-weight-bolder">Please Select Items From Your Products</h2>
+<div class="Table-container">
+    <table class="table">
+        <thead>
+            <tr>
+                <td><input type="checkbox" id="Allcheckbox" onclick="SelectAllCheckboxInTable('StockTable')" /></td>
+                <td>Product</td>
+                <td>Selling Price</td>
+                <td class="text-nowrap pr-2">Image</td>
+                <td>Quantity</td>
+                <td>Available Stock</td>
+            </tr>
+        </thead>
+        <tbody id="StockTable">
+            @if (Model != null && Model.Count > 0)
+            {
+                foreach (var item in Model)
+                {
+                    <tr id="@item.VendorProductId">
+                        <td>
+                            <input type="checkbox" name="VendorProductId" id="Product_@item.VendorProductId" class="ProductSelect" value="@item.VendorProductId" />
+                        </td>
+                        <td>@item.Name</td>
+                        <td class="font-weight-bold">
+                            <input max="@item.OriginalPrice" class="input-Number ProductPrice w-50" type="number" min="1" value="@item.OriginalPrice" />
+                        </td>
+                        <td><img src="/dist/images/@item.ImageUrl" width="50" /></td>
+                        <td class="font-weight-bold">
+                            <input name="Quantity" class="input-Number ProductItemCount w-50" type="number" min="1" value="0" />
+                        </td>
+                        <td class="font-weight-bold">@item.AvailableStock</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="10" class="text-danger text-center"><h3>No Product available in table</h3></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div class="col-lg-12">
+    <button class="Red-Btn-OutLine OutLine-Green Btn-Model" type="button" onclick="CalcStockItemsPrice()">Add Items</button>
+</div>

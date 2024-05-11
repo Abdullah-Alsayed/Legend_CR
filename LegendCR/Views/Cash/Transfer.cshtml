@@ -1,0 +1,122 @@
+﻿
+@using LegendCR.CommonDefinitions.DTO.CashDTOs
+@using LegendCR.CommonDefinitions.DTO
+@model CashTransferDTO
+
+<main>
+    <div class="container-fluid site-width">
+        <div class="row Red-Row">
+            <div class="col-12 col-lg-12 col-xl-12 col-sm-12">
+                <div class="sub-header">
+                    <div>
+                        <span class="Header-Titel">Transfer Cash</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="Shipment-container">
+        <form style="width:95%" class="needs-validation" method="post" id="CashTransferForm" action="@Url.Action("TransferCash")" novalidate>
+            <div class="row Red-Row w-100">
+                <div class="col-lg-4">
+                    <h6 class="my-4 ml-2 font-w-500">Transfer Details</h6>
+                    <div class="Shipment-Details-Section height-400">
+                        <div class="col-lg-12 mt-4">
+                            <label class="Shipment-Details-label">Vendor</label>
+                            @Html.DropDownList("VendorId", new SelectList(ViewBag.Vendors, "Id", "Name"), "--- Select Vendor ---", new { @class = "form-control ", @required = "required", @id = "VendorChangeVal", @onChange = "CashTransferVendorChange()" })
+                            <div class="invalid-feedback">
+                                Please select vendor.
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-4">
+                            <label class="Shipment-Details-label">Transfer Type</label>
+                            <select class="form-control mb-3" id="TypeId" name="TypeId" required>
+                                <option value="">--- Select Transfer Type ---</option>
+                                @*<option value="@((byte)EnumCashTransferType.CourierTransfer)">Courier Transfer</option>*@
+                                <option value="@((byte)EnumCashTransferType.BankTransfer)">Bank Transfer</option>
+                                <option value="@((byte)EnumCashTransferType.VodafoneCashTransfer)">Vodafone Cash</option>
+                                <option value="@((byte)EnumCashTransferType.InstaPayTransfer)">InstaPay</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8 w-100">
+                    <h6 class="my-4 ml-2 font-w-500">Vendor Details</h6>
+                    <div class="Shipment-Details-Section height-400">
+                        <div class="col-lg-6 mt-4">
+                            <label class="Shipment-Details-label">Government</label>
+                            @Html.DropDownListFor(model => model.ZoneId, new SelectList(ViewBag.Zones, "Id", "NameEn"),"--- Select Government ---", new { @class = "form-control select", @required = "required" ,@onchange="GetAreaByZoneID()"})
+                        </div>
+                        <div class="col-lg-6 mt-4">
+                            <label class="Shipment-Details-label">Area</label>
+                            <select asp-for="AreaId" class="form-control select" required="required"></select>
+                        </div>
+                        <div class="col-lg-6 mt-4">
+                            <label class="Shipment-Details-label">Name</label>
+                            <input asp-for="Name" type="text" placeholder="Vendor Name" required />
+                        </div>
+                        <div class="col-lg-6 mt-4">
+                            <label class="Shipment-Details-label">Phone</label>
+                            <input asp-for="Phone" type="text" placeholder="Phone Number" required />
+                        </div>
+                        <div class="col-lg-6 mt-4">
+                            <label class="Shipment-Details-label">Address</label>
+                            <input asp-for="Address" type="text" placeholder="Address" required />
+                        </div>
+                        <div class="col-lg-6 mt-4">
+                            <label class="Shipment-Details-label">Email</label>
+                            <input asp-for="Email" type="text" placeholder="Email" required />
+                        </div>
+                        <div class="col-lg-4 mt-4">
+                            <label class="Shipment-Details-label">Landmark</label>
+                            <input asp-for="Landmark" type="text" placeholder="Landmark" required />
+                        </div>
+                        <div class="col-lg-4 mt-4">
+                            <label class="Shipment-Details-label">Floor</label>
+                            <input asp-for="Floor" type="number" min="0" class="input-Number" placeholder="Floor" required />
+                        </div>
+                        <div class="col-lg-4 mt-4">
+                            <label class="Shipment-Details-label">Apartment</label>
+                            <input asp-for="Apartment" type="number" min="0" class="input-Number" placeholder="Apartment" required />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row Red-Row w-100 mt-4">
+                <div class="col-lg-4"></div>
+                <div class="col-lg-3 d-flex flex-column">
+                    <button data-toggle="modal" data-target="#Shipments-Model" type="button" class="Red-Btn btn-warning">Select Shipment(s)</button>
+                </div>
+                <div class="col-lg-1"></div>
+                <div class="col-lg-4 d-flex justify-content-end">
+                    <button class="Print-Btn mr-3"><i class="icon-printer F-Large"></i></button>
+                    <button id="btnTransferCash" type="button" onclick="TransferCash()" class="Red-Btn btn-success">Submit Cash Transfer</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Shipments Model -->
+    <div class="modal fade" id="Shipments-Model" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div>
+                    <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h2 class="ml-4 font-weight-bolder">Select Shipment(s)</h2>
+                    <div class="Table-container">
+                        <table class="table" id="Table_dvcodes"></table>
+                    </div>
+                    <div class="col-lg-12">
+                        <button class="Red-Btn btn-success pull-right cursor-pointer" data-dismiss="modal" type="button" id="BtnSend">
+                            Confirm
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

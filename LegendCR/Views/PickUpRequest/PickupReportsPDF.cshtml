@@ -1,0 +1,60 @@
+﻿
+@using LegendCR.BL.Services;
+@using LegendCR.CommonDefinitions.DTO;
+@using LegendCR.CommonDefinitions.DTO.PickupDTOs;
+@model List<PickupDTO>
+@{
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+}
+
+<table class="table">
+    <thead>
+        <partial name="_ReportHeder" model="11" />
+        <tr>
+            <td>Code</td>
+            <td>Vendor</td>
+            <td>Area</td>
+            <td class="text-center">Type</td>
+            <td class="text-nowrap"># of Shipments</td>
+            <td class="text-center">Day</td>
+            <td class="text-center">Time</td>
+            <td class="text-center">Status</td>
+            <td>Comments</td>
+            <td class="text-center">Actions</td>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Count > 0)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td class="text-nowrap">
+                        <b onclick="@(item.PickupRequestTypeId == (int)EnumPickupRequestType.DeliveryPickup ? "GetDeliveryPickups":"GetStockPickups")('@item.PickupRequestId')" data-target="@(item.PickupRequestTypeId == (int)EnumPickupRequestType.DeliveryPickup ? "#PickupRequstDetails":"#PickupStocktDetails")" data-toggle="modal">@item.RefId</b>
+                    </td>
+                    <td>@item.VendorName</td>
+                    <td><span id="Adderss_@item.PickupRequestId"><i class="fa fa-map-marker mr-2" aria-hidden="true"></i>@item.AreaName</span></td>
+                    @if (item.PickupRequestTypeId == (int)EnumPickupRequestType.StockPickup)
+                    {
+                        <td><span class="Shipment-Type Mauve-Bg">FulFillment</span></td>
+                    }
+                    else
+                    {
+                        <td> <span class="Shipment-Type Pickup-Bg">Delivery</span></td>
+                    }
+                    <td class="text-center">@item.PickupItems.Count()</td>
+                    <td id="DateTd_@item.PickupRequestId" class="text-nowrap text-center">@item.PickupDate.ToShortDateString()</td>
+                    <td class="text-nowrap"><span id="ReadyTimeTd_@item.PickupRequestId">@item.TimeFrom.ToShortTimeString()</span> to <span id="LastTimeAvailableTd_@item.PickupRequestId">@item.TimeTo.ToShortTimeString()</span></td>
+                    <partial name="_StatusPickupSwitch" model="@item" />
+                    <td><span class="Comments-Table">@(item.Notes ?? "---")</span></td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="16" class="text-danger text-center"><h3>No data available in table</h3></td>
+            </tr>
+        }
+    </tbody>
+</table>

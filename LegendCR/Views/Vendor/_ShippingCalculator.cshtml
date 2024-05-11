@@ -1,0 +1,92 @@
+﻿
+@using LegendCR.CommonDefinitions.DTO.ShipmentDTOs
+@using LegendCR.BL.Services
+@model ShippingCalculatorDTO
+
+<main>
+    <div class="container-fluid site-width">
+        <div class="row">
+            <div class="col-12 col-lg-12 col-xl-12 col-sm-12 Pickup-Header">
+                <div>
+                    <div>
+                        <span class="Header-Titel">shipping calculator</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <form asp-action="ShippingCalculator" asp-controller="Vendor" method="post" id="CalcFees-Form">
+        <div class="Shipment-container">
+            <div class="col-lg-6">
+                <div class="row">
+                    @*<div class="col-lg-6">
+                        <h6 class="my-4 ml-2 font-w-500">Source</h6>
+                        <div class="Shipment-Details-Section">
+                            <div class="col-lg-12 mb-3">
+                                <label class="Shipment-Details-label">Area</label>
+                                @Html.DropDownList("SourceAreaId", new SelectList(ViewBag.Area, "Id", "CityNameAr"),"---Select Area---", new { @class = "",@required="required", @id="SourceAreaId"})
+                            </div>
+                        </div>
+                    </div>*@
+                    <div class="col-lg-12">
+                        <h6 class="my-4 ml-2 font-w-500">Destination</h6>
+                        <div class="Shipment-Details-Section">
+                            <div class="col-lg-12 mb-3">
+                                <label class="Shipment-Details-label">Area</label>
+                                @Html.DropDownList("DestinationAreaId", new SelectList(ViewBag.Area, "Id", "CityNameAr"),"---Select Area---", new { @class = "",@required="required" , @id="DestinationAreaId"})
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @*<div class="row mt-3">
+                    <div class="col-lg-12">
+                        <ul>
+                            <li class="font-weight-bold text-danger"><h6>@BaseHelper.Constants.CancelFees EGP will be applied on cancellation</h6></li>
+                        </ul>
+                    </div>
+                </div>*@
+                <div id="TotalFeesDiv" class="row mt-3 d-none">
+                    <div class="col-lg-12">
+                        <h6 class="my-4 ml-2 font-w-500">Total Fees</h6>
+                        <ul>
+                            @*<li class="font-weight-bold"><h6>Source Shipping : <label id="lblSourceShipping">0</label> EGP</h6></li>*@
+                            <li class="font-weight-bold"><h6>Shipping Fees : <label id="lblDestinationShipping">0</label> EGP</h6></li>
+                            <li class="font-weight-bold"><h6>Service : <label id="lblService">0</label> EGP</h6></li>
+                            <li class="font-weight-bold"><h6>Weight : <label id="lblWeight">0</label> EGP</h6></li>
+                            <li class="font-weight-bold"><h6>Size : <label id="lblSize">0</label> EGP</h6></li>
+                            <br />
+                            <li class="font-weight-bold"><h6>Total : <label id="lblTotalFees">0</label> EGP</h6></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h6 class="my-4 ml-2 font-w-500">Package Details</h6>
+                        <div class="Shipment-Details-Section">
+                            <div class="col-lg-12">
+                                <label class="Shipment-Details-label">Service</label>
+                                @Html.DropDownListFor(model => model.ShipmentServiceId, new SelectList(ViewBag.ShipmentService, "Id", "ServiceName"),"---Select Service---", new { @required="required", @id="ShipmentServiceId" })
+                            </div>
+                            <div class="col-lg-12 mt-4">
+                                <label class="Shipment-Details-label">Package Weight</label>
+                                <input type="number" class="input-Number" min="1" id="Weight" name="Weight" placeholder="Package Weight" required />
+                            </div>
+                            <div class="col-lg-12 mt-4">
+                                <label class="Shipment-Details-label">Package Size</label>
+                                <input type="text" id="Size" name="Size" placeholder="Package Size" required />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-lg-12 d-flex justify-content-end">
+                        <button style="cursor:pointer" onclick="ShippingCalculator()" type="button" class="Calc-Btn"><img src="/dist/images/Icons/Calc.png" /> Calculate <span id="Calc-Spinner" class="spinner-border spinner-border-sm ml-2 d-none" role="status" aria-hidden="true"></span> </button>
+                    </div>
+                </div>
+            </div>            
+        </div>
+    </form>
+</main>
+<script src="~/dist/js/app.js"></script>

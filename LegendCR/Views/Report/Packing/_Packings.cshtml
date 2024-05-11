@@ -1,0 +1,26 @@
+﻿
+@using LegendCR.CommonDefinitions.DTO;
+@using LegendCR.CommonDefinitions.DTO.ShipmentDTOs;
+@model List<PackingDTO>
+@if (Model != null && Model.Count > 0)
+{
+    foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.NameEn</td>
+            <td>@item.Description</td>
+            <td>@item.Size</td>
+            <td>@item.Count</td>
+            <td class="text-center"><img src="~/dist/images/@item.ImgUrl" width="97" /></td>
+        </tr>
+    }
+}
+else
+{
+    <tr>
+        <td colspan="7">
+            <h6 class="text-center text-danger my-5">No data available in table</h6>
+        </td>
+    </tr>
+}
+<input type="hidden" value="@Model.Count" id="DataCount" />

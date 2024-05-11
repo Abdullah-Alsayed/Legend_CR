@@ -1,0 +1,112 @@
+﻿
+@using LegendCR.CommonDefinitions.DTO.PickupDTOs
+@using LegendCR.CommonDefinitions.DTO
+@using LegendCR.CommonDefinitions.DTO;
+@using LegendCR.Helpers;
+@model ViewModel<PickupDTO>
+@{
+    var MinDate = DateTimeHelper.MinDate();
+}
+<main>
+    <div class="container-fluid site-width">
+        <div class="row Red-Row">
+            <div class="col-12 col-lg-12 col-xl-12 col-sm-12">
+                <div class="sub-header py-5 d-flex">
+                    <div>
+                        <span class="Header-Titel">Pickups</span>
+                    </div>
+                    <div class="Shipment-Filter">
+                        <ul id="Shipment-Filter-Ul">
+                            <li id="All" class="Active" data-status="@((int)EnumStatus.All)" onclick="FilterByStatus('All','PickUpRequest','All',@((int)EnumStatus.All))"> <a href="javascript:">All</a></li>
+                            <li id="Pending" data-status="@((int)EnumStatus.Ready_For_Pickup)" onclick="FilterByStatus('All','PickUpRequest','Pending',@((int)EnumStatus.Ready_For_Pickup))"> <a href="javascript:">Pending Pickups</a></li>
+                            <li id="Done" data-status="@((int)EnumStatus.At_Warehouse)" onclick="FilterByStatus('All','PickUpRequest','Done',@((int)EnumStatus.At_Warehouse))"> <a href="javascript:">Done Pickups</a></li>
+                            <li id="Cancelled" data-status="@((int)EnumStatus.Cancelled_Pickup)" onclick="FilterByStatus('All','PickUpRequest','Cancelled',@((int)EnumStatus.Cancelled_Pickup))"><a href="javascript:">Cancelled Pickups</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="Shipment-container">
+        <div class="row Red-Row">
+            @{
+                await Html.RenderPartialAsync("_ToolsRow", new OptionDTO
+            {
+                Action = "All",
+                Controller = "PickUpRequest",
+                Lookup = Model.Lookup,
+                SelectListType = new byte[] { (byte)EnumSelectListType.Vendor,
+            (byte)EnumSelectListType.Zone,
+            (byte)EnumSelectListType.Status }
+            });
+            }
+        </div>
+    </div>
+    <div class="col-12">
+        <span id="Ajaxloader" class="Ajaxloader d-none"></span>
+    </div>
+    <div class="Table-container">
+        <table class="table" id="Table">
+            <partial name="_All" model="@Model" />
+        </table>
+    </div>
+
+    <div class="modal fade" id="PickupRequstDetails" tabindex="-1" role="dialog" aria-labelledby="PickupRequstDetails-ModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div>
+                    <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="PickupRequstDetails-Body">
+                    <h2 class="ml-4"></h2>
+                    <h2 class="Model-Titel">Shipments included</h2>
+                    <h2 class="Model-Titel">Courier : <span id="courierName-Span"></span></h2>
+                    <div class="Table-container" id="PickupRequstDetails-TableSection">
+                        <table id="Red-Table" class="table">
+                            <tbody id="tblContent">
+                                <tr>
+                                    <td colspan="10">
+                                        <div class="spinner-border text-danger ml-50" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="PickupStocktDetails" tabindex="-1" role="dialog" aria-labelledby="PickupStocktDetails-ModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div>
+                    <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="PickupStocktDetails-Body">
+                    <h2 class="ml-4"></h2>
+                    <h2 class="Model-Titel">Products included</h2>
+                    <div class="Table-container" id="PickupStocktDetails-TableSection">
+                        <table id="Red-Table" class="table">
+                            <tbody id="tblContent">
+                                <tr>
+                                    <td colspan="10">
+                                        <div class="spinner-border text-danger ml-50" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

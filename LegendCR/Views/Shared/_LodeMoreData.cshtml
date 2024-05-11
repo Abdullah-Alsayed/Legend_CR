@@ -1,0 +1,80 @@
+﻿
+<script>
+    var TodayCount = 0, YesterdayCount = 0, LastWeekCount = 0, LastMonthCount = 0, FilterTimeMultiSelectFormCount = 0, SearchIndex = 0;
+    $('#TodayForm').click(function () {
+        YesterdayCount = 0; LastWeekCount = 0; LastMonthCount = 0; FilterTimeMultiSelectFormCount = 0;
+        $('#From,#To,#status').val("");
+        $(".select2-selection__rendered li").remove();
+        $('#TodayForm').attr('action', `/User/OrderListPartial?Today=1&PageIndex=${TodayCount}`);
+    });
+
+    $('#YesterdayForm').click(function () {
+        TodayCount = 0; LastWeekCount = 0; LastMonthCount = 0; FilterTimeMultiSelectFormCount = 0;
+        $('#From,#To,#status').val("");
+        $(".select2-selection__rendered li").remove();
+        $('#YesterdayForm').attr("action", `/User/OrderListPartial?Yesterday=1&PageIndex=${YesterdayCount}`);
+    });
+
+    $('#LastWeekForm').click(function () {
+        $('#From,#To,#status').val("");
+        $(".select2-selection__rendered li").remove();
+        TodayCount = 0; YesterdayCount = 0; LastMonthCount = 0; FilterTimeMultiSelectFormCount = 0;
+        $('#LastWeekForm').attr("action", `/User/OrderListPartial?LastWeek=1&PageIndex=${LastWeekCount}`);
+    });
+
+    $('#LastMonthForm').click(function () {
+        $('#From,#To,#status').val("");
+        $(".select2-selection__rendered li").remove();
+        TodayCount = 0; YesterdayCount = 0; LastWeekCount = 0; FilterTimeMultiSelectFormCount = 0;
+        $('#LastMonthForm').attr("action", `/User/OrderListPartial?LastMonth=1&PageIndex=${LastMonthCount}`);
+    });
+
+    $('#FilterTimeMultiSelectForm').click(function () {
+        TodayCount = 0; YesterdayCount = 0; LastWeekCount = 0; LastMonthCount = 0;
+        $('#FilterTimeMultiSelectForm').attr("action", `/User/OrderListPartial?PageIndex=${FilterTimeMultiSelectFormCount}`);
+    });
+    function moreData() {
+        var Search = $("#Search").val()
+        if (Search != "") 
+        {
+            TodayCount = 0; YesterdayCount = 0; LastWeekCount = 0; LastMonthCount = 0; FilterTimeMultiSelectFormCount = 0, SearchIndex++;
+            $('#FormSearch').attr('action', `/User/OrderListPartial?Search=${Search}&PageIndex=${SearchIndex}`);
+            $("input").removeClass("FilterSelected");
+            $('#FormSearch').submit();
+        }
+        else if ($('#Today').hasClass('FilterSelected')) {
+            TodayCount++; YesterdayCount = 0; LastWeekCount = 0; LastMonthCount = 0; FilterTimeMultiSelectFormCount = 0, SearchIndex = 0;
+            $('#TodayForm').attr('action', `/User/OrderListPartial?Today=1&PageIndex=${TodayCount}`);
+            $('#TodayForm').submit();
+        }
+        else if ($('#Yesterday').hasClass('FilterSelected')) {
+            TodayCount = 0; YesterdayCount++; LastWeekCount = 0; LastMonthCount = 0; FilterTimeMultiSelectFormCount = 0 ,SearchIndex = 0;
+            $('#YesterdayForm').attr("action", `/User/OrderListPartial?Yesterday=1&PageIndex=${YesterdayCount}`);
+            $('#YesterdayForm').submit();
+        }
+        else if ($('#LastWeek').hasClass('FilterSelected')) {
+            TodayCount = 0; YesterdayCount = 0; LastWeekCount++; LastMonthCount = 0; FilterTimeMultiSelectFormCount = 0, SearchIndex = 0;
+            $('#LastWeekForm').attr("action", `/User/OrderListPartial?LastWeek=1&PageIndex=${LastWeekCount}`);
+            $('#LastWeekForm').submit();
+        }
+        else if ($('#LastMonth').hasClass('FilterSelected')) {
+            TodayCount = 0; YesterdayCount = 0; LastWeekCount = 0; LastMonthCount++; FilterTimeMultiSelectFormCount = 0, SearchIndex = 0;
+            $('#LastMonthForm').attr("action", `/User/OrderListPartial?LastMonth=1&PageIndex=${LastMonthCount}`);
+            $('#LastMonthForm').submit();
+        }
+        else {
+            TodayCount = 0; YesterdayCount = 0; LastWeekCount = 0; LastMonthCount = 0; FilterTimeMultiSelectFormCount++, SearchIndex = 0;
+            $('#FilterTimeMultiSelectForm').attr("action", `/User/OrderListPartial?PageIndex=${FilterTimeMultiSelectFormCount}`);
+            $('#FilterTimeMultiSelectForm').submit();
+        }
+    }
+
+    $('#From,#To,#status').change(function () {
+        TodayCount = 0; YesterdayCount = 0; LastWeekCount = 0; LastMonthCount = 0; FilterTimeMultiSelectFormCount = 0;
+        $('#TodayForm').attr('action', `/User/OrderListPartial?Today=1&PageIndex=${TodayCount}`);
+        $('#YesterdayForm').attr("action", `/User/OrderListPartial?Yesterday=1&PageIndex=${YesterdayCount}`);
+        $('#LastWeekForm').attr("action", `/User/OrderListPartial?LastWeek=1&PageIndex=${LastWeekCount}`);
+        $('#LastMonthForm').attr("action", `/User/OrderListPartial?LastMonth=1&PageIndex=${LastMonthCount}`);
+        $('#FilterTimeMultiSelectForm').attr("action", `/User/OrderListPartial?PageIndex=${FilterTimeMultiSelectFormCount}`);
+    })
+</script>

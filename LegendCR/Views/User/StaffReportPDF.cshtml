@@ -1,0 +1,50 @@
+﻿
+@using LegendCR.CommonDefinitions.DTO;
+@model List<UserDTO>
+@{
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+    string path = Url.ActionContext.HttpContext.Request.Path;
+ }
+    @if (Model != null && Model.Count() > 0)
+{
+  <table class="table">
+    <thead>
+        <partial name="_ReportHeder" model="11" />
+        <tr>
+            <td>Name</td>
+            <td>Info </td>
+            <td>Role</td>
+            <td>Join date</td>
+            <td>Username</td>
+            <td>Photo</td>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Count > 0)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td class="text-nowrap" id="Td-Name">@item.Name</td>
+                <td id="Td-Info">
+                    @item.PhoneNumber <br>
+                    @item.Address <br>
+                    @item.Email <br>
+                </td>
+                <td class="text-nowrap" id="Td-Role"><b>@item.RoleName</b></td>
+                <td>@item.CreationDate.ToShortDateString()</td>
+                <td #Td-Email>@item.Email</td>   
+                <td><img src="/dist/images/Fake-Img2.png" /></td>
+                    </tr>
+                }
+            }else
+            {
+                <tr>
+                    <td colspan="9">
+                        <h6 class="text-center text-danger my-5">No data available in table</h6>
+                    </td>
+                </tr>
+            }
+        </tbody>
+  </table>
+}

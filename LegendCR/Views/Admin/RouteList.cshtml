@@ -1,0 +1,213 @@
+﻿
+@using LegendCR.CommonDefinitions.DTO;
+@using LegendCR.CommonDefinitions.DTO;
+@using LegendCR.Helpers;
+@using LegendCR.BL.Services;
+@using LegendCR.DAL.DB;
+<main>
+    <div class="container-fluid site-width">
+        <!-- START: Filter-->
+        <div class="row Red-Row">
+            <div class="col-12 col-lg-12 col-xl-12 col-sm-12">
+                <div class="sub-header py-5 d-flex">
+                    <div>
+                        <span class="Header-Titel">Route Management</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END: Filter-->
+    <div class="Shipment-container">
+        <!-- Start: Filter-->
+        <div class="row Red-Row">
+            @{
+                await Html.RenderPartialAsync("_ToolsRow", new OptionDTO { Action = "RouteList", Controller = "Admin" });
+            }
+            <div class="row Red-Row w-100">
+                <div class="col-lg-12 RedBtn-Section">
+                    <a href="#" data-toggle="modal" data-target="#AddRoute-Model" class="Red-Btn"><img class="mr-2 w-20" src="~/dist/images/Icons/Location.png" />Add Route</a>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="ShipmentDetails" tabindex="-1" aria-labelledby="ShipmentDetailsLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div id="ShipmentDetails-Body" class="modal-body">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END  : Filter-->
+    </div>
+    <div class="col-12">
+        <span id="Ajaxloader" class="Ajaxloader d-none"></span>
+    </div>
+    <div class="Table-container">
+        <table class="table">
+            <tdead>
+                <thead>
+                    <tr>
+                        <td><input type="checkbox" onclick="SelectAllCheckbox()" /></td>
+                        <td>Name</td>
+                        <td>City</td>
+                        <td>Description</td>
+                        <td>Routes Included</td>
+                        <td>Actions</td>
+                    </tr>
+                </thead>
+                <tbody>
+                        <tr>
+                            <td><input type="checkbox" /></td>
+                            <td>Lorem Ipsum</td>
+                            <td><b>Cairo</b></td>
+                            <td>Lorem Ipsum Text Here</td>
+                            <td>Nasr City, Helipolis</td>
+                            <td>
+                                <div class="Actions-Buttons">
+                                    <ul>
+                                        <li class="Green-Bg">
+                                            <!-- START: Edit Form -->
+                                            <a data-toggle="modal" data-target="#EditForm_"><i class="icon-note F-Medium"></i></a>
+                                            <div class="modal fade" id="EditForm_" tabindex="-1" role="dialog" aria-labelledby="AddRouteLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg" role="document">
+                                                    <div class="modal-content">
+                                                        <div>
+                                                            <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <h2 class="Model-Titel">Edit Route</h2>
+                                                            <form asp-action="" asp-controller="" enctype="multipart/form-data" id="AddRoute-Form">
+                                                                <div class="container-fluid P-Model">
+                                                                    <div class="row pt-5">
+                                                                        <div class="col-lg-6 pt-3">
+                                                                            <label class="Label-Model float-left">Name</label>
+                                                                            <input class="input-Model" required id="NameEn" name="NameEn" placeholder="Name" />
+                                                                        </div>
+                                                                        <div class="col-lg-6 pt-3">
+                                                                        <label class="Label-Model float-left">City</label>
+                                                                            <select class="input-Model" required id="" name="" placeholder="City">
+                                                                                <option>
+                                                                                    Label
+                                                                                </option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="col-lg-6 pt-3">
+                                                                        <label class="Label-Model float-left">Zones</label>
+                                                                            <input class="input-Model" required id="Fess" name="Fess" type="number" min="1" placeholder="Zones" />
+                                                                        </div>
+                                                                      <div class="col-lg-6 pt-3">
+                                                                        <label class="Label-Model float-left">Description</label>
+                                                                        <input class="input-Model" id="" name="" placeholder="Description" />
+                                                                    </div>
+                                                                    <div class="col-lg-12 pt-5">
+                                                                        <div class="Logo-Edit justify-content-center">
+                                                                            Nasr City
+                                                                        </div>
+                                                                    </div>
+                                                                        <input class="input-Model" hidden required id="RouteID" name="RouteID" placeholder="Name" />
+                                                                        <div class="col-lg-12">
+                                                                            <button class="Red-Btn-OutLine OutLine-Red Btn-Model" type="submit" id="BtnSend">
+                                                                                Edit Route
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- END: Edit Form -->
+                                        </li>
+                                        <li class="Red-Bg">
+                                            <a data-toggle="modal" data-target="#DeletForm_"><i class="icon-trash F-Medium"></i></a>
+                                            <!-- Delete Route Model -->
+                                            <div class="modal fade" id="DeletForm_" tabindex="-1" role="dialog" aria-labelledby="DeleteVendorLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                                    <div class="modal-content">
+                                                        <div>
+                                                            <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <h2 class="Model-Titel w-75">are you sure you want to delete this Route?</h2>
+                                                            <h5 class="Model-Contetn"> Deleting the selected Vendor is permanent. You won’t be able to undo this action.</h5>
+                                                            <input type="hidden" id="EntityId" />
+                                                            <div class="col-lg-12">
+                                                                <button class="Red-Btn-OutLine OutLine-Red ml-3 Btn-Model" type="button" data-dismiss="modal"> Cancel</button>
+                                                                <button class="Red-Btn-OutLine OutLine-White Btn-Model" type="button" data-dismiss="modal">Delete </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                            </td>
+                        </tr>
+                </tbody>
+        </table>
+    </div>
+    <!-- Add New Route Model -->
+    <div class="modal fade" id="AddRoute-Model" tabindex="-1" role="dialog" aria-labelledby="AddRouteLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div>
+                    <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h2 class="Model-Titel">Add New Route</h2>
+                    <form asp-action="" asp-controller="" enctype="multipart/form-data" id="AddRoute-Form">
+                        <div class="container-fluid P-Model">
+                            <div class="row pt-5">
+                                <div class="col-lg-6 pt-3">
+                                    <label class="Label-Model">Name</label>
+                                    <input class="input-Model" required id="NameEn" name="NameEn" placeholder="Name" />
+                                </div>
+                                <div class="col-lg-6 pt-3">
+                                    <label class="Label-Model">City</label>
+                                    <select class="input-Model" required id="" name="" placeholder="city">
+                                        <option>
+                                            Label
+                                        </option>
+                                    </select>
+
+                                </div>
+                                <div class="col-lg-6 pt-3">
+                                    <label class="Label-Model">Zones</label>
+                                    <input class="input-Model" required id="Fess" name="Fess" type="number" min="1" placeholder="Zones" />
+                                </div>
+                                <div class="col-lg-6 pt-3">
+                                    <label class="Label-Model">Description</label>
+                                    <input class="input-Model" required id="" name="" placeholder="Description" />
+                                </div>
+                                <div class="col-lg-12 pt-5">
+                                    <div class="Logo-Edit justify-content-center">
+                                    Nasr City
+                                  </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <button class="Red-Btn-OutLine OutLine-Red Btn-Model" type="submit" id="BtnSend">
+                                        Add Route
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- START: Card Data-->
+</main>
+
+

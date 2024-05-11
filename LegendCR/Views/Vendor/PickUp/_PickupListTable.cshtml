@@ -1,0 +1,175 @@
+﻿
+@using LegendCR.CommonDefinitions.DTO.PickupDTOs;
+@using LegendCR.CommonDefinitions.DTO;
+@using LegendCR.Helpers;
+@model ViewModel<PickupDTO>
+@{
+    var MinDate = DateTimeHelper.MinDate();
+}
+@if (Model.ObjDTOs != null && Model.ObjDTOs.Count > 0)
+{
+    foreach (var item in Model.ObjDTOs)
+    {
+        <tr id="TableRow_@item.PickupRequestId">
+            <td class="text-nowrap">
+                <b onclick="@(item.PickupRequestTypeId == (int)EnumPickupRequestType.DeliveryPickup ? "GetDeliveryPickups":"GetStockPickups")('@item.PickupRequestId')" data-target="@(item.PickupRequestTypeId == (int)EnumPickupRequestType.DeliveryPickup ? "#PickupRequstDetails" : "#PickupStocktDetails")" data-toggle="modal">@item.RefId</b>
+            </td>
+            <td><span id="Adderss_@item.PickupRequestId"><i class="fa fa-map-marker mr-2" aria-hidden="true"></i>@item.AreaName</span></td>
+            @if (item.PickupRequestTypeId == (int)EnumPickupRequestType.StockPickup)
+            {
+                <td><span class="Shipment-Type Mauve-Bg font-weight-bold">FulFillment</span></td>
+            }
+            else
+            {
+                <td> <span class="Shipment-Type Pickup-Bg font-weight-bold">Delivery</span></td>
+            }
+            <td class="text-center">@item.PickupItems?.Count()</td>
+            <td id="DateTd_@item.PickupRequestId" class="text-nowrap text-center">@item.PickupDate.ToShortDateString()</td>
+            <td class="text-nowrap"><span id="ReadyTimeTd_@item.PickupRequestId">@item.TimeFrom.ToShortTimeString()</span> to <span id="LastTimeAvailableTd_@item.PickupRequestId">@item.TimeTo.ToShortTimeString()</span></td>
+            <partial name="_StatusPickupSwitch" model="@item" />
+            <td>@item.Notes</td>
+            <td>
+                <div class="Actions-Buttons">
+                    <ul>
+                        <li class="Green-Bg" data-toggle="tooltip" data-placement="top" title="Edit Pickup Requst">
+                            <a data-toggle="modal" data-target="#divEditAddress_@item.PickupRequestId"><i class="fa fa-pencil-square-o F-Large" aria-hidden="true"></i></a>
+                            <div class="modal fade" id="divEditAddress_@item.PickupRequestId" tabindex="-1" role="dialog" aria-hidden="true" style="text-align:left">
+                                <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="Modal-Lablel">
+                                                Pickup : <label>@item.RefId</label>
+                                                <br />
+                                                Vendor : <label>@item.VendorName</label>
+                                                <br />
+                                                Phone : <label>@item.VendorPhone</label>
+                                            </h5>
+                                            <button type="button" class="close" data-dismiss="modal">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <form id="PickUpForm_@item.PickupRequestId">
+                                            <div class="container-fluid P-Model">
+                                                <div class="row">
+                                                    <div class="col-sm-12 pt-3">
+                                                        <h6 class="Label-Model">Area:</h6>
+                                                        <select name="AreaId" id="AreaIdtxt_@item.PickupRequestId" required class="input-Model">
+                                                            <option value="">---Select Area---</option>
+                                                            @foreach (var Area in Model.Lookup.AreaDTOs)
+                                                            {
+                                                                if (Area.Id == item.AreaId)
+                                                                {
+                                                                    <option selected value="@Area.Id">@Area.CityNameAr</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="@Area.Id">@Area.CityNameAr</option>
+                                                                }
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-sm-12 pt-3">
+                                                        <h6 class="Label-Model">Pickup Address :</h6>
+                                                        <input class="input-Model" id="AddressTxt_@item.PickupRequestId" required value="@item.VendorAddress">
+                                                    </div>
+                                                    <div class="col-sm-12 pt-3">
+                                                        <h6 class="Label-Model">Date:</h6>
+                                                        <input type="date" min="@MinDate" required class="input-Model" id="DateTxt_@item.PickupRequestId" value="@DateTimeHelper.InputDateFormat(@item.PickupDate.ToShortDateString())" placeholder="dd/mm/yyyy">
+                                                    </div>
+                                                    <div class="col-sm-6 pt-3">
+                                                        <h6 class="Label-Model">Ready Time:</h6>
+                                                        <input class="input-Model" required type="time" min="0" id="ReadyTimeTxt_@item.PickupRequestId" value="@DateTimeHelper.InputTimeFormat(@item.TimeFrom.ToShortTimeString())">
+                                                    </div>
+                                                    <div class="col-sm-6 pt-3">
+                                                        <h6 class="Label-Model">Last Time Available:</h6>
+                                                        <input type="time" min="0" required class="input-Model" id="LastTimeAvailableTxt_@item.PickupRequestId" value="@DateTimeHelper.InputTimeFormat(@item.TimeTo.ToShortTimeString())">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <button class="Red-Btn-OutLine OutLine-Red Btn-Model" id="Btn-Send" type="button" data-dismiss="" onclick="EditePickupRequst('@item.PickupRequestId')">Save</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+
+        <div class="modal fade" id="divEditAddress_@item.PickupRequestId" tabindex="-1" role="dialog" aria-hidden="true" style="text-align:left">
+            <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="Modal-Lablel">
+                            Code : <label>@item.RefId</label>
+                            <br />
+                            Vendor : <label>@item.VendorName</label>
+                            <br />
+                            Phone : <label>@item.VendorPhone</label>
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form id="PickUpForm_@item.PickupRequestId">
+                        <div class="container-fluid P-Model">
+                            <div class="row">
+                                <div class="col-sm-12 pt-3">
+                                    <h6 class="Label-Model">Area:</h6>
+                                    <select name="AreaId" id="AreaIdtxt_@item.PickupRequestId" required class="input-Model">
+                                        <option value="">---Select Area---</option>
+                                        @foreach (var Area in Model.Lookup.AreaDTOs)
+                                        {
+                                            if (Area.Id == item.AreaId)
+                                            {
+                                                <option selected value="@Area.Id">@Area.CityNameAr</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@Area.Id">@Area.CityNameAr</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-sm-12 pt-3">
+                                    <h6 class="Label-Model">Pickup Address :</h6>
+                                    <input class="input-Model" id="AddressTxt_@item.PickupRequestId" required value="@item.VendorAddress">
+                                </div>
+                                <div class="col-sm-12 pt-3">
+                                    <h6 class="Label-Model">Date:</h6>
+                                    <input type="date" min="@MinDate" required class="input-Model" id="DateTxt_@item.PickupRequestId" value="@DateTimeHelper.InputDateFormat(@item.PickupDate.ToShortDateString())" placeholder="dd/mm/yyyy">
+                                </div>
+                                <div class="col-sm-6 pt-3">
+                                    <h6 class="Label-Model">Ready Time:</h6>
+                                    <input class="input-Model" required type="time" min="0" id="ReadyTimeTxt_@item.PickupRequestId" value="@DateTimeHelper.InputTimeFormat(@item.TimeFrom.ToShortTimeString())">
+                                </div>
+                                <div class="col-sm-6 pt-3">
+                                    <h6 class="Label-Model">Last Time Available:</h6>
+                                    <input type="time" min="0" required class="input-Model" id="LastTimeAvailableTxt_@item.PickupRequestId" value="@DateTimeHelper.InputTimeFormat(@item.TimeTo.ToShortTimeString())">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <button class="Red-Btn-OutLine OutLine-Red Btn-Model" id="Btn-Send" type="button" data-dismiss="" onclick="EditePickupRequst('@item.PickupRequestId')">
+                                Save
+                                <span class="Spinner spinner-border spinner-border-sm ml-2 d-none" role="status" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    }
+}
+else
+{
+    <tr>
+        <td colspan="10" class="text-danger text-center"><h3>No data available in table</h3></td>
+    </tr>
+}
+
+<input type="hidden" value="@(Model.ObjDTOs != null ? Model.ObjDTOs.Count:0)" id="DataCount" />

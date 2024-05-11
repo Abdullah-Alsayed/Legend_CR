@@ -1,0 +1,66 @@
+﻿
+@using LegendCR.CommonDefinitions.DTO;
+@using LegendCR.CommonDefinitions.DTO.ShipmentDTOs
+@model ViewModel<ShipDTO>
+<main>
+    <div class="container-fluid site-width">
+        <!-- START: Filter-->
+        <div class="row Red-Row">
+            <div class="col-12 col-lg-12 col-xl-12 col-sm-12">
+                <div class="sub-header py-5">
+                    <div>
+                        <span class="Header-Titel">Couriers Report</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="Shipment-container">
+        <!-- Start: Filter-->
+        <div class="row Red-Row">
+            @{
+                await Html.RenderPartialAsync("_ToolsRow", new OptionDTO
+            {
+                Action = "Couriers",
+                Controller = "Report",
+                Lookup = Model.Lookup,
+                SelectListType = new byte[] {
+            (byte)EnumSelectListType.Courier }
+            });
+            }
+        </div>
+        <!-- END  : Filter-->
+    </div>
+    <div class="col-12">
+        <span id="Ajaxloader" class="Ajaxloader d-none"></span>
+    </div>
+    <div class="">
+        <div class="Table-container">
+            <table class="table" id="Red-Table">
+                <thead>
+                    <tr>
+                        <td>Name</td>
+                        <td># Orders</td>
+                        <td>orders</td>
+                        <td>Shipments</td>
+                        <td>Pickups</td>
+                        <td>Success %</td>
+                        <td># Complains </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <partial name="/Views/Report/Courier/_Couriers.cshtml" model="Model.ObjDTOs" />
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="10">
+                            @{
+                                await Html.RenderPartialAsync("_Pagination", new OptionDTO { Action = "Couriers", Controller = "Report", Count = Model.ObjDTOs.Count });
+                            }
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</main>

@@ -1,0 +1,56 @@
+﻿
+@using DicomDB.CommonDefinitions.DTO;
+@model List<ComplainsDTO>
+    @if (Model != null && Model.Count > 0)
+    {
+        foreach (var item in Model)
+        {
+            <tr id="Complains_@item.ComplainsId">
+                <td>
+                    @(item.VendorName ?? "---")
+                </td>
+                <td>@item.Date.ToShortDateString()</td>
+                <td>@item.Description</td>
+                <td><b>@item.Department</b></td>
+                <td>
+                    @(item.EmployeeName ?? "---")
+                </td>
+                <td>
+                    @if(!item.Solved)
+                    {
+                        <span class="status-Table Yellow">Pending</span>
+                    }
+                    else
+                    {
+                        <span class="status-Table Green">Solved</span>
+                    }
+                </td>
+                <td>@item.CreateBy</td>
+                <td>@item.Comments</td>
+                <td>
+                    @if (!item.Solved)
+                    {
+                        <div class="Actions-Buttons">
+                            <ul>
+                                <li class="Green-Bg">
+                                    <a href="javascript:;" onclick="OpenModal(@item.ComplainsId,'SolveComplains-Model')"><i class="fa fa-check  F-Medium text-white"></i></a>
+                                </li>
+                                <li class="Red-Bg">
+                                    <a href="javascript:;" onclick="deleteComplains('Complains','DeleteComplains',@item.ComplainsId)"><i class="icon-trash  text-white F-Medium"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                    }
+                </td>
+            </tr>
+        }
+    }
+    else
+    {
+        <tr>
+            <td colspan="20">
+                <h6 class="text-center text-danger my-5">No data available in table</h6>
+            </td>
+        </tr>
+    }
+<input type="hidden" value="@(Model != null ? Model.Count:0)" id="DataCount" />

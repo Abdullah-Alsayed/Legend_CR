@@ -1,0 +1,129 @@
+﻿
+@*@using LegendCR.CommonDefinitions.DTO;
+@using LegendCR.Helpers;
+
+@model List<InvoiceDTO>
+@if (ViewBag.ActionName == EnumActionName.InvoiceReport)
+{
+    @if (Model != null && Model.Count > 0)
+    {
+        foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.VendorName</td>
+                <td>@item.InvoiceId</td>
+                <td class="text-nowrap Date-Table">@item.InvoiceDate.Value.Date.ToShortDateString()</td>
+                <td>@item.Total EGP</td>
+                <td><span class="Filter-Table">Transfer Type</span></td>
+                <td class="Actions-Buttons">
+                    <ul>
+                        <li class="Green-Bg"><img class="Buttons-image ml-auto" src="~/dist/images/Icons/excel.png"></li>
+                        <li class="Red-Bg"><img class="Buttons-image ml-auto" src="~/dist/images/Icons/Pdf.png"></li>
+                    </ul>
+                </td>
+            </tr>
+        }
+    }
+    else
+    {
+        <tr>
+            <td colspan="20" class="text-danger text-center"><h3>No data available in table</h3></td>
+        </tr>
+    }
+}
+else if (ViewBag.ActionName == EnumActionName.Invoices)
+{
+    @if (Model != null && Model.Count > 0)
+    {
+        foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <input type="checkbox" />
+                </td>
+                <td>@item.InvoiceId</td>
+                <td>@item.VendorName</td>
+                <td class="text-nowrap Date-Table">@item.InvoiceDate.Value.ToString("MMM") @item.InvoiceDate.Value.ToString("dd"),@item.InvoiceDate.Value.ToString("yyy")</td>
+                <td>@item.Total EGP</td>
+                <td><span class="Filter-Table">Invoice</span></td>
+                <td class="Actions-Buttons">
+                    <ul>
+                        <li class="Green-Bg"><img class="Buttons-image ml-auto" src="~/dist/images/Icons/excel.png"></li>
+                        <li class="Red-Bg"><img class="Buttons-image ml-auto" src="~/dist/images/Icons/Pdf.png"></li>
+                    </ul>
+                </td>
+            </tr>
+        }
+    }
+    else
+    {
+        <tr>
+            <td colspan="6" class="text-danger text-center"><h3>No data available in table</h3></td>
+        </tr>
+    }
+}
+else if (ViewBag.ActionName == EnumActionName.InvoiceReportVendor)
+{
+    if (Model != null && Model.Count > 0)
+    {
+        foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.InvoiceId</td>
+                <td class="text-nowrap Date-Table">@item.InvoiceDate.Value.Date.ToShortDateString()</td>
+                <td>@item.Total EGP</td>
+                <td><span class="Filter-Table">Transfer Type</span></td>
+                <td>
+                    <div class="Actions-Buttons">
+                        <ul>
+                            <li class="Green-Bg"><img class="Buttons-image ml-auto" src="~/dist/images/Icons/excel.png"></li>
+                            <li class="Red-Bg"><img class="Buttons-image ml-auto" src="~/dist/images/Icons/Pdf.png"></li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        }
+    }
+    else
+    {
+        <tr>
+            <td colspan="6" class="text-danger text-center"><h3>No data available in table</h3></td>
+        </tr>
+    }
+}
+else if (ViewBag.ActionName == EnumActionName.Treasury)
+{
+    @if (Model != null && Model.Count > 0)
+    {
+        foreach (var item in Model.GroupBy(p => p.VendorId))
+        {
+            <tr>
+                <td><b>@(item.FirstOrDefault().VendorName)</b></td>
+                <td>
+                    @item.Where(p => p.InvoiceTypeId == 1).Sum(p => p.Total)
+                </td>
+                <td>
+                    @item.Where(p => p.InvoiceTypeId == 1).Sum(p => p.ShippingFees)
+                </td>
+                <td>
+                    @item.Where(p => p.InvoiceTypeId == 1).Sum(p => p.PackingFees)
+                </td>
+                <td>
+                    @item.Where(p => p.InvoiceTypeId == 1).Sum(p => GeneralHelper.CalcWeight((int)p.ReturnedAmount))
+                </td>
+                <td>@item.Where(p => p.InvoiceTypeId == 2).Sum(p => p.Total)</td>
+                <td>@(item.Sum(p => p.Total) - item.Where(p => p.InvoiceTypeId == 1 && p.StatusId == (int)EnumStatus.Invoice_Paid).Sum(p => p.Total) - item.Where(p => p.InvoiceTypeId == 2).Sum(p => p.Total))</td>
+                <td>@(item.Where(p => p.InvoiceTypeId == 1 && p.StatusId == (int)EnumStatus.Invoice_Paid).Sum(p => p.Total) - item.Where(p => p.InvoiceTypeId == 2).Sum(p => p.Total))</td>
+
+            </tr>
+        }
+    }
+    else
+    {
+        <tr>
+            <td colspan="20" class="text-danger text-center"><h3>No data available in table</h3></td>
+        </tr>
+    }
+}
+
+<input type="hidden" value="@Model.Count" id="DataCount" />*@

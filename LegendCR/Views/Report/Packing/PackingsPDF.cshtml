@@ -1,0 +1,45 @@
+﻿
+@using LegendCR.BL.Services;
+@using LegendCR.CommonDefinitions.DTO;
+@using LegendCR.CommonDefinitions.DTO.ShipmentDTOs;
+@model List<PackingDTO>
+@{
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+}
+
+  <table class="table">
+    <thead>
+        <partial name="_ReportHeder" model="11" />
+        <tr>
+            <td>Code</td>
+            <td>Name</td>
+            <td>Description</td>
+            <td>Size</td>
+            <td>Number</td>
+            <td class="text-center">Image</td>
+        </tr>
+    </thead>
+     <tbody>
+        @if (Model != null && Model.Count > 0)
+        {
+            foreach (var item in Model)
+            {   <tr>
+                    <td>@item.id</td>
+                    <td>@item.NameEn</td>
+                    <td>@item.Description</td>
+                    <td> @item.Size </td>
+                    <td>@item.Count</td>
+                    <td class="text-center"><img src="~/dist/images/@item.ImgUrl" width="97" /></td>
+                 </tr>
+             }
+        }
+        else
+        {
+            <tr>
+                <td colspan="20">
+                    <h6 class="text-center text-danger my-5">No data available in table</h6>
+                </td>
+            </tr>
+        }
+      </tbody>
+  </table>

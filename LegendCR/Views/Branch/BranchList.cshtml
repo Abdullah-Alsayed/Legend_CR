@@ -1,0 +1,139 @@
+﻿
+@using LegendCR.CommonDefinitions.DTO;
+@using LegendCR.CommonDefinitions.DTO;
+@using LegendCR.Helpers;
+@using LegendCR.BL.Services;
+@using LegendCR.DAL.DB;
+@model List<BranchDTO>
+<main>
+    <div class="container-fluid site-width">
+        <!-- START: Filter-->
+        <div class="row Red-Row">
+            <div class="col-12 col-lg-12 col-xl-12 col-sm-12">
+                <div class="sub-header mb-3">
+                    <div>
+                        <span class="Header-Titel">Branchs Management</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END: Filter-->
+    <div class="Shipment-container">
+        <!-- Start: Filter-->
+        <div class="row Red-Row">
+            @{
+                await Html.RenderPartialAsync("_ToolsRow", new OptionDTO { Action = "BranchList", Controller = "Branch" });
+            }
+            <div class="row Red-Row w-100">
+                <div class="col-lg-12 RedBtn-Section">
+                    <a href="#" data-toggle="modal" data-target="#AddBranch-Model" class="Red-Btn"><img class="mr-2 w-20" src="~/dist/images/Icons/Location.png" />Add Branch</a>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="ShipmentDetails" tabindex="-1" aria-labelledby="ShipmentDetailsLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div id="ShipmentDetails-Body" class="modal-body">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END  : Filter-->
+    </div>
+    <div class="col-12">
+        <span id="Ajaxloader" class="Ajaxloader d-none"></span>
+    </div>
+    <div class="Table-container">
+        <table class="table">
+            <tdead>
+                <thead>
+                    <tr>
+                        <td>Name</td>
+                        <td>Address</td>
+                        <td>City</td>
+                        <td>Phone</td>
+                        <td>State</td>
+                        <td>Description</td>
+                        <td class="text-center">Action</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <partial name="_BranchList" model="Model" />
+                </tbody>
+        </table>
+    </div>
+    <!-- Add New Branch Model -->
+    <div class="modal fade" id="AddBranch-Model" tabindex="-1" role="dialog" aria-labelledby="AddBranchLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div>
+                    <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h2 class="Model-Titel">Add New Branch</h2>
+                    <form asp-action="AddBranch" asp-controller="Branch" class="needs-validation" enctype="multipart/form-data" id="AddBranch-Form">
+                        <div class="container-fluid P-Model">
+                            <div class="row pt-5">
+                                <div class="col-lg-6 pt-3">
+                                    <label class="Label-Model">Branch Name</label>
+                                    <input class="input-Model" required id="BranchName" name="BranchName" placeholder="Branch Name" />
+                                    <div class="invalid-feedback">
+                                        Please enter Branch Name
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 pt-3">
+                                    <label class="Label-Model">City</label>
+                                    <input class="input-Model" id="City" name="City" placeholder="City" />
+                                    <div class="invalid-feedback">
+                                        Please enter City
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 pt-3">
+                                    <label class="Label-Model">Phone</label>
+                                    <input class="input-Model" required id="Phone" name="Phone" placeholder="Phone" />
+                                      <div class="invalid-feedback">
+                                        Please enter Phone
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 pt-3">
+                                    <label class="Label-Model">Address</label>
+                                    <input class="input-Model" required id="Address" name="Address" placeholder="Address" />
+                                      <div class="invalid-feedback">
+                                        Please enter Address
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 pt-3">
+                                    <label class="Label-Model">State</label>
+                                    <input class="input-Model"  id="State" name="State" placeholder="State" />
+                                    <div class="invalid-feedback">
+                                        Please enter State
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 pt-3">
+                                    <label class="Label-Model">Description</label>
+                                    <input class="input-Model"  id="Description" name="Description" placeholder="Description" />
+                                      <div class="invalid-feedback">
+                                        Please enter Description
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <button class="Red-Btn-OutLine OutLine-Red Btn-Model" onclick="AddEntity('Branch','AddBranch','AddBranch-Form')" type="button" id="BtnSend">
+                                        Add Branch
+                                        <span class="Spinner spinner-border spinner-border-sm ml-2 mb-1 d-none" role="status" aria-hidden="true"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- START: Card Data-->
+</main>
+
+

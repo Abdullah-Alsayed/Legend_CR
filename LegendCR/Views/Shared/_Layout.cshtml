@@ -1,0 +1,438 @@
+﻿@using LegendCR.Portal.Helpers;
+@using LegendCR.Helpers;
+@using LegendCR.Portal.Controllers;
+@using LegendCR.BL.Services;
+@using LegendCR.CommonDefinitions.DTO;
+@{
+    string connectionString = @Constants.connectionString;
+    long roleID = 0;
+    long userID = 0;
+    if (User.Identity.IsAuthenticated)
+    {
+        roleID = AuthHelper.GetClaimValue(User, "RoleID");
+        userID = @AuthHelper.GetClaimValue(User, "UserID");
+    }
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width" />
+    <title>RED Express</title>
+    <link rel="shortcut icon" href="~/dist/images/favicon.ico" />
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <partial name="_MainCssFiles" />
+
+    @* <link rel="stylesheet" href="~/dist/vendors/datatable/css/dataTables.bootstrap4.min.css" />
+    <link rel="stylesheet" href="~/dist/vendors/datatable/buttons/css/buttons.bootstrap4.min.css" />
+    <style>
+    .dataTables_wrapper {
+    width: 100% !important;
+    }
+    </style>*@
+</head>
+<body id="main-container" class="default compact-menu">
+    <div class="se-pre-con">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Left Menu Navigation Bar -->
+    <a class="sidebarCollapse" id="collapse"><span class="ToggelSpan"><i class="fas fa-angle-right"></i></span></a>
+    <div class="sidebar">
+        <a href="#" class="sidebarCollapseOut ToggelSpan-collapse"><span class=""><i class="fas fa-angle-left"></i></span></a>
+        <div class="site-width">
+            <ul id="side-menu" class="sidebar-menu">
+                <li class="dropdown Main-logo"><img src="/dist/images/RED.png" /></li>
+                <li class="dropdown active">
+                    <ul id="NavigationList">
+                        @if (BaseService.CheckRoleAccessability(roleID, "Menu_RedDashboard", connectionString: connectionString))
+                        {
+                            <li id="Dashboard-li" class="cursor-pointer" onclick="NavActive('Dashboard-li')">
+                                <a href="/Home/Index" class="Navigation">
+                                    <img class="Img-Ul" src="~/dist/images/Icons/Dashboard.png" />
+                                    Dashboard
+                                </a>
+                            </li>
+                        }
+                        @if (roleID == (int)EnumRole.Admin || roleID == (int)EnumRole.SuperAdmin || roleID == (int)EnumRole.AccountManager)
+                        {
+                            if (BaseService.CheckRoleAccessability(roleID, "Menu_AccountDashboard", connectionString: connectionString))
+                            {
+                                <li class="cursor-pointer">
+                                    <a href="/Home/AccountDashboard" class="Navigation">
+                                        <img class="Img-Ul" src="~/dist/images/Icons/Dashboard.png" />
+                                        Account Dashboard
+                                    </a>
+                                </li>
+                            }
+                        }
+                        <li class="cursor-pointer" onclick="OpenSection('Reports-Ul')">
+                            <a><img class="Img-Ul" src="~/dist/images/Icons/Reports.png" /> Reports</a>
+                            <ul id="Reports-Ul" class="d-none Nested-sidebar-menu">
+                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_VendorReport", connectionString: connectionString))
+                                {
+                                    <li><a href="/Report/Vendor" class="MenuNavigation Navigation">Vendor Report</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_ReportsShipments", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Report/Shipments">Shipments Report</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_ReportsPickups", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Report/Pickups">Pickup Report</a></li>
+                                }
+                                @*@if (BaseService.CheckRoleAccessability(roleID, "Menu_ReportsInvoices", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Cash/InvoiceReport">Invoice Report</a></li>
+                                }*@
+                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_ReportsStock", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Report/Stock">Stock Report</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_ReportsCouriers", connectionString: connectionString))
+                                {
+                                    <li><a href="/Report/Couriers" class="MenuNavigation Navigation">Couriers Report</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_ReportsPacking", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Report/Packings">Packaging Report</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_ReportsCustomerFollowup", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Report/CustomerFollowup">Customer followup Report</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_ReportsComplains", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Report/Complains">Complains Report</a></li>
+                                }
+                            </ul>
+                        </li>
+                        <li class="cursor-pointer" onclick="OpenSection('REDManagement-Ul')">
+                            <a><img class="Img-Ul" src="~/dist/images/Icons/REDManagement.png" /> RED Management</a>
+                            <ul id="REDManagement-Ul" class="d-none Nested-sidebar-menu">
+                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_Staff", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/User/ListUser">Staff</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_Vendors", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/User/ListAccount">Vendors</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_Packing", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Packing/PackingList">Packing</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_Areas", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Admin/AreaList">Areas</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_Zones", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Admin/ZoneList">Routes</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_Branches", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Branch/BranchList">Branches</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_Roles", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Role/listrole">Roles & Permissions</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_ProblemType", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/ProblemType/ProblemTypeList">Problem Types</a></li>
+                                }
+                            </ul>
+                        </li>
+                        <li class="cursor-pointer" onclick="OpenSection('PickupManagement-Ul')">
+                            <a><img class="Img-Ul" src="~/dist/images/Icons/Pickup.png" /> Pickup Management</a>
+                            <ul id="PickupManagement-Ul" class="d-none Nested-sidebar-menu">
+                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_PickupDelivery", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/PickupRequest/Delivery">Add New Items Pickup</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_PickupStock", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/PickupRequest/Stock">Add New Stock Pickup</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_PickupList", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/PickupRequest/All">Pickup List</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_PickupAssign", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/PickupRequest/Assign">Assign Pickups</a></li>
+                                }
+                            </ul>
+                        </li>
+                        <li class="cursor-pointer" onclick="OpenSection('ShippingManagement-Ul')">
+                            <a><img class="Img-Ul" src="~/dist/images/Icons/Shipment.png" /> Shipping Management</a>
+                            <ul id="ShippingManagement-Ul" class="d-none Nested-sidebar-menu">
+                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_AddShipment", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Shipment/Add">Add New Shipment</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_ShipmentList", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Shipment/All">Shipments List</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_AssignShipments", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Shipment/Assign">Assign Shipments</a></li>
+                                }
+                            </ul>
+                        </li>
+                        <li class="cursor-pointer" onclick="OpenSection('Warehouse-Packaging-Ul')">
+                            <a><img class="Img-Ul" src="~/dist/images/Icons/Warehouse-Packaging.png" /> Warehouse & Packaging</a>
+                            <ul id="Warehouse-Packaging-Ul" class="d-none Nested-sidebar-menu">
+                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_ReceiveDeliveryPickups", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Warehouse/ReceivePickups">Receive Delivery Pickups</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_ReceiveStockPickups", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Warehouse/ReceiveStock">Receive Stock Pickups</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_ReceiveReturns", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Warehouse/ReceiveReturns">Receive Returns</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_WarehouseShipments", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Warehouse/Shipments">Shipments</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_WarehouseStock", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Warehouse/StockReport">Stock</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_CouriersShipments", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Warehouse/Courier">Courier's Orders</a></li>
+                                }
+                            </ul>
+                        </li>
+                        <li class="cursor-pointer" onclick="OpenSection('Invoicing-CashManagement-Ul')">
+                            <a><img class="Img-Ul" src="~/dist/images/Icons/Invoicing-Cash.png" /> Invoicing & Cash</a>
+                            <ul id="Invoicing-CashManagement-Ul" class="d-none Nested-sidebar-menu">
+                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_ReceiveCash", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Cash/Receive">Receive Cash</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_Treasury", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Cash/Treasury">Treasury</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_TransferCash", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Cash/Transfer">Transfer Cash</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_Invoices", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Cash/Invoices">Invoicing</a></li>
+                                }
+                            </ul>
+                        </li>
+                        @if (BaseService.CheckRoleAccessability(roleID, "Menu_Products", connectionString: connectionString))
+                        {
+                            <li class="cursor-pointer">
+                                <a href="/Product/ProductList" class="Navigation">
+                                    <img class="Img-Ul" src="~/dist/images/Icons/Product.png" />
+                                    Products Management
+                                </a>
+                            </li>
+                        }
+                        @if (BaseService.CheckRoleAccessability(roleID, "Menu_Complains", connectionString: connectionString))
+                        {
+                            <li id="Complains-li" class="cursor-pointer" onclick="NavActive('Complains-li')">
+                                <a href="/Complains/ComplainsManagement" class="Navigation"><img class="Img-Ul" src="~/dist/images/Icons/ComplainsManagement.png" /> Complains Management</a>
+                            </li>
+                        }
+                        <li style="padding-top: 100%;"><a href="~/User/Logout"><img class="Img-Ul" src="~/dist/images/Icons/Logout.png" /> Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ol class="breadcrumb bg-transparent align-self-center m-0 p-0 ml-auto">
+                <li class="breadcrumb-item"><a>Application</a></li>
+                <li class="breadcrumb-item active">Dashboard</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Top Navigation Bar -->
+    <div class="navbar-section">
+        <div class="row Red-Row User-Section">
+            <div class="col-sm-12 col-lg-4 col-xl-5 col-12 Search">
+                <i class="fas fa-search cursor-pointer Icon-Search" onclick="TrackShipment()"></i>
+                <input type="text" class="Txt-Search" id="TrackShipment" placeholder="Track Shipment" />
+                <i class="fas fa-angle-right cursor-pointer Icon-Arow-Right" onclick="TrackShipment()"></i>
+            </div>
+            <div class="col-sm-9 col-lg-8 col-xl-7 col-12 Notifcation">
+                <!-- <img src="/Icon.png">
+                <span>Mohamed Ahmed</span> -->
+                <select>
+                    <option>ENG</option>
+                </select>
+                @if (BaseService.CheckRoleAccessability(roleID, "NotificationVComponent", connectionString: connectionString))
+                {
+                    @await Component.InvokeAsync("NotificationVComponent", new { pageIndex = 0 })
+                }
+
+                <div class="User-Info">
+                    <img src="/dist/images/RED.png" width="31" />
+                    <p class="font-weight-bold" style="font-size:13px">Welcome !</p>
+                    <p>@AuthHelper.GetUserName(User)</p>
+                </div>
+
+
+                @*<a data-toggle="modal" data-target="#ChangePasswordModal_@userID"> </a>*@
+                <!--Change Password Modal-->
+                @*<div class="modal fade" id="ChangePasswordModal_@userID" tabindex="-1" role="dialog" aria-labelledby="ChangePasswordModal" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                <h2 class="Model-Titel">Change User Password</h2>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                <form id="ChangePassword-Form_@userID" asp-action="ChangePassword" asp-controller="User" method="post">
+                <input id="Id" name="Id" value="@userID" type="hidden" />
+                <div class="Change-Password">
+                <div class="row">
+                <div class="col-lg-6 col-md-6">
+                <label class="Shipment-Details-label pull-left mb-3 text-danger" style="font-size: 18px;">New Password</label>
+                <input type="password" class="mb-3 text-danger" id="NewPassword_@userID" name="NewPassword" placeholder="New Password" required />
+                </div>
+                <div class="col-lg-6 col-md-6">
+                <label class="Shipment-Details-label pull-left mb-3 text-danger" style="font-size: 18px;">Confirm New Password</label>
+                <input type="password" class="mb-3 text-danger" id="ConfirmPassword_@userID" name="ConfirmPassword" placeholder="Confirm Password" required />
+                </div>
+                </div>
+                </div>
+                <div class="col-lg-12 mt-4">
+                <button class="Red-Btn btn-success pull-right" style="width: 300px;" type="submit">Change Password</button>
+                <button class="Red-Btn btn-danger pull-left" style="width: 300px !important;" type="button" data-dismiss="modal">Cancel</button>
+                </div>
+                </form>
+                </div>
+                </div>
+                </div>
+                </div>*@
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Shipment Details Popup -->
+    <div class="modal fade z-index-9999" id="ShipmentDetails" tabindex="-1" aria-labelledby="ShipmentDetailsLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div id="ShipmentDetails-Body" class="modal-body">
+                    <div class="spinner-border text-danger d-block m-auto" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shipment Items Popup -->
+    <div class="modal fade" id="ItemsModal" tabindex="-1" role="dialog" aria-labelledby="ItemsModal" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content" style="width: 108%;">
+                <div>
+                    <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="ItemsModal-body">
+                    <div class="spinner-border text-danger d-block m-auto" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shipment Partial Items Popup -->
+    <div class="modal fade" id="PartialItemsModal" tabindex="-1" role="dialog" aria-labelledby="PartialItemsModal" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content" style="width: 108%;">
+                <div>
+                    <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="PartialItemsModal-body">
+                    <div class="spinner-border text-danger d-block m-auto" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="MainDiv">
+        <div id="MainView">
+            @RenderBody()
+        </div>
+        <div id="MainLoder" style="display:none">
+            <span class="MainLoder">
+                <img src="~/dist/images/lo2ثثثثثث.png" />
+            </span>
+        </div>
+    </div>
+    <a class="scrollup text-center">
+        <i class="icon-arrow-up text-white"></i>
+    </a>
+
+    <partial name="_MainJsFiles" />
+
+    <!-- App Scripts -->
+    <script src="~/dist/vendors/datatable/js/jquery.dataTables.min.js"></script>
+    <script src="~/dist/vendors/datatable/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/dist/vendors/datatable/jszip/jszip.min.js"></script>
+    <script src="~/dist/vendors/datatable/pdfmake/pdfmake.min.js"></script>
+    <script src="~/dist/vendors/datatable/pdfmake/vfs_fonts.js"></script>
+    <script src="~/dist/vendors/datatable/buttons/js/dataTables.buttons.min.js"></script>
+    <script src="~/dist/vendors/datatable/buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="~/dist/vendors/datatable/buttons/js/buttons.colVis.min.js"></script>
+    <script src="~/dist/vendors/datatable/buttons/js/buttons.flash.min.js"></script>
+    <script src="~/dist/vendors/datatable/buttons/js/buttons.html5.min.js"></script>
+    <script src="~/dist/vendors/datatable/buttons/js/buttons.print.min.js"></script>
+    <script src="~/dist/js/datatable.script.js"></script>
+
+
+    @if (TempData["SuccessMsg"] != null)
+    {
+        <script>
+            $(document).ready(function () {
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: '@TempData["SuccessMsg"]',
+                    showConfirmButton: false,
+                    timer: 5000
+                });
+            });
+        </script>
+    }
+    @if (TempData["ErrorMsg"] != null)
+    {
+        <script>
+            $(document).ready(function () {
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: '@TempData["ErrorMsg"]',
+                    showConfirmButton: false,
+                    timer: 5000
+                });
+            });
+        </script>
+    }
+    @RenderSection("scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,27 @@
+﻿
+@using LegendCR.CommonDefinitions.DTO;
+@using LegendCR.CommonDefinitions.DTO.VendorProductDTOs;
+@model List<VendorProductDTO>
+
+@if (Model != null && Model.Count > 0)
+{
+    foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.VendorName</td>
+            <td>@item.Name</td>
+            <td class="font-weight-bold">@item.AvailableStock</td>
+            <td class="font-weight-bold">@item.StockPrice</td>
+            <td>@item.Size</td>
+        </tr>
+    }
+}
+else
+{
+    <tr>
+        <td colspan="20">
+            <h6 class="text-center text-danger my-5">No data available in table</h6>
+        </td>
+    </tr>
+}
+<input type="hidden" value="@Model.Count" id="DataCount" />

@@ -1,0 +1,111 @@
+﻿
+@using LegendCR.CommonDefinitions.DTO.ShipmentDTOs
+@using LegendCR.Helpers
+@model ShipDTO
+
+@if (Model.ProblemDTOs != null)
+{
+    if (Model.ProblemDTOs.Where(p => p.IsCourierProblem == false).Count() > 0)
+    {
+        var problem = Model.ProblemDTOs.FirstOrDefault(p => p.IsCourierProblem == false);
+
+        <div id="ProblemDev_@Model.ShipmentId">
+            <b>@problem.ProblemTypeName</b>
+            <br>
+            @problem.Note
+            <br />
+            <div class="d-flex mt-1 pl-3">
+
+                <!-- Solve Problem Button -->
+                <a data-toggle="modal" data-target="#divSolveProblem_@Model.ShipmentId">
+                    <span class="Badge-Medium Green-Bg" data-toggle="tooltip" data-placement="top" title="Solve problem"><i class="fa fa-check"></i></span>
+                </a>
+
+                <!-- Solve Problem Modal -->
+                <div class="modal fade" id="divSolveProblem_@Model.ShipmentId" tabindex="-1" role="dialog" aria-hidden="true" style="text-align:left">
+                    <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="Modal-Lablel">
+                                    <label style="font-size: 24px; color: black">Solve Problem</label>
+                                    <br /><br />
+                                    Code : <label>@Model.RefId</label>
+                                    <br />
+                                    Customer : <label>@Model.CustomerDetailsDTO.CustomerName</label>
+                                    <br />
+                                    Phone : <label>@Model.CustomerDetailsDTO.CustomerPhone - @Model.CustomerDetailsDTO.CustomerPhone2</label>
+                                </h5>
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="container-fluid">
+                                <h5 class="Modal-Lablel">Problem Type :</h5>
+                                @problem.ProblemTypeName
+                                <h5 class="Modal-Lablel mt-2">Problem Notes :</h5>
+                                @problem.Note
+                            </div>
+                            <div class="container-fluid P-Model mt-2">
+                                <div class="row">
+                                    <div class="form-group col-sm-12">
+                                        <h6 class="Label-Model">Solution :</h6>
+                                        <textarea rows="4" class="form-control" id="ProblemSolutionTxt_@Model.ShipmentId"></textarea>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-lg-12">
+                                <button class="Red-Btn-OutLine OutLine-Red Btn-Model" type="button" data-dismiss="modal" onclick="SolveProblem('@Model.ShipmentId',$('#ProblemSolutionTxt_@Model.ShipmentId').val())">Done</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Delete Problem Button -->
+                <span class="Badge-Medium Red-Bg" data-toggle="tooltip" data-placement="top" title="Delete problem" onclick="DeleteProblem('@Model.ShipmentId')"><i class="fa fa-times"></i></span>
+
+                <!-- Report to Vendor Button -->
+                <a data-toggle="modal" data-target="#divReportToVendorProblem_@Model.ShipmentId">
+                    <span class="Badge-Medium Yellow-Bg" data-toggle="tooltip" data-placement="top" title="Report to vendor"><i class="fa fa-exclamation"></i></span>
+                </a>
+
+                <!-- Report to Vendor Modal -->
+                <div class="modal fade" id="divReportToVendorProblem_@Model.ShipmentId" tabindex="-1" role="dialog" aria-hidden="true" style="text-align:left">
+                    <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="Modal-Lablel">
+                                    <label style="font-size: 24px; color: black">Report To Vendor</label>
+                                    <br /><br />
+                                    Code : <label>@Model.RefId</label>
+                                    <br />
+                                    Customer : <label>@Model.CustomerDetailsDTO.CustomerName</label>
+                                    <br />
+                                    Phone : <label>@Model.CustomerDetailsDTO.CustomerPhone - @Model.CustomerDetailsDTO.CustomerPhone2</label>
+                                </h5>
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="container-fluid P-Model">
+                                <div class="row">
+                                    <div class="form-group col-sm-12">
+                                        <h6 class="Label-Model">Problem Type :</h6>
+                                        @Html.DropDownList("ProblemTypeId", new SelectList(ViewBag.ProblemType, "ProblemTypeId", "NameEn"), "--- Select Problem Type ---", new { @class="input-Model", @id="ddlVendorReason_"+@Model.ShipmentId+"" })
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <h6 class="Label-Model">Problem Notes :</h6>
+                                        <textarea rows="4" class="form-control" id="VendorProblemNote_@Model.ShipmentId"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <button class="Red-Btn-OutLine OutLine-Red Btn-Model" type="button" data-dismiss="modal" onclick="ReportToVendor('@Model.ShipmentId',$('#VendorProblemNote_@Model.ShipmentId').val(), $('#ddlVendorReason_@Model.ShipmentId').val(), false )">Done</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}

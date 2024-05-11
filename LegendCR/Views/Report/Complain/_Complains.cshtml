@@ -1,0 +1,42 @@
+﻿
+@using DicomDB.CommonDefinitions.DTO;
+@model List<ComplainsDTO>
+
+    @if (Model != null && Model.Count > 0)
+    {
+        foreach (var item in Model)
+        {
+            <tr id="Complains_@item.ComplainsId">
+                <td>
+        @(item.VendorName ?? "---")
+                </td>
+                <td>@item.Date.ToShortDateString()</td>
+                <td>@item.Description</td>
+                <td><b>@item.Department</b></td>
+                <td>
+        @(item.EmployeeName ?? "---")
+                </td>
+                <td>
+        @if (!item.Solved)
+        {
+                            <span class="status-Table Yellow">Pending</span>
+        }
+        else
+        {
+                            <span class="status-Table Green">Solved</span>
+        }
+                </td>
+                <td>@item.CreateBy</td>
+                <td>@item.Comments</td>
+            </tr>
+        }
+    }
+    else
+    {
+        <tr>
+            <td colspan="20">
+                <h6 class="text-center text-danger my-5">No data available in table</h6>
+            </td>
+        </tr>
+    }
+<input type="hidden" value="@Model.Count" id="DataCount" />

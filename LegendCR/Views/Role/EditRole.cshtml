@@ -1,0 +1,43 @@
+﻿
+@using LegendCR.CommonDefinitions.DTO;
+@model RoleDTO
+
+<div id="content" class="content">
+    <h1 class="page-header label-text">
+      Edit Group
+    </h1>
+    <div >
+        @using (Html.BeginForm("EditRole", "Role", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <input hidden name="Id" value="@Model.Id" />
+            <div class="panel panel-success ">
+                <div class="panel-body">
+                    <div class="section-container">
+                        <div class="row">
+                            <!-- begin col-4 -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>
+                                       Group name
+                                    </label>
+                                    @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "validation-message" })
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>
+                                        Save
+                                    </label>
+                                    <input type="submit" class="btn btn-success btn-lg btn-block" value="Save" />
+                                    <span class="validation-message">@ViewBag.error</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

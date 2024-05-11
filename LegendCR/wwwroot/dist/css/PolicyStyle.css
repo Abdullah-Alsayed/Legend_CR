@@ -1,0 +1,250 @@
+
+    * {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    }
+
+    main {
+    margin: auto;
+    }
+
+.Container {
+    margin: 100% auto;
+    padding: 15px 30px 0px 30px;
+    border: 2px solid black;
+    width: 80%;
+}
+
+    .Container div h1 {
+    font-weight: 900;
+    display: inline-block;
+    font-size:60px
+    }
+
+    .Container div h1:first-child {
+    margin-right:520px;
+    }
+
+    .Personal-Information {
+    border: 2px solid black;
+    margin-top: 5px;
+    }
+
+    .Personal-Information div {
+    padding: 5px 15px;
+    }
+
+    .Personal-Information h5 {
+    font-weight: 600;
+    width: 100%;
+    padding: 5px 15px;
+    border-bottom: 2px solid black;
+    }
+
+    .Personal-Information span {
+    font-weight: 500;
+    font-size: x-large;
+    }
+
+    .Personal-Information ul {
+    list-style-type: none;
+    width: 100%;
+    padding: 15px 15px 0;
+    margin:0 0 30px 0;
+    height: 70px;
+    }
+
+    .Personal-Information ul:last-child {
+    position: relative;
+    bottom: 40px;
+    left: 850px;
+    }
+
+    .Personal-Information ul li {
+    width: 50%;
+    }
+
+    .Personal-Information p {
+    padding: 0px 0px 0 15px;
+    font-weight: 500;
+    margin: 0;
+    width: 100%;
+    font-size: x-large;
+    }
+
+    .Personal-Information p:last-child {
+    margin-bottom: 25px;
+    }
+
+    .Shipment-Information-Heder h5 {
+    margin-right: 25px;
+    }
+
+    .Shipment-Information-Heder td:first-child h5 {
+    font-weight: 500;
+    font-size:30px;
+    }
+
+.Shipment-Information-Heder td:last-child h5 {
+    font-weight: bolder;
+    font-size: 30px;
+}
+
+    .Shipment-Information-Heder {
+    width: 100%;
+    margin-top: 10px;
+    }
+
+    .Shipment-Information-Content div:first-child {
+    width: 45%;
+    display: inline-block;
+    }
+
+    .Shipment-Information-Content div:last-child {
+    display: inline-block;
+    width: 45%;
+    float: right;
+    }
+
+    .Shipment-Information-Content table {
+    margin: 10px 0;
+    }
+
+    table,
+    td,
+    tr {
+    border: 1px solid black;
+    }
+
+td {
+    padding: 5px 10px;
+    text-align: center;
+    font-weight: 500;
+    font-size: x-large;
+}
+
+    table {
+    width: 100%;
+    }
+
+    .Description-Section {
+    width: 100%;
+    }
+
+    .Description-Section div:first-of-type {
+    width: 49.8%;
+    display: inline-block;
+    }
+
+    .Description-Section div:last-child {
+    display: inline-block;
+    width: 49.8%;
+    float: right;
+    }
+
+    .Description-Section h5 {
+    padding: 10px;
+    margin: 0;
+    font-weight: 700;
+    width: 100%;
+    text-align: center;
+    border: 2px solid black;
+    font-size:30px;
+    }
+
+    .Description-Section table {
+    border: none;
+    }
+
+    .Description-Section td {
+    padding: 1px 10px;
+    text-align: left;
+    font-weight: 600;
+    font-size: large;
+    }
+
+    .Description-Section td:last-child {
+    text-align: center;
+    max-width: 70px;
+    }
+
+    .Description-Section table tr {
+    padding: 0px;
+    border-bottom: 1px solid black;
+    }
+
+    .Date-Section {
+    width: 100%;
+    margin-top: 15px;
+    }
+
+    .Date-Section div:first-child {
+    display: inline-block;
+    width: 72%;
+    }
+
+    .Date-Section div:first-child td {
+    padding: 14px;
+    }
+
+    .Date-Section div:last-child {
+    width: 25%;
+    display: inline-block;
+    float: right;
+    }
+
+    .Total-Section {
+    width: 100%;
+    margin-top: -5%;
+    display: inline-block;
+    }
+
+    .Total-Section table tr td {
+    padding: 3px 10px;
+    white-space: nowrap;
+    font-size: x-large;
+    }
+
+    .Total-Section table tr td strong {
+    font-size: x-large;
+    }
+
+    .Total-Section div:first-child {
+    width: 25%;
+    display: inline-block;
+    }
+
+    .Total-Section div:first-child img {
+    width: 150px;
+    }
+
+    .Total-Section div:nth-child(2) {
+    position: relative;
+    top: 71px;
+    }
+
+    .Total-Section div:last-child {
+    width: 25%;
+    display: inline-block;
+    }
+
+    .Total-Section div {
+    width: 45%;
+    display: inline-block;
+    }
+
+    .last-Section {
+    width: 100%;
+    }
+    .Total-Section div:last-child img{
+    width: 140px;
+    position:relative;
+    left:220px;
+    }
+.OneTable {
+    width:100% !important;
+    margin-bottom:15px;
+    display:inline-block;
+    margin-top:-25px;
+}

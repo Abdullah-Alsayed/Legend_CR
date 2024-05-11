@@ -1,0 +1,98 @@
+﻿
+@using LegendCR.CommonDefinitions.DTO;
+@using LegendCR.CommonDefinitions.DTO.ShipmentDTOs;
+@model List<ShipDTO>
+@{
+    List<ShipDTO> model = new List<ShipDTO>();
+}
+@if (Model != null && Model.Count() > 0)
+{
+    model = Model.Where(s => s.ProblemDTOs.Where(p => !p.IsDeleted && !p.IsSolved && p.IsReportToVendor).Any()).ToList();
+    foreach (var item in model)
+    {
+        var problemItem = item.ProblemDTOs.Where(p => p.IsReportToVendor == true && p.IsSolved == false && p.IsDeleted == false).LastOrDefault();
+        <tr>
+            <td class="text-center text-nowrap font-weight-bold">@item.RefId</td>
+            <td class="text-center text-nowrap Date-Table">@item.CreatedAt.ToString("MMM dd,yyy")</td>
+            <td class="text-center">@item.CustomerDetailsDTO.CustomerAddress</td>
+            <td class="text-center">@(item.ShipmentServiceName ?? "")</td>
+            <td class="text-center text-nowrap">@item.FeesDetailsDTO.Total EGP</td>
+            <td class="text-center Actions-Buttons">
+                <ul>
+                    <i class="Call-Number">@item.CustomerFollowUpDTO.CallAnswerCount</i>
+                    <li class="Answer-Bg"><img class="call-Img" src="~/dist/images/Icons/Call-Answer.png"></li>
+                    <i class="Call-Number">@item.CustomerFollowUpDTO.CallNotAnswerCount</i>
+                    <li class="No-Answer-Bg"><img class="call-Img" src="~/dist/images/Icons/Call-NoAnswer.png"></li>
+                </ul>
+            </td>
+            <td class="text-nowrap text-center"><span style="margin-bottom:0px;" class="Filter-Table font-weight-bold">@item.StatusDTO.Name</span></td>
+            <td class="text-center pl-1 pr-1">
+                <div id="CourierProblemDev_@item.ShipmentId">
+                    @if (problemItem != null)
+                    {
+                        <b>@problemItem.ProblemTypeName</b>
+                        <br>
+                        @problemItem.Note
+                    }
+                </div>
+            </td>
+            <td>
+                <div class="d-flex">
+                    <!-- Reply Button -->
+                    <a data-toggle="modal" data-target="#divReply_@item.ShipmentId">
+                        <span class="Badge Yellow-Bg" data-toggle="tooltip" data-placement="top" title="Reply"><i class="fa fa-share"></i></span>
+                    </a>
+                    <!-- Reply Modal -->
+                    <div class="modal fade" id="divReply_@item.ShipmentId" tabindex="-1" role="dialog" aria-hidden="true" style="text-align:left">
+                        <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="Modal-Lablel">
+                                        <label style="font-size: 24px; color: black">Problem Reply</label>
+                                        <br /><br />
+                                        Order : <label>@item.RefId</label>
+                                        <br />
+                                        Customer : <label>@item.CustomerDetailsDTO.CustomerName</label>
+                                        <br />
+                                        Phone : <label>@item.CustomerDetailsDTO.CustomerPhone - @item.CustomerDetailsDTO.CustomerPhone2</label>
+                                    </h5>
+                                    <button type="button" class="close" data-dismiss="modal">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="container-fluid">
+                                    @if (problemItem != null)
+                                    {
+                                        <h5 class="Modal-Lablel">Problem Type :</h5>
+                                        @problemItem.Note
+                                        <h5 class="Modal-Lablel mt-2">Problem :</h5>
+                                        @problemItem.ProblemTypeName
+                                    }
+                                </div>
+                                <div class="container-fluid P-Model mt-2">
+                                    <div class="row">
+                                        <div class="form-group col-sm-12">
+                                            <h6 class="Label-Model">Solution :</h6>
+                                            <textarea rows="4" class="form-control" id="ReplyTxt_@item.ShipmentId">@(problemItem != null ? problemItem.Solution : "")</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <button class="Red-Btn-OutLine OutLine-Red Btn-Model" type="button" data-dismiss="modal" onclick="VendorReply('@item.ShipmentId',$('#ReplyTxt_@item.ShipmentId').val())">Done</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    }
+}
+else
+{
+    <tr>
+        <td colspan="10" class="text-danger text-center"><h3>No data available in table</h3></td>
+    </tr>
+}
+
+<input type="hidden" value="@(model != null ? model.Count : 0)" id="DataCount" />

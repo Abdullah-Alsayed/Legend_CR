@@ -1,0 +1,34 @@
+﻿
+@using LegendCR.CommonDefinitions.DTO.ShipmentDTOs
+@using LegendCR.CommonDefinitions.DTO
+@using LegendCR.Helpers
+@model List<ShipDTO>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Code</th>
+            <th class="text-center">Created At</th>
+            <th class="text-center">Customer</th>
+            <th class="text-center">Phone</th>
+            <th class="text-center">Address</th>
+            <th class="text-center">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Count > 0)
+        {
+            foreach (var order in Model)
+            {
+                <tr>
+                    <td class="text-nowrap"><b onclick="ShipmentDetails('Shipment', @order.ShipmentId)" data-toggle="modal" data-target="#ShipmentDetails"> @order.RefId</b></td>
+                    <td class="text-center">@order.CreatedAt.ToString("ddd, d/M/yyyy")</td>
+                    <td class="text-center">@order.CustomerDetailsDTO.CustomerName</td>
+                    <td class="text-nowrap text-center">@order.CustomerDetailsDTO.CustomerPhone</td>
+                    <td class="text-wrap text-center">@order.CustomerDetailsDTO.CustomerAddress</td>
+                    <partial name="~/Views/Shared/Shipment/_StatusSwitch.cshtml" model="@order.StatusDTO"></partial>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

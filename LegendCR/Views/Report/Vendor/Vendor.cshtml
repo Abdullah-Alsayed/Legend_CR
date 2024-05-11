@@ -1,0 +1,412 @@
+﻿@using LegendCR.CommonDefinitions.DTO.CashDTOs
+@using LegendCR.CommonDefinitions.DTO
+@using LegendCR.CommonDefinitions.DTO.ShipmentDTOs;
+@using LegendCR.Helpers
+@using LegendCR.BL.Services
+@model List<VendorReportDTO>
+
+<main>
+    <div class="container-fluid site-width">
+        <div class="row Red-Row">
+            <div class="col-12 col-lg-12 col-xl-12 col-sm-12">
+                <div class="sub-header">
+                    <span class="Header-Titel">Vendor Report</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <span id="Ajaxloader" class="Ajaxloader d-none"></span>
+    </div>
+    <div class="Table-container">
+        <table class="table" id="Table">
+            <thead>
+                <tr>
+                    <td class="text-left">Vendor</td>
+                    <td class="text-center">All Orders</td>
+                    <td class="text-center">Current</td>
+                    <td class="text-center">Done</td>
+                    <td class="text-center">Cancelled</td>
+                    <td class="text-center">Success %</td>
+                    <td class="text-center">RED Fees</td>
+                    <td class="text-center">Total</td>
+                    <td class="text-center">Balance</td>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
+                    foreach (var vendor in Model)
+                    {
+                        <tr>
+                            <td class="td-medium text-left font-weight-bold" style="font-size: 14px;">@vendor.VendorName</td>
+
+                            <td class="td-medium text-center text-nowrap">
+                                <span data-toggle="modal" data-target="#AllShips-Modal_@vendor.VendorId"
+                              class="badge badge-pill badge-light font-weight-bold" style="font-size: 16px;">@vendor.TotalShipsCount</span>
+
+                                <!-- START : All Shipments -->
+                                <div class="modal fade" id="AllShips-Modal_@vendor.VendorId" tabindex="-1" role="dialog" aria-hidden="true">
+                                    <div style="min-width:85%;" class="modal-dialog modal-xl" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header mb-0 pb-0">
+                                                <h2 class="Model-Titel">All Shipments (@vendor.VendorName) - Balance :&nbsp;&nbsp;@vendor.Balance&nbsp;<label class="mb-0 pb-0 pt-2" style="font-size: 12px;">EGP</label></h2>
+                                                <a class="Red-Btn Btn-Sm pull-right ml-3 btn-info" style="padding: 5px 20px 5px 20px; margin-top: 15px" target="_blank" href="@Url.Action("pdf", "Report", new { v = EncryptionManager.Encrypt(vendor.VendorId.ToString()), s = (int)EnumStatus.All })">PDF</a>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body mt-0 pt-0">
+                                                <div class="Table-container Max-height">
+                                                    <table class="table text-center" id="TableAll_@vendor.VendorId">
+                                                        <thead>
+                                                            <tr>
+                                                                <td class="text-nowrap">Code</td>
+                                                                <td class="text-wrap">Created At</td>
+                                                                <td class="text-nowrap">Customer</td>
+                                                                <td class="text-nowrap">Service</td>
+                                                                <td class="text-nowrap">RED Fees</td>
+                                                                <td class="text-wrap">Vendor Cash</td>
+                                                                <td class="text-nowrap">Total</td>
+                                                                <td class="text-nowrap">Status</td>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var groupedSHIPS in vendor.lstShips.GroupBy(t => t.StatusId))
+                                                            {
+                                                                <tr>
+                                                                    <td class="td-small text-nowrap text-center mt-2" colspan="8">
+                                                                        <partial name="~/Views/Shared/Shipment/_StatusSwitch22.cshtml" model="@groupedSHIPS.FirstOrDefault().StatusDTO"></partial>
+                                                                        &nbsp;
+                                                                        <span style="margin-bottom: 0px; background-color: #8f8f8f4d; color: #000000; font-weight: bolder !important;" class="Filter-Table font-weight-bold">@groupedSHIPS.Count() Order</span>
+                                                                    </td>
+                                                                </tr>
+                                                                foreach (var ship in groupedSHIPS)
+                                                                {
+                                                                    <tr> 
+                                                                        <td class="text-nowrap td-small" onclick="ShipmentDetails('Shipment', @ship.ShipmentId)" data-toggle="modal" data-target="#ShipmentDetails"><b style="font-size: 14px;">@ship.RefId</b></td>
+                                                                        <td class="text-nowrap td-small"><b>@ship.CreatedAt.ToString("d/M/yyyy") <br /> @ship.CreatedAt.ToString("hh:mm tt")</b></td>
+                                                                        <td class="td-small">
+                                                                            @ship.CustomerDetailsDTO.CustomerName
+                                                                            <br />
+                                                                            <label class="text-nowrap mt-1"><i class="fa fa-map-marker"></i>&nbsp;@ship.AreaName</label>
+                                                                        </td>
+                                                                        <td class="td-small text-nowrap font-weight-bold">@ship.ShipmentServiceName</td>
+
+                                                                        @if (ship.StatusId == (int)EnumStatus.Delivered || ship.StatusId == (int)EnumStatus.Paid_To_Vendor)
+                                                                        {
+                                                                            var RedTrans = ship.TransactionDTOs.FirstOrDefault(t => t.ReceiverId == (int)EnumAccountId.RED_Main_Account);
+                                                                            var VendorTrans = ship.TransactionDTOs.FirstOrDefault(t => t.ReceiverId == t.VendorId); // Updated
+
+                                                                            <td class="text-nowrap td-small"><b style="font-size: 16px;">@RedTrans.Total</b></td>
+                                                                            <td class="text-nowrap td-small"><b style="font-size: 16px;">@VendorTrans.Total</b></td>
+                                                                            <td class="text-nowrap td-small"><b style="font-size: 16px;">@(RedTrans.Total + VendorTrans.Total)</b></td>
+                                                                        }
+                                                                        else if (ship.StatusId == (int)EnumStatus.Refunded)
+                                                                        {
+                                                                            var RedTrans = ship.TransactionDTOs.FirstOrDefault(t => t.ReceiverId == (int)EnumAccountId.RED_Main_Account);
+                                                                            var VendorTrans = ship.TransactionDTOs.FirstOrDefault(t => t.ReceiverId == t.VendorId);
+
+                                                                            <td class="text-nowrap td-small"><b style="font-size: 16px;">@RedTrans.Total</b></td>
+                                                                            <td class="text-nowrap td-small"><b style="font-size: 16px;">0</b></td>
+                                                                            <td class="text-nowrap td-small"><b style="font-size: 16px;">@VendorTrans.Total</b></td>
+                                                                        }
+                                                                        else if (ship.StatusId == (int)EnumStatus.Cancelled)
+                                                                        {
+                                                                            if (ship.TransactionDTOs != null && ship.TransactionDTOs.Count() > 0)
+                                                                            {
+                                                                                var RedTrans = ship.TransactionDTOs.FirstOrDefault(t => t.ReceiverId == (int)EnumAccountId.RED_Main_Account);
+
+                                                                                <td class="text-nowrap td-small"><b style="font-size: 16px;">@RedTrans.Total</b></td>
+                                                                                <td class="text-nowrap td-small"><b style="font-size: 16px;">0</b></td>
+                                                                                <td class="text-nowrap td-small"><b style="font-size: 16px;">@RedTrans.Total</b></td>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <td class="text-nowrap td-small"><b style="font-size: 16px;">0</b></td>
+                                                                                <td class="text-nowrap td-small"><b style="font-size: 16px;">0</b></td>
+                                                                                <td class="text-nowrap td-small"><b style="font-size: 16px;">0</b></td>
+                                                                            }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            double TotalREDFees = ship.FeesDetailsDTO.ShippingFees + ship.FeesDetailsDTO.PackingFees + ship.FeesDetailsDTO.WeightFees + ship.FeesDetailsDTO.SizeFees + ship.FeesDetailsDTO.PartialDeliveryFees;
+
+                                                                            <td class="text-nowrap td-small"><b style="font-size: 16px;">@TotalREDFees</b></td>
+                                                                            <td class="text-nowrap td-small"><b style="font-size: 16px;">@ship.FeesDetailsDTO.VendorCash</b></td>
+                                                                            <td class="text-nowrap td-small"><b style="font-size: 16px;">@ship.FeesDetailsDTO.Total</b></td>
+                                                                        }
+
+                                                                        <partial name="~/Views/Shared/Shipment/_StatusSwitch.cshtml" model="@ship.StatusDTO"></partial>
+                                                                    </tr>
+                                                                }
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- END   : All Shipments -->
+                            </td>
+
+                            <td class="td-medium text-center text-nowrap">
+                                <span data-toggle="modal" data-target="#CurrentShips-Modal_@vendor.VendorId"
+                              class="badge badge-pill badge-light font-weight-bold" style="font-size: 15px;">@vendor.CurrentShipsCount</span>
+
+                                <!-- START : Current Shipments -->
+                                <div class="modal fade" id="CurrentShips-Modal_@vendor.VendorId" tabindex="-1" role="dialog" aria-hidden="true">
+                                    <div style="min-width:85%;" class="modal-dialog modal-xl" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header mb-0 pb-0">
+                                                <h2 class="Model-Titel">Current Shipments (@vendor.VendorName) - Balance :&nbsp;&nbsp;@vendor.Balance&nbsp;<label class="mb-0 pb-0 pt-2" style="font-size: 12px;">EGP</label></h2>
+                                                <a class="Red-Btn Btn-Sm pull-right ml-3 btn-info" style="padding: 5px 20px 5px 20px; margin-top: 15px" target="_blank" href="@Url.Action("pdf", "Report", new { v = EncryptionManager.Encrypt(vendor.VendorId.ToString()), s = (int)EnumStatus.Current })">PDF</a>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body mt-0 pt-0">
+                                                <div class="Table-container Max-height">
+                                                    <table class="table text-center" id="TableAll_@vendor.VendorId">
+                                                        <thead>
+                                                            <tr>
+                                                                <td class="text-nowrap">Code</td>
+                                                                <td class="text-wrap">Created At</td>
+                                                                <td class="text-nowrap">Customer</td>
+                                                                <td class="text-nowrap">Service</td>
+                                                                <td class="text-nowrap">RED Fees</td>
+                                                                <td class="text-wrap">Vendor Cash</td>
+                                                                <td class="text-nowrap">Total</td>
+                                                                <td class="text-nowrap">Status</td>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+@*                                                             @foreach (var groupedSHIPS in vendor.lstShips.Where(t => ShipmentService.GetStatusGroup((int)EnumStatus.Current).Contains(t.StatusId)).GroupBy(t => t.StatusId))
+                                                            {
+                                                                <tr>
+                                                                    <td class="td-small text-nowrap text-center mt-2" colspan="8">
+                                                                        <partial name="~/Views/Shared/Shipment/_StatusSwitch22.cshtml" model="@groupedSHIPS.FirstOrDefault().StatusDTO"></partial>
+                                                                        &nbsp;
+                                                                        <span style="margin-bottom: 0px; background-color: #8f8f8f4d; color: #000000; font-weight: bolder !important;" class="Filter-Table font-weight-bold">@groupedSHIPS.Count() Order</span>
+                                                                    </td>
+                                                                </tr>
+                                                                foreach (var ship in groupedSHIPS)
+                                                                {
+                                                                    <tr>
+                                                                        <td class="text-nowrap td-small" onclick="ShipmentDetails('Shipment', @ship.ShipmentId)" data-toggle="modal" data-target="#ShipmentDetails"><b style="font-size: 14px;">@ship.RefId</b></td>
+                                                                        <td class="text-nowrap td-small"><b>@ship.CreatedAt.ToString("d/M/yyyy") <br /> @ship.CreatedAt.ToString("hh:mm tt")</b></td>
+                                                                        <td class="td-small">
+                                                                            @ship.CustomerDetailsDTO.CustomerName
+                                                                            <br />
+                                                                            <label class="text-nowrap mt-1"><i class="fa fa-map-marker"></i>&nbsp;@ship.AreaName</label>
+                                                                        </td>
+                                                                        <td class="td-small text-nowrap font-weight-bold">@ship.ShipmentServiceName</td>
+                                                                        @{
+                                                                            double TotalREDFees = ship.FeesDetailsDTO.ShippingFees + ship.FeesDetailsDTO.PackingFees + ship.FeesDetailsDTO.WeightFees + ship.FeesDetailsDTO.SizeFees + ship.FeesDetailsDTO.PartialDeliveryFees;
+                                                                        }
+                                                                        <td class="text-nowrap td-small"><b style="font-size: 16px;">@TotalREDFees</b></td>
+                                                                        <td class="text-nowrap td-small"><b style="font-size: 16px;">@ship.FeesDetailsDTO.VendorCash</b></td>
+                                                                        <td class="text-nowrap td-small"><b style="font-size: 16px;">@ship.FeesDetailsDTO.Total</b></td>
+
+                                                                        <partial name="~/Views/Shared/Shipment/_StatusSwitch.cshtml" model="@ship.StatusDTO"></partial>
+                                                                    </tr>
+                                                                }
+                                                            }
+ *@                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- END   : Current Shipments -->
+                            </td>
+                            <td class="td-medium text-center text-nowrap">
+                                <span data-toggle="modal" data-target="#DoneShips-Modal_@vendor.VendorId"
+                              class="badge badge-pill badge-light text-success font-weight-bold" style="font-size: 15px;">@vendor.DoneShipsCount</span>
+
+                                <!-- START : Done Shipments -->
+                                <div class="modal fade" id="DoneShips-Modal_@vendor.VendorId" tabindex="-1" role="dialog" aria-hidden="true">
+                                    <div style="min-width:85%;" class="modal-dialog modal-xl" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header mb-0 pb-0">
+                                                <h2 class="Model-Titel">Done Shipments (@vendor.VendorName) - Balance :&nbsp;&nbsp;@vendor.Balance&nbsp;<label class="mb-0 pb-0 pt-2" style="font-size: 12px;">EGP</label></h2>
+                                                <a class="Red-Btn Btn-Sm pull-right ml-3 btn-info" style="padding: 5px 20px 5px 20px; margin-top: 15px" target="_blank" href="@Url.Action("pdf", "Report", new { v = EncryptionManager.Encrypt(vendor.VendorId.ToString()), s = (int)EnumStatus.Done })">PDF</a>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body mt-0 pt-0">
+                                                <div class="Table-container Max-height">
+                                                    <table class="table text-center" id="TableAll_@vendor.VendorId">
+                                                        <thead>
+                                                            <tr>
+                                                                <td class="text-nowrap">Code</td>
+                                                                <td class="text-wrap">Created At</td>
+                                                                <td class="text-nowrap">Customer</td>
+                                                                <td class="text-nowrap">Service</td>
+                                                                <td class="text-nowrap">RED Fees</td>
+                                                                <td class="text-wrap">Vendor Cash</td>
+                                                                <td class="text-nowrap">Total</td>
+                                                                <td class="text-nowrap">Status</td>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+@*                                                             @foreach (var groupedSHIPS in vendor.lstShips.Where(t => ShipmentService.GetStatusGroup((int)EnumStatus.Done).Contains(t.StatusId)).GroupBy(t => t.StatusId))
+                                                            {
+                                                                <tr>
+                                                                    <td class="td-small text-nowrap text-center mt-2" colspan="8">
+                                                                        <partial name="~/Views/Shared/Shipment/_StatusSwitch22.cshtml" model="@groupedSHIPS.FirstOrDefault().StatusDTO"></partial>
+                                                                        &nbsp;
+                                                                        <span style="margin-bottom: 0px; background-color: #8f8f8f4d; color: #000000; font-weight: bolder !important;" class="Filter-Table font-weight-bold">@groupedSHIPS.Count() Order</span>
+                                                                    </td>
+                                                                </tr>
+                                                                foreach (var ship in groupedSHIPS)
+                                                                {
+                                                                    <tr>
+                                                                        <td class="text-nowrap td-small" onclick="ShipmentDetails('Shipment', @ship.ShipmentId)" data-toggle="modal" data-target="#ShipmentDetails"><b style="font-size: 14px;">@ship.RefId</b></td>
+                                                                        <td class="text-nowrap td-small"><b>@ship.CreatedAt.ToString("d/M/yyyy") <br /> @ship.CreatedAt.ToString("hh:mm tt")</b></td>
+                                                                        <td class="td-small">
+                                                                            @ship.CustomerDetailsDTO.CustomerName
+                                                                            <br />
+                                                                            <label class="text-nowrap mt-1"><i class="fa fa-map-marker"></i>&nbsp;@ship.AreaName</label>
+                                                                        </td>
+                                                                        <td class="td-small text-nowrap font-weight-bold">@ship.ShipmentServiceName</td>
+
+                                                                        @if (ship.StatusId == (int)EnumStatus.Delivered || ship.StatusId == (int)EnumStatus.Paid_To_Vendor)
+                                                                        {
+                                                                            var RedTrans = ship.TransactionDTOs.FirstOrDefault(t => t.ReceiverId == (int)EnumAccountId.RED_Main_Account);
+                                                                            var VendorTrans = ship.TransactionDTOs.FirstOrDefault(t => t.ReceiverId == t.VendorId);
+
+                                                                            <td class="text-nowrap td-small"><b style="font-size: 16px;">@RedTrans.Total</b></td>
+                                                                            <td class="text-nowrap td-small"><b style="font-size: 16px;">@VendorTrans.Total</b></td>
+                                                                            <td class="text-nowrap td-small"><b style="font-size: 16px;">@(RedTrans.Total + VendorTrans.Total)</b></td>
+                                                                        }
+                                                                        else if (ship.StatusId == (int)EnumStatus.Refunded)
+                                                                        {
+                                                                            var RedTrans = ship.TransactionDTOs.FirstOrDefault(t => t.ReceiverId == (int)EnumAccountId.RED_Main_Account);
+                                                                            var VendorTrans = ship.TransactionDTOs.FirstOrDefault(t => t.ReceiverId == t.VendorId);
+
+                                                                            <td class="text-nowrap td-small"><b style="font-size: 16px;">@RedTrans.Total</b></td>
+                                                                            <td class="text-nowrap td-small"><b style="font-size: 16px;">0</b></td>
+                                                                            <td class="text-nowrap td-small"><b style="font-size: 16px;">@VendorTrans.Total</b></td>
+                                                                        }
+
+                                                                        <partial name="~/Views/Shared/Shipment/_StatusSwitch.cshtml" model="@ship.StatusDTO"></partial>
+                                                                    </tr>
+                                                                }
+                                                            }
+ *@                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- END   : Done Shipments -->
+                            </td>
+                            <td class="td-medium text-center text-nowrap">
+                                <span data-toggle="modal" data-target="#CancelledShips-Modal_@vendor.VendorId"
+                              class="badge badge-pill badge-light text-danger font-weight-bold" style="font-size: 15px;">@vendor.CancelledShipsCount</span>
+
+                                <!-- START : Cancelled Shipments -->
+                                <div class="modal fade" id="CancelledShips-Modal_@vendor.VendorId" tabindex="-1" role="dialog" aria-hidden="true">
+                                    <div style="min-width:85%;" class="modal-dialog modal-xl" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header mb-0 pb-0">
+                                                <h2 class="Model-Titel">Cancelled Shipments (@vendor.VendorName) - Balance :&nbsp;&nbsp;@vendor.Balance&nbsp;<label class="mb-0 pb-0 pt-2" style="font-size: 12px;">EGP</label></h2>
+                                                <a class="Red-Btn Btn-Sm pull-right ml-3 btn-info" style="padding: 5px 20px 5px 20px; margin-top: 15px" target="_blank" href="@Url.Action("pdf", "Report", new { v = EncryptionManager.Encrypt(vendor.VendorId.ToString()), s = (int)EnumStatus.Cancelled })">PDF</a>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body mt-0 pt-0">
+                                                <div class="Table-container Max-height">
+                                                    <table class="table text-center" id="TableAll_@vendor.VendorId">
+                                                        <thead>
+                                                            <tr>
+                                                                <td class="text-nowrap">Code</td>
+                                                                <td class="text-wrap">Created At</td>
+                                                                <td class="text-nowrap">Customer</td>
+                                                                <td class="text-nowrap">Service</td>
+                                                                <td class="text-nowrap">RED Fees</td>
+                                                                <td class="text-wrap">Vendor Cash</td>
+                                                                <td class="text-nowrap">Total</td>
+                                                                <td class="text-nowrap">Status</td>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+@*                                                             @foreach (var groupedSHIPS in vendor.lstShips.Where(t => ShipmentService.GetStatusGroup((int)EnumStatus.Cancelled).Contains(t.StatusId)).GroupBy(t => t.StatusId))
+                                                            {
+                                                                <tr>
+                                                                    <td class="td-small text-nowrap text-center mt-2" colspan="8">
+                                                                        <partial name="~/Views/Shared/Shipment/_StatusSwitch22.cshtml" model="@groupedSHIPS.FirstOrDefault().StatusDTO"></partial>
+                                                                        &nbsp;
+                                                                        <span style="margin-bottom: 0px; background-color: #8f8f8f4d; color: #000000; font-weight: bolder !important;" class="Filter-Table font-weight-bold">@groupedSHIPS.Count() Order</span>
+                                                                    </td>
+                                                                </tr>
+                                                                foreach (var ship in groupedSHIPS)
+                                                                {
+                                                                    <tr>
+                                                                        <td class="text-nowrap td-small" onclick="ShipmentDetails('Shipment', @ship.ShipmentId)" data-toggle="modal" data-target="#ShipmentDetails"><b style="font-size: 14px;">@ship.RefId</b></td>
+                                                                        <td class="text-nowrap td-small"><b>@ship.CreatedAt.ToString("d/M/yyyy") <br /> @ship.CreatedAt.ToString("hh:mm tt")</b></td>
+                                                                        <td class="td-small">
+                                                                            @ship.CustomerDetailsDTO.CustomerName
+                                                                            <br />
+                                                                            <label class="text-nowrap mt-1"><i class="fa fa-map-marker"></i>&nbsp;@ship.AreaName</label>
+                                                                        </td>
+                                                                        <td class="td-small text-nowrap font-weight-bold">@ship.ShipmentServiceName</td>
+
+                                                                        @if (ship.TransactionDTOs != null && ship.TransactionDTOs.Count() > 0)
+                                                                        {
+                                                                            var RedTrans = ship.TransactionDTOs.FirstOrDefault(t => t.ReceiverId == (int)EnumAccountId.RED_Main_Account);
+
+                                                                            <td class="text-nowrap td-small"><b style="font-size: 16px;">@RedTrans.Total</b></td>
+                                                                            <td class="text-nowrap td-small"><b style="font-size: 16px;">0</b></td>
+                                                                            <td class="text-nowrap td-small"><b style="font-size: 16px;">@RedTrans.Total</b></td>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td class="text-nowrap td-small"><b style="font-size: 16px;">0</b></td>
+                                                                            <td class="text-nowrap td-small"><b style="font-size: 16px;">0</b></td>
+                                                                            <td class="text-nowrap td-small"><b style="font-size: 16px;">0</b></td>
+                                                                        }
+
+                                                                        <partial name="~/Views/Shared/Shipment/_StatusSwitch.cshtml" model="@ship.StatusDTO"></partial>
+                                                                    </tr>
+                                                                }
+                                                            }
+ *@                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- END   : Cancelled Shipments -->
+                            </td>
+                            <td class="td-medium text-center text-nowrap">
+                                <span class="badge badge-pill font-weight-bold @(vendor.SuccessPerc >= 50 ? "badge-success" : "badge-danger")" style="font-size: 15px;">@vendor.SuccessPerc %</span>
+                            </td>
+
+                            <td class="td-medium text-center text-nowrap font-weight-bold" style="font-size: 18px;">
+                                @(vendor.ShippingFees + vendor.PackingFees + vendor.WeightFees + vendor.SizeFees + vendor.PartialDeliveryFees + vendor.CancelFees)
+                            </td>
+
+                            <td class="td-medium text-center text-nowrap" style="font-size: 18px;"><b>@(vendor.TotalDelivered + vendor.TotalRefunded + vendor.TotalOthers)</b></td>
+
+                            <td class="td-medium text-center text-nowrap" style="font-size: 18px;"><b>@vendor.Balance <label style="font-size: 10px;">EGP</label></b></td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="20" class="text-danger text-center"><h3>No data available in table</h3></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</main>

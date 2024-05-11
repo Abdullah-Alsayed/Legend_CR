@@ -1,0 +1,96 @@
+﻿
+@using LegendCR.CommonDefinitions.DTO;
+@using LegendCR.CommonDefinitions.DTO;
+@using LegendCR.Helpers;
+@model List<PackingDTO>
+@{
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+    string path = Url.ActionContext.HttpContext.Request.Path;
+}
+@if (Model != null && Model.Count() > 0)
+{
+    <table class="table">
+        <thead>
+            <partial name="_ReportHeder" model="11" />
+            @if (path.Contains("/Packing/PackagingReport"))
+            {
+                <tr>
+                    <td>Code</td>
+                    <td class="Sort-Column" >Name</td>
+                    <td>Description</td>
+                    <td>Size</td>
+                    <td>Number</td>
+                    <td class="text-center">Image</td>
+                </tr>
+            }
+            else if (path.Contains("/packing/PackingList"))
+            {
+                <tr>
+                    <td>Code</td>
+                    <td>Name</td>
+                    <td>Type</td>
+                    <td>size</td>
+                    <td>description</td>
+                    <td>quantity</td>
+                    <td>price</td>
+                    <td>Photo</td>
+                </tr>
+            }
+        </thead>
+        <tbody>
+            @if (path.Contains("/Packing/PackagingReport"))
+            {
+                if (Model != null && Model.Count > 0)
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.id</td>
+                            <td>@item.NameEn</td>
+                            <td class="">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod</td>
+                            <td> @item.Size </td>
+                            <td>@item.Count</td>
+                            <td class="text-center"><img src="~/dist/images/@item.ImgUrl" width="97" /></td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7">
+                            <h6 class="text-center text-danger my-5">No data available in table</h6>
+                        </td>
+                    </tr>
+                }
+
+            }
+            else if ((path.Contains("/packing/PackingList")))
+            {
+                if (Model != null && Model.Count > 0)
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.id</td>
+                            <td>@item.NameEn</td>
+                            <td><b>@item.PackingTypeName</b></td>
+                            <td>@item.Size</td>
+                            <td>Lorem Ipsum Text Here</td>  
+                            <td>@item.Count</td>
+                            <td>@item.Price</td>
+                            <td><img src="/dist/images/@item.ImgUrl" width="50" /></td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7">
+                            <h6 class="text-center text-danger my-5">No data available in table</h6>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}

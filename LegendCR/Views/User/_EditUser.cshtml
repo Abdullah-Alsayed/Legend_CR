@@ -1,0 +1,48 @@
+﻿
+@using LegendCR.CommonDefinitions.DTO
+@model UserDTO
+<main>
+    <div class="container-fluid site-width">
+        <div class="row Red-Row">
+            <div class="col-12 col-lg-12 col-xl-12 col-sm-12 Pickup-Header">
+                <div class="sub-header">
+                    <div>
+                        <span class="Header-Titel">My Account</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="Shipment-container">
+        <div class="Red-Row">
+            <form style="width: 95%;" id="ChangePassword-Form" class="needs-validation" asp-action="ChangePassword" asp-controller="vendor" method="post">
+                <div class="Change-Password">
+                    <p class="Account-Details-p">Change Password</p>
+                    <div class="row Red-Row ml-0 Shipment-Details-Section">
+                        <div class="col-lg-4">
+                            <label class="Shipment-Details-label">Old Password</label>
+                            <input type="password" class="mb-2" asp-for="Password" placeholder="Old Password" required />
+                            @Html.ValidationMessageFor(v=>v.Password ,"", new{@class="error"})
+                        </div>
+                        <div class="col-lg-4">
+                            <label class="Shipment-Details-label">New Password</label>
+                            <input type="password" class="mb-3" asp-for="NewPassword" placeholder="New Password" required />
+                            @Html.ValidationMessageFor(v=>v.NewPassword ,"", new{@class="error"})
+
+                        </div>
+                        <div class="col-lg-4">
+                            <label class="Shipment-Details-label ">Confirm New Password</label>
+                            <input type="password" class="mb-3" asp-for="ConfirmNewPassword" placeholder="Confirm New Password" required />
+                            @Html.ValidationMessageFor(v=>v.ConfirmNewPassword ,"", new{@class="error"})
+                        </div>
+                    </div>
+                    <div class="row Red-Row w-100">
+                        <div class="col-lg-12 ml-0 Buttons-Submit-Section">
+                            <button class="Calc-Btn" onclick="Changepassword()" type="button">Change password</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>

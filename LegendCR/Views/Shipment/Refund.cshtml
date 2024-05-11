@@ -1,0 +1,233 @@
+﻿
+@using LegendCR.CommonDefinitions.DTO.ShipmentDTOs
+@using LegendCR.CommonDefinitions.DTO;
+@using LegendCR.Helpers
+@model ShipDTO
+
+<main>
+    <div class="container-fluid site-width">
+        <div class="row Red-Row">
+            <div class="col-12 col-lg-12 col-xl-12 col-sm-12">
+                <div class="sub-header">
+                    <div>
+                        <span class="Header-Titel">Shipment Refund</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-12 col-xl-12 col-sm-12">
+                <p class="Shipment-Details-Titel pt-4">Shipment to Refund Details - #@Model.RefId</p>
+            </div>
+        </div>
+    </div>
+    <div class="Shipment-container">
+        <form style="width:95%" asp-action="AddRefund" asp-controller="Shipment" method="post">
+            <input type="hidden" asp-for="VendorBalance" />
+            <input type="hidden" asp-for="ShipmentId" />
+            <input type="hidden" asp-for="VendorDetailsDTO.VendorId" />
+
+            <div class="row Red-Row ml-4 Shipment-Details-Section">
+                <div class="col-lg-4">
+                    <div class="col-lg-12">
+                        <label class="Shipment-Details-label">Vendor</label>
+                        <div class="Label-Details">
+                            <p class="mt-2"><label>@Model.VendorDetailsDTO.VendorName</label></p>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 mt-3">
+                        <label class="Shipment-Details-label">Service</label>
+                        <div class="Label-Details">
+                            <p class="mt-2"><label>@Model.ShipmentServiceName</label></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="col-lg-12">
+                        <label class="Shipment-Details-label">Cash Received (Total)</label>
+                        <div class="Label-Details">
+                            <p class="mt-2"><label>@Model.FeesDetailsDTO.TotalReceived</label> <label style="font-size: 10px;">EGP</label></p>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 mt-3">
+                        <label class="Shipment-Details-label">Vendor Cash</label>
+                        <div class="Label-Details">
+                            <p class="mt-2"><label>@Model.FeesDetailsDTO.VendorCash</label> <label style="font-size: 10px;">EGP</label></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="col-lg-12">
+                        <label class="Shipment-Details-label">RED Fees</label>
+                        <div class="Label-Details">
+                            <p class="mt-2"><label>@Model.FeesDetailsDTO.TotalRedFees</label> <label style="font-size: 10px;">EGP</label></p>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 mt-3">
+                        <label class="Shipment-Details-label">Status</label>
+                        <br />
+                        <span style="margin-bottom:0px; background-color:#0ebc934d; color:#008000" class="Filter-Table font-weight-bold mt-2">@Model.StatusDTO.Name</span>
+                        @if (Model.CashTransferId.HasValue)
+                        {
+                            <label class="Label-Bold font-weight-bold ml-2">Invoice ID : &nbsp;#@Model.CashTransferRefId</label>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <h6 class="my-4 font-w-500" style="margin-left:35px !important">
+                Refund Details
+                <br />
+                <i class="fas fa-info-circle fa-1x mt-3"></i>
+                <label style="font-size: 12px;">New Shipment will be created</label>
+                <label style="font-size: 11px; color:#ff000096">(Shipping Fees will applied).</label>
+
+                <br />
+                <i class="fas fa-info-circle F-Medium"></i>
+                <label style="font-size: 12px;">Total refund cash will deducted from your balance.</label>
+            </h6>
+
+            <div class="row Red-Row ml-4 Shipment-Details-Section">
+                <div class="col-lg-4">
+                    <div class="col-lg-12">
+                        <label class="Shipment-Details-label">Available Balance</label>
+                        <div class="Label-Details">
+                            <p class="mt-2"><label style="font-size: 19px">@Model.VendorBalance</label> <label style="font-size: 10px;">EGP</label></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="col-lg-12">
+                        <label class="Shipment-Details-label">Refund Cash</label>
+                        <input onchange="GetFeesSummary()" type="number" asp-for="RefundCash" class="input-Number" min="0" placeholder="Enter Refund Cash" required />
+                    </div>
+                </div>
+            </div>
+
+            <h6 class="my-4 font-w-500" style="margin-left:35px !important">Customer Details</h6>
+
+            <div class="row Red-Row w-100">
+                <div class="col-lg-12">
+                    <div class="Shipment-Details-Section">
+                        <div class="col-lg-4">
+                            <label class="Shipment-Details-label">Name</label>
+                            <input type="text" placeholder="Name" asp-for="CustomerDetailsDTO.CustomerName" required />
+                            <div class="invalid-feedback">
+                                Please enter customer name.
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <label class="Shipment-Details-label">Number</label>
+                            <input type="text" placeholder="Number" asp-for="CustomerDetailsDTO.CustomerPhone" pattern="^(?:\s*\d){8,11}(?:\s*)$" required>
+                            <div class="invalid-feedback">
+                                Please enter customer number (between 8 and 11 digit).
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <label class="Shipment-Details-label">Number 2</label>
+                            <input type="text" placeholder="Number 2" asp-for="CustomerDetailsDTO.CustomerPhone2" pattern="^(?:\s*\d){8,11}(?:\s*)$">
+                            <div class="invalid-feedback">
+                                Please enter customer number (between 8 and 11 digit).
+                            </div>
+                        </div>
+                        <div class="col-lg-4 mt-3">
+                            <label class="Shipment-Details-label">Address</label>
+                            <input type="text" placeholder="Address" asp-for="CustomerDetailsDTO.CustomerAddress" pattern="^(?!\s*$).+" required>
+                            <div class="invalid-feedback">
+                                Please enter customer address.
+                            </div>
+                        </div>
+                        <div class="col-lg-4 mt-3">
+                            <label class="Shipment-Details-label">Location Url</label>
+                            <input placeholder="Location Url" class="Input-Txt" asp-for="CustomerDetailsDTO.Location">
+                        </div>
+                        <div class="col-lg-4 mt-3">
+                            <label class="Shipment-Details-label">Landmark</label>
+                            <input type="text" placeholder="Landmark" asp-for="CustomerDetailsDTO.Landmark">
+                        </div>
+                        <div class="col-lg-6 mt-3">
+                            <label class="Shipment-Details-label">Floor</label>
+                            <input type="number" min="0" class="input-Number" asp-for="CustomerDetailsDTO.Floor" placeholder="Floor" required />
+                            <div class="invalid-feedback">
+                                Please enter floor.
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mt-3">
+                            <label class="Shipment-Details-label">Apartment</label>
+                            <input type="number" min="0" class="input-Number" asp-for="CustomerDetailsDTO.Apartment" placeholder="Apartment" required />
+                            <div class="invalid-feedback">
+                                Please enter apartment.
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mt-3">
+                            <label class="Shipment-Details-label">Governament</label>
+                            @Html.DropDownListFor(model => model.ZoneId, new SelectList(ViewBag.ZoneList, nameof(ZoneDTO.Id), nameof(ZoneDTO.NameAr)),"--- Select Governament ---", new { @class = "form-control select" ,@required="required",@onchange="GetAreasByZone(event)"})
+                            <div class="invalid-feedback">
+                                Please select governament.
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mt-3">
+                            <label class="Shipment-Details-label">Area</label>
+                            <select asp-for="AreaId" class="form-control select" onchange="GetFeesSummary()" required></select>
+                            <div class="invalid-feedback">
+                                Please select area.
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 mt-3">
+                            <label class="Shipment-Details-label">Comments</label>
+                            <textarea rows="3" type="text" placeholder="Additional Comments" asp-for="Description"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h6 class="my-4 font-w-500" style="margin-left:35px !important">New Shipment Summary</h6>
+
+            <div class="row Red-Row ml-4 Shipment-Total-Section">
+                <div class="col-lg-8">
+                    <label class="Shipment-Details-label">Shipment Fees Summary</label>
+                    <table class="OrdersTable mt-2" id="Order-Summary">
+                        <tbody>
+                            <tr>
+                                <td>Refund Cash</td>
+                                <td id="lblRefundCash" class="font-weight-bold">0 EGP</td>
+                            </tr>
+                            <tr>
+                                <td>Shipping Fees</td>
+                                <td id="lblShippingFees" class="font-weight-bold">0 EGP</td>
+                            </tr>
+                            <tr class="Red-Tr">
+                                <td>Total Cash</td>
+                                <td id="lblTotalFees" class="font-weight-bold">0 EGP</td>
+                            </tr>
+                            <tr class="Vendor-Tr">
+                                <td>Vendor Balance</td>
+                                <td class="font-weight-bold">@Model.VendorBalance EGP</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-lg-4 Total-Section">
+                    <div class="col-lg-12">
+                        <p id="Zone-name" class="mb-1"></p>
+                        <div class="d-flex">
+                            <span> Total Cash : </span>
+                            <span id="spanTotalFees">0 EGP</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row Red-Row w-100">
+                <div class="col-lg-12 Buttons-Submit-Section">
+                    <button type="submit" id="BtnSend" class="Red-Btn btn-success">Submit Refund Shipment</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+<script src="~/dist/vendors/select2/js/select2.full.min.js"></script>
+<script src="~/dist/js/select2.script.js"></script>
+<script src="~/dist/js/jquery.validate.min.js"></script>
+<script src="~/dist/js/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/dist/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/Shipment/AddShipment.js"></script>

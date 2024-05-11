@@ -1,0 +1,54 @@
+﻿
+@using LegendCR.CommonDefinitions.DTO.PickupDTOs
+@model PickupDTO
+<main>
+    <div class="container-fluid site-width">
+        <div class="row Red-Row">
+            <div class="col-12 col-lg-12 col-xl-12 col-sm-12">
+                <div class="sub-header">
+                        <span class="Header-Titel">Receive Delivery Pickups</span>
+                </div>
+            </div>
+            <div class="col-12 col-lg-12 col-xl-12 col-sm-12">
+                <p class="Shipment-Details-Titel-Small">Pickup Details</p>
+            </div>
+        </div>
+    </div>
+    <div class="Shipment-container">
+        <form style="width:95%" class="needs-validation" method="post" id="ReveivePickup" action="@Url.Action("ReveivePickup")">
+            <div class="row Red-Row ml-4 Shipment-Details-Section">
+                <div class="col-lg-6">
+                    <label class="Shipment-Details-label">Courier</label>
+                    @Html.DropDownListFor(model => model.DeliveryManId, new SelectList(ViewBag.Couriers, "Id", "Name"), "--- Select Courier ---", new { @class = "form-control ", @id = "CourierChangeVal", @onChange = "ReceivePickupsDDLchange()" })
+                    <div class="invalid-feedback">
+                        Please Select Courier.
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <label class="Shipment-Details-label">Vendor</label>
+                    @Html.DropDownListFor(model => model.VendorId, new SelectList(ViewBag.Vendors, "Id", "Name"), "--- Select Vendor ---", new { @class = "form-control ", @id = "VendorChangeVal", @onChange = "ReceivePickupsDDLchange()" })
+                </div>
+                <div class="col-md-12 pt-3">
+                    <div class="Packing-Type-Section">
+                        <label class="Shipment-Details-label">Pickup Code</label>
+                        <div class="Packing-Type h-auto" id="dvcodes">
+                            <ul>
+                                <li>
+                                    <label>No Data</label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row Red-Row w-100">
+                <div class="col-lg-12 RedBtn-Section">
+                    <button type="button" onclick="ReveivePickup()" class="Red-Btn">
+                        <img class="mr-2" src="~/dist/images/Icons/Shipped.png" /> Confirm
+                        <span class="Spinner spinner-border spinner-border-sm ml-2 d-none" role="status" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>

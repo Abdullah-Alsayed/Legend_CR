@@ -1,0 +1,87 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" href="~/dist/images/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RED Express</title>
+    <link rel="stylesheet" href="~/dist/vendors/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/dist/css/main-New.css">
+    <link href="~/dist/css/Red.css" rel="stylesheet" />
+    <![endif]-->
+    <style>
+        .panel-body {
+            padding: 0px !important;
+            overflow: hidden;
+        }
+
+        #barChart {
+            width: 800px !important;
+        }
+
+        .search-toolbar {
+            content: '';
+            display: block;
+            page-break-after: always !important;
+            page-break-inside: avoid !important;
+            page-break-before: avoid !important;
+        }
+
+        @@media print {
+            .page {
+                size: a4;
+                margin: 0;
+                margin: 0;
+                border: initial;
+                border-radius: initial;
+                width: initial;
+                min-height: initial;
+                box-shadow: initial;
+                background: initial;
+                page-break-after: always;
+            }
+
+            a[href]:after {
+                content: none !important;
+                background: -webkit-linear-gradient(left, #096f6b, #096f6b);
+            }
+
+
+/*            .table {
+                display: table;
+                border-collapse: separate;
+                border-spacing: 2px;
+                width: 100%;
+                direction: rtl;
+                margin-bottom: 2px !important;
+            }
+
+            .row {
+                display: table-row;
+            }
+
+            .cell {
+                display: table-cell;
+                padding: 2px;
+            }
+
+            .invoice {
+            }
+
+            .hr-tbl {
+                border: 1px solid green;
+                margin-bottom: 5px;
+                width: 100%;
+                page-break-inside: !important;
+                margin-top: 0px;
+            }*/
+        }
+    </style>
+</head>
+<body>
+    @RenderBody()
+</body>
+</html>

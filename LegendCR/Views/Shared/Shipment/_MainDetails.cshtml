@@ -1,0 +1,208 @@
+﻿@using LegendCR.CommonDefinitions.DTO.ShipmentDTOs
+@using LegendCR.CommonDefinitions.DTO
+@using LegendCR.Helpers
+@model ShipDTO
+@{
+    var Role = AuthHelper.GetClaimValue(User, "RoleID");
+}
+
+<div class="d-flex">
+    <div class="col-md-7 col-lg-5 Order-Details-FollowUp">
+        <div class="col-lg-6 col-12 col-sm-12 vehicle">
+            <img src="~/dist/images/Car.png" />
+        </div>
+        <div class="col-lg-6 col-12 col-sm-12">
+            <p>Shipment</p>
+            <b>@Model.RefId</b>
+            <p>@Model.ShipmentServiceName</p>
+            <p>@Model.BranchName</p>
+        </div>
+        <hr />
+        <div class="col-lg-12 col-12 col-sm-12 FollowUpList">
+            <ul class="timeline-app-alt">
+                @foreach (var follow in Model.FollowUpDTOs)
+                {
+                    <li class="timeline-item" style="margin-bottom: 20px;">
+                        @if (follow.FollowUpTypeId == 1)
+                        {
+                            <div class="timeline-dot bg-info"><i class="fas fa-check"></i></div>
+                        }
+                        else
+                        {
+                            @switch (follow.StatusId)
+                            {
+                                case (int)EnumStatus.Delivered:
+                                case (int)EnumStatus.Paid_To_Vendor:
+                                case (int)EnumStatus.Returned:
+                                case (int)EnumStatus.Refunded:
+                                    <div class="timeline-dot bg-success"><i class="fas fa-check-double"></i></div>
+                                    break;
+                                case (int)EnumStatus.Cancelled:
+                                case (int)EnumStatus.Cancelled_Pickup:
+                                case (int)EnumStatus.Cancelled_Refund:
+                                case (int)EnumStatus.Not_Received:
+                                    <div class="timeline-dot bg-danger"><i class="fas fas fa-times"></i></div>
+                                    break;
+                                case (int)EnumStatus.Ready_For_Delivery:
+                                case (int)EnumStatus.Ready_For_Pickup:
+                                case (int)EnumStatus.Ready_For_Return:
+                                case (int)EnumStatus.Ready_For_Refund:
+                                case (int)EnumStatus.Assigned_For_Delivery:
+                                case (int)EnumStatus.Assigned_For_Pickup:
+                                case (int)EnumStatus.Assigned_For_Return:
+                                case (int)EnumStatus.Assigned_For_Refund:
+                                    <div class="timeline-dot bg-warning"><i class="fas fas fa-arrow-right"></i></div>
+                                    break;
+                                case (int)EnumStatus.Out_For_Delivery:
+                                case (int)EnumStatus.Picked_Up:
+                                case (int)EnumStatus.Out_For_Return:
+                                case (int)EnumStatus.Out_For_Refund:
+                                    <div class="timeline-dot bg-info"><i class="fas fas fa-motorcycle"></i></div>
+                                    break;
+                                case (int)EnumStatus.At_Warehouse:
+                                case (int)EnumStatus.Postponed:
+                                case (int)EnumStatus.Archive:
+                                    <div class="timeline-dot bg-primary"><i class="fas fa-arrow-down"></i></div>
+                                    break;
+                                default:
+                                    <div class="timeline-dot bg-primary"><i class="fas fa-exclamation"></i></div>
+                                    break;
+                            }
+                        }
+                        <div class="w-100">
+                            <span>
+                                <p>@follow.Title</p>
+                                <p>@follow.Comment</p>
+                                <p>@follow.CreatedAt</p>
+                                @if (Role == (int)EnumRole.Admin)
+                                {
+                                    <p class="mt-1 font-weight-bold">By : @follow.CreatedByName</p>
+                                }
+                            </span>
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
+        <div class="row Client-Info">
+            <div class="col-lg-8 col-12 col-sm-12">
+                <p>Client Details</p>
+                <b>@Model.CustomerDetailsDTO.CustomerName</b>
+                <p>@Model.CustomerDetailsDTO.CustomerPhone</p>
+                <p>@Model.CustomerDetailsDTO.CustomerPhone2</p>
+                <p>@Model.CustomerDetailsDTO.CustomerAddress</p>
+            </div>
+            <div class="col-lg-4 col-12 col-sm-12 Clint-Contact">
+                <div>
+                    <i class="icon-phone"></i>
+                </div>
+                <div class="New-Messege">
+                    <i class="icon-speech"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 col-lg-7 Order-Details-Location">
+        <div class="row Order-Details-Section col-lg-12 col-12 col-sm-12">
+            <div class="row Order-Details">
+                <div class="col-md-3">
+                    <h3>Shipment Details</h3>
+                </div>
+                <div class="col-md-3">
+                    <p>@Model.CreatedAt.ToShortDateString()</p>
+                </div>
+                <div class="col-md-2">
+                    <h3>Vendor</h3>
+                </div>
+                <div class="col-md-4">
+                    <p>@Model.VendorDetailsDTO.VendorName</p>
+                </div>
+            </div>
+            <div class="row Order-Details">
+                @if (Model.ShipmentServiceId == (int)EnumShipmentService.Refund)
+                {
+                    <div class="col-lg-3 col-3">
+                        <label>Refund Cash</label>
+                        <p>@Model.RefundCash EGP</p>
+                    </div>
+                    <div class="col-lg-3 col-3">
+                        <label>Shipping Fees</label>
+                        <p>@Model.FeesDetailsDTO.ShippingFees EGP</p>
+                    </div>
+                    <div class="col-lg-3 col-3">
+                        <label>Refund Fees</label>
+                        <p>@Model.RefundFees EGP</p>
+                    </div>
+                    <div class="col-lg-3 col-3">
+                        <label>Refund Shipment ID</label>
+                        <p class="font-weight-bold">@Model.ShipToRefundRefId</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-lg-3 col-3">
+                        <label>COD</label>
+                        <p>@Model.FeesDetailsDTO.Total EGP</p>
+                    </div>
+                    <div class="col-lg-3 col-3">
+                        <label>Shipping Fees</label>
+                        <p>@Model.FeesDetailsDTO.ShippingFees EGP</p>
+                    </div>
+                    <div class="col-lg-3 col-3">
+                        <label>
+                            Other Fees
+                        </label>
+                        <ul class="Fess-Ul">
+                            @if (Model.FeesDetailsDTO.PackingFees > 0)
+                            {
+                                <li><p>Packing @Model.FeesDetailsDTO.PackingFees EGP</p></li>
+                            }
+                            @if (Model.FeesDetailsDTO.WeightFees > 0)
+                            {
+                                <li><p> Weight @Model.FeesDetailsDTO.WeightFees EGP</p></li>
+                            }
+                            @if (Model.FeesDetailsDTO.PartialDeliveryFees > 0)
+                            {
+                                <li><p> Partial @Model.FeesDetailsDTO.PartialDeliveryFees EGP</p></li>
+                            }
+                        </ul>
+                    </div>
+                    <div class="col-lg-3 col-3">
+                        <label>Vendor Cash</label>
+                        <p>@Model.FeesDetailsDTO.VendorCash EGP</p>
+                    </div>
+                }
+                <div class="col-lg-6 col-6">
+                    <h3>Packing</h3>
+                    <p>@(Model.SettingDTO.PackingName ?? "None")</p>
+                </div>
+                <div class="col-lg- col-6">
+                    <h3>Comments</h3>
+                    <p>@(Model.Description ?? "None")</p>
+                </div>
+                <div class="col-lg-3 col-3">
+                    @if (Model.ShipItemDTOs.Count() > 0)
+                    {
+                        <button class="Red-Btn Btn-Xs" data-target="#PartialItemsModal" data-toggle="modal" data-dismiss="modal" onclick="PartialItems('Shipment',@Model.ShipmentId)">View Package Items</button>
+                    }
+                    else
+                    {
+                        <button class="Red-Btn Btn-Xs" disabled>View Package Items</button>
+                    }
+                </div>
+                <div class="col-lg-3 col-3">
+                    <label>Items</label>
+                    <p>@Model.NoOfItems</p>
+                </div>
+                <div class="col-lg-3 col-3">
+                    <label>Weight</label>
+                    <p>@Model.SettingDTO.Weight KG</p>
+                </div>
+                <div class="col-lg-3 col-3">
+                    <label>Size</label>
+                    <p>@(Model.SettingDTO.Size ?? "None")</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

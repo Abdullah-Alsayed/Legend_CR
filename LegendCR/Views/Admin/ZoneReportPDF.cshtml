@@ -1,0 +1,37 @@
+﻿
+@using LegendCR.CommonDefinitions.DTO;
+@model List<ZoneDTO>
+@{
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+}
+    @if (Model != null && Model.Count() > 0)
+{
+  <table class="table">
+    <thead>
+        <partial name="_ReportHeder" model="11" />
+            <tr>
+                <td>Name</td>
+                <td>Name Arabic</td>
+                <td>Description</td>
+                <td>Fees</td>
+            </tr>
+    </thead>
+    <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.NameEn</td>
+                    <td>@item.NameAr</td>
+                    @*  <td><b>Cairo</b></td>*@
+                    <td>
+                        @foreach (var Area in item.City)
+                        {
+                            <span>@Area.CityNameAr, </span>
+                        }
+                    </td>
+                    <td>@item.ZoneTax.Tax EGP</td>
+                </tr>
+            }
+    </tbody>
+  </table>
+}
