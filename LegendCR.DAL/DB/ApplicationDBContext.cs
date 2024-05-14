@@ -1,40 +1,26 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace LegendCR.DAL.DB
 {
-    public partial class ApplicationDBContext : DbContext
+    public class ApplicationDBContext : IdentityDbContext<User, Role, string>
     {
-        public ApplicationDBContext()
-        {
-        }
-
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options)
-            : base(options)
-        {
-        }
+            : base(options) { }
 
+        public virtual DbSet<Account> Accounts { get; set; }
+        public virtual DbSet<AccountFiles> AccountFiles { get; set; }
         public virtual DbSet<AppService> AppService { get; set; }
-        public virtual DbSet<AppServiceClass> AppServiceClass { get; set; }
-        public virtual DbSet<AppServiceGroup> AppServiceGroup { get; set; }
-        public virtual DbSet<City> City { get; set; }
-        public virtual DbSet<CommonResource> CommonResource { get; set; }
-        public virtual DbSet<CommonUser> CommonUser { get; set; }
-        public virtual DbSet<CommonUserDevice> CommonUserDevice { get; set; }
+        public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<ContactUs> ContactUs { get; set; }
-        public virtual DbSet<FollowUp> FollowUp { get; set; }
-        public virtual DbSet<FollowUpType> FollowUpType { get; set; }
+        public virtual DbSet<Favorite> Favorites { get; set; }
+        public virtual DbSet<FeedBack> FeedBacks { get; set; }
+        public virtual DbSet<Game> Games { get; set; }
+        public virtual DbSet<History> Histories { get; set; }
+        public virtual DbSet<Invoice> Invoices { get; set; }
         public virtual DbSet<Notification> Notification { get; set; }
-        public virtual DbSet<ProblemType> ProblemType { get; set; }
-        public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<RoleAppService> RoleAppService { get; set; }
-        //public virtual DbSet<Shipment> Shipment { get; set; }
-        //public virtual DbSet<ShipmentService> ShipmentService { get; set; }
-        //public virtual DbSet<ShipmentType> ShipmentType { get; set; }
-        public virtual DbSet<Status> Status { get; set; }
-        public virtual DbSet<UserLocation> UserLocation { get; set; }
-        public virtual DbSet<VendorProduct> VendorProduct { get; set; }
-        public virtual DbSet<Warehouse> Warehouse { get; set; }
-        public virtual DbSet<Zone> Zone { get; set; }
-        public virtual DbSet<ZoneTax> ZoneTax { get; set; }
+        public virtual DbSet<Status> Statuses { get; set; }
+        public virtual DbSet<Settings> Settings { get; set; }
     }
 }

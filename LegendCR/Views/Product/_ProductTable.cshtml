@@ -11,7 +11,7 @@
     foreach (var item in Model)
     {
         <tr id="Product_@item.VendorProductId">
-            @if (Role != (int)EnumRole.Vendor)
+            @if (Role != EnumRole.Vendor.ToString())
             {
                 <td class="font-weight-bold" id="AccountName_@item.VendorProductId">@item.VendorName</td>
             }

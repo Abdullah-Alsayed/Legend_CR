@@ -5,7 +5,7 @@
 @{
     var Role = AuthHelper.GetClaimValue(User, "RoleID");
     int Filter;
-    if (Role == (int)EnumRole.AccountManager || Role == (int)EnumRole.Admin)
+    if (Role == EnumRole.AccountManager.ToString() || Role == EnumRole.Admin.ToString())
     { 
         Filter = (byte)EnumSelectListType.Vendor; 
     }

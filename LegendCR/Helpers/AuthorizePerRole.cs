@@ -7,7 +7,8 @@ namespace LegendCR.Portal.Helpers
 {
     public class AuthorizePerRoleAttribute : TypeFilterAttribute
     {
-        public AuthorizePerRoleAttribute(string serviceName) : base(typeof(AuthorizePerRoleFilter))
+        public AuthorizePerRoleAttribute(string serviceName)
+            : base(typeof(AuthorizePerRoleFilter))
         {
             Arguments = new object[] { serviceName };
         }
@@ -24,19 +25,26 @@ namespace LegendCR.Portal.Helpers
 
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            var roleID = long.Parse(context.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "RoleID").Value);
+            var roleID = context
+                .HttpContext.User.Claims.FirstOrDefault(c => c.Type == "RoleID")
+                .Value;
             string connectionString = Constants.connectionString;
             var canAccess = true;
 
-            canAccess = BaseService.CheckRoleAccessability(roleID, serviceName, connectionString: connectionString);
+            canAccess = BaseService.CheckRoleAccessability(
+                roleID,
+                serviceName,
+                connectionString: connectionString
+            );
             if (!canAccess)
             {
                 context.Result = new ForbidResult();
                 if (!context.HttpContext.User.Identity.IsAuthenticated)
                     context.Result = new UnauthorizedResult();
                 else
-                    context.Result = new RedirectToRouteResult(new
-                    RouteValueDictionary(new { controller = "User", action = "NotFound" }));
+                    context.Result = new RedirectToRouteResult(
+                        new RouteValueDictionary(new { controller = "User", action = "NotFound" })
+                    );
             }
         }
     }

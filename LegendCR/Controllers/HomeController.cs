@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using LegendCR.BL.Services;
 using LegendCR.BL.Services.Helpers;
 using LegendCR.CommonDefinitions.DTO;
@@ -10,7 +11,6 @@ using LegendCR.Portal.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 using Constants = LegendCR.Helpers.Constants;
 
 namespace LegendCR.Portal.Controllers
@@ -36,7 +36,9 @@ namespace LegendCR.Portal.Controllers
                 MarkAsSeen = true,
             };
 
-            var notificationResponse = UserNotificationService.ListUserNotification(notificationRequest);
+            var notificationResponse = UserNotificationService.ListUserNotification(
+                notificationRequest
+            );
             return View(notificationResponse.UserNotificationRecords);
         }
 
@@ -44,7 +46,7 @@ namespace LegendCR.Portal.Controllers
         public IActionResult Index(DateTime? From, DateTime? To, string ActionType)
         {
             var roleID = AuthHelper.GetClaimValue(User, "RoleID");
-            if (roleID == (int)EnumRole.Vendor)
+            if (roleID == EnumRole.Vendor.ToString())
                 return RedirectToAction(nameof(AccountDashboard));
 
             #region Filter Data
@@ -74,15 +76,20 @@ namespace LegendCR.Portal.Controllers
         }
 
         [AuthorizePerRole("AccountDashboard")]
-        public IActionResult AccountDashboard(DateTime? From, DateTime? To, int VendorID, string ActionType)
+        public IActionResult AccountDashboard(
+            DateTime? From,
+            DateTime? To,
+            string VendorID,
+            string ActionType
+        )
         {
-            int UserID = AuthHelper.GetClaimValue(User, "UserID");
-            int RolID = AuthHelper.GetClaimValue(User, "RoleID");
+            var UserID = AuthHelper.GetClaimValue(User, "UserID");
+            var RolID = AuthHelper.GetClaimValue(User, "RoleID");
 
             #region Filter Data
             var ViewData = new ViewModel<DashboardDTO>();
             var filter = new ShipDTO();
-            if (VendorID == 0)
+            if (string.IsNullOrEmpty(VendorID))
                 filter.VendorDetailsDTO = new VendorDetailsDTO { VendorId = UserID };
             else
                 filter.VendorDetailsDTO = new VendorDetailsDTO { VendorId = VendorID };
@@ -94,10 +101,11 @@ namespace LegendCR.Portal.Controllers
                 filter.DateTo = To.Value;
             #endregion
 
-            if (RolID != (int)EnumRole.Vendor)
-                ViewData.Lookup = BaseHelper.GetLookup(new List<byte> {
-                    (byte)EnumSelectListType.Vendor,
-                }, _context);
+            if (RolID != EnumRole.Vendor.ToString())
+                ViewData.Lookup = BaseHelper.GetLookup(
+                    new List<byte> { (byte)EnumSelectListType.Vendor, },
+                    _context
+                );
 
             var Request = new DashboardRequest()
             {
@@ -118,8 +126,6 @@ namespace LegendCR.Portal.Controllers
             else
                 return View(ViewData);
         }
-
-
 
         [AuthorizePerRole("RedDashboard")]
         public IActionResult IndexPartial(DateTime? From, DateTime? To)
@@ -249,8 +255,8 @@ namespace LegendCR.Portal.Controllers
             //    .OrderByDescending(p => p.Value2).Take(10).ToArray();
             #endregion
             return PartialView("_IndexPartial", record);
-
         }
+
         [AuthorizePerRole("RedDashboard")]
         public IActionResult AllOrdersIncome(DateTime? From, DateTime? To)
         {
@@ -302,6 +308,7 @@ namespace LegendCR.Portal.Controllers
             #endregion
             return Json(record);
         }
+
         [AuthorizePerRole("RedDashboard")]
         public IActionResult TodayOrdersIncome(DateTime? From, DateTime? To)
         {
@@ -356,6 +363,7 @@ namespace LegendCR.Portal.Controllers
             //#endregion
             return Json(record);
         }
+
         [AuthorizePerRole("RedDashboard")]
         public IActionResult AllOrdersCount(DateTime? From, DateTime? To)
         {
@@ -400,7 +408,6 @@ namespace LegendCR.Portal.Controllers
 
             var record = new DashboardDTO();
 
-
             //#region All Orders Count
             //record.AllOrders_Count = AllOrders.Count();
             //record.NewOrders_Count = AllOrders.Where(p => p.StatusId == (int)EnumStatus.Ready_For_Pickup
@@ -413,16 +420,16 @@ namespace LegendCR.Portal.Controllers
             return Json(record);
         }
 
-        public IActionResult AccountDashboardPartial(DateTime? From, DateTime? To, int VendorID)
+        public IActionResult AccountDashboardPartial(DateTime? From, DateTime? To, string VendorID)
         {
-            int UserID = AuthHelper.GetClaimValue(User, "UserID");
-            if (AuthHelper.GetClaimValue(User, "RoleID") == (int)EnumRole.Vendor)
+            string UserID = AuthHelper.GetClaimValue(User, "UserID");
+            if (AuthHelper.GetClaimValue(User, "RoleID") == EnumRole.Vendor.ToString())
             {
-                ViewBag.Accounts = _context.CommonUser.Where(p => p.RoleId == 4 && p.Id == UserID);
+                ViewBag.Accounts = _context.Users.Where(p => p.Id == UserID);
                 VendorID = UserID;
             }
             else
-                ViewBag.Accounts = _context.CommonUser.Where(p => p.RoleId == 4);
+                ViewBag.Accounts = _context.Users.ToList();
 
             //#region Get Data
             //List<ShipmentDTO> AllOrders, TodayOrders = null;
@@ -602,11 +609,12 @@ namespace LegendCR.Portal.Controllers
 
             return View(record);
         }
+
         public IActionResult About()
         {
-
             return View();
         }
+
         [AllowAnonymous]
         public IActionResult Contact()
         {
@@ -614,6 +622,7 @@ namespace LegendCR.Portal.Controllers
 
             return View();
         }
+
         public IActionResult Error()
         {
             var exceptionFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
@@ -626,15 +635,22 @@ namespace LegendCR.Portal.Controllers
                 // Get the exception that occurred
                 Exception exceptionThatOccurred = exceptionFeature.Error;
 
-                LogHelper.LogException(routeWhereExceptionOccurred + " ** " + exceptionThatOccurred.Message, exceptionThatOccurred.StackTrace);
+                LogHelper.LogException(
+                    routeWhereExceptionOccurred + " ** " + exceptionThatOccurred.Message,
+                    exceptionThatOccurred.StackTrace
+                );
             }
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(
+                new ErrorViewModel
+                {
+                    RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+                }
+            );
         }
 
         public IActionResult Privacy()
         {
             return View();
         }
-
     }
 }

@@ -14,7 +14,7 @@
     <thead>
         <partial name="_ReportHeder" model="11" />
             <tr>
-                @if (Role != (int)EnumRole.Vendor)
+                @if (Role != EnumRole.Vendor.ToString())
                 {
                     <td>Vendor Name</td>
                 }
@@ -30,7 +30,7 @@
             @foreach (var item in Model)
             {
               <tr>
-                @if (Role != (int)EnumRole.Vendor)
+                @if (Role !=EnumRole.Vendor.ToString())
                 {
                     <td id="AccountName_@item.VendorProductId">@item.VendorName</td>
                 }

@@ -22,7 +22,6 @@ namespace LegendCR.BL.Services
             public const int RefundFees = 0;
         }
 
-
         public static int PercentageCalculation(double PresentMonth, double LastMonth)
         {
             if (PresentMonth > LastMonth) // Present Month is GREATER
@@ -60,7 +59,7 @@ namespace LegendCR.BL.Services
         }
 
         /// <summary>
-        /// Return Pdf Report 
+        /// Return Pdf Report
         /// </summary>
         /// <typeparam name="T"> Type Of DTOs </typeparam>
         /// <param name="ViewName"> Of Page Name</param>
@@ -87,26 +86,57 @@ namespace LegendCR.BL.Services
         {
             var lookup = new LookupDTO();
 
-            if (LookType.Contains((byte)EnumSelectListType.Zone))
-                lookup.ZoneDTOs = ZoneService.GetZones(new ZoneRequest { context = Context }).ZoneDTOs;
+            //if (LookType.Contains((byte)EnumSelectListType.Zone))
+            //    lookup.ZoneDTOs = ZoneService.GetZones(new ZoneRequest { context = Context }).ZoneDTOs;
 
             if (LookType.Contains((byte)EnumSelectListType.Courier))
-                lookup.CourierDTOs = UserService.GetAllUsers(new UserRequest { context = Context, applyFilter = true, UserDTO = new UserDTO { RoleID = (int)EnumRole.DeliveryMan } }).UserDTOs;
+                lookup.CourierDTOs = UserService
+                    .GetAllUsers(
+                        new UserRequest
+                        {
+                            context = Context,
+                            applyFilter = true,
+                            UserDTO = new UserDTO { RoleID = (int)EnumRole.DeliveryMan }
+                        }
+                    )
+                    .UserDTOs;
 
             if (LookType.Contains((byte)EnumSelectListType.Vendor))
-                lookup.VendorDTOs = UserService.GetAllUsers(new UserRequest { context = Context, applyFilter = true, UserDTO = new UserDTO { RoleID = (int)EnumRole.Vendor } }).UserDTOs;
+                lookup.VendorDTOs = UserService
+                    .GetAllUsers(
+                        new UserRequest
+                        {
+                            context = Context,
+                            applyFilter = true,
+                            UserDTO = new UserDTO { RoleID = (int)EnumRole.Vendor }
+                        }
+                    )
+                    .UserDTOs;
 
             if (LookType.Contains((byte)EnumSelectListType.Employee))
-                lookup.EmployeeDTOs = UserService.GetAllUsers(new UserRequest { context = Context, applyFilter = true, UserDTO = new UserDTO { RoleID = (int)EnumRole.Employee } }).UserDTOs;
+                lookup.EmployeeDTOs = UserService
+                    .GetAllUsers(
+                        new UserRequest
+                        {
+                            context = Context,
+                            applyFilter = true,
+                            UserDTO = new UserDTO { RoleID = (int)EnumRole.Employee }
+                        }
+                    )
+                    .UserDTOs;
 
             if (LookType.Contains((byte)EnumSelectListType.Status))
-                lookup.StatusDTOs = StatusService.GetStatus(new StatusRequest { context = Context }).StatusDTOs;
+                lookup.StatusDTOs = StatusService
+                    .GetStatus(new StatusRequest { context = Context })
+                    .StatusDTOs;
 
             //if (LookType.Contains((byte)EnumSelectListType.PackingType))
             //    lookup.PackingTypeDTOs = PackingTypeService.GetPackingType(new PackingTypeRequest { context = Context }).PackingTypeDTOs;
 
             if (LookType.Contains((byte)EnumSelectListType.Role))
-                lookup.RoleDTOs = RoleService.ListRole(new RoleRequest { context = Context }).RoleDTOs;
+                lookup.RoleDTOs = RoleService
+                    .ListRole(new RoleRequest { context = Context })
+                    .RoleDTOs;
 
             //if (LookType.Contains((byte)EnumSelectListType.Area))
             //    lookup.AreaDTOs = CityService.GetCity(new CityRequest { context = Context }).CityDTOs;
@@ -137,7 +167,11 @@ namespace LegendCR.BL.Services
             return Img;
         }
 
-        public static string GenerateRefId(EnumRefIdType RefIdType, int ID, byte TransactionType = (int)EnumTransactionType.Withdraw)
+        public static string GenerateRefId(
+            EnumRefIdType RefIdType,
+            int ID,
+            byte TransactionType = (int)EnumTransactionType.Withdraw
+        )
         {
             switch (RefIdType)
             {
@@ -156,7 +190,9 @@ namespace LegendCR.BL.Services
                 case EnumRefIdType.Shipment_Refund:
                     return "RF" + ID;
                 case EnumRefIdType.Account_Transaction:
-                    return "TR" + ID + (TransactionType == (int)EnumTransactionType.Withdraw ? "W" : "D");
+                    return "TR"
+                        + ID
+                        + (TransactionType == (int)EnumTransactionType.Withdraw ? "W" : "D");
                 case EnumRefIdType.Cash_Transfer:
                     return "INV" + ID;
                 default:

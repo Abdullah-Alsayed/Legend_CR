@@ -1,7 +1,7 @@
-﻿using LegendCR.DAL.DB;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using LegendCR.DAL.DB;
 
 namespace LegendCR.CommonDefinitions.Records
 {
@@ -22,7 +22,8 @@ namespace LegendCR.CommonDefinitions.Records
         public int? ZoneId { get; set; }
         public string ZoneNameEn { get; set; }
         public string ZoneNameAr { get; set; }
-        public ZoneTax ZoneTax { get; set; }
+
+        //  public ZoneTax ZoneTax { get; set; }
         public double ShippingFees { get; set; }
         public string Search { get; set; }
         public bool? IsDeleted { get; set; }

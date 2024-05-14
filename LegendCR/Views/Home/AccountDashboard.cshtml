@@ -2,7 +2,7 @@
 @using LegendCR.CommonDefinitions.DTO;
 @using LegendCR.Helpers;
 @{
-    @if (AuthHelper.GetClaimValue(User, "RoleID") == (int)EnumRole.Vendor)
+    @if (AuthHelper.GetClaimValue(User, "RoleID") == EnumRole.Vendor.ToString())
     {
         Layout = "~/Views/Shared/_VendorLayout.cshtml";
     }

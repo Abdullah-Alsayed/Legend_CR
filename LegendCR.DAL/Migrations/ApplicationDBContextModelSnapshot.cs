@@ -22,523 +22,267 @@ namespace LegendCR.DAL.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("LegendCR.DAL.DB.Account", b =>
+                {
+                    b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreateBy")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("GameID")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("GameID1")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsAccepted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Level")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifyAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifyBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<decimal>("Profit")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("PurchasePrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("SellingPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("StatusID")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("StatusID1")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("CreateBy");
+
+                    b.HasIndex("GameID1");
+
+                    b.HasIndex("StatusID1");
+
+                    b.ToTable("Accounts");
+                });
+
+            modelBuilder.Entity("LegendCR.DAL.DB.AccountFiles", b =>
+                {
+                    b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AccountId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreateBy")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("File")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifyAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifyBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("CreateBy");
+
+                    b.ToTable("AccountFiles");
+                });
+
             modelBuilder.Entity("LegendCR.DAL.DB.AppService", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<bool>("AllowAnonymous")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("AllowLog")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("AppServiceClassId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("AppServiceGroupId")
-                        .HasColumnType("int");
-
                     b.Property<string>("ClassName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LogMessage")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ModificationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ModifiedBy")
-                        .HasColumnType("int");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.Property<bool?>("ShowToUser")
+                    b.Property<bool>("ShowToUser")
                         .HasColumnType("bit");
 
                     b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppServiceClassId");
-
-                    b.HasIndex("AppServiceGroupId");
+                    b.HasKey("ID");
 
                     b.ToTable("AppService");
                 });
 
-            modelBuilder.Entity("LegendCR.DAL.DB.AppServiceClass", b =>
+            modelBuilder.Entity("LegendCR.DAL.DB.Category", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("CreatedBy")
-                        .HasColumnType("int");
+                    b.Property<string>("CreateBy")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Description")
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Icon")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifyAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifyBy")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ID");
 
-                    b.ToTable("AppServiceClass");
-                });
+                    b.HasIndex("CreateBy");
 
-            modelBuilder.Entity("LegendCR.DAL.DB.AppServiceGroup", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("AppServiceClassId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppServiceClassId");
-
-                    b.ToTable("AppServiceGroup");
-                });
-
-            modelBuilder.Entity("LegendCR.DAL.DB.City", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("BranchId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CityName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CityNameAr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool?>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("LastModifiedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Lat")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Lng")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("StateId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ZoneId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ZoneId");
-
-                    b.ToTable("City");
-                });
-
-            modelBuilder.Entity("LegendCR.DAL.DB.CommonResource", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("ApplicationId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("LastUpdateDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("MediaUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ModifiedBy")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ResourceKey")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ResourceLang")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ResourceValue")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CommonResource");
-                });
-
-            modelBuilder.Entity("LegendCR.DAL.DB.CommonUser", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AccountName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("AccountNumber")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AddressDetails")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Apartment")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("AreaId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Averageorders")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Bank")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("BranchId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Floor")
-                        .HasColumnType("int");
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("HashedPassword")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("IbanNumber")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ImgUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("InstaPayAccountName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsLoggedIn")
-                        .HasColumnType("bit");
-
-                    b.Property<bool?>("IsVerified")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Landmark")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastLocationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("LastLoginDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Lat")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Lng")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LocationUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ModificationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ModifiedBy")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NationalId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool?>("OpenPackage")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("PageName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool?>("PartialDelivery")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProductType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.Property<long?>("VerificationCode")
-                        .HasColumnType("bigint");
-
-                    b.Property<bool?>("VisaPayment")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("VodafoneCashNumber")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ZoneId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("CommonUser");
-                });
-
-            modelBuilder.Entity("LegendCR.DAL.DB.CommonUserDevice", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("AuthCreationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("AuthExpirationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("AuthIp")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AuthToken")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("CommonUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DeviceEmail")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DeviceImei")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DeviceMobileNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DeviceName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DeviceOsversion")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DeviceToken")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DeviceType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool?>("EnableNotification")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool?>("IsGoogleSupport")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsLoggedIn")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Lang")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastActiveDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("LastUpdateDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ModifiedBy")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CommonUserId");
-
-                    b.ToTable("CommonUserDevice");
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("LegendCR.DAL.DB.ContactUs", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreateBy")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Message")
                         .IsRequired()
+                        .HasMaxLength(225)
+                        .HasColumnType("nvarchar(225)");
+
+                    b.Property<DateTime?>("ModifyAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifyBy")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
@@ -547,265 +291,716 @@ namespace LegendCR.DAL.Migrations
 
                     b.Property<string>("Subject")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.HasKey("ID");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
+                    b.HasIndex("CreateBy");
 
                     b.ToTable("ContactUs");
                 });
 
-            modelBuilder.Entity("LegendCR.DAL.DB.FollowUp", b =>
+            modelBuilder.Entity("LegendCR.DAL.DB.Favorite", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("AccountID")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<Guid?>("AccountID1")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Comment")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
+                    b.Property<string>("CreateBy")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("CreatedByNavigationId")
-                        .HasColumnType("int");
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
 
-                    b.Property<int?>("FollowUpTypeId")
-                        .HasColumnType("int");
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("LastModifiedAt")
+                    b.Property<DateTime?>("ModifyAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("LastModifiedBy")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Lat")
-                        .IsRequired()
+                    b.Property<string>("ModifyBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Lng")
+                    b.HasKey("ID");
+
+                    b.HasIndex("AccountID1");
+
+                    b.HasIndex("CreateBy");
+
+                    b.ToTable("Favorites");
+                });
+
+            modelBuilder.Entity("LegendCR.DAL.DB.FeedBack", b =>
+                {
+                    b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Comment")
                         .IsRequired()
+                        .HasMaxLength(225)
+                        .HasColumnType("nvarchar(225)");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreateBy")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ShipmentId")
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifyAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifyBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Rate")
                         .HasColumnType("int");
 
-                    b.Property<int?>("StatusId")
+                    b.HasKey("ID");
+
+                    b.HasIndex("CreateBy");
+
+                    b.ToTable("FeedBacks");
+                });
+
+            modelBuilder.Entity("LegendCR.DAL.DB.Game", b =>
+                {
+                    b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("CategoryID")
                         .HasColumnType("int");
+
+                    b.Property<Guid?>("CategoryID1")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreateBy")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(225)
+                        .HasColumnType("nvarchar(225)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Logo")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime?>("ModifyAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifyBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("CategoryID1");
+
+                    b.HasIndex("CreateBy");
+
+                    b.ToTable("Games");
+                });
+
+            modelBuilder.Entity("LegendCR.DAL.DB.History", b =>
+                {
+                    b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Action")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreateBy")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Entity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Icon")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifyAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifyBy")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ID");
 
-                    b.HasIndex("CreatedByNavigationId");
+                    b.HasIndex("CreateBy");
 
-                    b.HasIndex("FollowUpTypeId");
-
-                    b.ToTable("FollowUp");
+                    b.ToTable("Histories");
                 });
 
-            modelBuilder.Entity("LegendCR.DAL.DB.FollowUpType", b =>
+            modelBuilder.Entity("LegendCR.DAL.DB.Invoice", b =>
                 {
-                    b.Property<int>("FollowUpTypeId")
+                    b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("AccountID")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FollowUpTypeId"));
+                    b.Property<Guid?>("AccountID1")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("TypeName")
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreateBy")
                         .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("FollowUpTypeId");
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
-                    b.ToTable("FollowUpType");
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsReturn")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifyAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifyBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("AccountID1");
+
+                    b.HasIndex("CreateBy");
+
+                    b.ToTable("Invoices");
                 });
 
             modelBuilder.Entity("LegendCR.DAL.DB.Notification", b =>
                 {
-                    b.Property<int>("NotificationId")
+                    b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NotificationId"));
-
-                    b.Property<string>("Body")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreationDate")
+                    b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("DeletionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Icon")
+                    b.Property<string>("CreateBy")
                         .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CreateName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("IsDeleted")
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Entity")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<bool?>("IsSeen")
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("RecipientId")
-                        .HasColumnType("int");
+                    b.Property<string>("MessageAR")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
-                    b.Property<int?>("RecipientRoleId")
-                        .HasColumnType("int");
+                    b.Property<string>("MessageEN")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
-                    b.Property<int?>("SeenBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("SeenDate")
+                    b.Property<DateTime?>("ModifyAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("SenderId")
+                    b.Property<string>("ModifyBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OperationType")
                         .HasColumnType("int");
 
-                    b.Property<string>("TargetPath")
+                    b.Property<string>("Subject")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("NotificationId");
+                    b.HasKey("ID");
 
-                    b.HasIndex("RecipientRoleId");
-
-                    b.HasIndex("SenderId");
+                    b.HasIndex("CreateBy");
 
                     b.ToTable("Notification");
                 });
 
-            modelBuilder.Entity("LegendCR.DAL.DB.ProblemType", b =>
-                {
-                    b.Property<int>("ProblemTypeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProblemTypeId"));
-
-                    b.Property<bool?>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("NameAr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NameEn")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Type")
-                        .HasColumnType("int");
-
-                    b.HasKey("ProblemTypeId");
-
-                    b.ToTable("ProblemType");
-                });
-
             modelBuilder.Entity("LegendCR.DAL.DB.Role", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreationDate")
+                    b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool?>("Editable")
+                    b.Property<string>("CreateBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsInternal")
+                    b.Property<bool>("IsMaster")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("ModificationDate")
+                    b.Property<DateTime?>("ModifyAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifiedBy")
-                        .HasColumnType("int");
+                    b.Property<string>("ModifyBy")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Role");
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles", (string)null);
                 });
 
             modelBuilder.Entity("LegendCR.DAL.DB.RoleAppService", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("AppServiceId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreationDate")
+                    b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("CreateBy")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("Enabled")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("ModificationDate")
+                    b.Property<DateTime?>("ModifyAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifiedBy")
-                        .HasColumnType("int");
+                    b.Property<string>("ModifyBy")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ID");
 
                     b.HasIndex("AppServiceId");
+
+                    b.HasIndex("CreateBy");
 
                     b.HasIndex("RoleId");
 
                     b.ToTable("RoleAppService");
                 });
 
+            modelBuilder.Entity("LegendCR.DAL.DB.Settings", b =>
+                {
+                    b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreateBy")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FaceBook")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Instagram")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Logo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MainColor")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifyAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifyBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Whatsapp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Youtube")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("CreateBy");
+
+                    b.ToTable("Settings");
+                });
+
             modelBuilder.Entity("LegendCR.DAL.DB.Status", b =>
+                {
+                    b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreateBy")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifyAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifyBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("CreateBy");
+
+                    b.ToTable("Statuses");
+                });
+
+            modelBuilder.Entity("LegendCR.DAL.DB.User", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AccountNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Bank")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateOnly>("Birthday")
+                        .HasColumnType("date");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreateBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("Gander")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IbanNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("InstPayAccount")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsLoggedIn")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsVerified")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Language")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("LastLoginDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Lat")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Lng")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTime?>("ModifyAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifyBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Photo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<int>("VodafoneCashNumber")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -813,349 +1008,242 @@ namespace LegendCR.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
-                        .IsRequired()
+                    b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Status");
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
-            modelBuilder.Entity("LegendCR.DAL.DB.UserLocation", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("ApplicationId")
-                        .HasColumnType("bigint");
-
-                    b.Property<double?>("AquirityDistance")
-                        .HasColumnType("float");
-
-                    b.Property<int?>("BataryStatus")
                         .HasColumnType("int");
 
-                    b.Property<long?>("ChannelId")
-                        .HasColumnType("bigint");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreationDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
+                    b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double?>("DirectionAngle")
-                        .HasColumnType("float");
-
-                    b.Property<string>("ImagePath")
-                        .IsRequired()
+                    b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("IsOnline")
-                        .HasColumnType("bit");
-
-                    b.Property<decimal>("Latitude")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("Longitude")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int?>("NetworkStatus")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Phone")
+                    b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PlaceId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("SubmitDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserLocation");
+                    b.ToTable("AspNetUserClaims", (string)null);
                 });
 
-            modelBuilder.Entity("LegendCR.DAL.DB.VendorProduct", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.Property<int>("VendorProductId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VendorProductId"));
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("AvailableStock")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
+                    b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImageUrl")
+                    b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("OriginalPrice")
-                        .HasColumnType("float");
+                    b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.Property<string>("Size")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("StockPrice")
-                        .HasColumnType("float");
-
-                    b.Property<int>("VendorId")
-                        .HasColumnType("int");
-
-                    b.HasKey("VendorProductId");
-
-                    b.HasIndex("VendorId");
-
-                    b.ToTable("VendorProduct");
+                    b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("LegendCR.DAL.DB.Warehouse", b =>
+            modelBuilder.Entity("LegendCR.DAL.DB.Account", b =>
                 {
-                    b.Property<int>("WarehouseId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WarehouseId"));
-
-                    b.Property<int>("BranchId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("WarehouseName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("WarehouseId");
-
-                    b.ToTable("Warehouse");
-                });
-
-            modelBuilder.Entity("LegendCR.DAL.DB.Zone", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("BranchId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CommonUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CommonUserId1")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("LastModifiedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("LastModifiedBy")
-                        .HasColumnType("int");
-
-                    b.Property<string>("NameAr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NameEn")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CommonUserId");
-
-                    b.HasIndex("CommonUserId1");
-
-                    b.ToTable("Zone");
-                });
-
-            modelBuilder.Entity("LegendCR.DAL.DB.ZoneTax", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("LastModifiedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("LastModifiedBy")
-                        .HasColumnType("int");
-
-                    b.Property<double>("Tax")
-                        .HasColumnType("float");
-
-                    b.Property<int>("ZoneId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ZoneId");
-
-                    b.ToTable("ZoneTax");
-                });
-
-            modelBuilder.Entity("LegendCR.DAL.DB.AppService", b =>
-                {
-                    b.HasOne("LegendCR.DAL.DB.AppServiceClass", "AppServiceClass")
-                        .WithMany("AppService")
-                        .HasForeignKey("AppServiceClassId");
-
-                    b.HasOne("LegendCR.DAL.DB.AppServiceGroup", "AppServiceGroup")
-                        .WithMany("AppService")
-                        .HasForeignKey("AppServiceGroupId");
-
-                    b.Navigation("AppServiceClass");
-
-                    b.Navigation("AppServiceGroup");
-                });
-
-            modelBuilder.Entity("LegendCR.DAL.DB.AppServiceGroup", b =>
-                {
-                    b.HasOne("LegendCR.DAL.DB.AppServiceClass", "AppServiceClass")
-                        .WithMany("AppServiceGroup")
-                        .HasForeignKey("AppServiceClassId");
-
-                    b.Navigation("AppServiceClass");
-                });
-
-            modelBuilder.Entity("LegendCR.DAL.DB.City", b =>
-                {
-                    b.HasOne("LegendCR.DAL.DB.Zone", null)
-                        .WithMany("City")
-                        .HasForeignKey("ZoneId");
-                });
-
-            modelBuilder.Entity("LegendCR.DAL.DB.CommonUser", b =>
-                {
-                    b.HasOne("LegendCR.DAL.DB.Role", "Role")
-                        .WithMany("CommonUser")
-                        .HasForeignKey("RoleId")
+                    b.HasOne("LegendCR.DAL.DB.User", "User")
+                        .WithMany("Account")
+                        .HasForeignKey("CreateBy")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Role");
+                    b.HasOne("LegendCR.DAL.DB.Game", "Game")
+                        .WithMany("Accounts")
+                        .HasForeignKey("GameID1");
+
+                    b.HasOne("LegendCR.DAL.DB.Status", "Status")
+                        .WithMany("Accounts")
+                        .HasForeignKey("StatusID1");
+
+                    b.Navigation("Game");
+
+                    b.Navigation("Status");
+
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("LegendCR.DAL.DB.CommonUserDevice", b =>
+            modelBuilder.Entity("LegendCR.DAL.DB.AccountFiles", b =>
                 {
-                    b.HasOne("LegendCR.DAL.DB.CommonUser", "CommonUser")
-                        .WithMany("CommonUserDevice")
-                        .HasForeignKey("CommonUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CommonUser");
-                });
-
-            modelBuilder.Entity("LegendCR.DAL.DB.ContactUs", b =>
-                {
-                    b.HasOne("LegendCR.DAL.DB.CommonUser", "User")
-                        .WithMany("ContactUs")
-                        .HasForeignKey("UserId")
+                    b.HasOne("LegendCR.DAL.DB.User", "User")
+                        .WithMany("AccountFiles")
+                        .HasForeignKey("CreateBy")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("LegendCR.DAL.DB.FollowUp", b =>
+            modelBuilder.Entity("LegendCR.DAL.DB.Category", b =>
                 {
-                    b.HasOne("LegendCR.DAL.DB.CommonUser", "CreatedByNavigation")
-                        .WithMany("FollowUp")
-                        .HasForeignKey("CreatedByNavigationId")
+                    b.HasOne("LegendCR.DAL.DB.User", "User")
+                        .WithMany("Category")
+                        .HasForeignKey("CreateBy")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LegendCR.DAL.DB.FollowUpType", "FollowUpType")
-                        .WithMany("FollowUp")
-                        .HasForeignKey("FollowUpTypeId");
+                    b.Navigation("User");
+                });
 
-                    b.Navigation("CreatedByNavigation");
+            modelBuilder.Entity("LegendCR.DAL.DB.ContactUs", b =>
+                {
+                    b.HasOne("LegendCR.DAL.DB.User", "User")
+                        .WithMany("ContactUs")
+                        .HasForeignKey("CreateBy")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("FollowUpType");
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("LegendCR.DAL.DB.Favorite", b =>
+                {
+                    b.HasOne("LegendCR.DAL.DB.Account", "Account")
+                        .WithMany("Favorites")
+                        .HasForeignKey("AccountID1");
+
+                    b.HasOne("LegendCR.DAL.DB.User", "User")
+                        .WithMany("Favorite")
+                        .HasForeignKey("CreateBy")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("LegendCR.DAL.DB.FeedBack", b =>
+                {
+                    b.HasOne("LegendCR.DAL.DB.User", "User")
+                        .WithMany("FeedBack")
+                        .HasForeignKey("CreateBy")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("LegendCR.DAL.DB.Game", b =>
+                {
+                    b.HasOne("LegendCR.DAL.DB.Category", "Category")
+                        .WithMany("Games")
+                        .HasForeignKey("CategoryID1");
+
+                    b.HasOne("LegendCR.DAL.DB.User", "User")
+                        .WithMany("Game")
+                        .HasForeignKey("CreateBy")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("LegendCR.DAL.DB.History", b =>
+                {
+                    b.HasOne("LegendCR.DAL.DB.User", "User")
+                        .WithMany("History")
+                        .HasForeignKey("CreateBy")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("LegendCR.DAL.DB.Invoice", b =>
+                {
+                    b.HasOne("LegendCR.DAL.DB.Account", "Account")
+                        .WithMany("Invoice")
+                        .HasForeignKey("AccountID1");
+
+                    b.HasOne("LegendCR.DAL.DB.User", "User")
+                        .WithMany("Invoice")
+                        .HasForeignKey("CreateBy")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("LegendCR.DAL.DB.Notification", b =>
                 {
-                    b.HasOne("LegendCR.DAL.DB.Role", "RecipientRole")
+                    b.HasOne("LegendCR.DAL.DB.User", "User")
                         .WithMany("Notification")
-                        .HasForeignKey("RecipientRoleId");
+                        .HasForeignKey("CreateBy")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("LegendCR.DAL.DB.CommonUser", "Sender")
-                        .WithMany("Notification")
-                        .HasForeignKey("SenderId");
-
-                    b.Navigation("RecipientRole");
-
-                    b.Navigation("Sender");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("LegendCR.DAL.DB.RoleAppService", b =>
@@ -1166,6 +1254,12 @@ namespace LegendCR.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("LegendCR.DAL.DB.User", "User")
+                        .WithMany()
+                        .HasForeignKey("CreateBy")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("LegendCR.DAL.DB.Role", "Role")
                         .WithMany("RoleAppService")
                         .HasForeignKey("RoleId")
@@ -1175,50 +1269,88 @@ namespace LegendCR.DAL.Migrations
                     b.Navigation("AppService");
 
                     b.Navigation("Role");
+
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("LegendCR.DAL.DB.UserLocation", b =>
+            modelBuilder.Entity("LegendCR.DAL.DB.Settings", b =>
                 {
-                    b.HasOne("LegendCR.DAL.DB.CommonUser", "User")
-                        .WithMany("UserLocation")
-                        .HasForeignKey("UserId")
+                    b.HasOne("LegendCR.DAL.DB.User", "User")
+                        .WithMany()
+                        .HasForeignKey("CreateBy")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("LegendCR.DAL.DB.VendorProduct", b =>
+            modelBuilder.Entity("LegendCR.DAL.DB.Status", b =>
                 {
-                    b.HasOne("LegendCR.DAL.DB.CommonUser", "Vendor")
-                        .WithMany("VendorProduct")
-                        .HasForeignKey("VendorId")
+                    b.HasOne("LegendCR.DAL.DB.User", "User")
+                        .WithMany("Status")
+                        .HasForeignKey("CreateBy")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Vendor");
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("LegendCR.DAL.DB.Zone", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("LegendCR.DAL.DB.CommonUser", null)
-                        .WithMany("ZoneCreatedByNavigation")
-                        .HasForeignKey("CommonUserId");
-
-                    b.HasOne("LegendCR.DAL.DB.CommonUser", null)
-                        .WithMany("ZoneLastModifiedByNavigation")
-                        .HasForeignKey("CommonUserId1");
+                    b.HasOne("LegendCR.DAL.DB.Role", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("LegendCR.DAL.DB.ZoneTax", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("LegendCR.DAL.DB.Zone", "Zone")
-                        .WithMany("ZoneTax")
-                        .HasForeignKey("ZoneId")
+                    b.HasOne("LegendCR.DAL.DB.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("LegendCR.DAL.DB.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("LegendCR.DAL.DB.Role", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Zone");
+                    b.HasOne("LegendCR.DAL.DB.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.HasOne("LegendCR.DAL.DB.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("LegendCR.DAL.DB.Account", b =>
+                {
+                    b.Navigation("Favorites");
+
+                    b.Navigation("Invoice");
                 });
 
             modelBuilder.Entity("LegendCR.DAL.DB.AppService", b =>
@@ -1226,56 +1358,49 @@ namespace LegendCR.DAL.Migrations
                     b.Navigation("RoleAppService");
                 });
 
-            modelBuilder.Entity("LegendCR.DAL.DB.AppServiceClass", b =>
+            modelBuilder.Entity("LegendCR.DAL.DB.Category", b =>
                 {
-                    b.Navigation("AppService");
-
-                    b.Navigation("AppServiceGroup");
+                    b.Navigation("Games");
                 });
 
-            modelBuilder.Entity("LegendCR.DAL.DB.AppServiceGroup", b =>
+            modelBuilder.Entity("LegendCR.DAL.DB.Game", b =>
                 {
-                    b.Navigation("AppService");
-                });
-
-            modelBuilder.Entity("LegendCR.DAL.DB.CommonUser", b =>
-                {
-                    b.Navigation("CommonUserDevice");
-
-                    b.Navigation("ContactUs");
-
-                    b.Navigation("FollowUp");
-
-                    b.Navigation("Notification");
-
-                    b.Navigation("UserLocation");
-
-                    b.Navigation("VendorProduct");
-
-                    b.Navigation("ZoneCreatedByNavigation");
-
-                    b.Navigation("ZoneLastModifiedByNavigation");
-                });
-
-            modelBuilder.Entity("LegendCR.DAL.DB.FollowUpType", b =>
-                {
-                    b.Navigation("FollowUp");
+                    b.Navigation("Accounts");
                 });
 
             modelBuilder.Entity("LegendCR.DAL.DB.Role", b =>
                 {
-                    b.Navigation("CommonUser");
-
-                    b.Navigation("Notification");
-
                     b.Navigation("RoleAppService");
                 });
 
-            modelBuilder.Entity("LegendCR.DAL.DB.Zone", b =>
+            modelBuilder.Entity("LegendCR.DAL.DB.Status", b =>
                 {
-                    b.Navigation("City");
+                    b.Navigation("Accounts");
+                });
 
-                    b.Navigation("ZoneTax");
+            modelBuilder.Entity("LegendCR.DAL.DB.User", b =>
+                {
+                    b.Navigation("Account");
+
+                    b.Navigation("AccountFiles");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("ContactUs");
+
+                    b.Navigation("Favorite");
+
+                    b.Navigation("FeedBack");
+
+                    b.Navigation("Game");
+
+                    b.Navigation("History");
+
+                    b.Navigation("Invoice");
+
+                    b.Navigation("Notification");
+
+                    b.Navigation("Status");
                 });
 #pragma warning restore 612, 618
         }

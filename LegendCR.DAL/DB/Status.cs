@@ -1,19 +1,12 @@
-﻿
-using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace LegendCR.DAL.DB
 {
-    public partial class Status
+    public class Status : BaseEntity
     {
-        public Status()
-        {
-   
-        }
+        [StringLength(100), Required]
+        public string Name { get; set; } = string.Empty;
 
-        public int Id { get; set; }
-        public string Name { get; set; }
-
-        //public virtual ICollection<Shipment> Shipment { get; set; }
+        public virtual ICollection<Account> Accounts { get; set; }
     }
 }

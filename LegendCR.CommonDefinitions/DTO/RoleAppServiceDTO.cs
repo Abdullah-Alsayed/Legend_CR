@@ -7,9 +7,9 @@ namespace LegendCR.CommonDefinitions.DTO
 {
     public class RoleAppServiceDTO
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
-        public int RoleId { get; set; }
+        public string RoleId { get; set; }
         public string RoleName { get; set; }
 
         public string ClassName { get; set; }

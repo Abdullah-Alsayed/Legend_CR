@@ -8,7 +8,7 @@ namespace LegendCR.CommonDefinitions.DTO
     public class FollowUpDTO
     {
         public int? ShipmentId { get; set; }
-        public int? StatusId { get; set; }
+        public Guid StatusId { get; set; }
         public string Comment { get; set; }
         public int CreatedBy { get; set; }
         public string CreatedByName { get; set; }

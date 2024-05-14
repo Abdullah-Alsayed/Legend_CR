@@ -1,181 +1,196 @@
-﻿using LegendCR.CommonDefinitions.DTO;
-using LegendCR.DAL.DB;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
+﻿using System.Net;
+using LegendCR.CommonDefinitions.DTO;
 using LegendCR.CommonDefinitions.Requests;
-using LegendCR.Helpers;
 using LegendCR.CommonDefinitions.Responses;
-using System.Net;
+using LegendCR.DAL.DB;
+using LegendCR.Helpers;
 
 namespace LegendCR.BL.Services
 {
     public class PermissionService : BaseService
     {
-
         public static RoleAppServiceResponse ListAppService(RoleAppServiceRequest request)
         {
             var res = new RoleAppServiceResponse();
-            RunBase(request, res, (RoleAppServiceRequest req) =>
-            {
-                try
+            RunBase(
+                request,
+                res,
+                (RoleAppServiceRequest req) =>
                 {
-                    var query = request.context.AppService.Where(c => !c.IsDeleted && !c.AllowAnonymous && c.ShowToUser.Value)
-                       .Select(c => new AppServiceDTO
-                       {
-                           Id = c.Id,
-                           Name = c.Name,
-                           Title = c.Title,
-                           AllowAnonymous = c.AllowAnonymous,
-                           ShowToUser = c.ShowToUser.Value,
-                           AppServiceClassID = c.AppServiceClassId.Value,
-                           AppServiceClassName = c.AppServiceClass.Name,
-                           AppServiceGroupID = c.AppServiceGroupId.Value,
-                           AppServiceGroupName = c.AppServiceGroup.Name,
+                    try
+                    {
+                        var query = request
+                            .context.AppService.Where(c => !c.AllowAnonymous && c.ShowToUser)
+                            .Select(c => new AppServiceDTO
+                            {
+                                Id = c.ID,
+                                Name = c.Name,
+                                Title = c.Title,
+                                AllowAnonymous = c.AllowAnonymous,
+                                ShowToUser = c.ShowToUser,
+                                RoleID = request.RoleAppServiceDTO.RoleId,
+                                //RoleName =
+                                //    request
+                                //        .context.Roles.FirstOrDefault(r =>
+                                //            r.Id == request.RoleAppServiceDTO.RoleId
+                                //        )
+                                //        ?.Name ?? "",
 
-                           RoleID = request.RoleAppServiceDTO.RoleId,
-                           RoleName = request.context.Role.FirstOrDefault(r => r.Id == request.RoleAppServiceDTO.RoleId).Name,
+                                IsChecked = c.RoleAppService.Any(r =>
+                                    r.AppServiceId == c.ID
+                                    && r.RoleId == request.RoleAppServiceDTO.RoleId
+                                    && !r.IsDeleted
+                                )
+                            });
 
-                           IsChecked = c.RoleAppService.Any(r => r.AppServiceId == c.Id && r.RoleId == request.RoleAppServiceDTO.RoleId && !r.IsDeleted)
-                       });
+                        res.AppServiceDTOs = query.ToList();
 
-                    res.AppServiceDTOs = query.ToList();
-
-                    res.Message = HttpStatusCode.OK.ToString();
-                    res.Success = true;
-                    res.StatusCode = HttpStatusCode.OK;
+                        res.Message = HttpStatusCode.OK.ToString();
+                        res.Success = true;
+                        res.StatusCode = HttpStatusCode.OK;
+                    }
+                    catch (Exception ex)
+                    {
+                        res.Message = ex.Message;
+                        res.Success = false;
+                        LogHelper.LogException(ex.Message, ex.StackTrace);
+                    }
+                    return res;
                 }
-                catch (Exception ex)
-                {
-                    res.Message = ex.Message;
-                    res.Success = false;
-                    LogHelper.LogException(ex.Message, ex.StackTrace);
-                }
-                return res;
-            });
+            );
             return res;
         }
 
         public static RoleAppServiceResponse ListRoleAppService(RoleAppServiceRequest request)
         {
             var res = new RoleAppServiceResponse();
-            RunBase(request, res, (RoleAppServiceRequest req) =>
-             {
+            RunBase(
+                request,
+                res,
+                (RoleAppServiceRequest req) =>
+                {
+                    try
+                    {
+                        var query = request
+                            .context.RoleAppService.Where(c =>
+                                !c.AppService.AllowAnonymous && c.AppService.ShowToUser
+                            )
+                            .Select(c => new RoleAppServiceDTO
+                            {
+                                Id = c.ID,
+                                RoleId = c.RoleId,
+                                //  RoleName = c.Role?.Name ?? "",
+                                ClassName = c.AppService.ClassName,
 
-                 try
-                 {
-                     var query = request.context.RoleAppService.Where(c => !c.AppService.IsDeleted && !c.AppService.AllowAnonymous && c.AppService.ShowToUser.Value)
-                        .Select(c => new RoleAppServiceDTO
-                        {
-                            Id = c.Id,
-                            RoleId = c.RoleId,
-                            RoleName = c.Role.Name,
-                            ClassName = c.AppService.ClassName,
+                                AppServiceId = c.AppServiceId,
+                                ServiceName = c.AppService.Name,
+                                ServiceTitle = c.AppService.Title,
+                                ServiceAllowAnonymous = c.AppService.AllowAnonymous,
+                                ServiceShowToUser = c.AppService.ShowToUser,
 
-                            AppServiceId = c.AppServiceId,
-                            ServiceName = c.AppService.Name,
-                            ServiceTitle = c.AppService.Title,
-                            ServiceAllowAnonymous = c.AppService.AllowAnonymous,
-                            ServiceShowToUser = c.AppService.ShowToUser.Value,
+                                Enabled = c.Enabled,
+                            });
 
-                            AppServiceClassID = c.AppService.AppServiceClassId.Value,
-                            AppServiceClassName = c.AppService.AppServiceClass.Name,
+                        if (request.RoleAppServiceDTO != null)
+                            query = ApplyFilter(query, request.RoleAppServiceDTO);
 
-                            AppServiceGroupID = c.AppService.AppServiceGroupId.Value,
-                            AppServiceGroupName = c.AppService.AppServiceGroup.Name,
+                        query = OrderByDynamic(query, request.OrderByColumn, request.IsDesc);
 
-                            Enabled = c.Enabled,
-                        });
+                        if (request.PageSize > 0)
+                            query = ApplyPaging(query, request.PageSize, request.PageIndex);
 
-                     if (request.RoleAppServiceDTO != null)
-                         query = ApplyFilter(query, request.RoleAppServiceDTO);
+                        res.RoleAppServiceDTOs = query.ToList();
 
-                     query = OrderByDynamic(query, request.OrderByColumn, request.IsDesc);
-
-                     if (request.PageSize > 0)
-                         query = ApplyPaging(query, request.PageSize, request.PageIndex);
-
-                     res.RoleAppServiceDTOs = query.ToList();
-
-                     res.Message = HttpStatusCode.OK.ToString();
-                     res.Success = true;
-                     res.StatusCode = HttpStatusCode.OK;
-                 }
-                 catch (Exception ex)
-                 {
-                     res.Message = ex.Message;
-                     res.Success = false;
-                     LogHelper.LogException(ex.Message, ex.StackTrace);
-                 }
-                 return res;
-             });
+                        res.Message = HttpStatusCode.OK.ToString();
+                        res.Success = true;
+                        res.StatusCode = HttpStatusCode.OK;
+                    }
+                    catch (Exception ex)
+                    {
+                        res.Message = ex.Message;
+                        res.Success = false;
+                        LogHelper.LogException(ex.Message, ex.StackTrace);
+                    }
+                    return res;
+                }
+            );
             return res;
         }
 
         public static RoleAppServiceResponse UpdateRoleAppService(RoleAppServiceRequest request)
         {
             var res = new RoleAppServiceResponse();
-            RunBase(request, res, (RoleAppServiceRequest req) =>
-            {
-                try
+            RunBase(
+                request,
+                res,
+                (RoleAppServiceRequest req) =>
                 {
-                    var model = request.AppServiceDTO;
-
-                    //*** Delete Current Role Permissions
-                    var toDeleteData = request.context.RoleAppService.Where(r => r.RoleId == model.RoleID);
-                    request.context.RoleAppService.RemoveRange(toDeleteData);
-                    request.context.SaveChanges();
-
-                    //*** Add New Role Permissions
-                    foreach (var item in model.SelectedAppServiceIDs)
+                    try
                     {
-                        var newRoleAppService = new RoleAppService();
-                        newRoleAppService.AppServiceId = item;
-                        newRoleAppService.RoleId = model.RoleID;
-                        newRoleAppService.Enabled = true;
-                        newRoleAppService.CreationDate = DateTime.Now;
-                        newRoleAppService.CreatedBy = request.UserID;
+                        var model = request.AppServiceDTO;
 
-                        request.context.RoleAppService.Add(newRoleAppService);
+                        //*** Delete Current Role Permissions
+                        var toDeleteData = request.context.RoleAppService.Where(r =>
+                            r.RoleId == model.RoleID
+                        );
+                        request.context.RoleAppService.RemoveRange(toDeleteData);
+                        request.context.SaveChanges();
+
+                        //*** Add New Role Permissions
+                        foreach (var item in model.SelectedAppServiceIDs)
+                        {
+                            var newRoleAppService = new RoleAppService();
+                            newRoleAppService.AppServiceId = item;
+                            newRoleAppService.RoleId = model.RoleID;
+                            newRoleAppService.Enabled = true;
+                            newRoleAppService.CreateAt = DateTime.Now;
+                            newRoleAppService.CreateBy = request.UserID;
+
+                            request.context.RoleAppService.Add(newRoleAppService);
+                        }
+
+                        request.context.SaveChanges();
+
+                        res.Message = "Saved Successfully";
+                        res.Success = true;
+                        res.StatusCode = HttpStatusCode.OK;
                     }
-
-                    request.context.SaveChanges();
-
-                    res.Message = "Saved Successfully";
-                    res.Success = true;
-                    res.StatusCode = HttpStatusCode.OK;
+                    catch (Exception ex)
+                    {
+                        res.Message = ex.Message;
+                        res.Success = false;
+                        LogHelper.LogException(ex.Message, ex.StackTrace);
+                    }
+                    return res;
                 }
-                catch (Exception ex)
-                {
-                    res.Message = ex.Message;
-                    res.Success = false;
-                    LogHelper.LogException(ex.Message, ex.StackTrace);
-                }
-                return res;
-            });
+            );
             return res;
         }
 
-        private static RoleAppService AddOrEditRoleAppService(long createdBy, RoleAppServiceDTO record, RoleAppService oldRoleAppService = null)
+        private static RoleAppService AddOrEditRoleAppService(
+            long createdBy,
+            RoleAppServiceDTO record,
+            RoleAppService oldRoleAppService = null
+        )
         {
-            if (oldRoleAppService == null)//new roleAppService
+            if (oldRoleAppService == null) //new roleAppService
             {
                 oldRoleAppService = new RoleAppService();
             }
-            else
-            {
-            }
+            else { }
 
             return oldRoleAppService;
         }
 
-        private static IQueryable<RoleAppServiceDTO> ApplyFilter(IQueryable<RoleAppServiceDTO> query, RoleAppServiceDTO roleAppServiceRecord)
+        private static IQueryable<RoleAppServiceDTO> ApplyFilter(
+            IQueryable<RoleAppServiceDTO> query,
+            RoleAppServiceDTO roleAppServiceRecord
+        )
         {
-            if (roleAppServiceRecord.Id > 0)
+            if (roleAppServiceRecord.Id != Guid.Empty)
                 query = query.Where(c => c.Id == roleAppServiceRecord.Id);
 
-            if (roleAppServiceRecord.RoleId > 0)
+            if (!string.IsNullOrWhiteSpace(roleAppServiceRecord.RoleId))
                 query = query.Where(c => c.RoleId == roleAppServiceRecord.RoleId);
 
             return query;

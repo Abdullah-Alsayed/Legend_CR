@@ -5,7 +5,7 @@
 @model List<UserDTO>
 @{
     string connectionString = @Constants.connectionString;
-    long roleID = 0;
+    string roleID = "";
     if (User.Identity.IsAuthenticated)
     {
         roleID = AuthHelper.GetClaimValue(User, "RoleID");

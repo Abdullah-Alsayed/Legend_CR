@@ -1,4 +1,4 @@
-﻿
+﻿@* 
 @using LegendCR.CommonDefinitions.DTO.VendorProductDTOs
 @using LegendCR.CommonDefinitions.DTO
 @using LegendCR.Helpers;
@@ -47,7 +47,7 @@
         <table id="Red-Table" class="table">
             <thead>
                 <tr>
-                    @if(Role != (int)EnumRole.Vendor){
+                    @if(Role != EnumRole.Vendor.ToString()){
                         <td>Vendor Name</td>
                     }
                     <td class="Sort-Column">Item Code</td>
@@ -265,3 +265,4 @@
     //})
 </script>
 
+ *@

@@ -4,13 +4,13 @@ namespace LegendCR.Helpers
 {
     public class AuthHelper
     {
-        public static int GetClaimValue(ClaimsPrincipal user, string type)
+        public static string GetClaimValue(ClaimsPrincipal user, string type)
         {
             var identity = user.Identity as ClaimsIdentity;
             var claim = identity.FindFirst(c => c.Type == type);
             if (claim != null)
-                return int.Parse(claim.Value);
-            return 0;
+                return claim.Value;
+            return string.Empty;
         }
 
         public static string GetUserName(ClaimsPrincipal user)

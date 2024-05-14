@@ -11,8 +11,8 @@ namespace LegendCR.CommonDefinitions.Requests
         public string OrderByColumn { get; set; }
         public int PageSize { get; set; }
         public int PageIndex { get; set; }
-        public int UserID { get; set; }
-        public int RoleID { get; set; }
+        public string UserID { get; set; }
+        public string RoleID { get; set; }
 
         public int ID { get; set; }
 

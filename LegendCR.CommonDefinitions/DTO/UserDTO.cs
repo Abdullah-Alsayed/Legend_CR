@@ -1,9 +1,9 @@
-﻿using LegendCR.CommonDefinitions.DTO.ShipmentDTOs;
-using Microsoft.AspNetCore.Http;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using LegendCR.CommonDefinitions.DTO.ShipmentDTOs;
+using Microsoft.AspNetCore.Http;
 
 namespace LegendCR.CommonDefinitions.DTO
 {
@@ -14,11 +14,10 @@ namespace LegendCR.CommonDefinitions.DTO
             //Shipments = new List<ShipmentDTO>();
         }
 
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [Required(ErrorMessage = "Required")]
         public string Name { get; set; }
-
 
         [Required(ErrorMessage = " Please Enter a Email")]
         [EmailAddress(ErrorMessage = "Please Enter a valid Email")]

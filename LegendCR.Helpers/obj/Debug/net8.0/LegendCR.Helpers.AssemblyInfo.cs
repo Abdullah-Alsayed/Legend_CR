@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LegendCR.Helpers")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fb26cceb158cb28728f8c921d1c614e6ced2af6b")]
 [assembly: System.Reflection.AssemblyProductAttribute("LegendCR.Helpers")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LegendCR.Helpers")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

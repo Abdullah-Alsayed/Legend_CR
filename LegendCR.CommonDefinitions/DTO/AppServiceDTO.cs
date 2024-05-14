@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
-
-namespace LegendCR.CommonDefinitions.DTO
+﻿namespace LegendCR.CommonDefinitions.DTO
 {
     public class AppServiceDTO
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Title { get; set; }
 
@@ -24,7 +19,7 @@ namespace LegendCR.CommonDefinitions.DTO
         public DateTime CreationDate { get; set; }
 
         public bool IsChecked { get; set; }
-        public int RoleID { get; set; }
+        public string RoleID { get; set; }
         public string RoleName { get; set; }
 
         public List<int> SelectedAppServiceIDs { get; set; }

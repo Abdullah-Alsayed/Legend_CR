@@ -4,8 +4,8 @@
 @model List<UserNotificationDTO>
 @{
     string connectionString = @Constants.connectionString;
-    long roleID = AuthHelper.GetClaimValue(User, "RoleID");
-    long userID = AuthHelper.GetClaimValue(User, "UserID");
+    string roleID = AuthHelper.GetClaimValue(User, "RoleID");
+    string userID = AuthHelper.GetClaimValue(User, "UserID");
 }
 
 @if (Model != null && Model.Count > 0)

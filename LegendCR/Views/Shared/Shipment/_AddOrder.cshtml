@@ -25,7 +25,7 @@
         <form style="width:95%" class="needs-validation" method="post" id="AddShipment" onchange="OrderSummary()" action="@Url.Action("Add","Shipment")" novalidate>
             <div class="row Red-Row ml-4 Shipment-Details-Section">
                 <div class="col-lg-4">
-                    @if (RoleID != (int)EnumRole.Vendor)
+                    @if (RoleID != EnumRole.Vendor.ToString())
                     {
                         <label class="Shipment-Details-label">Vendor</label>
                         @Html.DropDownListFor(model => model.VendorDetailsDTO.VendorId, new SelectList(ViewBag.Vendors, "Id", "Name"), "--- Select Vendor ---", new { @class = "form-control select", @required = "required" })

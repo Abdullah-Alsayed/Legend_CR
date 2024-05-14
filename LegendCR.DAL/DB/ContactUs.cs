@@ -1,20 +1,30 @@
-﻿
-using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace LegendCR.DAL.DB
 {
-    public partial class ContactUs
+    public class ContactUs : BaseEntity
     {
-        public int Id { get; set; }
+        [StringLength(100), Required]
         public string LastName { get; set; }
-        public string FirstName { get; set; }
-        public string PhoneNumber { get; set; }
-        public string Email { get; set; }
-        public string Subject { get; set; }
-        public string Message { get; set; }
-        public int UserId { get; set; }
 
-        public virtual CommonUser User { get; set; }
+        [StringLength(100), Required]
+        public string FirstName { get; set; }
+
+        [
+            RegularExpression(
+                "^(\\+\\d{1,2}\\s?)?(1\\s?)?((\\(\\d{3}\\))|\\d{3})[\\s.-]?\\d{3}[\\s.-]?\\d{4}$"
+            ),
+            Required
+        ]
+        public string PhoneNumber { get; set; }
+
+        [StringLength(100), Required, EmailAddress]
+        public string Email { get; set; }
+
+        [StringLength(100), Required]
+        public string Subject { get; set; }
+
+        [StringLength(225), Required]
+        public string Message { get; set; }
     }
 }

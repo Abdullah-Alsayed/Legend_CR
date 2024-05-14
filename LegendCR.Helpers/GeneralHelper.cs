@@ -4,9 +4,9 @@ namespace LegendCR.Helpers
 {
     public class GeneralHelper
     {
-        public static List<CommonUser> GetUsers(int RoleID, ApplicationDBContext _context)
+        public static List<User> GetUsers(int RoleID, ApplicationDBContext _context)
         {
-            var UserList = _context.CommonUser.Where(p => !p.IsDeleted && p.RoleId == RoleID).ToList();
+            var UserList = _context.Users.Where(p => !p.IsDeleted).ToList();
             return UserList;
         }
     }

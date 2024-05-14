@@ -1,4 +1,4 @@
-﻿@using LegendCR.CommonDefinitions.DTO.ShipmentDTOs
+﻿@* @using LegendCR.CommonDefinitions.DTO.ShipmentDTOs
 @using LegendCR.CommonDefinitions.DTO
 @using LegendCR.Helpers
 @model ShipDTO
@@ -31,37 +31,37 @@
                         {
                             @switch (follow.StatusId)
                             {
-                                case (int)EnumStatus.Delivered:
-                                case (int)EnumStatus.Paid_To_Vendor:
-                                case (int)EnumStatus.Returned:
-                                case (int)EnumStatus.Refunded:
+                                case EnumStatus.Delivered.ToString():
+                                case EnumStatus.Paid_To_Vendor.ToString():
+                                case EnumStatus.Returned.ToString():
+                                case EnumStatus.Refunded.ToString():
                                     <div class="timeline-dot bg-success"><i class="fas fa-check-double"></i></div>
                                     break;
-                                case (int)EnumStatus.Cancelled:
-                                case (int)EnumStatus.Cancelled_Pickup:
-                                case (int)EnumStatus.Cancelled_Refund:
-                                case (int)EnumStatus.Not_Received:
+                                case EnumStatus.Cancelled.ToString():
+                                case EnumStatus.Cancelled_Pickup.ToString():
+                                case EnumStatus.Cancelled_Refund.ToString():
+                                case EnumStatus.Not_Received.ToString():
                                     <div class="timeline-dot bg-danger"><i class="fas fas fa-times"></i></div>
                                     break;
-                                case (int)EnumStatus.Ready_For_Delivery:
-                                case (int)EnumStatus.Ready_For_Pickup:
-                                case (int)EnumStatus.Ready_For_Return:
-                                case (int)EnumStatus.Ready_For_Refund:
-                                case (int)EnumStatus.Assigned_For_Delivery:
-                                case (int)EnumStatus.Assigned_For_Pickup:
-                                case (int)EnumStatus.Assigned_For_Return:
-                                case (int)EnumStatus.Assigned_For_Refund:
+                                case EnumStatus.Ready_For_Delivery.ToString():
+                                case EnumStatus.Ready_For_Pickup.ToString():
+                                case EnumStatus.Ready_For_Return.ToString():
+                                case EnumStatus.Ready_For_Refund.ToString():
+                                case EnumStatus.Assigned_For_Delivery.ToString():
+                                case EnumStatus.Assigned_For_Pickup.ToString():
+                                case EnumStatus.Assigned_For_Return.ToString():
+                                case EnumStatus.Assigned_For_Refund.ToString():
                                     <div class="timeline-dot bg-warning"><i class="fas fas fa-arrow-right"></i></div>
                                     break;
-                                case (int)EnumStatus.Out_For_Delivery:
-                                case (int)EnumStatus.Picked_Up:
-                                case (int)EnumStatus.Out_For_Return:
-                                case (int)EnumStatus.Out_For_Refund:
+                                case EnumStatus.Out_For_Delivery.ToString():
+                                case EnumStatus.Picked_Up.ToString():
+                                case EnumStatus.Out_For_Return.ToString():
+                                case EnumStatus.Out_For_Refund.ToString():
                                     <div class="timeline-dot bg-info"><i class="fas fas fa-motorcycle"></i></div>
                                     break;
-                                case (int)EnumStatus.At_Warehouse:
-                                case (int)EnumStatus.Postponed:
-                                case (int)EnumStatus.Archive:
+                                case EnumStatus.At_Warehouse.ToString():
+                                case EnumStatus.Postponed.ToString():
+                                case EnumStatus.Archive.ToString():
                                     <div class="timeline-dot bg-primary"><i class="fas fa-arrow-down"></i></div>
                                     break;
                                 default:
@@ -74,7 +74,7 @@
                                 <p>@follow.Title</p>
                                 <p>@follow.Comment</p>
                                 <p>@follow.CreatedAt</p>
-                                @if (Role == (int)EnumRole.Admin)
+                                @if (Role == EnumRole.Admin.ToString())
                                 {
                                     <p class="mt-1 font-weight-bold">By : @follow.CreatedByName</p>
                                 }
@@ -119,7 +119,7 @@
                 </div>
             </div>
             <div class="row Order-Details">
-                @if (Model.ShipmentServiceId == (int)EnumShipmentService.Refund)
+                @if (Model.ShipmentServiceId == EnumShipmentService.Refund)
                 {
                     <div class="col-lg-3 col-3">
                         <label>Refund Cash</label>
@@ -205,4 +205,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> *@

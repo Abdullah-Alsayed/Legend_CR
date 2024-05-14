@@ -1,27 +1,26 @@
-﻿using LegendCR.Helpers;
+﻿using LegendCR.BL.Services;
 using LegendCR.CommonDefinitions.DTO;
 using LegendCR.CommonDefinitions.Requests;
 using LegendCR.DAL.DB;
-using LegendCR.BL.Services;
+using LegendCR.Helpers;
 
 namespace LegendCR.API.Helpers
 {
     public static class TokenHelper
     {
-        public static bool Validate(string token, int userId, int roleId)
+        public static bool Validate(string token, string userId, string roleId)
         {
-            if (userId > 0 && roleId > 0)
+            if (!string.IsNullOrEmpty(userId) && !string.IsNullOrEmpty(roleId))
             {
                 string connectionString = Constants.connectionString;
-                var context = new ApplicationDBContext(BaseService.GetDBContextConnectionOptions(connectionString));
+                var context = new ApplicationDBContext(
+                    BaseService.GetDBContextConnectionOptions(connectionString)
+                );
                 var userRequest = new UserRequest
                 {
                     RoleID = roleId,
                     context = context,
-                    UserDTO = new UserDTO
-                    {
-                        Id = userId
-                    }
+                    UserDTO = new UserDTO { Id = userId }
                 };
                 var userResponse = UserService.GetAllUsers(userRequest);
                 if (userResponse.Success && userResponse.UserDTOs.Count > 0)

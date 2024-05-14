@@ -5,8 +5,8 @@
 @using LegendCR.CommonDefinitions.DTO;
 @{
     string connectionString = @Constants.connectionString;
-    long roleID = 0;
-    long userID = 0;
+    string roleID = "";
+    string userID = "";
     if (User.Identity.IsAuthenticated)
     {
         roleID = AuthHelper.GetClaimValue(User, "RoleID");
@@ -54,7 +54,7 @@
                                 </a>
                             </li>
                         }
-                        @if (roleID == (int)EnumRole.Admin || roleID == (int)EnumRole.SuperAdmin || roleID == (int)EnumRole.AccountManager)
+                        @if (roleID == EnumRole.Admin.ToString() || roleID == EnumRole.SuperAdmin.ToString() || roleID == EnumRole.AccountManager.ToString())
                         {
                             if (BaseService.CheckRoleAccessability(roleID, "Menu_AccountDashboard", connectionString: connectionString))
                             {
