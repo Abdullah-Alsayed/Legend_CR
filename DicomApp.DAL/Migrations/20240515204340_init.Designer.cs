@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DicomApp.DAL.Migrations
 {
     [DbContext(typeof(ShippingDBContext))]
-    [Migration("20240316142344_new")]
-    partial class @new
+    [Migration("20240515204340_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
