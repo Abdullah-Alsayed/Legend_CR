@@ -1,0 +1,271 @@
+﻿
+@using DicomApp.Portal.Helpers;
+@using DicomApp.Helpers;
+@using DicomApp.Portal.Controllers;
+@using DicomApp.BL.Services;
+@using DicomApp.CommonDefinitions.DTO;
+@{
+    string connectionString = @Startup.Configuration["ConnectionStrings:DicomAppDBEntities"];
+    long roleID = 0;
+    if (User.Identity.IsAuthenticated)
+    {
+        roleID = AuthHelper.GetClaimValue(User, "RoleID");
+    }
+}
+<!DOCTYPE html>
+
+<html>
+<!-- START: Head-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width" />
+    <title>RED Express</title>
+    <link rel="shortcut icon" href="~/dist/images/favicon.ico" />
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <partial name="_MainCssFiles" />
+</head>
+<!-- END Head-->
+<!-- START: Body-->
+<body id="main-container" class="default compact-menu">
+    <!-- START: Pre Loader-->
+    <div class="se-pre-con">
+        <div class="loader"></div>
+    </div>
+    <!-- END: Pre Loader-->
+    <!-- START: Main Menu-->
+    <a href="#" class="sidebarCollapse" id="collapse"><span class="ToggelSpan"><i class="fas fa-angle-right"></i></span></a>
+    <div class="sidebar">
+        <a href="#" class="sidebarCollapseOut ToggelSpan-collapse"><span class=""><i class="fas fa-angle-left"></i></span></a>
+        <div class="site-width">
+            <!-- START: Menu-->
+            <ul id="side-menu" class="sidebar-menu">
+                <li class="dropdown Main-logo"><img src="/dist/images/RED.png" /></li>
+                <li class="dropdown active">
+                    <ul>
+                        @if (BaseService.CheckRoleAccessability(roleID, "Menu_AccountDashboard", connectionString: connectionString))
+                        {
+                            <li class="cursor-pointer">
+                                <a href="/Home/AccountDashboard" class="Navigation">
+                                    <img class="Img-Ul" src="~/dist/images/Icons/Dashboard.png" />
+                                    Dashboard
+                                </a>
+                            </li>
+                        }
+                        <li class="cursor-pointer" onclick="OpenSection('Reports-Ul')">
+                            <a><img class="Img-Ul" src="~/dist/images/Icons/Reports.png" /> Reports</a>
+                            <ul id="Reports-Ul" class="d-none Nested-sidebar-menu">
+                                @if (BaseService.CheckRoleAccessability(roleID, "MenuVendor_ReportsShipments", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Vendor/OrderReports">Shipments Report</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, "MenuVendor_ReportsInvoices", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Vendor/InvoiceReport">Invoice Report</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, "MenuVendor_ReportsStock", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Vendor/StockReport">Stock Report</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, "MenuVendor_ReportsProblem", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Vendor/ProblemReport">Problem Report</a></li>
+                                }
+                            </ul>
+                        </li>
+                        <li class="cursor-pointer" onclick="OpenSection('Shipment-Ul')">
+                            <a><img class="Img-Ul" src="~/dist/images/Icons/Shipment.png" /> Shipment</a>
+                            <ul id="Shipment-Ul" class="d-none Nested-sidebar-menu">
+                                @if (BaseService.CheckRoleAccessability(roleID, "MenuVendor_AddShipment", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Vendor/AddOrder">Add New Shipment</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, "MenuVendor_ShipmentList", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Vendor/ShipmentList">Shipment List</a></li>
+                                }
+                            </ul>
+                        </li>
+                        <li class="cursor-pointer" onclick="OpenSection('Pickup-Ul')">
+                            <a><img class="Img-Ul" src="~/dist/images/Icons/Pickup.png" /> Pickup</a>
+                            <ul id="Pickup-Ul" class="d-none Nested-sidebar-menu">
+                                @if (BaseService.CheckRoleAccessability(roleID, "MenuVendor_PickupDelivery", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Vendor/PickupRequest">Add New Items Pickup</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, "MenuVendor_PickupStock", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Vendor/FulfillmentRequest">Add New Stock Pickup</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, "MenuVendor_PickupList", connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Vendor/PickupList">Pickup Request List</a></li>
+                                }
+                            </ul>
+                        </li>
+                        @if (BaseService.CheckRoleAccessability(roleID, "MenuVendor_Products", connectionString: connectionString))
+                        {
+                            <li class="cursor-pointer">
+                                <a href="/Product/ProductList" class="Navigation">
+                                    <img class="Img-Ul" src="~/dist/images/Icons/Product.png" />
+                                    Products
+                                </a>
+                            </li>
+                        }
+                        @if (BaseService.CheckRoleAccessability(roleID, "MenuVendor_ShippingCalculator", connectionString: connectionString))
+                        {
+                            <li class="cursor-pointer">
+                                <a href="/Vendor/ShippingCalculator" class="Navigation">
+                                    <img class="Img-Ul" src="~/dist/images/Icons/Calculator.png" />
+                                    Calculator
+                                </a>
+                            </li>
+                        }
+                        @if (BaseService.CheckRoleAccessability(roleID, "MenuVendor_ContactUs", connectionString: connectionString))
+                        {
+                            <li class="cursor-pointer">
+                                <a href="/Vendor/ContactUs" class="Navigation">
+                                    <img class="Img-Ul" src="~/dist/images/Icons/ContactUs.png" />
+                                    Contact Us
+                                </a>
+                            </li>
+                        }
+                        <li class="cursor-pointer" style="padding-top: 300%;"><a href="~/User/Logout"><img class="Img-Ul" src="~/dist/images/Icons/Logout.png" /> Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <!-- END: Menu-->
+            <ol class="breadcrumb bg-transparent align-self-center m-0 p-0 ml-auto">
+                <li class="breadcrumb-item"><a href="#">Application</a></li>
+                <li class="breadcrumb-item active">Dashboard</li>
+            </ol>
+        </div>
+    </div>
+    <!-- END: Main Menu-->
+    <!-- START: User Bar-->
+    <div class="navbar-section">
+        <div class="row Red-Row User-Section">
+            <div class="col-sm-12 col-lg-4 col-xl-5 col-12 Search">
+                <i class="fas fa-search cursor-pointer Icon-Search" onclick="TrackShipment()"></i>
+                <input type="text" class="Txt-Search" id="TrackShipment" placeholder="Track Shipment" />
+                <i class="fas fa-angle-right cursor-pointer Icon-Arow-Right" onclick="TrackShipment()"></i>
+            </div>
+            <div class="col-sm-9 col-lg-8 col-xl-7 col-12 Notifcation">
+                <!-- <img src="/Icon.png">
+                <span>Mohamed Ahmed</span> -->
+                <select>
+                    <option>ENG</option>
+                </select>
+
+                <button class="Notifcation-Alart"><img class="mr-2" src="/dist/images/Icons/Alarm.png"></button>
+                <div onclick="MenuNavigation(event,'MyAccount','Vendor')" class="User-Info">
+                    <img src="/dist/images/RED.png" width="31" />
+                    <p>@AuthHelper.GetUserName(User)</p>
+                    <p>ID: @AuthHelper.GetClaimValue(User, "UserID")</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shipment Details Popup -->
+    <div class="modal fade z-index-9999" id="ShipmentDetails" tabindex="-1" aria-labelledby="ShipmentDetailsLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div id="ShipmentDetails-Body" class="modal-body">
+                    <div class="spinner-border text-danger d-block m-auto" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shipment Items Popup -->
+    <div class="modal fade" id="ItemsModal" tabindex="-1" role="dialog" aria-labelledby="ItemsModal" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content" style="width: 108%;">
+                <div>
+                    <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="ItemsModal-body">
+                    <div class="spinner-border text-danger d-block m-auto" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shipment Partial Items Popup -->
+    <div class="modal fade" id="PartialItemsModal" tabindex="-1" role="dialog" aria-labelledby="PartialItemsModal" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content" style="width: 108%;">
+                <div>
+                    <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="PartialItemsModal-body">
+                    <div class="spinner-border text-danger d-block m-auto" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- End: User Bar-->
+    <!-- START: Main Content-->
+    <div class="MainDiv">
+        <div id="MainView">
+            @RenderBody()
+        </div>
+        <div id="MainLoder" style="display:none">
+            <span class="MainLoder">
+                <img src="~/dist/images/lo2ثثثثثث.png" />
+            </span>
+        </div>
+    </div>
+    <!-- End: Main Content-->
+    <!-- START: Back to top-->
+    <a href="#" class="scrollup text-center">
+        <i class="icon-arrow-up"></i>
+    </a>
+    <!-- END: Back to top-->
+
+    <partial name="_MainJsFiles" />
+    @if (TempData["SuccessMsg"] != null)
+    {
+        <script>
+            $(document).ready(function () {
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: '@TempData["SuccessMsg"]',
+                    showConfirmButton: false,
+                    timer: 5000
+                });
+            });
+        </script>
+    }
+    @if (TempData["ErrorMsg"] != null)
+    {
+        <script>
+            $(document).ready(function () {
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: '@TempData["ErrorMsg"]',
+                    showConfirmButton: false,
+                    timer: 5000
+                });
+            });
+        </script>
+    }
+    @RenderSection("Vendorscripts", required: false)
+    <!-- END: Page JS-->
+</body>
+<!-- END: Body-->
+</html>
+

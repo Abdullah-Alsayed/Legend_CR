@@ -1,0 +1,10 @@
+﻿
+@using DicomApp.CommonDefinitions.DTO;
+@using DicomApp.CommonDefinitions.DTO.ShipmentDTOs;
+
+@model ViewModel<ShipDTO>
+@{
+    Layout = "~/Views/Shared/_VendorLayout.cshtml";
+}
+<partial name="/Views/Vendor/PickUp/_PickUpRequest.cshtml" model="Model"/>
+

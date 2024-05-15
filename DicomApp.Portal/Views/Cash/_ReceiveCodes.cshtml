@@ -1,0 +1,66 @@
+﻿
+@using DicomApp.CommonDefinitions.DTO.ShipmentDTOs
+@using DicomApp.CommonDefinitions.DTO
+@model List<ShipDTO>
+@{
+    double finalTotal = 0;
+    double itemsTotal = 0;
+}
+<thead>
+    <tr>
+        <td>Code</td>
+        <td>Vendor</td>
+        <td class="text-center">Status</td>
+        <td>COD</td>
+    </tr>
+</thead>
+<tbody>
+    @if (Model != null && Model.Count() > 0)
+    {
+        foreach (var item in Model)
+        {
+            <tr class="cursor-pointer" onclick="ShipmentDetails('Shipment',@item.ShipmentId)" data-toggle="modal" data-target="#ShipmentDetails">
+                <td class="font-weight-bold">@item.RefId</td>
+                <td class="font-weight-bold">@item.VendorDetailsDTO.VendorName</td>
+                @if (item.StatusId == (int)EnumStatus.Delivered || item.StatusId == (int)EnumStatus.Paid_To_Vendor)
+                {
+                    if (item.SettingDTO.IsPartialDelivery)
+                    {
+                        itemsTotal = item.ShipItemDTOs.Where(t => t.StatusId == item.StatusId).Sum(s => s.Price * s.CourierQuantityDelivered);
+                        finalTotal += itemsTotal;
+
+                        <partial name="~/Views/Shared/Shipment/_StatusSwitch.cshtml" model="@item.StatusDTO"></partial>
+                        <td><span class="font-weight-bold">@itemsTotal</span> of <span class="font-weight-bold">@item.FeesDetailsDTO.Total EGP</span></td>
+                    }
+                    else
+                    {
+                        finalTotal += item.FeesDetailsDTO.Total;
+
+                        <partial name="~/Views/Shared/Shipment/_StatusSwitch.cshtml" model="@item.StatusDTO"></partial>
+                        <td><span class="font-weight-bold">@item.FeesDetailsDTO.Total</span> of <span class="font-weight-bold">@item.FeesDetailsDTO.Total EGP</span></td>
+                    }
+                }
+                else if (item.StatusId == (int)EnumStatus.Cancelled)
+                {
+                    finalTotal += item.FeesDetailsDTO.ShippingFeesPaid;
+
+                    <partial name="~/Views/Shared/Shipment/_StatusSwitch.cshtml" model="@item.StatusDTO"></partial>
+                    <td><span class="font-weight-bold">@(item.FeesDetailsDTO.ShippingFeesPaid)</span> of <span class="font-weight-bold">@item.FeesDetailsDTO.Total EGP</span></td>
+                }
+            </tr>
+        }
+        <tr style="background-color: white">
+            <td colspan="3"></td>
+            <td class="font-weight-bold">Total : @finalTotal EGP</td>
+        </tr>
+    }
+    else
+    {
+        <tr>
+            <td colspan="4">
+                <h6 class="text-center text-danger">No data available in table</h6>
+            </td>
+        </tr>
+    }
+</tbody>
+<input type="hidden" id="FinalTotal" value="@finalTotal" />

@@ -1,0 +1,178 @@
+﻿@using DicomApp.CommonDefinitions.DTO.ShipmentDTOs
+@model ShipDTO
+@{
+    Layout = "/Views/Shared/_PrintLayout.cshtml";
+    int Index = 0;
+}
+<link href="~/dist/css/policystyle.css" rel="stylesheet" />
+
+<main>
+    <section class="Container">
+        <div>
+            <h1>Shipment Policy</h1>
+            <h1>#@Model.RefId</h1>
+        </div>
+        <div class="Personal-Information">
+            <h5>Personal Information</h5>
+            <ul>
+                <li>
+                    <span>Name : <b>@Model.CustomerDetailsDTO.CustomerName</b></span>
+                </li>
+                <ul>
+                    <li>
+                        <span>Number 1: <b>@Model.CustomerDetailsDTO.CustomerPhone</b></span>
+                    </li>
+                    <li>
+                        <span>Number 2: <b>@Model.CustomerDetailsDTO.CustomerPhone2</b></span>
+                    </li>
+                </ul>
+            </ul>
+            <p>Address : <b>@Model.CustomerDetailsDTO.CustomerAddress</b></p>
+            <p>
+                <span>Floor <b>@Model.CustomerDetailsDTO.Floor</b></span>,
+                <span>Apartment <b>@Model.CustomerDetailsDTO.Apartment</b></span>
+            </p>
+            <p>Landmark : <b>@Model.CustomerDetailsDTO.Landmark</b></p>
+        </div>
+        <div class="Shipment-Information-Section">
+            <div class="Shipment-Information-Heder">
+                <table>
+                    <tr>
+                        <td>
+                            <h5>Shipment Information</h5>
+                        </td>
+                        <td><h5>Pickup & Delivery</h5></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="Shipment-Information-Content">
+                <div>
+                    <table>
+                        <tr>
+                            <td>Area</td>
+                            <td><b>@Model.AreaName</b></td>
+                        </tr>
+                        <tr>
+                            <td>Branch</td>
+                            <td><b>@Model.BranchName</b></td>
+                        </tr>
+                    </table>
+                </div>
+                <div>
+                    <table>
+                        <tr>
+                            <td>Vendor</td>
+                            <td><b>@Model.VendorDetailsDTO.VendorName</b></td>
+                        </tr>
+                        <tr>
+                            <td>Shipment Code</td>
+                            <td><b>#@Model.RefId</b></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            @if (Model.ShipItemDTOs != null && Model.ShipItemDTOs.Count() > 0)
+            {
+            <div class="Description-Section">
+                <h5>Items</h5>
+                <div class="@(Model.ShipItemDTOs.Count() < 5 ? "OneTable":"")">
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>Item Name</td>
+                                <td>Quantity</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.ShipItemDTOs != null && Model.ShipItemDTOs.Count() > 0)
+                                {
+                                    foreach (var item in Model.ShipItemDTOs)
+                                    {
+                                        Index++;
+                                        if (Index == 10)
+                                {
+                                break;
+                                }
+
+                            <tr>
+                                <td>@item.Name</td>
+                                <td>@item.Quantity</td>
+                            </tr>
+                                    }
+                                }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            }
+            <div class="Date-Section">
+                <div>
+                    <table>
+                        <tr>
+                            <td>Fragile</td>
+                            <td>Open Package</td>
+                            <td>Partial Delivery</td>
+                        </tr>
+                        <tr>
+                            <td><b>@(Model.SettingDTO.IsFragilePackage ? "Yes" : "No")</b></td>
+                            <td><b>@(Model.SettingDTO.IsOpenPackage ? "Yes" : "No")</b></td>
+                            <td><b>@(Model.SettingDTO.IsPartialDelivery ? "Yes" : "No")</b></td>
+                        </tr>
+                    </table>
+                </div>
+                <div>
+                    <table>
+                        <tr>
+                            <td>DATE SUBMITTED</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>
+                                    @Model.CreatedAt.ToString("ddd"), @Model.CreatedAt.ToString("dd/MM/yy")
+                                    <br />
+                                    @Model.CreatedAt.ToString("H:mm:ss") GMT
+                                </b>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="Total-Section">
+                <div>
+                    <img src="~/dist/images/qr.png" />
+                </div>
+                <div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <td colspan="2">COD</td>
+                                @*<td>Shipping Fees</td>*@
+                            </tr>
+                        </thead>
+                        <tr>
+                            <td colspan="2" class="p-3"><strong>@Model.FeesDetailsDTO.Total EGP</strong></td>
+                            @*<td class="p-3"><strong>@Model.FeesDetailsDTO.ShippingFees EGP</strong></td>*@
+                        </tr>
+                        <tr>
+                            <td>WEIGHT</td>
+                            <td><b>@Model.SettingDTO.WarehouseWeight KG</b></td>
+                        </tr>
+                        <tr>
+                            <td>SIZE</td>
+                            <td>
+                                <b>@Model.SettingDTO.WarehouseSize CM<sup>3</sup></b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td># OF PACKAGES</td>
+                            <td><b>@Model.NoOfItems</b></td>
+                        </tr>
+                    </table>
+                </div>
+                <div>
+                    <img src="/dist/images/Red2.png" />
+                </div>
+            </div>
+        </div>
+    </section>
+</main>

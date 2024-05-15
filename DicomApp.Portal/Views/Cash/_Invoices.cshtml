@@ -1,0 +1,138 @@
+﻿@using DicomApp.CommonDefinitions.DTO.CashDTOs
+@using DicomApp.CommonDefinitions.DTO
+@using DicomApp.Helpers
+@model InvoiceDTO
+
+<thead>
+    <tr>
+        <td class="text-left">Code</td>
+        <td class="text-center">Invoice Date</td>
+        <td class="text-center">Vendor</td>
+        <td class="text-center"># of Shipments</td>
+        <td class="text-center">Amount</td>
+        <td class="text-center">Transfer Type</td>
+        <td class="text-center">Status</td>
+        <td class="text-center">Actions</td>
+    </tr>
+</thead>
+<tbody>
+    @if (Model != null)
+    {
+        foreach (var item in Model.CashTransferDTOs)
+        {
+            <tr>
+                <td class="td-medium text-left font-weight-bold" style="font-size:14px;">@item.RefId</td>
+                <td class="td-medium text-center font-weight-bold">@item.CreatedAt.ToString("d/M/yyyy") <br /> @item.CreatedAt.ToString("hh:mm tt")</td>
+                <td class="td-medium text-center">@item.Name</td>
+                <td class="td-medium text-center">
+                    <button data-toggle="modal" data-target="#Transactions-Modal_@item.CashTransferId" class="Red-Btn Btn-Sm">
+                        <img class="mr-2" src="~/dist/images/Icons/Remaining.png" />
+                        @item.AccountTransactionDTOs.GroupBy(t => t.ShipmentId).Count()
+                    </button>
+
+                    <!-- START : Invoice Shipments -->
+                    <div class="modal fade" id="Transactions-Modal_@item.CashTransferId" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div style="min-width:85%;" class="modal-dialog modal-xl" role="document">
+                            <div class="modal-content">
+                                <div>
+                                    <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <h2 class="pl-5 font-weight-bolder text-left">Transfer Amount :&nbsp;@item.Amount <label style="font-size: 12px;">EGP</label></h2>
+                                    <div class="Table-container Max-height">
+                                        <table class="table text-center" id="Table_@item.CashTransferId">
+                                            <thead>
+                                                <tr>
+                                                    <td class="text-nowrap">Code</td>
+                                                    <td class="text-nowrap">Status</td>
+                                                    <td class="text-nowrap">Total</td>
+                                                    <td class="text-wrap">Vendor Cash</td>
+                                                    <td class="text-wrap">Shipping Fees</td>
+                                                    <td class="text-wrap">Packing Fees</td>
+                                                    <td class="text-wrap">Weight Fees</td>
+                                                    <td class="text-wrap">Size Fees</td>
+                                                    <td class="text-wrap">Partial Delivery Fees</td>
+                                                    <td class="text-wrap">Pickup Fees</td>
+                                                    <td class="text-wrap">Cancel Fees</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var ShipTrans in item.AccountTransactionDTOs.GroupBy(t => t.ShipmentId))
+                                                {
+                                                    var RED = ShipTrans.FirstOrDefault(t => t.ReceiverId == (int)EnumAccountId.RED_Main_Account);
+                                                    var Vendor = ShipTrans.FirstOrDefault(t => t.ReceiverId == item.ReceiverId);
+
+                                                    <tr>
+                                                        <td class="text-nowrap td-small"><b style="font-size: 14px;">@RED.ShipRefId</b></td>
+                                                        <partial name="~/Views/Shared/Shipment/_StatusSwitch.cshtml" model="@RED.StatusDTO"></partial>
+                                                        <td class="text-nowrap td-small"><b style="font-size: 16px;">@(RED.Total + Vendor.Total)</b></td>
+                                                        <td class="text-nowrap td-small"><b style="font-size: 14px;">@Vendor.VendorCash</b></td>
+                                                        <td class="text-nowrap td-small"><b>@RED.ShippingFees</b></td>
+                                                        <td class="text-nowrap td-small"><b>@RED.PackingFees</b></td>
+                                                        <td class="text-nowrap td-small"><b>@RED.WeightFees</b></td>
+                                                        <td class="text-nowrap td-small"><b>@RED.SizeFees</b></td>
+                                                        <td class="text-nowrap td-small"><b>@RED.PartialDeliveryFees</b></td>
+                                                        <td class="text-nowrap td-small"><b style="font-size: 14px;">@RED.PickupFees</b></td>
+                                                        <td class="text-nowrap td-small text-danger"><b style="font-size: 14px;">@RED.CancelFees</b></td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END   : Invoice Shipments -->
+
+                </td>
+                <td class="td-medium text-center font-weight-bold">
+                    <label style="font-size: 16px;">@item.Amount</label> <label style="font-size: 11px;">EGP</label>
+                </td>
+                <td class="td-medium text-center">
+                    @if (item.TypeId == (byte)EnumCashTransferType.CourierTransfer)
+                    {
+                        <span class="Filter-Table font-weight-bold">Courier Transfer</span>
+                    }
+                    else if (item.TypeId == (byte)EnumCashTransferType.BankTransfer)
+                    {
+                        <span class="Filter-Table font-weight-bold">Bank Transfer</span>
+                    }
+                    else if (item.TypeId == (byte)EnumCashTransferType.VodafoneCashTransfer)
+                    {
+                        <span class="Filter-Table font-weight-bold">Vodafone Cash Transfer</span>
+                    }
+                    else if (item.TypeId == (byte)EnumCashTransferType.InstaPayTransfer)
+                    {
+                        <span class="Filter-Table font-weight-bold">InstaPay Transfer</span>
+                    }
+                </td>
+                <td class="td-medium text-center font-weight-bold">Confirmed</td>
+                <td class="Actions-Buttons td-medium text-center">
+                    <ul>
+                        <li class="Green-Bg"><img class="Buttons-image ml-auto" src="~/dist/images/Icons/excel.png"></li>
+                        <li class="Red-Bg"><img class="Buttons-image ml-auto" src="~/dist/images/Icons/Pdf.png"></li>
+                    </ul>
+                </td>
+            </tr>
+        }
+    }
+    else
+    {
+        <tr>
+            <td colspan="10" class="text-danger text-center"><h3>No data available in table</h3></td>
+        </tr>
+    }
+</tbody>
+<tfoot>
+    <tr>
+        <td colspan="10">
+            @{
+                await Html.RenderPartialAsync("_Pagination", new OptionDTO { Action = "Invoices", Controller = "Cash", Count = Model.CashTransferDTOs.Count() });
+            }
+        </td>
+    </tr>
+</tfoot>
+<input type="hidden" value="@Model.CashTransferDTOs.Count()" id="DataCount" />

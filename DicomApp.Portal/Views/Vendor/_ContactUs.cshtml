@@ -1,0 +1,124 @@
+﻿
+@using DicomApp.CommonDefinitions.DTO;
+@model ContactUsDTO
+<main>
+  <form asp-action="ContactUs"  asp-controller="Vendor" id="AddContactUs-Form" method="post" class="needs-validation" novalidate>
+    <div class="container-fluid site-width">
+        <!-- START: Filter-->
+        <div class="row">
+            <div class="col-12 col-lg-12 col-xl-12 col-sm-12 Pickup-Header">
+                <div class="sub-header">
+                    <div>
+                        <span class="Header-Titel ml-4">Contact Us</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="contact-Us-Section">
+            <div class="col-lg-4 Contact-Information Contact-Inf-Bg">
+                <p class="Contact-Information-Header">Contact Information</p>
+                <b>
+                    Offering a reliable shipping service all over Egypt! , 𝙎𝙩𝙤𝙧𝙚, 𝙋𝙖𝙘𝙠 & 𝙎𝙝𝙞𝙥 𝙞𝙩
+                </b>
+                <div class="d-flex flex-column ">
+                    <div class="Contact-Info">
+                        <img src="/dist/images/Icons/phone-call.png" />
+                        <p>01030003314</p>
+                    </div>
+                    <div class="Contact-Info">
+                        <img src="/dist/images/Icons/Email.png" />
+                        <p>
+                            contact@redexpressegy.com
+                        </p>
+                    </div>
+                    <div class="Contact-Info">
+                        <img src="/dist/images/Icons/Spot.png" /> 
+                        <p> 9 MohamedArefst.Sheshiny, Maryoteya, Fisal</p>
+                     </div>
+                    <div class="pt-5 social-Icon-Section">
+                        <div class="social-Icon">
+                            <img src="/dist/images/Icons/Twitter.png" />
+                         </div>
+                        <div class="social-Icon">
+                            <a href="https://www.instagram.com/redexpress.eg/" target="_blank">
+                            <img src="/dist/images/Icons/Instagram.png" />
+                            </a>
+                        </div>
+                        <div class="social-Icon">
+                            <a href="https://www.facebook.com/redexpressegy" target="_blank">
+                                <img src="/dist/images/Icons/Facebook.png" />
+                             </a>
+                        </div>
+                     </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="row Contact-Form">
+                    <div class="col-lg-6 mb-5">
+                        <label class="Shipment-Details-label">First Name</label>
+                            <input type="text" class="Input-Txt" placeholder="First Name" required asp-for="FirstName" />
+                            <div class="invalid-feedback">
+                                Please enter a First Name.
+                            </div>
+                    </div>
+                    <div class="col-lg-6 mb-5">
+                        <label class="Shipment-Details-label">Last Name</label>
+                            <input type="text" class="Input-Txt" placeholder="Last Name" required  asp-for="LastName"/>
+                            <div class="invalid-feedback">
+                                Please enter a Last Name.
+                            </div>
+                    </div>
+                    <div class="col-lg-6 mb-5">
+                        <label class="Shipment-Details-label">Phone Number</label>
+                            <input type="text" class="Input-Txt" placeholder="Phone Number" asp-for="PhoneNumber" pattern="^(?:\s*\d){8,11}(?:\s*)$" required>
+                            <div class="invalid-feedback">
+                                Please enter a valid Phone Number (between 8 and 11 digit).
+                            </div>
+                    </div>
+                    <div class="col-lg-6 mb-5">
+                        <label class="Shipment-Details-label">Email</label>
+                            <input type="email" class="Input-Txt" placeholder="Email" asp-for="Email" required />
+                            <div class="invalid-feedback">
+                                Please enter a Email.
+                            </div>
+                    </div>
+                    <div class="row w-100">
+                        @* <p class="col-lg-12 mb-4 h6 font-weight-bold">
+                            Select Subject?
+                        </p>
+                        <div class="col-lg-3 Radio-Form">
+                            <input class="Radio-Input-Form" value="1" type="radio" id="Subject" name="Subject" checked />
+                            <label>General Inquiry</label>
+                        </div>
+                        <div class="col-lg-3 Radio-Form">
+                                <input class="Radio-Input-Form" value="2" type="radio" id="Subject" name="Subject" />
+                            <label>General Inquiry</label>
+                        </div>
+                        <div class="col-lg-3 Radio-Form">
+                                <input class="Radio-Input-Form" value="3" type="radio" id="Subject" name="Subject" />
+                            <label>General Inquiry</label>
+                        </div>
+                        <div class="col-lg-3 Radio-Form">
+                                <input class="Radio-Input-Form" value="4" type="radio" id="Subject" name="Subject" />
+                            <label>General Inquiry</label>
+                        </div> *@
+                        <div class="col-lg-12 Contact-Message">
+                            <label class="w-100">Message</label>
+                            <input type="text" asp-for="Message" placeholder="Write your message.." required />
+                                <div class="invalid-feedback">
+                                    Please enter a Message.
+                                </div>
+                        </div>
+                        <div class="col-lg-12 d-flex justify-content-end Buttons-Calculator-Section">
+                            <button type="button" id="BtnSend" onclick="AddEntity('Vendor','ContactUs','AddContactUs-Form')" class="Calc-Btn">
+                                Send Message
+                                    <span class="Spinner spinner-border spinner-border-sm ml-2 mb-1 d-none" role="status" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>            
+        </div>
+     </div>
+  </form>
+</main>

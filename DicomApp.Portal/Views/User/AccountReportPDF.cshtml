@@ -1,0 +1,53 @@
+﻿
+@using DicomApp.CommonDefinitions.DTO;
+@model List<UserDTO>
+@{
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+    string path = Url.ActionContext.HttpContext.Request.Path;
+}
+@if (Model != null && Model.Count() > 0)
+{
+    <table class="table">
+        <thead>
+            <partial name="_ReportHeder" model="11" />
+            <tr>
+                <td>Vendor</td>
+                <td class="Sort-Column">Join Date </td>
+                <td>Business Type</td>
+                <td class="text-center">Username</td>
+                <td>Password</td>
+                <td class="text-center">Logo</td>
+                <td class="text-center">Actions</td>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Count > 0)
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td id="Td-VendorInfo">
+                            <a><b>@item.Name</b></a><br>
+                            @item.Address <br>
+                            @item.PhoneNumber<br>
+                            @item.Email
+                        </td>
+                        <td class="text-nowrap Date-Table">@item.CreationDate.ToString("MMM") @item.CreationDate.ToString("dd"),@item.CreationDate.ToString("yyy")</td>
+                        <td id="Td-ProductType">@item.ProductType</td>
+                        <td class="text-center">@item.Email</td>
+                        <td id="Td-Password">@item.Password</td>
+                        <td class="text-center"><img src="@(!string.IsNullOrEmpty(item.ImgUrl) ? item.ImgUrl:"/dist/images/Fake-Img2.png")" /></td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="9">
+                        <h6 class="text-center text-danger my-5">No data available in table</h6>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

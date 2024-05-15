@@ -1,0 +1,63 @@
+﻿@using DicomApp.CommonDefinitions.DTO
+@using DicomApp.BL.Services;
+@using DicomApp.Helpers;
+@model List<UserNotificationDTO>
+@{
+    string connectionString = @Startup.Configuration["ConnectionStrings:TmiReportdbBEntities"];
+    long roleID = AuthHelper.GetClaimValue(User, "RoleID");
+    long userID = AuthHelper.GetClaimValue(User, "UserID");
+}
+
+@if (Model != null && Model.Count > 0)
+{
+    <button data-toggle="dropdown" aria-expanded="false" class="Notifcation-Alart"><img class="mr-2" src="/dist/images/Icons/Alarm.png"></button>
+    <div class="Notifcation-Section dropdown-menu dropdown-menu-right border">
+        <h2>@Model.Count() New Notifications</h2>
+        <ul class="">
+            @foreach (var item in Model.OrderByDescending(p => p.NotificationId).Take(5))
+            {
+                <li>
+                    <a class="dropdown-item" href="#">
+                        <div class="media">
+                            <img src="~/dist/images/Red2.png" alt="" class="d-flex mr-3 img-fluid rounded-circle w-50">
+                            <div class="media-body">
+                                <p>@item.Body</p>
+                                @if (DateTimeHelper.DifferenceDate(item.CreationDate) == 0)
+                                {
+                                    <small>Today</small>
+                                }
+                                else
+                                {
+                                    <small>@DateTimeHelper.DifferenceDate(item.CreationDate)d ago.</small>
+                                }
+                            </div>
+                        </div>
+                    </a>
+                </li>
+            }
+            @*            <li><a class="dropdown-item text-center py-2" href="@Url.Action("Alerts","Home")"> Read All Message <i class="icon-arrow-right pl-2 small"></i></a></li>
+        *@
+        </ul>
+    </div>
+}
+else
+{
+    <button data-toggle="dropdown" aria-expanded="false" class="Notifcation-Alart"><img class="mr-2" src="/dist/images/Icons/Alarm.png"></button>
+    <div class="Notifcation-Section dropdown-menu dropdown-menu-right border">
+        <h2>Notifications</h2>
+        <ul class="">
+            <li>
+                <a class="dropdown-item" href="#">
+                    <div class="media">
+                        <img src="~/dist/images/Red2.png" alt="" class="d-flex mr-3 img-fluid rounded-circle w-50">
+                        <div class="media-body">
+                            <p>No Data</p>
+                        </div>
+                    </div>
+                </a>
+            </li>
+            @*            <li><a class="dropdown-item text-center py-2" href="@Url.Action("Alerts","Home")"> Read All Message <i class="icon-arrow-right pl-2 small"></i></a></li>
+        *@
+        </ul>
+    </div>
+}

@@ -1,0 +1,23 @@
+﻿
+@*@using DicomApp.CommonDefinitions.DTO
+@model FilterTimeRecord
+<div class="row">
+    <div class="col-12 align-self-center d-flex">
+        <form id="TodayForm" asp-action="@Model.Action" asp-controller="@Model.Controller" asp-route-Today="@Model.Value"  data-ajax="true" data-ajax-method="GET" data-ajax-begin="OnBegin" data-ajax-failure="OnFailure"
+              data-ajax-success="OnSuccess" data-ajax-complete="OnComplete" data-ajax-mode="replace" data-ajax-update="#DataTable">
+            <input type="submit" onclick="GetInputID('Today')" id="Today" name="Today" class="btn btn-outline-primary rounded-btn Filters @(ViewBag.Today != null ? "FilterSelected" : "")" value="Today" />
+        </form>
+        <form id="YesterdayForm" asp-action="@Model.Action" asp-controller="@Model.Controller" asp-route-Yesterday="@Model.Value"  data-ajax="true" data-ajax-method="GET" data-ajax-begin="OnBegin" data-ajax-failure="OnFailure"
+              data-ajax-success="OnSuccess" data-ajax-complete="OnComplete" data-ajax-mode="replace" data-ajax-update="#DataTable">
+            <input type="submit" onclick="GetInputID('Yesterday')" id="Yesterday" class="btn btn-outline-primary rounded-btn Filters" value="Yesterday" />
+        </form>
+        <form id="LastWeekForm" asp-action="@Model.Action" asp-controller="@Model.Controller" asp-route-LastWeek="@Model.Value" data-ajax="true" data-ajax-method="GET" data-ajax-begin="OnBegin" data-ajax-failure="OnFailure"
+              data-ajax-success="OnSuccess" data-ajax-complete="OnComplete" data-ajax-mode="replace" data-ajax-update="#DataTable">
+            <input type="submit" onclick="GetInputID('LastWeek')" id="LastWeek" class="btn btn-outline-primary rounded-btn Filters" value="Last Week" />
+        </form>
+        <form id="LastMonthForm" asp-action="@Model.Action" asp-controller="@Model.Controller" asp-route-LastMonth="@Model.Value" data-ajax="true" data-ajax-method="GET" data-ajax-begin="OnBegin" data-ajax-failure="OnFailure"
+              data-ajax-success="OnSuccess" data-ajax-complete="OnComplete" data-ajax-mode="replace" data-ajax-update="#DataTable">
+            <input type="submit" onclick="GetInputID('LastMonth')" id="LastMonth" class="btn btn-outline-primary rounded-btn Filters" value="Last Month" />
+        </form>
+    </div>
+</div>*@

@@ -1,0 +1,63 @@
+﻿
+@using DicomApp.CommonDefinitions.DTO
+<script>
+    var FIlterID = "Today";
+         var url = window.location.pathname.split("/");
+         var ActionName = url[2];
+    function GetInputID(FilterIDParam) {
+        return FIlterID = FilterIDParam;
+    }
+    function OnBegin() {
+        if ($('#To').val() < $("#From").val()) {
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: ' Date from should be greater than Date TO',
+                showConfirmButton: false,
+                timer: 3000
+            });
+            return false;
+        }
+        else {
+            $(".spinner-border").css("display", "inline-block");
+            $("input").removeClass("FilterSelected");
+            $("#Ajaxloader").css("display", "inline-block").fadeIn(20000)
+            $("#Ajaxloader").removeClass("d-none");
+        }
+
+    }
+    function OnFailure() {
+            alert("Error occured.");
+        }
+    function OnSuccess() {
+        $(".spinner-border").css("display", "none");
+        $("#Ajaxloader").fadeOut(1000);
+        $(".datepicker").datepicker();
+            $('#DataTable').DataTable({
+                destroy: true,
+                responsive: true,
+                searching: false,
+                'order': [[1, 'desc']],
+                dom: 'lBfrtip',
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 ', '25 ', '50 ', '100 ', 'All']
+                ],
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print', 
+                ]
+            });
+    }
+    function OnComplete() {
+        $(".spinner-border").css("display", "none");
+
+            //$("#Ajaxloader").fadeOut(1000);
+        if (FIlterID != '')
+            $(`#${FIlterID}`).addClass("FilterSelected");
+        }
+    $("#To , #From").change(function () {
+        $("input").removeClass("FilterSelected");
+    });
+    </script>
+
+  

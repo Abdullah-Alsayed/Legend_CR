@@ -1,0 +1,173 @@
+﻿
+@*@using DicomApp.CommonDefinitions.DTO;
+@using DicomApp.Helpers;
+@using DicomApp.Helpers;
+
+@model List<InvoiceDTO>
+@{
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+    string path = Url.ActionContext.HttpContext.Request.Path;
+}
+@if (Model != null && Model.Count() > 0)
+{
+    <table class="table">
+        <thead>
+            <partial name="_ReportHeder" model="11" />
+            @if (path.Contains("/Invoice/InvoiceReport"))
+            {
+                <tr>
+                    <td>Vendor</td>
+                    <td>Invoice Number</td>
+                    <td class="Sort-Column" onclick="SortColumn('InvoiceDate-td','InvoiceDate','Invoice','InvoiceReport')" id="InvoiceDate-td" data-isDesc="true">Date</td>
+                    <td class="Sort-Column" onclick="SortColumn('TotalPrice-td','TotalPrice','Invoice','InvoiceReport')" id="TotalPrice-td" data-isDesc="true">Amount</td>
+                    <td>Transfer Type</td>
+                </tr>
+            }
+            else if (path.Contains("/Vendor/InvoiceReport"))
+            {
+                <tr>
+                    <td>Invoice Number</td>
+                    <td class="Sort-Column" onclick="SortColumn('InvoiceDate-td','InvoiceDate','Vendor','InvoiceReport')" id="InvoiceDate-td" data-isDesc="true">Date</td>
+                    <td class="Sort-Column" onclick="SortColumn('TotalPrice-td','TotalPrice','Vendor','InvoiceReport')" id="TotalPrice-td" data-isDesc="true">Amount</td>
+                    <td>Transfer Type</td>
+                </tr>
+            }
+            else if (path.Contains("/Invoice/Treasury"))
+            {
+                <tr>
+                    <td class="Sort-Column">Name</td>
+                    <td class="Sort-Column">Total</td>
+                    <td class="Sort-Column">Shipping Fees</td>
+                    <td class="Sort-Column">Packing Fees</td>
+                    <td class="Sort-Column">Weight Fees</td>
+                    <td class="Sort-Column">Cancellation Fees</td>
+                    <td class="Sort-Column">Balance</td>
+                    <td class="Sort-Column">Paid</td>
+                    @*<td class="Sort-Column">Pending</td>
+                </tr>
+            }
+            else if (path.Contains("/Invoice/Invoices"))
+            {
+                <tr>
+                    <td><input type="checkbox" /></td>
+                    <td>Invoice Number</td>
+                    <td>VendorName</td>
+                    <td class="Sort-Column" onclick="SortColumn('InvoiceDate-td','InvoiceDate','Invoice','Invoices')" id="InvoiceDate-td" data-isDesc="true">Date</td>
+                    <td class="Sort-Column" onclick="SortColumn('TotalPrice-td','TotalPrice','Invoice','Invoices')" id="TotalPrice-td" data-isDesc="true">Amount</td>
+                    <td>Transfer Type</td>
+                    <td>Download</td>
+                </tr>
+            }
+        </thead>
+        <tbody>
+            @if (path.Contains("/Invoice/InvoiceReport"))
+            {
+                @if (Model != null && Model.Count > 0)
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.VendorName</td>
+                            <td>@item.InvoiceId</td>
+                            <td class="text-nowrap Date-Table">@item.InvoiceDate.Value.Date.ToShortDateString()</td>
+                            <td>@item.Total EGP</td>
+                            <td><span class="Filter-Table">Transfer Type</span></td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="text-danger text-center"><h3>No data available in table</h3></td>
+                    </tr>
+                }
+            }
+            else if (path.Contains("/Vendor/InvoiceReport"))
+            {
+                if (Model != null && Model.Count > 0)
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.InvoiceId</td>
+                            <td class="text-nowrap Date-Table">@item.InvoiceDate.Value.Date.ToShortDateString()</td>
+                            <td>@item.Total EGP</td>
+                            <td><span class="Filter-Table">Transfer Type</span></td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="text-danger text-center"><h3>No data available in table</h3></td>
+                    </tr>
+                }
+            }
+            else if (path.Contains("/Invoice/Treasury"))
+            {
+                @if (Model != null && Model.Count > 0)
+                {
+                    foreach (var item in Model.GroupBy(p => p.VendorId))
+                    {
+                        <tr>
+                            <td><b>@(item.FirstOrDefault().VendorName)</b></td>
+                            <td>
+                                @item.Where(p => p.InvoiceTypeId == 1).Sum(p => p.Total)
+                            </td>
+                            <td>
+                                @item.Where(p => p.InvoiceTypeId == 1).Sum(p => p.ShippingFees)
+                            </td>
+                            <td>
+                                @item.Where(p => p.InvoiceTypeId == 1).Sum(p => p.PackingFees)
+                            </td>
+                            <td>
+                                @item.Where(p => p.InvoiceTypeId == 1).Sum(p => GeneralHelper.CalcWeight((int)p.ReturnedAmount))
+                            </td>
+                            <td>@item.Where(p => p.InvoiceTypeId == 2).Sum(p => p.Total)</td>
+                            <td>@(item.Sum(p => p.Total) - item.Where(p => p.InvoiceTypeId == 1 && p.StatusId == (int)EnumStatus.Invoice_Paid).Sum(p => p.Total) - item.Where(p => p.InvoiceTypeId == 2).Sum(p => p.Total))</td>
+                            <td>@(item.Where(p => p.InvoiceTypeId == 1 && p.StatusId == (int)EnumStatus.Invoice_Paid).Sum(p => p.Total) - item.Where(p => p.InvoiceTypeId == 2).Sum(p => p.Total))</td>
+
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="20" class="text-danger text-center"><h3>No data available in table</h3></td>
+                    </tr>
+                }
+            }
+            else if (path.Contains("/Invoice/Invoices"))
+            {
+                @if (Model != null && Model.Count > 0)
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <input type="checkbox" />
+                            </td>
+                            <td>@item.InvoiceId</td>
+                            <td>@item.VendorName</td>
+                            <td class="text-nowrap Date-Table">@item.InvoiceDate.Value.ToString("MMM") @item.InvoiceDate.Value.ToString("dd"),@item.InvoiceDate.Value.ToString("yyy")</td>
+                            <td>@item.Total EGP</td>
+                            <td><span class="Filter-Table">Invoice</span></td>
+                            <td class="Actions-Buttons">
+                                <ul>
+                                    <li class="Green-Bg"><img class="Buttons-image ml-auto" src="~/dist/images/Icons/excel.png"></li>
+                                    <li class="Red-Bg"><img class="Buttons-image ml-auto" src="~/dist/images/Icons/Pdf.png"></li>
+                                </ul>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="text-danger text-center"><h3>No data available in table</h3></td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}*@

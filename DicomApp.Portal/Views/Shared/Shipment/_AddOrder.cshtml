@@ -1,0 +1,336 @@
+﻿
+@using DicomApp.CommonDefinitions.DTO.ShipmentDTOs
+@using DicomApp.CommonDefinitions.DTO;
+@using DicomApp.Helpers
+@model ShipDTO
+@{
+    var RoleID = AuthHelper.GetClaimValue(User, "RoleID");
+}
+<main>
+    <div class="container-fluid site-width">
+        <div class="row Red-Row">
+            <div class="col-12 col-lg-12 col-xl-12 col-sm-12">
+                <div class="sub-header">
+                    <div>
+                        <span class="Header-Titel">Add New Shipment</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-12 col-xl-12 col-sm-12">
+                <p class="Shipment-Details-Titel pt-4">Shipment Details</p>
+            </div>
+        </div>
+    </div>
+    <div class="Shipment-container">
+        <form style="width:95%" class="needs-validation" method="post" id="AddShipment" onchange="OrderSummary()" action="@Url.Action("Add","Shipment")" novalidate>
+            <div class="row Red-Row ml-4 Shipment-Details-Section">
+                <div class="col-lg-4">
+                    @if (RoleID != (int)EnumRole.Vendor)
+                    {
+                        <label class="Shipment-Details-label">Vendor</label>
+                        @Html.DropDownListFor(model => model.VendorDetailsDTO.VendorId, new SelectList(ViewBag.Vendors, "Id", "Name"), "--- Select Vendor ---", new { @class = "form-control select", @required = "required" })
+                        <div class="invalid-feedback">
+                            Please select vendor.
+                        </div>
+                    }
+                    <div class="mt-2">
+                        <label class="Shipment-Details-label">Service</label>
+                        @Html.DropDownListFor(model => model.ShipmentServiceId, new SelectList(ViewBag.ShipmentService, "Id", "ServiceName"),"--- Select Service ---", new { @class = "form-control select mb-3", @required="required", @onchange="ServiceTypeChange()"})
+                        <div class="invalid-feedback">
+                            Please select service.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <label class="Shipment-Details-label">Cash On Delivery</label>
+                    <input type="number" asp-for="FeesDetailsDTO.Total" class="input-Number" min="0" placeholder="Enter Cash On Delivery" onchange="GetTotalPrice()" required />
+                    <div class="invalid-feedback">
+                        Please enter a Cash on delivery.
+                    </div>
+                    <div class="mt-2">
+                        <label class="Shipment-Details-label">Shipping Fees (for Cancellation or Partial Delivery)</label>
+                        <input type="number" class="input-Number" min="0" placeholder="Shipping Fees (for Cancellation or Partial Delivery)" disabled />
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <label class="Lable-Disabled">RED Fees</label>
+                    <input type="number" id="txtREDFees" class="input-Number mb-3" disabled />
+                    <div class="Shipment-Details-COD mt-3">
+                        <p>Vendor Cash:</p>
+                        <p class="ml-2 VendorCash"> EGP</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row Red-Row w-100">
+                <div class="col-lg-4">
+                    <h6 class="my-4 ml-2 font-w-500">Customer Details</h6>
+                    <div style="" class="Shipment-Details-Section">
+                        <div class="col-lg-12">
+                            <label class="Shipment-Details-label">Name</label>
+                            <input type="text" placeholder="Name" asp-for="CustomerDetailsDTO.CustomerName" required />
+                            <div class="invalid-feedback">
+                                Please enter customer name.
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-3">
+                            <label class="Shipment-Details-label">Number</label>
+                            <input type="text" placeholder="Number" asp-for="CustomerDetailsDTO.CustomerPhone" pattern="^(?:\s*\d){8,11}(?:\s*)$" required>
+                            <div class="invalid-feedback">
+                                Please enter customer number (between 8 and 11 digit).
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-3">
+                            <label class="Shipment-Details-label">Number 2</label>
+                            <input type="text" placeholder="Number 2" asp-for="CustomerDetailsDTO.CustomerPhone2" pattern="^(?:\s*\d){8,11}(?:\s*)$">
+                            <div class="invalid-feedback">
+                                Please enter customer number (between 8 and 11 digit).
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-3">
+                            <label class="Shipment-Details-label">Address</label>
+                            <input type="text" placeholder="Address" asp-for="CustomerDetailsDTO.CustomerAddress" pattern="^(?!\s*$).+" required>
+                            <div class="invalid-feedback">
+                                Please enter customer address.
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-3">
+                            <label class="Shipment-Details-label">Location Url</label>
+                            <input placeholder="Location Url" class="Input-Txt" asp-for="CustomerDetailsDTO.Location">
+                        </div>
+                        <div class="col-lg-12 mt-3">
+                            <label class="Shipment-Details-label">Landmark</label>
+                            <input type="text" placeholder="Landmark" asp-for="CustomerDetailsDTO.Landmark">
+                        </div>
+                        <div class="col-lg-6 mt-3">
+                            <label class="Shipment-Details-label">Floor</label>
+                            <input type="number" min="0" class="input-Number" asp-for="CustomerDetailsDTO.Floor" placeholder="Floor" required />
+                            <div class="invalid-feedback">
+                                Please enter floor.
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mt-3">
+                            <label class="Shipment-Details-label">Apartment</label>
+                            <input type="number" min="0" class="input-Number" asp-for="CustomerDetailsDTO.Apartment" placeholder="Apartment" required />
+                            <div class="invalid-feedback">
+                                Please enter apartment.
+                            </div>
+                        </div>
+                        @*<div class="col-lg-12 mt-3">
+                            <label class="Shipment-Details-label">Branch</label>
+                            @Html.DropDownListFor(model => model.BranchId, new SelectList(ViewBag.BarnchList, nameof(BranchDTO.BranchId), nameof(BranchDTO.BranchName)),"--- Select Branch ---", new { @class = "form-control select" ,@required="required"})
+                            <div class="invalid-feedback">
+                                Please Select Branch.
+                            </div>
+                        </div>*@
+                        <div class="col-lg-12 mt-3">
+                            <label class="Shipment-Details-label">Governament</label>
+                            @Html.DropDownListFor(model => model.ZoneId, new SelectList(ViewBag.ZoneList, nameof(ZoneDTO.Id), nameof(ZoneDTO.NameAr)),"--- Select Governament ---", new { @class = "form-control select" ,@required="required",@onchange="GetAreasByZone(event)"})
+                            <div class="invalid-feedback">
+                                Please select governament.
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-3">
+                            <label class="Shipment-Details-label">Area</label>
+                            <select asp-for="AreaId" class="form-control select" onchange="GetTotalPrice()" required></select>
+                            <div class="invalid-feedback">
+                                Please select area.
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mt-3" id="DivWeight">
+                            <label class="Shipment-Details-label">Weight</label>
+                            <input type="number" min="1" max="6" class="input-Number" asp-for="SettingDTO.Weight" onkeyup="GetTotalPrice()" onchange="GetTotalPrice()" placeholder="Weight" required />
+                            <div class="invalid-feedback">
+                                Please enter weight from 1 to 6.
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mt-3" id="DivSize">
+                            <label class="Shipment-Details-label">Size</label>
+                            <input type="text" asp-for="SettingDTO.Size" placeholder="Size" />
+                        </div>
+                        <div class="col-lg-12 mt-3" id="DivFreight">
+                            <label class="Shipment-Details-label">No. of items</label>
+                            <input type="number" min="1" asp-for="NoOfItems" class="input-Number" placeholder="No. of items" required />
+                            <div class="invalid-feedback">
+                                Please enter No. of items.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8 w-100">
+                    <h6 class="my-4 ml-2 font-w-500">Package Details</h6>
+                    <div class="Shipment-Details-Section">
+                        <div class="col-lg-12">
+                            <div class="col-lg-12 col-12 Stock-Modal">
+                                <div class="Switch-cover">
+                                    <a class="cursor-pointer"><p>Choose Items Location</p></a>
+                                    <div class="Switch r" id="Switch-1">
+                                        <input type="checkbox" asp-for="SettingDTO.IsStock" style="width: 100%;" class="checkbox" onclick="OpenStockPopup('STOCKModel')">
+                                        <div class="knobs"></div>
+                                        <div class="layer"></div>
+                                    </div>
+                                    <div class="Edit-Stock-Items d-none">
+                                        <button data-toggle="modal" data-target="#STOCKModel" type="button">Edit Items</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-5  col-12 Packing-Type-Section">
+                                <p>Packing Type</p>
+                                <div class="Packing-Type Packing-List">
+                                    <ul>
+                                        @foreach (var item in ViewBag.PackingType)
+                                        {
+                                            <li><input type="radio" id="@(item.Id+"-Packing")" onclick="PackingType(@item.Id)" name="Packing" /><label for="@(item.Id +"-Packing")">@item.NameEn</label></li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-12 Hide-Scrol grid-wrapper grid-col-auto mt-4 PackingList-Section" id="Packingdiv">
+                                <h4 class="text-center m-auto">Select Packing Type</h4>
+                            </div>
+                            <hr class="pt-5" />
+                            <div class="row Red-Row pt-3 Packing-Options">
+                                <div class="col-lg-6">
+                                    <input type="checkbox" asp-for="SettingDTO.IsOpenPackage">
+                                    <label for="IsOpenPackage">Open Package</label>
+                                </div>
+                                <div class="col-lg-6">
+                                    <input type="checkbox" asp-for="SettingDTO.IsFragilePackage">
+                                    <label for="IsFragilePackage">Fragile Package</label>
+                                </div>
+                                <div class="col-lg-6">
+                                    <input type="checkbox" asp-for="SettingDTO.IsPartialDelivery" onchange="GetTotalPrice()">
+                                    <label for="IsPartialDelivery">Partial delivery</label>
+                                    <button class="ml-2 Edit-Partial-Delivery d-none" type="button" data-target="#Partial-Model" data-toggle="modal">Edit Items</button>
+                                </div>
+                                <div class="row Red-Row pt-5" id="DivOrderDescription">
+                                    <div class="col-lg-6">
+                                        <p class="additional-comments">Comments</p>
+                                        <textarea class="h-auto" rows="5" asp-for="Description" placeholder="Comments"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row Red-Row mt-5 ml-4 Shipment-Total-Section">
+                <div class="col-lg-8">
+                    <input type="hidden" id="lblShippingFees" />
+                    <label class="Shipment-Details-label">Shipment Fees Summary</label>
+                    <table class="OrdersTable" id="Order-Summary">
+                        <tbody>
+                            <tr id="Order-Summary-tr"></tr>
+                        </tbody>
+                        <tfoot class="d-none">
+                            <tr>
+                                <td>Partial Delivery Fess</td>
+                                <td><b id="Order-Summary-Total"></b></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="col-lg-4 Total-Section">
+                    <div class="col-lg-12">
+                        <p id="Zone-name" class="mb-1"></p>
+                        <div class="d-flex">
+                            <span> Vendor Cash: </span>
+                            <span class="VendorCash"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row Red-Row w-100">
+                <div class="col-lg-12 Buttons-Submit-Section">
+                    <button onclick="AddShipment('Add','Shipment','AddShipment')" type="button" id="BtnSend" class="Red-Btn">Submit Shipment</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Stock Items Modal -->
+    <div class="modal fade" id="STOCKModel" tabindex="-1" role="dialog" aria-labelledby="STOCKModel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content" style="width: 108%;">
+                <div>
+                    <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="StockModalBody">
+                    <div class="spinner-border text-danger" role="status" style="margin-left: 43%;margin-bottom: 1pc;">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Partial Items Modal -->
+    <div class="modal fade" id="Partial-Model" tabindex="-1" role="dialog" aria-labelledby="Partial-Model" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div>
+                    <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h2 class="Model-Titel">Add New item</h2>
+                    <form class="needs-validation" enctype="multipart/form-data" id="ShipmentProduct-Form">
+                        <div class="container-fluid P-Model">
+                            <div class="row pt-5">
+                                <div class="col-lg-6">
+                                    <div class="col-lg-12 pt-3">
+                                        <label class="Label-Model">Name</label>
+                                        <input class="input-Model" required id="Name" name="Name" placeholder="Name" />
+                                        <div class="invalid-feedback">
+                                            Please enter name.
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 pt-3">
+                                        <label class="Label-Model">Price</label>
+                                        <input class="input-Number" type="number" min="1" required id="Price" name="Price" placeholder="Price" />
+                                        <div class="invalid-feedback">
+                                            Please enter price.
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 pt-3">
+                                        <label class="Label-Model">Size</label>
+                                        <input class="input-Model" required id="Size" name="Size" placeholder="Size" />
+                                        <div class="invalid-feedback">
+                                            Please enter size.
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 pt-3">
+                                        <label class="Label-Model">Quantity</label>
+                                        <input class="input-Model" required type="number" id="Quantity" name="Quantity" min="1" placeholder="Quantity" />
+                                        <div class="invalid-feedback">
+                                            Please enter quantity.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="col-lg-12">
+                                        <p class="Label-Model Add-img m-0" onclick="OpenFileInput('ShipmentProduct-Form')">Image</p>
+                                        <img src="/dist/images/Partial.png" id="ProductImg" class="w-100" onclick="OpenFileInput('ShipmentProduct-Form')" />
+                                        <input id="ImgFile" name="file" type="file" onchange="DisplayUpdateImg(event)" accept="image/gif, image/jpeg, image/png" hidden class="img" />
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <button class="Red-Btn-OutLine OutLine-Green float-right mt-4" type="button" onclick="AddShipmentProduct()" id="Save-Item">Save item</button>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 pt-5" id="Partial-Items"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script src="~/dist/vendors/select2/js/select2.full.min.js"></script>
+<script src="~/dist/js/select2.script.js"></script>
+<script src="~/dist/js/jquery.validate.min.js"></script>
+<script src="~/dist/js/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/dist/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/Shipment/AddShipment.js"></script>
