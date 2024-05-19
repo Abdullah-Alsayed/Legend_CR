@@ -1,5 +1,6 @@
 
 /*
+
 Template Name: Pick Admin
 Author: PSD2ALLCONVERSION
 Email: psd2allconversion@gmail.com
@@ -552,7 +553,7 @@ File: Main Style
 }
 
 .sidebar .sidebar-menu > li a:hover:not(.MenuNavigation){
-    background-color: #F36D72;
+    background-color: #007bff;
     padding: 8px;
     border-radius: 10px;
     color: white;

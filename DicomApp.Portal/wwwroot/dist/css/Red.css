@@ -10,9 +10,9 @@
 
 
 :root {
-    --MainColor: #EF3138;
-    --Red: #EF3138;
-    --lightRed: #EF3138C9;
+    --MainColor: #007bff;
+    --Red: #007bff;
+    --lightRed: #007bffC9;
     --DarkRed: #C5223F;
     --Green: #48F277;
     --DarkGreen: #18BD47A6;
@@ -48,7 +48,7 @@
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #EF3138BA;
+    background: #007bffBA;
     border-radius: 10px;
 }
 
@@ -587,7 +587,7 @@ body {
 .ToggelSpan {
     width: 24px;
     height: 24px;
-    background-color: #EF3138;
+    background-color: #007bff;
     position: absolute;
     top: 26px;
     left: 66px;
@@ -602,7 +602,7 @@ body {
 .ToggelSpan-collapse {
     width: 24px;
     height: 24px;
-    background-color: #EF3138;
+    background-color: #007bff;
     position: absolute;
     top: 26px;
     left: 220px;
@@ -1183,7 +1183,7 @@ color: #4D4D4D;
 }
 
 .login-form .validation-message {
-    color: #ef3138;
+    color: #007bff;
     font-size: 12px;
 }
 
@@ -1213,7 +1213,7 @@ color: #4D4D4D;
 .login-button {
     width: 476px;
     height: 46px;
-    background: #EF3138;
+    background: #007bff;
     border-radius: 10px;
     padding-top: 3px;
     font-style: normal;
@@ -1612,7 +1612,7 @@ color: #4D4D4D;
     position: absolute;
     width: 8px;
     height: 8px;
-    background: #EF3138;
+    background: #007bff;
     border-radius: 50%;
 }
 
@@ -2218,7 +2218,7 @@ label.radio-card .check-icon {
         content: "";
         position: absolute;
         inset: 0;
-        background-color: #EF3138;
+        background-color: #007bff;
         border: 3px solid white;
         border-radius: 50%;
         transition: 200ms linear;
@@ -2247,8 +2247,8 @@ box-shadow: 0 2px 4px 0 rgba(219, 215, 215, 0.5), 0 0 0 2px #1ee0ac;
 }*/
 
     label.radio-card input[type=radio]:checked + .card-content-wrapper .check-icon {
-        background: #EF3138;
-        border-color: #EF3138;
+        background: #007bff;
+        border-color: #007bff;
     }
 
         label.radio-card input[type=radio]:checked + .card-content-wrapper .check-icon:before {
@@ -2298,7 +2298,7 @@ label.radio-card .card-content h5 {
 }
 
 input[type=checkbox], input[type=radio] {
-    accent-color: #EF3138;
+    accent-color: #007bff;
     height: 20px; /* not needed */
     width: 20px; /* not needed */
 }
@@ -2439,7 +2439,7 @@ input[type=checkbox], input[type=radio] {
     font-size: 16px;
     line-height: 24px;
     text-transform: uppercase;
-    color: #EF3138AD;
+    color: #007bffAD;
     border: 1px solid var(--Red);
     outline: none;
 }
@@ -2705,7 +2705,7 @@ input[type=checkbox], input[type=radio] {
     border-radius: 9.12px;
     padding: 9px;
     font-size: 20px;
-    color: #EF31385E;
+    color: #007bff5E;
 }
 
 .Clint-Contact .New-Messege::before {
@@ -2918,7 +2918,7 @@ input[type=checkbox], input[type=radio] {
 }
 
 .No-Answer-Bg {
-    background: #EF3138;
+    background: #007bff;
     border-radius: 10px;
     width: 30px;
     height: 31px;
@@ -3238,14 +3238,14 @@ input[type=checkbox], input[type=radio] {
     }
 
         .pagination a.active {
-            background-color: #EF3138;
+            background-color: #007bff;
             color: white;
-            border: 1px solid #EF3138;
+            border: 1px solid #007bff;
         }
 
             .pagination a.active:hover {
                 background-color: white;
-                color: #EF3138;
+                color: #007bff;
             }
 
         .pagination a:hover:not(.active) {
