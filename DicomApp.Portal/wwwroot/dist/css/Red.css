@@ -3295,7 +3295,7 @@ input[type=checkbox], input[type=radio] {
     width: 32%;
     position: absolute;
     top: 42px;
-    left: 57pc;
+    left: 65%;
     z-index: 1;
     display: none;
 }
