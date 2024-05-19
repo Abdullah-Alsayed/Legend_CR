@@ -103,8 +103,8 @@ File: Main Style
 /*@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");*/
 /* Color Variables */
 :root {
-    --sidebarbg: #fff;
-    --sidebarcolor: #6c757d;
+    --sidebarbg: #1D232C;
+    --sidebarcolor: #EEF0F4;
     --sidebarbordercolor: rgba(72, 94, 144, 0.16);
     --sidebaractivecolor: #4c75f2;
     --sidebarheadingcolor: #6c757d;
@@ -116,7 +116,7 @@ File: Main Style
     --searchcolor: #292b3a;
     --primarycolor: #1e3d73;
     --bodycolor: #292b3a;
-    --bodybackground: #f6f6f7;
+    --bodybackground: #161B21;
     --bordercolor: rgba(72, 94, 144, 0.16);
     --mainbackground: #fff;
     --secondary: #6c757d;
@@ -553,7 +553,7 @@ File: Main Style
 }
 
 .sidebar .sidebar-menu > li a:hover:not(.MenuNavigation){
-    background-color: #007bff;
+    background-color: #0077E4;
     padding: 8px;
     border-radius: 10px;
     color: white;
@@ -4073,8 +4073,9 @@ body {
     padding: 5px 12px;
     gap: 12px;
     width: 100%;
-    background: #FFFFFF;
-    border: 1px solid #E6EDFF;
+    background: #485e9029;
+    color:#EEF0F4;
+    border: 1px solid #485e9029;
     border-radius: 10px;
 }
 
@@ -4099,18 +4100,18 @@ body {
         text-align:center;
     }
 
-    .table thead td {
-        font-family: 'Poppins';
-        font-style: normal;
-        font-weight: 600;
-        font-size: 13px;
-        line-height: 24px;
-        text-transform: capitalize;
-        color: #222133;
-        flex: none;
-        order: 0;
-        flex-grow: 0;
-    }
+.table thead td {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 24px;
+    text-transform: capitalize;
+    color: #EEF0F4;
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
 
     .table tbody tr {
         background: #FFFFFF;
