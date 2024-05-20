@@ -560,14 +560,16 @@ File: Main Style
     padding: 12px 8px;
 }
 .MenuNavigation {
-    color: rgba(36, 34, 32, 0.56);
+    color: #EEF0F4;
     display: inline-block;
     padding: 20px 0;
     height: 100%;
     width: 100%;
+    font-size: 12px;
+    font-weight: 500;
 }
     .MenuNavigation:hover {
-        color: rgba(36, 34, 32, 0.56);
+        color: #EEF0F4;
         cursor: pointer;
     }
 .sidebar .sidebar-menu > li a:hover img {
@@ -699,7 +701,7 @@ File: Main Style
     color: rgba(36, 34, 32, 0.56);
 }
     .Nested-sidebar-menu li:hover {
-        background: #dcdbdb;
+        background: #374150;
         box-shadow: 0px 12px 8px rgba(0, 0, 0, 0.10);
         border-radius: 8px;
         cursor: pointer;
@@ -2109,10 +2111,9 @@ body {
     }
 
     /* Model Pop Up */
-    .modal-content {
-        background: var(--mainbackground);
-        border-color: var(--bordercolor);
-    }
+.modal-content {
+    background: #1D232C;
+}
 
         .modal-content .modal-header, .modal-content .modal-footer {
             border-color: var(--bordercolor);
@@ -4073,18 +4074,17 @@ body {
     padding: 5px 12px;
     gap: 12px;
     width: 100%;
-    background: #485e9029;
-    color:#EEF0F4;
-    border: 1px solid #485e9029;
+    background: #1D232C;
+    color: #EEF0F4;
     border-radius: 10px;
 }
 
-        .table:not(.table-dark) thead th, .table:not(.table-dark) tfoot th, .table:not(.table-dark) td, .table:not(.table-dark) th {
-            /*padding: 2% 0;*/
-            border-bottom: 1px solid #E6EDFF;
-            border-top: none;
-            text-align:center;
-        }
+    .table:not(.table-dark) thead th, .table:not(.table-dark) tfoot th, .table:not(.table-dark) td, .table:not(.table-dark) th {
+        /*padding: 2% 0;*/
+        border-bottom: 1px solid #3B4758;
+        border-top: none;
+        text-align: center;
+    }
 
         .table:not(.table-dark) thead th img, .table:not(.table-dark) tfoot th, .table:not(.table-dark) td, .table:not(.table-dark) th {
             margin-left: 3px;
@@ -4095,9 +4095,9 @@ body {
         /*padding-right: 20px;*/
         /* padding-top: 30px; */
         /* padding-bottom: 20px; */
-        border-bottom: 1px solid #E6EDFF;
+        border-bottom: 1px solid #3B4758;
         border-top: none;
-        text-align:center;
+        text-align: center;
     }
 
 .table thead td {
@@ -4113,15 +4113,15 @@ body {
     flex-grow: 0;
 }
 
-    .table tbody tr {
-        background: #FFFFFF;
-        border-bottom: 1px solid #E6EDFF;
-        border-radius: 20px;
-        flex: none;
-        order: 2;
-        flex-grow: 0;
-        cursor: pointer;
-    }
+.table tbody tr {
+    background: #354050;
+    border-bottom: 1px solid #354050;
+    border-radius: 20px;
+    flex: none;
+    order: 2;
+    flex-grow: 0;
+    cursor: pointer;
+}
 
     .table:not(.table-dark).table-bordered {
         border-color: var(--bordercolor);
@@ -4245,9 +4245,9 @@ body {
         border: 2px solid var(--dark);
     }
 
-    .table tbody tr:hover {
-        background: rgba(237, 39, 39, 0.2);
-    }
+.table tbody tr:hover {
+    background: #1D232C;
+}
 
     .status-td {
         padding-top: 24px;
@@ -5624,8 +5624,8 @@ body {
 
     .Nested-sidebar-menu li:before {
         content: "";
-        border-bottom: 1.0654px solid #dcdbdb;
-        border-left: 1.0654px solid #dcdbdb;
+        border-bottom: 1.0654px solid #000;
+        border-left: 1.0654px solid #000;
         position: absolute;
         padding-top: 75px;
         padding-right: 15px;
@@ -5667,8 +5667,8 @@ body {
 
             .Nested-sidebar-menu li:before {
                 content: "";
-                border-bottom: 1.0654px solid #dcdbdb;
-                border-left: 1.0654px solid #dcdbdb;
+                border-bottom: 1.0654px solid #3B4758;
+                border-left: 1.0654px solid #3B4758;
                 position: absolute;
                 padding-top: 75px;
                 padding-right: 15px;
