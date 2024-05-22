@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace DicomApp.DAL.DB
@@ -24,11 +23,6 @@ namespace DicomApp.DAL.DB
         public string ClassName { get; set; }
         public bool AllowLog { get; set; }
         public string LogMessage { get; set; }
-        public int? AppServiceClassId { get; set; }
-        public int? AppServiceGroupId { get; set; }
-
-        public virtual AppServiceClass AppServiceClass { get; set; }
-        public virtual AppServiceGroup AppServiceGroup { get; set; }
         public virtual ICollection<RoleAppService> RoleAppService { get; set; }
     }
 }

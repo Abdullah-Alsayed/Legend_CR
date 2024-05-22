@@ -1,13 +1,15 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using DicomApp.BL.Services;
 using DicomApp.CommonDefinitions.DTO;
 using DicomApp.CommonDefinitions.Requests;
+using DicomApp.CommonDefinitions.Responses;
 using DicomApp.DAL.DB;
+using DicomApp.Helpers;
 using DicomApp.Helpers;
 using DicomApp.Portal.Helpers;
 using Microsoft.AspNetCore.Authentication;
@@ -15,8 +17,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using DicomApp.Helpers;
-using DicomApp.CommonDefinitions.Responses;
 
 namespace DicomApp.Portal.Controllers
 {
@@ -45,22 +45,38 @@ namespace DicomApp.Portal.Controllers
             };
 
             var roleResponse = RoleService.ListRole(roleRequest);
-            roleResponse.RoleDTOs = roleResponse.RoleDTOs.Where(r => r.Id != (int)EnumRole.SuperAdmin && r.Id != (int)EnumRole.Admin && r.Id != (int)EnumRole.Vendor).ToList();
+            roleResponse.RoleDTOs = roleResponse
+                .RoleDTOs.Where(r =>
+                    r.Id != (int)EnumRole.SuperAdmin
+                    && r.Id != (int)EnumRole.Admin
+                    && r.Id != (int)EnumRole.Vendor
+                )
+                .ToList();
 
             if (ActionType == Constants.ActionType.PartialView)
                 return PartialView(roleResponse.RoleDTOs);
-
             else if (ActionType == Constants.ActionType.Table)
                 return PartialView("_ListRole", roleResponse.RoleDTOs);
-
             else
                 return View(roleResponse.RoleDTOs);
         }
 
         [AuthorizePerRole("ListRole")]
-        public ActionResult LoadRole(string orderByColumn = null, string searchVal = null, int pageIndex = 0)
+        public ActionResult LoadRole(
+            string orderByColumn = null,
+            string searchVal = null,
+            int pageIndex = 0
+        )
         {
-            return ViewComponent("RoleVComponent", new { orderByColumn = orderByColumn, searchVal = searchVal, pageIndex = pageIndex });
+            return ViewComponent(
+                "RoleVComponent",
+                new
+                {
+                    orderByColumn = orderByColumn,
+                    searchVal = searchVal,
+                    pageIndex = pageIndex
+                }
+            );
         }
 
         [AuthorizePerRole("DeleteRole")]
@@ -156,8 +172,8 @@ namespace DicomApp.Portal.Controllers
                     return PartialView(roleAppServiceResponse.AppServiceDTOs);
                 else
                     return View(roleAppServiceResponse.AppServiceDTOs);
-
-            else return RedirectToAction(nameof(ListRole));
+            else
+                return RedirectToAction(nameof(ListRole));
         }
 
         [AuthorizePerRole("UpdateRoleAppService")]
@@ -172,7 +188,9 @@ namespace DicomApp.Portal.Controllers
                 AppServiceDTO = model
             };
 
-            var roleAppServiceResponse = PermissionService.UpdateRoleAppService(roleAppServiceRequest);
+            var roleAppServiceResponse = PermissionService.UpdateRoleAppService(
+                roleAppServiceRequest
+            );
 
             if (roleAppServiceResponse.Success)
                 TempData["SuccessMsg"] = "Saved Successfully";
@@ -180,6 +198,44 @@ namespace DicomApp.Portal.Controllers
                 TempData["ErrorMsg"] = "Faild";
 
             return RedirectToAction("UpdateRoleAppService");
+        }
+
+        public IActionResult SeedPermission()
+        {
+            Assembly assembly = Assembly.GetExecutingAssembly();
+
+            Dictionary<string, List<string>> Permissions = new Dictionary<string, List<string>>();
+            foreach (Type type in assembly.GetTypes())
+            {
+                if (type.Name.EndsWith("Controller"))
+                {
+                    List<string> roles = new List<string>();
+                    foreach (MethodInfo method in type.GetMethods())
+                    {
+                        var attributes = method.GetCustomAttributes(
+                            typeof(AuthorizePerRoleAttribute),
+                            false
+                        );
+                        foreach (AuthorizePerRoleAttribute attribute in attributes)
+                            if (attribute.Arguments != null && attribute.Arguments.Length > 0)
+                                roles.Add(attribute.Arguments[0]?.ToString());
+                    }
+
+                    if (roles.Count > 0)
+                        Permissions[type.Name] = roles;
+                }
+            }
+
+            var roleAppServiceResponse = PermissionService.SeedPermission(
+                new SeedPermissionRequest
+                {
+                    context = _context,
+                    Permissions = Permissions,
+                    RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
+                    UserID = AuthHelper.GetClaimValue(User, "UserID"),
+                }
+            );
+            return Ok(roleAppServiceResponse.Success);
         }
     }
 }

@@ -14,8 +14,6 @@ namespace DicomApp.DAL.DB
         public virtual DbSet<Account> Account { get; set; }
         public virtual DbSet<AccountTransaction> AccountTransaction { get; set; }
         public virtual DbSet<AppService> AppService { get; set; }
-        public virtual DbSet<AppServiceClass> AppServiceClass { get; set; }
-        public virtual DbSet<AppServiceGroup> AppServiceGroup { get; set; }
         public virtual DbSet<Branch> Branch { get; set; }
         public virtual DbSet<CashTransfer> CashTransfer { get; set; }
         public virtual DbSet<City> City { get; set; }
@@ -188,10 +186,6 @@ namespace DicomApp.DAL.DB
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.AppServiceClassId).HasColumnName("AppServiceClassID");
-
-                entity.Property(e => e.AppServiceGroupId).HasColumnName("AppServiceGroupID");
-
                 entity.Property(e => e.ClassName).HasMaxLength(150);
 
                 entity
@@ -211,50 +205,6 @@ namespace DicomApp.DAL.DB
                 entity.Property(e => e.ShowToUser).IsRequired().HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.Title).IsRequired().HasMaxLength(150);
-
-                entity
-                    .HasOne(d => d.AppServiceClass)
-                    .WithMany(p => p.AppService)
-                    .HasForeignKey(d => d.AppServiceClassId)
-                    .HasConstraintName("FK_AppService_AppServiceClass");
-
-                entity
-                    .HasOne(d => d.AppServiceGroup)
-                    .WithMany(p => p.AppService)
-                    .HasForeignKey(d => d.AppServiceGroupId)
-                    .HasConstraintName("FK_AppService_AppServiceGroup");
-            });
-
-            modelBuilder.Entity<AppServiceClass>(entity =>
-            {
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity
-                    .Property(e => e.CreatedAt)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
-
-                entity.Property(e => e.Name).HasMaxLength(250);
-            });
-
-            modelBuilder.Entity<AppServiceGroup>(entity =>
-            {
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.AppServiceClassId).HasColumnName("AppServiceClassID");
-
-                entity
-                    .Property(e => e.CreatedAt)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
-
-                entity.Property(e => e.Name).HasMaxLength(250);
-
-                entity
-                    .HasOne(d => d.AppServiceClass)
-                    .WithMany(p => p.AppServiceGroup)
-                    .HasForeignKey(d => d.AppServiceClassId)
-                    .HasConstraintName("FK_AppServiceGroup_AppServiceClass");
             });
 
             modelBuilder.Entity<Branch>(entity =>

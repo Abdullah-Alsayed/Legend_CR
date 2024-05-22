@@ -22,6 +22,7 @@
     <link rel="shortcut icon" href="~/dist/images/favicon.ico" />
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <partial name="_MainCssFiles" />
+        <script src="~/dist/vendors/jquery/jquery-3.3.1.min.js"></script>
     <link rel="stylesheet" href="~/dist/vendors/datatable/css/dataTables.bootstrap4.min.css" />
     <link rel="stylesheet" href="~/dist/vendors/datatable/buttons/css/buttons.bootstrap4.min.css" />
     <style>
@@ -388,8 +389,6 @@
     </a>
 
     <!-- App Scripts -->
-
-    <script src="~/dist/vendors/jquery/jquery-3.3.1.min.js"></script>
     <partial name="_MainJsFiles" />
     @if (TempData["SuccessMsg"] != null)
     {

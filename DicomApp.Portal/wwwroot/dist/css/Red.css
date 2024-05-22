@@ -1712,7 +1712,7 @@ color: #4D4D4D;
     display: flex;
     align-items: center;
     /*text-transform: uppercase;*/
-    color: #222133;
+    color: #EEF0F4;
     margin-left: 50px;
     margin-top: 10px;
 }
@@ -4059,32 +4059,21 @@ input[type=checkbox], input[type=radio] {
     }
 }
 
-
-
-
-
 /* ====== START (2) : My Custom Validation ====== */
 .input-validation-error {
-    border-color: #ff5252;
-    background-color: #ffecec;
+
     border: 2px solid #ff5252;
 }
 
 input.error {
-    border-color: #ff5252;
-    background-color: #ffecec;
     border: 2px solid #ff5252;
 }
 
 select.error {
-    border-color: #ff5252;
-    background-color: #ffecec;
     border: 2px solid #ff5252;
 }
 
 .valid {
-    border-color: #00da1c;
-    background-color: #ffffff;
-    border: 2px solid #00da1c;
+    border: 2px solid #0077e4;
 }
 /* ====== END (2) : My Custom Validation ====== */

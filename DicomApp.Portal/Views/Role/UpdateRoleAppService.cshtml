@@ -81,19 +81,15 @@
         <div class="row row-eq-height">
             <div class="col-12 col-lg-3 mt-3 todo-menu-bar flip-menu pr-lg-0">
                 <a href="#" class="d-inline-block d-lg-none mt-1 flip-menu-close"><i class="icon-close"></i></a>
-                <div class="card border h-100 todo-menu-section">
+                <div class="card h-100 todo-menu-section">
                     <ul class="nav flex-column todo-menu">
-                        @{
-                            var classes = Model.GroupBy(c => c.AppServiceClassID).ToList();
-                            @foreach (var group in classes)
-                            {
-                                var ClassName = group.FirstOrDefault().AppServiceClassName;
-                                <li class="nav-item">
-                                    <a class="nav-link @(group.Key == 1 ? "active":"")" href="#@ClassName.Replace(" ", "")" data-todotype="@ClassName.Replace(" ", "")">
-                                        <i class="icon-list"></i> &nbsp;@ClassName
-                                    </a>
-                                </li>
-                            }
+                        @foreach (var services in Model.GroupBy(x=>x.ClassName) )
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" onclick="displayPremition('@services.FirstOrDefault().ClassName')" data-todotype="@services.FirstOrDefault().ClassName">
+                                    <i class="icon-list"></i> &nbsp;@services.FirstOrDefault().ClassName
+                                </a>
+                            </li>
                         }
                     </ul>
                 </div>
@@ -101,18 +97,14 @@
             <div class="col-12 col-lg-9 mt-3 pl-lg-0">
                 <form class="panel-body" action="@Url.Action("UpdateRoleAppService")" id="UpdateRoleAppService-Form" method="post">
                     <input hidden name="RoleID" value="@Model.FirstOrDefault().RoleID" />
-                    <div class="card border h-100 todo-list-section">
+                    <div class="card h-100 todo-list-section">
                         <div class="card-body p-0">
                             <ul class="todo-list">
-                                @foreach (var groups in classes)
+                                @foreach (var groups in Model.GroupBy(x=>x.ClassName))
                                 {
-                                    var group = groups.GroupBy(c => c.AppServiceGroupID).ToList();
-                                    foreach (var items in group)
-                                    {
-                                        foreach (var item in items)
+                                    foreach (var item in groups)
                                         {
-                                            var ClassName = groups.FirstOrDefault().AppServiceClassName;
-                                            <li class="todo-item @(ClassName.Replace(" ", "")) " id="@ClassName.Replace(" ", "")">
+                                            <li class="todo-item" data-ClassName="@item.ClassName">
                                                 <label class="chkbox">
                                                     <input id="checkbox-@item.Id" type="checkbox" value="@item.Id" name="SelectedAppServiceIDs" checked="@item.IsChecked" />
                                                     <span class="checkmark mt-2"></span>
@@ -121,21 +113,17 @@
                                                     <div class="row">
                                                         <div class="col-md-8">
                                                             <h3>@item.Title</h3>
-                                                            <p class="text-muted mb-0 font-weight-bold todo-date">@item.AppServiceGroupName</p>
-                                                            <p class="small-content text-muted mb-0">@item.AppServiceClassName</p>
-                                                        </div>
-                                                        <div class="col-md-4">
-                                                            <span class="badge badge-pill badge-info p-2 mb-1 pull-right font-weight-bold">@item.AppServiceClassName / @item.AppServiceGroupName</span>
+                                                            <p class="mb-0 font-weight-bold todo-date">@item.Name</p>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </li>
                                         }
-                                    }
+                                    
                                 }
                             </ul>
                             <div class="row justify-content-around p-3">
-                                <button class="Red-Btn btn-success w-50 my-3" type="button" onclick="UpdateRoleAppService('Role', 'UpdateRoleAppService', 'UpdateRoleAppService-Form')">
+                                <button class="Red-Btn btn-primary w-50 my-3" type="button" onclick="UpdateRoleAppService('Role', 'UpdateRoleAppService', 'UpdateRoleAppService-Form')">
                                     Save and Submit
                                     <span class="Spinner spinner-border spinner-border-sm ml-2 d-none" role="status" aria-hidden="true"></span>
                                 </button>
@@ -147,4 +135,3 @@
         </div>
     </div>
 </main>
-<script src="~/dist/js/todo.js"></script>

@@ -280,6 +280,14 @@ MenuNavigationList.forEach((item) => {
     item.addEventListener("click", MenuNavigation);
 });
 
+function displayPremition(className) {
+
+    $('.nav-link').removeClass('active');
+    $('.todo-item').fadeOut('fast');
+    $('.todo-item[data-ClassName="' + className + '"]').fadeIn('fast');
+    $('.nav-link[data-todotype="' + className + '"]').addClass('active');
+}
+
 
 function MenuNavigation(event, ActionName, ControllerName, paramters = "") {
     event.preventDefault();

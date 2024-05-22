@@ -9,12 +9,8 @@ namespace DicomApp.CommonDefinitions.DTO
     {
         public long Id { get; set; }
         public string Name { get; set; }
+        public string ClassName { get; set; }
         public string Title { get; set; }
-
-        public int AppServiceClassID { get; set; }
-        public string AppServiceClassName { get; set; }
-        public int AppServiceGroupID { get; set; }
-        public string AppServiceGroupName { get; set; }
         public bool AllowAnonymous { get; set; }
         public bool ShowToUser { get; set; }
         public long? ModifiedBy { get; set; }
@@ -22,7 +18,6 @@ namespace DicomApp.CommonDefinitions.DTO
         public bool IsDeleted { get; set; }
         public long CreatedBy { get; set; }
         public DateTime CreationDate { get; set; }
-
         public bool IsChecked { get; set; }
         public int RoleID { get; set; }
         public string RoleName { get; set; }

@@ -19,12 +19,6 @@ namespace DicomApp.CommonDefinitions.DTO
         public string ServiceTitle { get; set; }
         public bool ServiceAllowAnonymous { get; set; }
         public bool ServiceShowToUser { get; set; }
-
-        public int AppServiceClassID { get; set; }
-        public string AppServiceClassName { get; set; }
-        public int AppServiceGroupID { get; set; }
-        public string AppServiceGroupName { get; set; }
-
         public bool Enabled { get; set; }
 
         public List<int> SelectedRoleAppServiceIDs { get; set; }

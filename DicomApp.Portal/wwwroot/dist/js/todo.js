@@ -3,12 +3,18 @@
     var primarycolor = getComputedStyle(document.body).getPropertyValue('--primarycolor');
     var todo;
 
-    $('.scrollertodo').slimScroll({
-        height: '500px',
-        color: '#fff'
-    });
+    //$('.scrollertodo').slimScroll({
+    //    height: '500px',
+    //    color: '#fff'
+    //});
 
-    $('.todo-menu a').on('click', function () {
+
+
+
+
+    $('.todo-menu .nav-item').on('click', function () {
+        console.log(this);
+        console.log("this");
         $('.todo-menu a').removeClass('active');
         $(this).addClass('active');
         $('.todo-item').hide();
