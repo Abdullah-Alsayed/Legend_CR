@@ -15,7 +15,6 @@ namespace DicomApp.CommonDefinitions.DTO.ShipmentDTOs
         public int CancelledShipsCount { get; set; }
         public int SuccessPerc { get; set; }
 
-
         public double REDFees { get; set; }
         public double Total { get; set; }
         public double Balance { get; set; }
@@ -24,7 +23,7 @@ namespace DicomApp.CommonDefinitions.DTO.ShipmentDTOs
         public double TotalRefunded { get; set; }
 
         public double ShippingFees { get; set; }
-        public double PackingFees { get; set; }
+        public double GameFees { get; set; }
         public double WeightFees { get; set; }
         public double SizeFees { get; set; }
         public double PartialDeliveryFees { get; set; }

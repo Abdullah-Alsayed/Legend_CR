@@ -1,15 +1,13 @@
-using DicomApp.CommonDefinitions.DTO;
-using DicomApp.CommonDefinitions.DTO;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using DicomApp.CommonDefinitions.DTO;
+using DicomApp.CommonDefinitions.DTO;
 
 namespace DicomApp.CommonDefinitions.Requests
 {
-    public class PackingRequest : BaseRequest
+    public class GameRequest : BaseRequest
     {
-        public PackingDTO PackingDTO { get; set; }
-
-    
-}
+        public GameDTO GameDTO { get; set; }
+    }
 }

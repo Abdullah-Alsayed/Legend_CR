@@ -85,13 +85,13 @@ function GetTotalPrice() {
     var shippingFees;
     var COD = $("#FeesDetailsDTO_Total").val();
     var AreaID = $("#AreaId").val();
-    var PackingID = $("input[name='SettingDTO.PackingId']:checked").val();
+    var GameID = $("input[name='SettingDTO.GameId']:checked").val();
     var Weight = $("#SettingDTO_Weight").val();
-    $.get(`/Shipment/GetTotalPrice/?AreaID=${AreaID}&PackingID=${PackingID}`, function (data) {
+    $.get(`/Shipment/GetTotalPrice/?AreaID=${AreaID}&GameID=${GameID}`, function (data) {
         shippingFees = data.shippingFees;
         $(`#lblShippingFees`).val(data.shippingFees);
         $("#Zone-name").text(data.zoneName);
-        var REDFees = Number(shippingFees) + Number(data.packingFees);
+        var REDFees = Number(shippingFees) + Number(data.GameFees);
         if (Weight > 3) {
             REDFees += (Weight - 3) * 5;
         }
@@ -109,16 +109,16 @@ function GetTotalPrice() {
 function OrderSummary() {
     let Summary = "";
     let Weight = $(`#SettingDTO_Weight`).val();
-    let PackingID = $("input[name='SettingDTO.PackingId']:checked").val();
-    let PackingFess = $(`label[for='${PackingID}'] .Packing-Price`).text();
+    let GameID = $("input[name='SettingDTO.GameId']:checked").val();
+    let GameFess = $(`label[for='${GameID}'] .Game-Price`).text();
     let ShippingFees = $(`#lblShippingFees`).val();
     let REDFees = $(`#txtREDFees`).val();
     let VendorCash = $(".VendorCash").text();
     if (Weight > 3) {
         Summary += `<tr><td>Weight Fees</td><td>${(Weight - 3) * 5} EGP</td></tr>`;
     }
-    if (PackingID > 0) {
-        Summary += `<tr><td>Packing Fees</td><td>${PackingFess}</td></tr>`;
+    if (GameID > 0) {
+        Summary += `<tr><td>Game Fees</td><td>${GameFess}</td></tr>`;
     }
     if (ShippingFees > 0) {
         Summary += `<tr><td>Shipping Fees</td><td>${ShippingFees} EGP</td></tr>`;

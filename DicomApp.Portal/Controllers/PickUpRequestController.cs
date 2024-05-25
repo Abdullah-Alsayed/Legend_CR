@@ -1,28 +1,28 @@
-﻿
-using System;
+﻿using System;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using DicomApp.BL.Services;
 using DicomApp.CommonDefinitions.DTO;
-using DicomApp.CommonDefinitions.Requests;
-using DicomApp.DAL.DB;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using DicomApp.Helpers;
-using DicomApp.Portal.Helpers;
 using DicomApp.CommonDefinitions.DTO.PickupDTOs;
-using DicomApp.CommonDefinitions.Responses;
-using Rotativa.AspNetCore.Options;
-using Rotativa.AspNetCore;
 using DicomApp.CommonDefinitions.DTO.ShipmentDTOs;
 using DicomApp.CommonDefinitions.DTO.VendorProductDTOs;
+using DicomApp.CommonDefinitions.Requests;
+using DicomApp.CommonDefinitions.Responses;
+using DicomApp.DAL.DB;
+using DicomApp.Helpers;
+using DicomApp.Portal.Helpers;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Rotativa.AspNetCore;
+using Rotativa.AspNetCore.Options;
 
 namespace DicomApp.Portal.Controllers
 {
     public class PickUpRequestController : Controller
     {
         private readonly ShippingDBContext _context;
+
         public PickUpRequestController(ShippingDBContext context)
         {
             _context = context;
@@ -32,7 +32,14 @@ namespace DicomApp.Portal.Controllers
 
         [HttpGet]
         [AuthorizePerRole("PickupDeliveryList")]
-        public IActionResult Delivery(DateTime? From, DateTime? To, int VendorId, string Search, bool? IsDesc, string ActionType = null)
+        public IActionResult Delivery(
+            DateTime? From,
+            DateTime? To,
+            int VendorId,
+            string Search,
+            bool? IsDesc,
+            string ActionType = null
+        )
         {
             ViewModel<PickupDTO> viewModel = new ViewModel<PickupDTO>();
             var filter = new ShipDTO();
@@ -58,22 +65,28 @@ namespace DicomApp.Portal.Controllers
                 HasSettingDTO = true
             };
 
-            if (ActionType != Constants.ActionType.Table && ActionType != Constants.ActionType.Print)
+            if (
+                ActionType != SystemConstants.ActionType.Table
+                && ActionType != SystemConstants.ActionType.Print
+            )
             {
-                viewModel.Lookup = BaseHelper.GetLookup(new List<byte> {
-                    (byte)EnumSelectListType.Zone,
-                    (byte)EnumSelectListType.Vendor,
-                    (byte)EnumSelectListType.Area
-                }, _context);
+                viewModel.Lookup = BaseHelper.GetLookup(
+                    new List<byte>
+                    {
+                        (byte)EnumSelectListType.Zone,
+                        (byte)EnumSelectListType.Vendor,
+                        (byte)EnumSelectListType.Area
+                    },
+                    _context
+                );
             }
             var response = BL.Services.ShipmentService.GetAllShipments(request);
 
             viewModel.ObjDTO = new PickupDTO { Shipments = response.ShipDTOs };
 
-            if (ActionType == Constants.ActionType.PartialView)
+            if (ActionType == SystemConstants.ActionType.PartialView)
                 return PartialView(viewModel);
-
-            else if (ActionType == Constants.ActionType.Table)
+            else if (ActionType == SystemConstants.ActionType.Table)
                 return PartialView("_Delivery", viewModel.ObjDTO);
             else
                 return View(viewModel);
@@ -131,16 +144,23 @@ namespace DicomApp.Portal.Controllers
         public IActionResult Stock(string ActionType)
         {
             ViewModel<PickupDTO> viewModel = new ViewModel<PickupDTO>();
-            if (ActionType != Constants.ActionType.Table && ActionType != Constants.ActionType.Print)
+            if (
+                ActionType != SystemConstants.ActionType.Table
+                && ActionType != SystemConstants.ActionType.Print
+            )
             {
-                viewModel.Lookup = BaseHelper.GetLookup(new List<byte> {
-                    (byte)EnumSelectListType.Zone,
-                    (byte)EnumSelectListType.Area,
-                    (byte)EnumSelectListType.Vendor,
-                }, _context);
+                viewModel.Lookup = BaseHelper.GetLookup(
+                    new List<byte>
+                    {
+                        (byte)EnumSelectListType.Zone,
+                        (byte)EnumSelectListType.Area,
+                        (byte)EnumSelectListType.Vendor,
+                    },
+                    _context
+                );
             }
 
-            if (ActionType == Constants.ActionType.PartialView)
+            if (ActionType == SystemConstants.ActionType.PartialView)
                 return PartialView(viewModel);
             else
                 return View(viewModel);
@@ -181,12 +201,14 @@ namespace DicomApp.Portal.Controllers
 
             for (int i = 0; i < ProductIDs.Count(); i++)
             {
-                items.Add(new PickupItemDTO
-                {
-                    VendorProductId = ProductIDs[i],
-                    Quantity = ProductsQuantity[i],
-                    Price = ProductsPrice[i]
-                });
+                items.Add(
+                    new PickupItemDTO
+                    {
+                        VendorProductId = ProductIDs[i],
+                        Quantity = ProductsQuantity[i],
+                        Price = ProductsPrice[i]
+                    }
+                );
             }
             request.PickupDTO = new PickupDTO()
             {
@@ -218,7 +240,18 @@ namespace DicomApp.Portal.Controllers
         #region Pickup request list
 
         [AuthorizePerRole("PickupsList")]
-        public IActionResult All(DateTime? From, DateTime? To, int VendorId, int StatusId, int ZoneID, string Search, string OrderByColumn, bool? IsDesc, int PageIndex, string ActionType = null)
+        public IActionResult All(
+            DateTime? From,
+            DateTime? To,
+            int VendorId,
+            int StatusId,
+            int ZoneID,
+            string Search,
+            string OrderByColumn,
+            bool? IsDesc,
+            int PageIndex,
+            string ActionType = null
+        )
         {
             ViewModel<PickupDTO> viewModel = new ViewModel<PickupDTO>();
             viewModel.Lookup = new LookupDTO();
@@ -228,7 +261,8 @@ namespace DicomApp.Portal.Controllers
             filter.ZoneId = ZoneID;
             filter.StatusId = StatusId == (int)EnumStatus.All ? 0 : StatusId;
 
-            var PageSize = ActionType == Constants.ActionType.Print ? 0 : BaseHelper.Constants.PageSize;
+            var PageSize =
+                ActionType == SystemConstants.ActionType.Print ? 0 : BaseHelper.Constants.PageSize;
 
             var request = new PickUpRequestRequest
             {
@@ -246,27 +280,35 @@ namespace DicomApp.Portal.Controllers
             var response = PickUpRequestService.GetAllPickUpRequests(request);
             viewModel.ObjDTOs = response.PickupDTOs;
 
-            if (ActionType != Constants.ActionType.Table && ActionType != Constants.ActionType.Print)
+            if (
+                ActionType != SystemConstants.ActionType.Table
+                && ActionType != SystemConstants.ActionType.Print
+            )
             {
-                viewModel.Lookup = BaseHelper.GetLookup(new List<byte> {
-                (byte) EnumSelectListType.Vendor,
-                (byte)EnumSelectListType.Zone,
-                (byte) EnumSelectListType.Status}, _context);
+                viewModel.Lookup = BaseHelper.GetLookup(
+                    new List<byte>
+                    {
+                        (byte)EnumSelectListType.Vendor,
+                        (byte)EnumSelectListType.Zone,
+                        (byte)EnumSelectListType.Status
+                    },
+                    _context
+                );
             }
 
-            viewModel.Lookup.AreaDTOs = BaseHelper.GetLookup(new List<byte> {
-                (byte) EnumSelectListType.Area}
-            , _context).AreaDTOs;
+            viewModel.Lookup.AreaDTOs = BaseHelper
+                .GetLookup(new List<byte> { (byte)EnumSelectListType.Area }, _context)
+                .AreaDTOs;
 
-            if (ActionType == Constants.ActionType.PartialView)
+            if (ActionType == SystemConstants.ActionType.PartialView)
                 return PartialView(viewModel);
-
-            else if (ActionType == Constants.ActionType.Table)
+            else if (ActionType == SystemConstants.ActionType.Table)
                 return PartialView("_All", viewModel);
-
-            else if (ActionType == Constants.ActionType.Print)
-
-                return BaseHelper.GeneratePDF<List<PickupDTO>>("PickupReportsPDF", viewModel.ObjDTOs);
+            else if (ActionType == SystemConstants.ActionType.Print)
+                return BaseHelper.GeneratePDF<List<PickupDTO>>(
+                    "PickupReportsPDF",
+                    viewModel.ObjDTOs
+                );
 
             return View(viewModel);
         }
@@ -330,7 +372,7 @@ namespace DicomApp.Portal.Controllers
         {
             if (VendorID <= 0)
                 return PartialView("_Shipments");
-            
+
             var RoleID = AuthHelper.GetClaimValue(User, "RoleID");
             var UserID = AuthHelper.GetClaimValue(User, "UserID");
 
@@ -363,7 +405,14 @@ namespace DicomApp.Portal.Controllers
 
         [AuthorizePerRole("PickupEdit")]
         [HttpPost]
-        public IActionResult UpdatePickupRequst(int id, int AreaId, string Address, DateTime PickupDate, DateTime ReadyTime, DateTime LastTimeAvailable)
+        public IActionResult UpdatePickupRequst(
+            int id,
+            int AreaId,
+            string Address,
+            DateTime PickupDate,
+            DateTime ReadyTime,
+            DateTime LastTimeAvailable
+        )
         {
             var PickupDTO = new PickupDTO
             {
@@ -397,10 +446,7 @@ namespace DicomApp.Portal.Controllers
                 context = _context,
                 RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
                 UserID = AuthHelper.GetClaimValue(User, "UserID"),
-                PickupDTO = new PickupDTO
-                {
-                    PickupRequestId = pickupID
-                }
+                PickupDTO = new PickupDTO { PickupRequestId = pickupID }
             };
 
             var response = DicomApp.BL.Services.PickUpRequestService.CancelPickupRequest(request);
@@ -430,16 +476,29 @@ namespace DicomApp.Portal.Controllers
         #region Assign pickup requests
 
         [AuthorizePerRole("AssignPickupList")]
-        public IActionResult Assign(DateTime? From, DateTime? To, int VendorId, int ZoneID, bool? IsDesc, string OrderByColumn, string Search = null, string accountsIDs = null, string ActionType = null)
+        public IActionResult Assign(
+            DateTime? From,
+            DateTime? To,
+            int VendorId,
+            int ZoneID,
+            bool? IsDesc,
+            string OrderByColumn,
+            string Search = null,
+            string accountsIDs = null,
+            string ActionType = null
+        )
         {
-
             ViewModel<PickupDTO> ViewData = new ViewModel<PickupDTO>();
 
-            ViewData.Lookup = BaseHelper.GetLookup(new List<byte> {
+            ViewData.Lookup = BaseHelper.GetLookup(
+                new List<byte>
+                {
                     (byte)EnumSelectListType.Vendor,
                     (byte)EnumSelectListType.Zone,
                     (byte)EnumSelectListType.Courier,
-                }, _context);
+                },
+                _context
+            );
 
             var filter = new PickupDTO();
             filter.Search = Search;
@@ -460,12 +519,10 @@ namespace DicomApp.Portal.Controllers
 
             var response = PickUpRequestService.GetAllPickUpRequests(request);
             ViewData.ObjDTOs = response.PickupDTOs;
-            if (ActionType == Constants.ActionType.PartialView)
+            if (ActionType == SystemConstants.ActionType.PartialView)
                 return PartialView(ViewData);
-
-            else if (ActionType == Constants.ActionType.Table)
+            else if (ActionType == SystemConstants.ActionType.Table)
                 return PartialView("_Assign", ViewData);
-
             else
                 return View(ViewData);
         }

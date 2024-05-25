@@ -190,11 +190,11 @@ namespace DicomApp.Portal.Controllers
             var userResponse = UserService.GetAllUsers(userRequest);
 
             ViewData.ObjDTOs = userResponse.UserDTOs;
-            if (ActionType == Constants.ActionType.PartialView)
+            if (ActionType == SystemConstants.ActionType.PartialView)
                 return PartialView(ViewData);
-            else if (ActionType == Constants.ActionType.Table)
+            else if (ActionType == SystemConstants.ActionType.Table)
                 return PartialView("_ListUser", userResponse.UserDTOs);
-            else if (ActionType == Constants.ActionType.Print)
+            else if (ActionType == SystemConstants.ActionType.Print)
                 return BaseHelper.GeneratePDF<List<UserDTO>>(
                     "StaffReportPDF",
                     userResponse.UserDTOs
@@ -243,11 +243,11 @@ namespace DicomApp.Portal.Controllers
             var userResponse = UserService.GetAllUsers(userRequest);
 
             ViewData.ObjDTOs = userResponse.UserDTOs.OrderByDescending(u => u.Id).ToList();
-            if (ActionType == Constants.ActionType.PartialView)
+            if (ActionType == SystemConstants.ActionType.PartialView)
                 return PartialView(ViewData);
-            else if (ActionType == Constants.ActionType.Table)
+            else if (ActionType == SystemConstants.ActionType.Table)
                 return PartialView("_ListAccount", userResponse.UserDTOs);
-            else if (ActionType == Constants.ActionType.Print)
+            else if (ActionType == SystemConstants.ActionType.Print)
                 return BaseHelper.GeneratePDF<List<UserDTO>>(
                     "AccountReportPDF",
                     userResponse.UserDTOs
@@ -434,7 +434,7 @@ namespace DicomApp.Portal.Controllers
                 ViewBag.areas = _context.City.ToList();
                 ViewBag.Zone = _context.Zone.ToList();
 
-                if (ActionType == Constants.ActionType.PartialView)
+                if (ActionType == SystemConstants.ActionType.PartialView)
                     return PartialView("_EditUser", userResponse.UserDTOs[0]);
                 else
                     return View(userResponse.UserDTOs[0]);

@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Text;
 using System.Collections.Generic;
+using System.Text;
 
 namespace DicomApp.CommonDefinitions.DTO.CashDTOs
 {
     public class InvoiceDTO
     {
         public double ShippingFees { get; set; }
-        public double PackingFees { get; set; }
+        public double GameFees { get; set; }
         public double WeightFees { get; set; }
         public double SizeFees { get; set; }
         public double PartialDeliveryFees { get; set; }
@@ -22,7 +22,7 @@ namespace DicomApp.CommonDefinitions.DTO.CashDTOs
         public double Deposit { get; set; }
         public double TreasuryBalance { get; set; }
         public double Total { get; set; }
-                
+
         public IEnumerable<CashTransferDTO> CashTransferDTOs { get; set; }
     }
 }

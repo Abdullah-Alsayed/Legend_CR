@@ -1,20 +1,20 @@
-﻿
-using DicomApp.CommonDefinitions.DTO;
-using DicomApp.DAL.DB;
-using DicomApp.Helpers;
+﻿using System.Collections.Generic;
 using DicomApp.BL.Services;
 using DicomApp.CommonDefinitions.DTO;
+using DicomApp.CommonDefinitions.DTO;
 using DicomApp.CommonDefinitions.Requests;
+using DicomApp.DAL.DB;
+using DicomApp.Helpers;
 using DicomApp.Helpers;
 using DicomApp.Portal.Helpers;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 
 namespace DicomApp.Portal.Controllers
 {
     public class ProblemTypeController : Controller
     {
         private readonly ShippingDBContext _context;
+
         public ProblemTypeController(ShippingDBContext context)
         {
             _context = context;
@@ -33,12 +33,10 @@ namespace DicomApp.Portal.Controllers
                 ProblemTypeDTO = filter,
             };
             var ProblemTypeRespons = ProblemTypeService.ListProblemType(ProblemTypeRequest);
-            if (ActionType == Constants.ActionType.PartialView)
+            if (ActionType == SystemConstants.ActionType.PartialView)
                 return PartialView(ProblemTypeRespons.ProblemTypeDTOs);
-
-            else if (ActionType == Constants.ActionType.Table)
+            else if (ActionType == SystemConstants.ActionType.Table)
                 return PartialView("_ProblemTypeList", ProblemTypeRespons.ProblemTypeDTOs);
-
             else
                 return View(ProblemTypeRespons.ProblemTypeDTOs);
         }
@@ -58,11 +56,12 @@ namespace DicomApp.Portal.Controllers
             var ProblemTypeData = ProblemTypeService.GetLastProblemType(ProblemTypeRequst);
 
             if (ProblemTypeRespons.Success)
-                return PartialView("_ProblemTypeList", new List<ProblemTypeDTO> { ProblemTypeData.ProblemTypeDTO });
-
+                return PartialView(
+                    "_ProblemTypeList",
+                    new List<ProblemTypeDTO> { ProblemTypeData.ProblemTypeDTO }
+                );
             else
                 return Json(ProblemTypeRespons);
-
         }
 
         [HttpPost]
@@ -94,7 +93,8 @@ namespace DicomApp.Portal.Controllers
             var ProblemTypeRespons = ProblemTypeService.DeleteProblemType(ProblemTypeRequst);
             if (ProblemTypeRespons.Success)
                 return Json(new { success = "Delete successfully" });
-            else return Json(false);
+            else
+                return Json(false);
         }
     }
 }

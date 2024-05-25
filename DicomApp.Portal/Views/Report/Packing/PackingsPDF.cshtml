@@ -2,7 +2,7 @@
 @using DicomApp.BL.Services;
 @using DicomApp.CommonDefinitions.DTO;
 @using DicomApp.CommonDefinitions.DTO.ShipmentDTOs;
-@model List<PackingDTO>
+@model List<GameDTO>
 @{
     Layout = "~/Views/Shared/_PrintLayout.cshtml";
 }
@@ -24,11 +24,10 @@
         {
             foreach (var item in Model)
             {   <tr>
-                    <td>@item.id</td>
+                    <td>@item.Id</td>
                     <td>@item.NameEn</td>
                     <td>@item.Description</td>
                     <td> @item.Size </td>
-                    <td>@item.Count</td>
                     <td class="text-center"><img src="~/dist/images/@item.ImgUrl" width="97" /></td>
                  </tr>
              }

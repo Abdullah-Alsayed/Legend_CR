@@ -6,12 +6,12 @@ namespace DicomApp.CommonDefinitions.DTO.ShipmentDTOs
 {
     public class ShipSettingDTO
     {
-        public int? PackingId { get; set; }
-        public int? PackingTypeId { get; set; }
-        public int? WarehousePackingId { get; set; }
-        public int? WarehousePackingTypeId { get; set; }
-        public string PackingName { get; set; }
-        public string PackingTypeName { get; set; }
+        public int? GameId { get; set; }
+        public int? CategoryId { get; set; }
+        public int? WarehouseGameId { get; set; }
+        public int? WarehouseCategoryId { get; set; }
+        public string GameName { get; set; }
+        public string CategoryName { get; set; }
         public int Weight { get; set; }
         public int WarehouseWeight { get; set; }
 

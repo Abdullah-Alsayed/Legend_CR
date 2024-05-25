@@ -1,22 +1,19 @@
-﻿using DicomApp.CommonDefinitions.DTO.ShipmentDTOs;
-using Microsoft.AspNetCore.Http;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using DicomApp.CommonDefinitions.DTO.ShipmentDTOs;
+using Microsoft.AspNetCore.Http;
 
 namespace DicomApp.CommonDefinitions.DTO
 {
-   public class PackingDTO
+    public class GameDTO
     {
-        public int id { get; set; }
+        public int Id { get; set; }
         public string NameAr { get; set; }
         public string NameEn { get; set; }
         public string Size { get; set; }
         public string ImgUrl { get; set; }
-
-        public int Count { get; set; }
-        public Double Price { get; set; }
-        public int PackingTypeId { get; set; }
+        public int CategoryId { get; set; }
         public int? CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; }
         public int? LastModifiedBy { get; set; }
@@ -26,9 +23,8 @@ namespace DicomApp.CommonDefinitions.DTO
         public IEnumerable<ShipDTO> ShipDTOs { get; set; }
         public string Messege { get; set; }
         public string search { get; set; }
-        public string PackingTypeName { get; set; }
+        public string CategoryName { get; set; }
         public DateTime? DateFrom { get; set; }
         public DateTime? DateTo { get; set; }
-        public int? BranchId { get; set; }
     }
 }

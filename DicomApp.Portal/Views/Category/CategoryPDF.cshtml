@@ -1,0 +1,41 @@
+﻿
+@using DicomApp.CommonDefinitions.DTO;
+@using DicomApp.CommonDefinitions.DTO;
+@using DicomApp.Helpers;
+@using DicomApp.BL.Services;
+@using DicomApp.DAL.DB;
+@model List<CategoryDTO>
+    <div class="Table-container">
+        <table class="table" id="Red-Table">
+            <thead>
+                <tr>
+                   
+                    <td>Code</td>
+                    <td class="Sort-Column">Name</td>
+                    <td class="Sort-Column">Name</td>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Count > 0)
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Id</td>
+                            <td>@item.NameEn</td>
+                            <td>@item.NameAr </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7">
+                            <h6 class="text-center text-danger my-5">No data available in table</h6>
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>

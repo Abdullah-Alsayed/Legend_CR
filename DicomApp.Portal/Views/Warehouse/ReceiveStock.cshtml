@@ -29,9 +29,9 @@
                     @Html.DropDownListFor(model => model.VendorId, new SelectList(ViewBag.Vendors, "Id", "Name"), "--- Select Vendor ---", new { @class = "form-control ", @id = "VendorChangeVal", @onChange = "ReceiveStockDDLchange()" })
                 </div>
                 <div class="col-md-12 pt-3">
-                    <div class="Packing-Type-Section">
+                    <div class="Game-Type-Section">
                         <label class="Shipment-Details-label">Pickup Code</label>
-                        <div class="Packing-Type h-auto" id="dvcodes">
+                        <div class="Game-Type h-auto" id="dvcodes">
                             <ul>
                                 <li>
                                     <label>No Data</label>

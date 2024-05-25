@@ -1,4 +1,6 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using DicomApp.BL.Services;
 using DicomApp.CommonDefinitions.DTO;
 using DicomApp.CommonDefinitions.Records;
@@ -12,9 +14,6 @@ using DicomDB.CommonDefinitions.Requests;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace DicomDB.Portal.Controllers
 {
@@ -43,19 +42,17 @@ namespace DicomDB.Portal.Controllers
             };
             var ZoneRespons = ZoneService.GetZones(ZoneRequest);
             ViewData.ObjDTOs = ZoneRespons.ZoneDTOs;
-            ViewData.Lookup = BaseHelper.GetLookup(new List<byte> {
-                (byte)EnumSelectListType.Area},
-                _context);
+            ViewData.Lookup = BaseHelper.GetLookup(
+                new List<byte> { (byte)EnumSelectListType.Area },
+                _context
+            );
 
-            if (ActionType == Constants.ActionType.PartialView)
+            if (ActionType == SystemConstants.ActionType.PartialView)
                 return PartialView(ViewData);
-
-            else if (ActionType == Constants.ActionType.Table)
+            else if (ActionType == SystemConstants.ActionType.Table)
                 return PartialView("_ZoneList", ViewData);
-
-            else if (ActionType == Constants.ActionType.Print)
+            else if (ActionType == SystemConstants.ActionType.Print)
                 return BaseHelper.GeneratePDF<List<ZoneDTO>>("ZoneReportPDF", ViewData.ObjDTOs);
-
             else
                 return View(ViewData);
         }
@@ -143,7 +140,7 @@ namespace DicomDB.Portal.Controllers
         [AuthorizePerRole("ZoneList")]
         public IActionResult RouteList(string ActionType)
         {
-            if (ActionType == Constants.ActionType.PartialView)
+            if (ActionType == SystemConstants.ActionType.PartialView)
                 return PartialView();
             else
                 return View();
@@ -164,21 +161,23 @@ namespace DicomDB.Portal.Controllers
                 context = _context,
                 CityDTO = new CityDTO() { ZoneId = ZoneId, Search = Search },
             };
-            ViewData.Lookup = BaseHelper.GetLookup(new List<byte> {
-                             (byte)EnumSelectListType.Zone }, _context);
+            ViewData.Lookup = BaseHelper.GetLookup(
+                new List<byte> { (byte)EnumSelectListType.Zone },
+                _context
+            );
 
             var CityResponse = CityService.GetCity(CityRequest);
             ViewData.ObjDTOs = CityResponse.CityDTOs;
 
-            if (ActionType == Constants.ActionType.PartialView)
+            if (ActionType == SystemConstants.ActionType.PartialView)
                 return PartialView(ViewData);
-
-            else if (ActionType == Constants.ActionType.Table)
+            else if (ActionType == SystemConstants.ActionType.Table)
                 return PartialView("_AreaList", ViewData);
-
-            else if (ActionType == Constants.ActionType.Print)
-                return BaseHelper.GeneratePDF<List<CityDTO>>("AreaReportPDF", CityResponse.CityDTOs);
-
+            else if (ActionType == SystemConstants.ActionType.Print)
+                return BaseHelper.GeneratePDF<List<CityDTO>>(
+                    "AreaReportPDF",
+                    CityResponse.CityDTOs
+                );
             else
                 return View(ViewData);
         }
@@ -301,8 +300,11 @@ namespace DicomDB.Portal.Controllers
         [AuthorizePerRole("ZoneTaxList")]
         public ActionResult ZoneTax(string ActionType)
         {
-            var ZoneTax = _context.ZoneTax.Include(c => c.Zone).OrderByDescending(c => c.Id).ToList();
-            if (ActionType == Constants.ActionType.PartialView)
+            var ZoneTax = _context
+                .ZoneTax.Include(c => c.Zone)
+                .OrderByDescending(c => c.Id)
+                .ToList();
+            if (ActionType == SystemConstants.ActionType.PartialView)
                 return PartialView(ZoneTax);
             else
                 return View(ZoneTax);

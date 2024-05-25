@@ -132,31 +132,31 @@
 //    })
 //}
 
-//function GetPacking(id) {
-//    $.get("/Packing/GetPackingList", { ID: id }, function (data) {
-//        $.each(data, function (index, Packing) {
-//            $("#Packingdiv").append('<div><label for="' + Packing.id + '" class="radio-card"><input type="radio" value="' + Packing.id + '" name="PackingId" id="' + Packing.id + '" /><div class="card-content-wrapper"><span class="check-icon"></span><div class="card-content"><img src="/dist/images/' + Packing.imgUrl + '" alt=""  width="100" /><p class="Packing-Price">' + Packing.price +' EGP</p><p class="float-end Packing-Name">' + Packing.nameEn + '</p><p class="Packing-Size">' + Packing.size + '<h4/></div></div></label></div>');
+//function GetGame(id) {
+//    $.get("/Game/GetGameList", { ID: id }, function (data) {
+//        $.each(data, function (index, Game) {
+//            $("#Gamediv").append('<div><label for="' + Game.id + '" class="radio-card"><input type="radio" value="' + Game.id + '" name="GameId" id="' + Game.id + '" /><div class="card-content-wrapper"><span class="check-icon"></span><div class="card-content"><img src="/dist/images/' + Game.imgUrl + '" alt=""  width="100" /><p class="Game-Price">' + Game.price +' EGP</p><p class="float-end Game-Name">' + Game.nameEn + '</p><p class="Game-Size">' + Game.size + '<h4/></div></div></label></div>');
 //        });
 //    });
-//    $("#Packingdiv").empty();
+//    $("#Gamediv").empty();
 //}
-//function PackingType(ID)
+//function Category(ID)
 //{
-//    $("#Packingdiv").fadeOut(900);
-//    GetPacking(ID);
-//    $("#Packingdiv").slideDown(1000);
+//    $("#Gamediv").fadeOut(900);
+//    GetGame(ID);
+//    $("#Gamediv").slideDown(1000);
 //}
 //function GetTotalPrice() {
 //    var Tax;
 //    var Amount = $("#SubTotal").val();
 //    var AreaID = $("#AreaId").val();
-//    var Packing = $("input[type='radio']:checked").val();
+//    var Game = $("input[type='radio']:checked").val();
 //    var Weight = $("#Weight").val();
-//    $.get(`/vendor/GetTotalPrice/?AreaID=${AreaID}&packingID=${Packing}`, function (data) {
+//    $.get(`/vendor/GetTotalPrice/?AreaID=${AreaID}&GameID=${Game}`, function (data) {
 //        Tax = data.tax;
 //        $("#taxtxt").val(Tax);
 //        $("#Zone-name").text(data.zone);
-//        var Total = Number(Tax) + Number(Amount) + Number(data.packing);
+//        var Total = Number(Tax) + Number(Amount) + Number(data.Game);
 //        if (Weight > 3) {
 //            Total += (Weight - 3) * 5;
 //        }

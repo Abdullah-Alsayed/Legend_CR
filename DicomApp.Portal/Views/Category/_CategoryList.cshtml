@@ -1,0 +1,91 @@
+﻿
+@using DicomApp.CommonDefinitions.DTO;
+@model List<CategoryDTO>
+@if (Model != null && Model.Count > 0)
+{
+    foreach (var item in Model)
+    {
+        <tr id="Category_@item.Id">
+            <td id="NameAr"><b>@item.NameAr</b></td>
+            <td id="NameEn">@item.NameEn</td>
+            <td>
+                <div class="Actions-Buttons">
+                    <ul>
+                        <li class="Green-Bg">
+                            <!-- START: Edit Form -->
+                            <a data-toggle="modal" data-target="#EditForm_@item.Id"><i class="icon-note F-Medium"></i></a>
+                            <div class="modal fade" id="EditForm_@item.Id" tabindex="-1" role="dialog" aria-labelledby="EditCategoryLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div>
+                                            <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h2 class="Model-Titel">Edit Category</h2>
+                                            <form asp-action="EditCategory" asp-controller="Category" class="needs-validation" enctype="multipart/form-data" id="EditCategory-Form">
+                                                <div class="container-fluid P-Model">
+                                                    <div class="row pt-5">
+                                                        <div class="col-lg-6 pt-3">
+                                                            <label class="Label-Model">Name Arabic</label>
+                                                            <input class="input-Model" required id="NameAr" name="NameAr" value="@item.NameAr" placeholder="Name Arabic" />
+                                                              <div class="invalid-feedback">
+                                                                    Please enter Name Arabic
+                                                             </div>
+                                                        </div>
+                                                        <div class="col-lg-6 pt-3">
+                                                            <label class="Label-Model">Name English</label>
+                                                            <input class="input-Model" id="NameEn" name="NameEn" placeholder="Name English" value="@item.NameEn" />
+                                                            <div class="invalid-feedback">
+                                                                Please enter Name English
+                                                            </div>
+                                                        </div>
+                                                        <input type="hidden" value="@item.Id" name="Id" id="Id" />
+                                                        <div class="col-lg-12">
+                                                            <button class="Red-Btn-OutLine OutLine-Red Btn-Model" onclick="EditEntity('Category','EditCategory','EditCategory-Form','Category_@item.Id')" type="button" id="BtnSend">
+                                                                Edit Category
+                                                            <span class="Spinner spinner-border spinner-border-sm ml-2 mb-1 d-none" role="status" aria-hidden="true"></span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- END: Edit Form -->
+                        </li>
+                        <li class="Red-Bg">
+                            <a data-toggle="modal" data-target="#DeletForm_@item.Id"><i class="icon-trash F-Medium"></i></a>
+                            <!-- Delete Category Model -->
+                            <div class="modal fade" id="DeletForm_@item.Id" tabindex="-1" role="dialog" aria-labelledby="DeleteVendorLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div>
+                                            <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h2 class="Model-Titel w-75">are you sure you want to delete this Category?</h2>
+                                            <h5 class="Model-Contetn"> Deleting the selected Vendor is permanent. You won’t be able to undo this action.</h5>
+                                            <input type="hidden" id="EntityId" />
+                                            <div class="col-lg-12">
+                                                <button class="Red-Btn-OutLine OutLine-Red ml-3 Btn-Model" type="button" data-dismiss="modal"> Cancel</button>
+                                                <button class="Red-Btn-OutLine OutLine-White Btn-Model" type="button" onclick="DeleteEntity('Category','DeleteCategory','Category_',@item.Id)" data-dismiss="modal">Delete </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+            </td>
+        </tr>
+    }
+}

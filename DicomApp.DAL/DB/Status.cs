@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace DicomApp.DAL.DB
@@ -16,7 +15,11 @@ namespace DicomApp.DAL.DB
         }
 
         public int Id { get; set; }
-        public string Name { get; set; }
+
+        public string NameEN { get; set; }
+        public string NameAR { get; set; }
+
+        public int StatusType { get; set; }
 
         public virtual ICollection<AccountTransaction> AccountTransaction { get; set; }
         public virtual ICollection<PickupRequest> PickupRequest { get; set; }

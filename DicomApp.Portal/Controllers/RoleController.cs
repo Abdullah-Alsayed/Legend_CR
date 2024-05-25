@@ -53,9 +53,9 @@ namespace DicomApp.Portal.Controllers
                 )
                 .ToList();
 
-            if (ActionType == Constants.ActionType.PartialView)
+            if (ActionType == SystemConstants.ActionType.PartialView)
                 return PartialView(roleResponse.RoleDTOs);
-            else if (ActionType == Constants.ActionType.Table)
+            else if (ActionType == SystemConstants.ActionType.Table)
                 return PartialView("_ListRole", roleResponse.RoleDTOs);
             else
                 return View(roleResponse.RoleDTOs);
@@ -168,7 +168,7 @@ namespace DicomApp.Portal.Controllers
             var roleAppServiceResponse = PermissionService.ListAppService(roleAppServiceRequest);
 
             if (roleAppServiceResponse.Success)
-                if (ActionType == Constants.ActionType.PartialView)
+                if (ActionType == SystemConstants.ActionType.PartialView)
                     return PartialView(roleAppServiceResponse.AppServiceDTOs);
                 else
                     return View(roleAppServiceResponse.AppServiceDTOs);

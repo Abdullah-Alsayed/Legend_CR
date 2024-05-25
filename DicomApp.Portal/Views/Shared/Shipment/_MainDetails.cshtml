@@ -153,9 +153,9 @@
                             Other Fees
                         </label>
                         <ul class="Fess-Ul">
-                            @if (Model.FeesDetailsDTO.PackingFees > 0)
+                            @if (Model.FeesDetailsDTO.GameFees > 0)
                             {
-                                <li><p>Packing @Model.FeesDetailsDTO.PackingFees EGP</p></li>
+                                <li><p>Game @Model.FeesDetailsDTO.GameFees EGP</p></li>
                             }
                             @if (Model.FeesDetailsDTO.WeightFees > 0)
                             {
@@ -173,8 +173,8 @@
                     </div>
                 }
                 <div class="col-lg-6 col-6">
-                    <h3>Packing</h3>
-                    <p>@(Model.SettingDTO.PackingName ?? "None")</p>
+                    <h3>Game</h3>
+                    <p>@(Model.SettingDTO.GameName ?? "None")</p>
                 </div>
                 <div class="col-lg- col-6">
                     <h3>Comments</h3>

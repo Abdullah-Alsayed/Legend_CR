@@ -103,7 +103,7 @@ namespace DicomApp.BL.Services
                                             StatusDTO = new StatusDTO
                                             {
                                                 Id = s.StatusId,
-                                                Name = s.Status.Name
+                                                Name = s.Status.NameEN
                                             }
                                         })
                                     : null,

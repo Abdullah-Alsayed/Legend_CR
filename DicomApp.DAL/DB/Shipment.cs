@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace DicomApp.DAL.DB
@@ -44,9 +43,9 @@ namespace DicomApp.DAL.DB
         public bool IsFragilePackage { get; set; }
         public bool IsStock { get; set; }
         public bool? IsAfford { get; set; }
-        public int? PackingId { get; set; }
-        public int? WarehousePackingId { get; set; }
-        public double PackingFees { get; set; }
+        public int? GameId { get; set; }
+        public int? WarehouseGameId { get; set; }
+        public double GameFees { get; set; }
         public int Weight { get; set; }
         public int WarehouseWeight { get; set; }
         public double WeightFees { get; set; }
@@ -85,13 +84,13 @@ namespace DicomApp.DAL.DB
         public virtual CommonUser Customer { get; set; }
         public virtual CommonUser DeliveryMan { get; set; }
         public virtual CommonUser LastModifiedByNavigation { get; set; }
-        public virtual Packing Packing { get; set; }
+        public virtual Game Game { get; set; }
         public virtual PickupRequest PickupRequest { get; set; }
         public virtual ShipmentService ShipmentService { get; set; }
         public virtual ShipmentType ShipmentType { get; set; }
         public virtual Status Status { get; set; }
         public virtual CommonUser Vendor { get; set; }
-        public virtual Packing WarehousePacking { get; set; }
+        public virtual Game WarehouseGame { get; set; }
         public virtual Zone Zone { get; set; }
         public virtual ICollection<AccountTransaction> AccountTransaction { get; set; }
         public virtual ICollection<FollowUp> FollowUp { get; set; }

@@ -1,11 +1,11 @@
 ﻿
-function GetPacking(id) {
-    $.get("/Packing/GetPackingList", { ID: id }, function (data) {
-        $.each(data, function (index, Packing) {
-            $("#Packingdiv").append('<label for="' + Packing.id + '" class="radio-card"><input type="radio" value="' + Packing.id + '" name="PackingId" id="' + Packing.id + '" /><div class="card-content-wrapper"><span class="check-icon"></span><div class="card-content"><img src="/dist/images/' + Packing.imgUrl + '" alt=""/><h4 class="text-center">' + Packing.nameEn + '</h4><h4 style="float: right;">' + Packing.size + '</h4> <h4 class="float-end">Size</h4><h4 style="float: right;">' + Packing.price + '</h4><h4>Price<h4/></div></div></label>')
+function GetGame(id) {
+    $.get("/Game/GetGameList", { ID: id }, function (data) {
+        $.each(data, function (index, Game) {
+            $("#Gamediv").append('<label for="' + Game.id + '" class="radio-card"><input type="radio" value="' + Game.id + '" name="GameId" id="' + Game.id + '" /><div class="card-content-wrapper"><span class="check-icon"></span><div class="card-content"><img src="/dist/images/' + Game.imgUrl + '" alt=""/><h4 class="text-center">' + Game.nameEn + '</h4><h4 style="float: right;">' + Game.size + '</h4> <h4 class="float-end">Size</h4><h4 style="float: right;">' + Game.price + '</h4><h4>Price<h4/></div></div></label>')
         });
     });
-    $("#Packingdiv").empty();
+    $("#Gamediv").empty();
 }
 
 $(document).ready(function () {
@@ -14,14 +14,14 @@ $(document).ready(function () {
             $(".se-pre-con").css("display", "block");
         }
     });
-    $("#PackingSelect").change(function () {
-        $("#Packingdiv").fadeOut("fast");
-        var ID = $("#PackingSelect").val();
-        GetPacking(ID);
-        $("#Packingdiv").slideDown(1000);
+    $("#GameSelect").change(function () {
+        $("#Gamediv").fadeOut("fast");
+        var ID = $("#GameSelect").val();
+        GetGame(ID);
+        $("#Gamediv").slideDown(1000);
     });
-    var ID = $("#PackingSelect").val();
-    GetPacking(ID);
+    var ID = $("#GameSelect").val();
+    GetGame(ID);
     $('.date-popup').datepicker({
         keyboardNavigation: false,
         forceParse: false,

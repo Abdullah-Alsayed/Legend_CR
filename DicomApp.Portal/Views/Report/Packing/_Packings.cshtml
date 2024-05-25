@@ -1,7 +1,7 @@
 ﻿
 @using DicomApp.CommonDefinitions.DTO;
 @using DicomApp.CommonDefinitions.DTO.ShipmentDTOs;
-@model List<PackingDTO>
+@model List<GameDTO>
 @if (Model != null && Model.Count > 0)
 {
     foreach (var item in Model)
@@ -10,7 +10,6 @@
             <td>@item.NameEn</td>
             <td>@item.Description</td>
             <td>@item.Size</td>
-            <td>@item.Count</td>
             <td class="text-center"><img src="~/dist/images/@item.ImgUrl" width="97" /></td>
         </tr>
     }

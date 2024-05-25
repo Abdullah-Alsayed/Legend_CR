@@ -68,11 +68,11 @@
                                         @Html.DropDownList("DeliveryManId", new SelectList(Model.Lookup.CourierDTOs, nameof(UserDTO.Id), nameof(UserDTO.Name)),"--- Select Couriers ---", new {@class="input-Model"})
                                     </div>
                                 }
-                                if (Model.SelectListType.Contains((byte)EnumSelectListType.PackingType))
+                                if (Model.SelectListType.Contains((byte)EnumSelectListType.Category))
                                 {
                                     <div class="col-lg-@Model.Columns pt-3">
-                                        <label class="Label-Model">PackingType</label>
-                                        @Html.DropDownList("PackingTypeId", new SelectList(Model.Lookup.PackingTypeDTOs, nameof(PackingType.Id), nameof(PackingType.NameEn)),"--- Select Packing Type ---", new {@class="input-Model"})
+                                        <label class="Label-Model">Category</label>
+                                        @Html.DropDownList("CategoryId", new SelectList(Model.Lookup.CategoryDTOs, nameof(Category.Id), nameof(Category.NameEn)),"--- Select Game Type ---", new {@class="input-Model"})
                                     </div>
                                 }
                                 if (Model.SelectListType.Contains((byte)EnumSelectListType.Quantity))

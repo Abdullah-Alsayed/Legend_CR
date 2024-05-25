@@ -490,7 +490,7 @@ body {
     }
 
     .Txt-Search:focus {
-        border: 1px solid #F9F9F9;
+        border: 1px solid #0e439842;
         box-shadow: 0px 2px 7px rgba(38, 51, 77, 0.03);
     }
 /*.Search {
@@ -1107,7 +1107,7 @@ color: #4D4D4D;
 
     .User-Info:hover {
         cursor: pointer;
-        background-color: aliceblue;
+        background-color: #102436;
         color: #1D232C;
         transition: all .4s;
     }
@@ -1375,8 +1375,7 @@ color: #4D4D4D;
 }
 
 .Red-Bg {
-    background: var(--Red);
-    background-color: var(--Red) !important;
+    background: #EF3138;
 }
 
 .DarkRed-Bg {
@@ -1855,7 +1854,7 @@ color: #4D4D4D;
         margin: 0
     }
 
-.Packing-Type {
+.Game-Type {
     background: #FFFFFF;
     border: 1px solid #D6E4EC;
     border-radius: 6px;
@@ -1863,7 +1862,7 @@ color: #4D4D4D;
     height: 5.4em;
 }
 
-    .Packing-Type ul {
+    .Game-Type ul {
         display: flex;
         flex-wrap: wrap;
         flex-direction: column;
@@ -1873,7 +1872,7 @@ color: #4D4D4D;
         margin-left: -20px;
     }
 
-        .Packing-Type ul li {
+        .Game-Type ul li {
             display: flex;
             padding-top: 15px;
             cursor: pointer;
@@ -1882,7 +1881,7 @@ color: #4D4D4D;
         }
 
 
-.Packing-List ul {
+.Game-List ul {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
@@ -1892,13 +1891,13 @@ color: #4D4D4D;
     margin-left: -20px;
 }
 
-    .Packing-List ul li {
+    .Game-List ul li {
         padding-top: 12px;
         cursor: pointer;
         display: block !important;
     }
 
-.Packing-Type ul li {
+.Game-Type ul li {
     display: flex;
     padding-top: 15px;
     cursor: pointer;
@@ -1908,7 +1907,7 @@ color: #4D4D4D;
 
 
 
-.Packing-Type label {
+.Game-Type label {
     position: relative;
     padding: 0px 10px 0px 6px;
     bottom: 5px;
@@ -1922,7 +1921,7 @@ color: #4D4D4D;
     color: #000000;
 }
 
-.Packing-Type-Section p {
+.Game-Type-Section p {
     font-family: 'Poppins';
     font-style: normal;
     font-weight: 500;
@@ -1934,7 +1933,7 @@ color: #4D4D4D;
     color: #343C44;
 }
 
-.Packing-Price {
+.Game-Price {
     float: right;
     font-family: 'Poppins';
     font-style: normal;
@@ -1945,7 +1944,7 @@ color: #4D4D4D;
     color: var(--LightText);
 }
 
-.Packing-Name {
+.Game-Name {
     font-family: 'Poppins';
     font-style: normal;
     font-weight: 600;
@@ -1956,7 +1955,7 @@ color: #4D4D4D;
     color: var(--LightText);
 }
 
-.Packing-Size {
+.Game-Size {
     font-family: 'Poppins';
     font-style: normal;
     font-weight: 300;
@@ -2298,7 +2297,7 @@ input[type=checkbox], input[type=radio] {
     width: 20px; /* not needed */
 }
 
-.Packing-Options label {
+.Game-Options label {
     font-family: 'Poppins';
     font-style: normal;
     font-weight: 400;
@@ -2434,9 +2433,10 @@ input[type=checkbox], input[type=radio] {
     font-size: 16px;
     line-height: 24px;
     text-transform: uppercase;
-    color: #0077E4AD;
+    color: #fff;
     border: 1px solid var(--Red);
     outline: none;
+    background: #0077e4;
 }
 
 .OutLine-white {
@@ -3276,7 +3276,7 @@ input[type=checkbox], input[type=radio] {
     width: 32%;
     position: absolute;
     top: 43px;
-    left: 58pc;
+    left: 66%;
     z-index: 1;
     display: none;
 }
@@ -3749,7 +3749,7 @@ input[type=checkbox], input[type=radio] {
         margin-bottom: 25px;
     }
 
-    .Packing-Type {
+    .Game-Type {
         padding: 5px 0px 0px 0px;
         height: 70px;
         width: 115%;
@@ -3773,7 +3773,7 @@ input[type=checkbox], input[type=radio] {
         font-size: 25px;
     }
 
-    .Packing-Options label {
+    .Game-Options label {
         margin-left: 8px;
         font-size: 10px;
     }

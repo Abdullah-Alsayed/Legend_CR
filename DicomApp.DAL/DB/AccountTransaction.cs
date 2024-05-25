@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace DicomApp.DAL.DB
@@ -15,7 +14,7 @@ namespace DicomApp.DAL.DB
         public int? StatusId { get; set; }
         public int? ShipmentId { get; set; }
         public int? PickupRequestId { get; set; }
-        public double PackingFees { get; set; }
+        public double GameFees { get; set; }
         public double WeightFees { get; set; }
         public double SizeFees { get; set; }
         public double PartialDeliveryFees { get; set; }

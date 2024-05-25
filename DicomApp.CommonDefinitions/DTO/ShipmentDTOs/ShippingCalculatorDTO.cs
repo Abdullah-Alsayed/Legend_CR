@@ -12,9 +12,8 @@ namespace DicomApp.CommonDefinitions.DTO.ShipmentDTOs
         public int DestinationZoneId { get; set; }
         public int ShipmentServiceId { get; set; }
 
-
-        public int? PackingId { get; set; }
-        public int? PackingTypeId { get; set; }
+        public int? GameId { get; set; }
+        public int? CategoryId { get; set; }
 
         public int Weight { get; set; }
         public string Size { get; set; }
@@ -23,10 +22,9 @@ namespace DicomApp.CommonDefinitions.DTO.ShipmentDTOs
         public bool IsOpenPackage { get; set; }
         public bool IsFragilePackage { get; set; }
 
-
         public double SourceShippingFees { get; set; }
         public double DestinationShippingFees { get; set; }
-        public double PackingFees { get; set; }
+        public double GameFees { get; set; }
         public double WeightFees { get; set; }
         public double SizeFees { get; set; }
         public double PartialDeliveryFees { get; set; }

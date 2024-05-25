@@ -38,7 +38,7 @@
                     <td class="Sort-Column">Name</td>
                     <td class="Sort-Column">Total</td>
                     <td class="Sort-Column">Shipping Fees</td>
-                    <td class="Sort-Column">Packing Fees</td>
+                    <td class="Sort-Column">Game Fees</td>
                     <td class="Sort-Column">Weight Fees</td>
                     <td class="Sort-Column">Cancellation Fees</td>
                     <td class="Sort-Column">Balance</td>
@@ -118,7 +118,7 @@
                                 @item.Where(p => p.InvoiceTypeId == 1).Sum(p => p.ShippingFees)
                             </td>
                             <td>
-                                @item.Where(p => p.InvoiceTypeId == 1).Sum(p => p.PackingFees)
+                                @item.Where(p => p.InvoiceTypeId == 1).Sum(p => p.GameFees)
                             </td>
                             <td>
                                 @item.Where(p => p.InvoiceTypeId == 1).Sum(p => GeneralHelper.CalcWeight((int)p.ReturnedAmount))

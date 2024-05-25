@@ -1,4 +1,4 @@
-
+using System.Collections.Generic;
 using DicomApp.BL.Services;
 using DicomApp.CommonDefinitions.DTO;
 using DicomApp.CommonDefinitions.Requests;
@@ -6,13 +6,13 @@ using DicomApp.DAL.DB;
 using DicomApp.Helpers;
 using DicomApp.Portal.Helpers;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 
 namespace DicomApp.Portal.Controllers
 {
     public class BranchController : Controller
     {
         private readonly ShippingDBContext _context;
+
         public BranchController(ShippingDBContext context)
         {
             _context = context;
@@ -31,9 +31,9 @@ namespace DicomApp.Portal.Controllers
                 BranchDTO = filter,
             };
             var BranchRespons = BranchService.GetBranchs(BranchRequest);
-            if (ActionType == Constants.ActionType.PartialView)
+            if (ActionType == SystemConstants.ActionType.PartialView)
                 return PartialView(BranchRespons.BranchDTOs);
-            else if (ActionType == Constants.ActionType.Table)
+            else if (ActionType == SystemConstants.ActionType.Table)
                 return PartialView("_BranchList", BranchRespons.BranchDTOs);
             else
                 return View(BranchRespons.BranchDTOs);
@@ -56,7 +56,7 @@ namespace DicomApp.Portal.Controllers
             if (BranchRespons.Success)
                 return PartialView("_BranchList", new List<BranchDTO> { model });
             else
-                return Json(BranchRespons); 
+                return Json(BranchRespons);
         }
 
         [HttpPost]
@@ -71,10 +71,8 @@ namespace DicomApp.Portal.Controllers
                 context = _context
             };
             var BranchRespons = BranchService.EditBranch(BranchRequst);
-           
-            return Json(BranchRespons);
-               
 
+            return Json(BranchRespons);
         }
 
         [HttpGet]

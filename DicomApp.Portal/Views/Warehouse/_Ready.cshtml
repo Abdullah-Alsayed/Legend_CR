@@ -11,8 +11,8 @@
         <td>Branch</td>
         <td>Vendor</td>
         <td>Type</td>
-        <td>Packing</td>
-        <td>Packing Type</td>
+        <td>Game</td>
+        <td>Game Type</td>
         <td>Package Details</td>
         <td class="text-center">Actions</td>
     </tr>
@@ -41,8 +41,8 @@
                 {
                     <td><span class="Shipment-Type Gold-Bg font-weight-bold">Stock</span></td>
                 }
-                <td id="PackingName_@ship.ShipmentId">@(ship.SettingDTO.PackingName ?? "N/A")</td>
-                <td id="PackingTypeName_@ship.ShipmentId">@(ship.SettingDTO.PackingTypeName ?? "N/A")</td>
+                <td id="GameName_@ship.ShipmentId">@(ship.SettingDTO.GameName ?? "N/A")</td>
+                <td id="CategoryName_@ship.ShipmentId">@(ship.SettingDTO.CategoryName ?? "N/A")</td>
                 <td id="PackagDetails_@ship.ShipmentId" class="text-center">
                     @(ship.SettingDTO.WarehouseWeight) KG
                     <br>

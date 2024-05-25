@@ -1,22 +1,22 @@
-﻿using DicomApp.DAL.DB;
-using DicomApp.Helpers;
-using DicomApp.CommonDefinitions.Requests;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using DicomApp.BL.Services;
 using DicomApp.CommonDefinitions.DTO;
+using DicomApp.CommonDefinitions.DTO.PickupDTOs;
+using DicomApp.CommonDefinitions.DTO.ShipmentDTOs;
+using DicomApp.CommonDefinitions.DTO.VendorProductDTOs;
+using DicomApp.CommonDefinitions.Requests;
+using DicomApp.DAL.DB;
+using DicomApp.Helpers;
 using DicomApp.Helpers;
 using DicomApp.Portal.Helpers;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using OfficeOpenXml.Style;
 using StackExchange.Redis;
-using System;
-using DicomApp.CommonDefinitions.DTO.ShipmentDTOs;
-using DicomApp.CommonDefinitions.DTO.PickupDTOs;
-using DicomApp.BL.Services;
-using DicomApp.CommonDefinitions.DTO.VendorProductDTOs;
-using Microsoft.AspNetCore.Identity;
 
 namespace DicomApp.Portal.Controllers
 {
@@ -37,14 +37,13 @@ namespace DicomApp.Portal.Controllers
             ViewBag.Couriers = GeneralHelper.GetUsers((int)EnumRole.DeliveryMan, _context);
             ViewBag.Vendors = GeneralHelper.GetUsers((int)EnumRole.Vendor, _context);
 
-            if (ActionType == Constants.ActionType.PartialView)
+            if (ActionType == SystemConstants.ActionType.PartialView)
                 return PartialView();
             else
                 return View();
         }
 
         public IActionResult GetPickupCodes(int deliveryManID = 0, int vendorID = 0)
-
         {
             var request = new PickUpRequestRequest
             {
@@ -66,13 +65,12 @@ namespace DicomApp.Portal.Controllers
             return PartialView("_PickupCodes", response.PickupDTOs);
         }
 
-
         [AuthorizePerRole("ReceiveStockPickups")]
         public IActionResult ReceiveStock(string ActionType)
         {
             ViewBag.Couriers = GeneralHelper.GetUsers((int)EnumRole.DeliveryMan, _context);
             ViewBag.Vendors = GeneralHelper.GetUsers((int)EnumRole.Vendor, _context);
-            if (ActionType == Constants.ActionType.PartialView)
+            if (ActionType == SystemConstants.ActionType.PartialView)
                 return PartialView();
             else
                 return View();
@@ -100,12 +98,10 @@ namespace DicomApp.Portal.Controllers
             return PartialView("_StockCodes", response.PickupDTOs);
         }
 
-
         [AuthorizePerRole("ConfirmReceivePickups")]
         [HttpPost]
         public IActionResult ReveivePickup(string pickUpRequestIDs)
         {
-
             if (string.IsNullOrEmpty(pickUpRequestIDs))
                 return View();
 
@@ -137,7 +133,7 @@ namespace DicomApp.Portal.Controllers
         public IActionResult ReceiveReturns(string ActionType)
         {
             ViewBag.Couriers = GeneralHelper.GetUsers((int)EnumRole.DeliveryMan, _context);
-            if (ActionType == Constants.ActionType.PartialView)
+            if (ActionType == SystemConstants.ActionType.PartialView)
                 return PartialView();
             else
                 return View();
@@ -156,7 +152,14 @@ namespace DicomApp.Portal.Controllers
                 HasSettingDTO = true,
                 ShipDTO = new ShipDTO
                 {
-                    StatusIDs = new List<int> { (int)EnumStatus.Postponed, (int)EnumStatus.Cancelled, (int)EnumStatus.Out_For_Delivery, (int)EnumStatus.Delivered, (int)EnumStatus.Refunded },
+                    StatusIDs = new List<int>
+                    {
+                        (int)EnumStatus.Postponed,
+                        (int)EnumStatus.Cancelled,
+                        (int)EnumStatus.Out_For_Delivery,
+                        (int)EnumStatus.Delivered,
+                        (int)EnumStatus.Refunded
+                    },
                     DeliveryManId = deliveryManID,
                     IsForReceiveReturns = true
                 }
@@ -189,14 +192,22 @@ namespace DicomApp.Portal.Controllers
         #region Shipments List and Actions
 
         [AuthorizePerRole("WarehouseShipments")]
-        public IActionResult Shipments(DateTime? From, DateTime? To, string Search, int VendorId, int DeliveryManId, string ActionType, int StatusId = (int)EnumStatus.At_Warehouse)
+        public IActionResult Shipments(
+            DateTime? From,
+            DateTime? To,
+            string Search,
+            int VendorId,
+            int DeliveryManId,
+            string ActionType,
+            int StatusId = (int)EnumStatus.At_Warehouse
+        )
         {
-            if (ActionType != Constants.ActionType.Print)
+            if (ActionType != SystemConstants.ActionType.Print)
             {
                 ViewBag.Vendor = GeneralHelper.GetUsers((int)EnumRole.Vendor, _context);
                 ViewBag.Couriers = GeneralHelper.GetUsers((int)EnumRole.DeliveryMan, _context);
-                ViewBag.Packing = _context.Packing.ToList();
-                ViewBag.PackingType = _context.PackingType.ToList();
+                ViewBag.Game = _context.Game.ToList();
+                ViewBag.Category = _context.Category.ToList();
             }
 
             var filter = new ShipDTO();
@@ -227,16 +238,14 @@ namespace DicomApp.Portal.Controllers
             };
             var response = DicomApp.BL.Services.ShipmentService.GetAllShipments(request);
 
-            if (ActionType == Constants.ActionType.PartialView)
+            if (ActionType == SystemConstants.ActionType.PartialView)
                 return PartialView(response.ShipDTOs);
-            else if (ActionType == Constants.ActionType.Table)
+            else if (ActionType == SystemConstants.ActionType.Table)
             {
                 if (StatusId == (int)EnumStatus.At_Warehouse)
                     return PartialView("_Pending", response.ShipDTOs);
-
                 else if (StatusId == (int)EnumStatus.Ready_For_Delivery)
                     return PartialView("_Ready", response.ShipDTOs);
-
                 else if (StatusId == (int)EnumStatus.Cancelled)
                     return PartialView("_Cancelled", response.ShipDTOs);
             }
@@ -288,8 +297,8 @@ namespace DicomApp.Portal.Controllers
             return Json(new { success = response.Success, message = response.Message });
         }
 
-        [AuthorizePerRole("WarehouseEditPacking")]
-        public IActionResult EditPacking(ShipDTO model)
+        [AuthorizePerRole("WarehouseEditGame")]
+        public IActionResult EditGame(ShipDTO model)
         {
             var request = new ShipmentRequest
             {
@@ -299,7 +308,7 @@ namespace DicomApp.Portal.Controllers
                 ShipDTO = model
             };
 
-            var response = DicomApp.BL.Services.ShipmentService.EditPacking(request);
+            var response = DicomApp.BL.Services.ShipmentService.EditGame(request);
 
             return Json(new { success = response.Success, message = response.Message });
         }
@@ -339,7 +348,7 @@ namespace DicomApp.Portal.Controllers
             };
             var response = VendorProductService.GetAllProducts(request);
 
-            if (ActionType == Constants.ActionType.PartialView)
+            if (ActionType == SystemConstants.ActionType.PartialView)
                 return PartialView(response.VendorProductDTOs);
             else
                 return View(response.VendorProductDTOs);
@@ -352,7 +361,7 @@ namespace DicomApp.Portal.Controllers
         [AuthorizePerRole("WarehouseCouriersShipments")]
         public IActionResult Courier(string Search, string ActionType = null, int DeliveryManId = 0)
         {
-            if (ActionType != Constants.ActionType.Table)
+            if (ActionType != SystemConstants.ActionType.Table)
                 ViewBag.Couriers = GeneralHelper.GetUsers((int)EnumRole.DeliveryMan, _context);
 
             var request = new UserRequest
@@ -371,12 +380,15 @@ namespace DicomApp.Portal.Controllers
             };
             var response = UserService.GetAllUsers(request);
 
-            if (ActionType == Constants.ActionType.PartialView)
+            if (ActionType == SystemConstants.ActionType.PartialView)
                 return PartialView(response.UserDTOs);
-            else if (ActionType == Constants.ActionType.Table)
+            else if (ActionType == SystemConstants.ActionType.Table)
                 return PartialView("_Courier", response.UserDTOs);
-            else if (ActionType == Constants.ActionType.Print)
-                return BaseHelper.GeneratePDF<List<UserDTO>>("~/Views/Warehouse/CourierPDF.cshtml", response.UserDTOs);
+            else if (ActionType == SystemConstants.ActionType.Print)
+                return BaseHelper.GeneratePDF<List<UserDTO>>(
+                    "~/Views/Warehouse/CourierPDF.cshtml",
+                    response.UserDTOs
+                );
             else
                 return View(response.UserDTOs);
         }

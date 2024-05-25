@@ -109,7 +109,7 @@
                 <div class="Total-Earning">
                     <a class="ShowMore" href="#" > Show More</a>
                     <p class="Total-Earning-p">Total Earning</p>
-                    <span>@Model.TotalEarning_Percentchanged% <i class="@(Model.TotalEarning_Arow == Constants.ArrowType.Up ? "ion-ios-arrow-up" : "ion-ios-arrow-down")"></i></span>
+                    <span>@Model.TotalEarning_Percentchanged% <i class="@(Model.TotalEarning_Arow == SystemConstants.ArrowType.Up ? "ion-ios-arrow-up" : "ion-ios-arrow-down")"></i></span>
                    <p class="Earning">@Model.TotalEarning <sub>EGP</sub></p>
                     <div id="Total-Earning-chart"></div>
                     <ul>
@@ -799,7 +799,7 @@
                     colors: ['#E58025'],
                     series: [{
                         data: Value,
-                        name: 'Total Packing Count',
+                        name: 'Total Game Count',
 
                     }],
                     xaxis: {

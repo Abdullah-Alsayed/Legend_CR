@@ -1,14 +1,12 @@
-
-using DicomApp.CommonDefinitions.DTO;
-using DicomApp.CommonDefinitions.DTO;
 using System.Collections.Generic;
+using DicomApp.CommonDefinitions.DTO;
+using DicomApp.CommonDefinitions.DTO;
 
 namespace DicomApp.CommonDefinitions.Responses
 {
-    public class PackingResponse : BaseResponse
+    public class GameResponse : BaseResponse
     {
-
-        public List<PackingDTO> PackingDTOs { get; set; }
-        public PackingDTO PackingDTO { get; set; }
+        public List<GameDTO> GameDTOs { get; set; }
+        public GameDTO GameDTO { get; set; }
     }
 }

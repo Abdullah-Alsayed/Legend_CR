@@ -181,37 +181,37 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-5  col-12 Packing-Type-Section">
-                                <p>Packing Type</p>
-                                <div class="Packing-Type Packing-List ">
+                            <div class="col-lg-5  col-12 Game-Type-Section">
+                                <p>Game Type</p>
+                                <div class="Game-Type Game-List ">
                                     <ul>
-                                        @foreach (var item in ViewBag.PackingType)
+                                        @foreach (var item in ViewBag.Category)
                                         {
-                                            <li><input type="radio" id="@(item.Id+"-Packing")" onclick="PackingType(@item.Id)" name="Packing" /><label for="@(item.Id +"-Packing")">@item.NameEn</label></li>
+                                            <li><input type="radio" id="@(item.Id+"-Game")" onclick="Category(@item.Id)" name="Game" /><label for="@(item.Id +"-Game")">@item.NameEn</label></li>
                                         }
                                     </ul>
                                 </div>
                             </div>
-                            <div class="col-lg-12 col-12 grid-wrapper Hide-Scrol grid-col-auto mt-4 PackingList-Section" id="Packingdiv">
-                                @foreach (var item in ViewBag.PackingBox)
+                            <div class="col-lg-12 col-12 grid-wrapper Hide-Scrol grid-col-auto mt-4 GameList-Section" id="Gamediv">
+                                @foreach (var item in ViewBag.GameBox)
                                 {
                                     <div>
                                         <label for="@item.Id" class="radio-card">
-                                            @if (Model.SettingDTO.PackingId.HasValue)
+                                            @if (Model.SettingDTO.GameId.HasValue)
                                             {
-                                                <input type="radio" value="@item.Id" onclick="GetTotalPrice()" checked="@(Model.SettingDTO.PackingId.Value == item.Id? true : false)" name="PackingId" id="@item.Id" />
+                                                <input type="radio" value="@item.Id" onclick="GetTotalPrice()" checked="@(Model.SettingDTO.GameId.Value == item.Id? true : false)" name="GameId" id="@item.Id" />
                                             }
                                             else
                                             {
-                                                <input type="radio" value="@item.Id" onclick="GetTotalPrice()" name="PackingId" id="@item.Id" />
+                                                <input type="radio" value="@item.Id" onclick="GetTotalPrice()" name="GameId" id="@item.Id" />
                                             }
-                                            <div class="card-content-wrapper" ondblclick="PackingUnselect(event)">
+                                            <div class="card-content-wrapper" ondblclick="GameUnselect(event)">
                                                 <span class="check-icon"></span>
                                                 <div class="card-content">
                                                     <img src="/dist/images/@item.ImgUrl" alt="" width="100" />
-                                                    <p class="Packing-Price">@item.Price EGP</p>
-                                                    <p class="float-end Packing-Name">@item.NameEn</p>
-                                                    <p class="Packing-Size">@item.Size<h4 />
+                                                    <p class="Game-Price">@item.Price EGP</p>
+                                                    <p class="float-end Game-Name">@item.NameEn</p>
+                                                    <p class="Game-Size">@item.Size<h4 />
                                                 </div>
                                             </div>
                                         </label>
@@ -219,7 +219,7 @@
                                 }
                             </div>
                             <hr class="pt-5" />
-                            <div class="row Red-Row pt-3 Packing-Options">
+                            <div class="row Red-Row pt-3 Game-Options">
                                 <div class="col-lg-6">
                                     <input type="checkbox" asp-for="SettingDTO.IsOpenPackage" checked="@Model.SettingDTO.IsOpenPackage">
                                     <label for="IsOpenPackage">
@@ -260,9 +260,9 @@
                             {
                                 <tr><td>Weight Fess</td><td>@Model.FeesDetailsDTO.WeightFees EGP</td></tr>
                             }
-                            @if (Model.FeesDetailsDTO.PackingFees > 0)
+                            @if (Model.FeesDetailsDTO.GameFees > 0)
                             {
-                                <tr><td>Packing Fess</td><td>@Model.FeesDetailsDTO.PackingFees EGP</td></tr>
+                                <tr><td>Game Fess</td><td>@Model.FeesDetailsDTO.GameFees EGP</td></tr>
                             }
                             @if (Model.FeesDetailsDTO.PartialDeliveryFees > 0)
                             {

@@ -4,11 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using DicomApp.DAL;
+using DicomApp.DAL.DB;
 using log4net;
 using log4net.Config;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace DicomApp.Portal
@@ -19,12 +22,28 @@ namespace DicomApp.Portal
         {
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
-            BuildWebHost(args).Run();
+
+            var host = BuildWebHost(args);
+
+            using (var scope = host.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var context = services.GetRequiredService<ShippingDBContext>();
+                if (context != null)
+                    DataSeeder.Seed(context);
+                else
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(
+                        "ShippingDBContext could not be resolved from the service provider."
+                    );
+                }
+            }
+
+            host.Run();
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .Build();
+            WebHost.CreateDefaultBuilder(args).UseStartup<Startup>().Build();
     }
 }

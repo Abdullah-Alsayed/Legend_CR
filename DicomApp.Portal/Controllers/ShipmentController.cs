@@ -1,29 +1,30 @@
-﻿using DicomApp.BL.Services;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Security.Policy;
+using DicomApp.BL.Services;
+using DicomApp.BL.Services;
 using DicomApp.CommonDefinitions.DTO;
 using DicomApp.CommonDefinitions.DTO.ShipmentDTOs;
+using DicomApp.CommonDefinitions.DTO.ShipmentDTOs;
+using DicomApp.CommonDefinitions.DTO.VendorProductDTOs;
 using DicomApp.CommonDefinitions.Requests;
+using DicomApp.CommonDefinitions.Responses;
 using DicomApp.DAL.DB;
 using DicomApp.Helpers;
 using DicomApp.Portal.Helpers;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Rotativa.AspNetCore;
-using Rotativa.AspNetCore.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using DicomApp.CommonDefinitions.DTO.ShipmentDTOs;
-using System.Security.Policy;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Logical;
-using Microsoft.CodeAnalysis;
-using Rotativa.AspNetCore.Options;
-using Rotativa.AspNetCore;
-using DicomApp.BL.Services;
-using System.Security.Cryptography;
-using DicomApp.CommonDefinitions.DTO.VendorProductDTOs;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Logical;
+using Rotativa.AspNetCore;
+using Rotativa.AspNetCore;
+using Rotativa.AspNetCore.Options;
+using Rotativa.AspNetCore.Options;
 using SelectPdf;
-using DicomApp.CommonDefinitions.Responses;
+
 //using iText.Html2pdf;
 //using iText.IO.Source;
 //using iText.Kernel.Geom;
@@ -114,7 +115,10 @@ namespace DicomApp.Portal.Controllers
                 ShipItemDTO = model
             };
             var response = DicomApp.BL.Services.ShipmentService.GetShipmentItems(request);
-            return PartialView("~/Views/Shared/Shipment/_ItemsDetails.cshtml", response.ShipItemDTOs);
+            return PartialView(
+                "~/Views/Shared/Shipment/_ItemsDetails.cshtml",
+                response.ShipItemDTOs
+            );
         }
 
         [AllowAnonymous]
@@ -131,7 +135,10 @@ namespace DicomApp.Portal.Controllers
                 ShipItemDTO = model
             };
             var response = DicomApp.BL.Services.ShipmentService.GetShipmentItems(request);
-            return PartialView("~/Views/Shared/Shipment/_ItemsDetails.cshtml", response.ShipItemDTOs);
+            return PartialView(
+                "~/Views/Shared/Shipment/_ItemsDetails.cshtml",
+                response.ShipItemDTOs
+            );
         }
 
         #endregion
@@ -149,13 +156,19 @@ namespace DicomApp.Portal.Controllers
 
             if (model.SettingDTO.IsPartialDelivery)
             {
-                if ((string.IsNullOrEmpty(model.PartialItems) || model.PartialItems == "[]") && !model.SettingDTO.IsStock)
+                if (
+                    (string.IsNullOrEmpty(model.PartialItems) || model.PartialItems == "[]")
+                    && !model.SettingDTO.IsStock
+                )
                     return Json("Please select shipment items");
                 else if (model.SettingDTO.IsStock)
                 {
                     bool hasStockItems = false;
                     var selectedStockIDs = model.ProductIDs.Split(',').Select(int.Parse).ToList();
-                    var selectedStockQuantities = model.ProductsQuantity.Split(',').Select(int.Parse).ToList();
+                    var selectedStockQuantities = model
+                        .ProductsQuantity.Split(',')
+                        .Select(int.Parse)
+                        .ToList();
                     for (int i = 0; i < selectedStockIDs.Count(); i++)
                     {
                         if (selectedStockQuantities[i] > 0)
@@ -171,7 +184,10 @@ namespace DicomApp.Portal.Controllers
             {
                 bool validStock = true;
                 var selectedStockIDs = model.ProductIDs.Split(',').Select(int.Parse).ToList();
-                var selectedStockQuantities = model.ProductsQuantity.Split(',').Select(int.Parse).ToList();
+                var selectedStockQuantities = model
+                    .ProductsQuantity.Split(',')
+                    .Select(int.Parse)
+                    .ToList();
                 for (int i = 0; i < selectedStockIDs.Count(); i++)
                 {
                     if (selectedStockQuantities[i] > 0)
@@ -179,9 +195,14 @@ namespace DicomApp.Portal.Controllers
                         var VendorProductRequest = new VendorProductRequest
                         {
                             context = _context,
-                            VendorProductDTO = new VendorProductDTO { VendorProductId = selectedStockIDs[i] },
+                            VendorProductDTO = new VendorProductDTO
+                            {
+                                VendorProductId = selectedStockIDs[i]
+                            },
                         };
-                        var product = VendorProductService.GetProductById(VendorProductRequest).VendorProductDTO;
+                        var product = VendorProductService
+                            .GetProductById(VendorProductRequest)
+                            .VendorProductDTO;
                         if (product.AvailableStock < selectedStockQuantities[i])
                             validStock = false;
                     }
@@ -191,11 +212,9 @@ namespace DicomApp.Portal.Controllers
                     return Json("Item quantity is less than stock");
             }
 
-            if (model.SettingDTO.PackingId.HasValue)
+            if (model.SettingDTO.GameId.HasValue)
             {
-                Packing pack = _context.Packing.FirstOrDefault(u => u.Id == model.SettingDTO.PackingId);
-                if (pack.Count <= 0)
-                    return Json("Selected packing is not available");
+                Game pack = _context.Game.FirstOrDefault(u => u.Id == model.SettingDTO.GameId);
             }
 
             #endregion
@@ -223,12 +242,20 @@ namespace DicomApp.Portal.Controllers
         [AuthorizePerRole("ShipmentAdd")]
         public IActionResult Add(string ActionType = null)
         {
-            ViewBag.PackingType = PackingTypeService.GetPackingType(new PackingTypeRequest { context = _context }).PackingTypeDTOs;
-            ViewBag.ShipmentService = _context.ShipmentService.Where(s => s.Id == (int)EnumShipmentService.PickupDelivery);
-            ViewBag.ZoneList = ZoneService.GetZones(new ZoneRequest { context = _context }).ZoneDTOs;
-            ViewBag.BarnchList = BranchService.GetBranchs(new BranchRequest { context = _context }).BranchDTOs.ToList();
+            ViewBag.Category = CategoryService
+                .GetCategory(new CategoryRequest { context = _context })
+                .CategoryDTOs;
+            ViewBag.ShipmentService = _context.ShipmentService.Where(s =>
+                s.Id == (int)EnumShipmentService.PickupDelivery
+            );
+            ViewBag.ZoneList = ZoneService
+                .GetZones(new ZoneRequest { context = _context })
+                .ZoneDTOs;
+            ViewBag.BarnchList = BranchService
+                .GetBranchs(new BranchRequest { context = _context })
+                .BranchDTOs.ToList();
             ViewBag.Vendors = GeneralHelper.GetUsers((int)EnumRole.Vendor, _context);
-            if (ActionType == Constants.ActionType.PartialView)
+            if (ActionType == SystemConstants.ActionType.PartialView)
                 return PartialView("/Views/Shared/Shipment/_AddOrder.cshtml");
             else
                 return View();
@@ -236,10 +263,10 @@ namespace DicomApp.Portal.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public IActionResult GetTotalPrice(int AreaID, int PackingID)
+        public IActionResult GetTotalPrice(int AreaID, int GameID)
         {
             double ShippingFees = 0;
-            double PackingFees = 0;
+            double GameFees = 0;
             string ZoneName = "";
 
             if (AreaID > 0)
@@ -252,13 +279,19 @@ namespace DicomApp.Portal.Controllers
                 ZoneName = zone.NameEn;
             }
 
-            if (PackingID > 0)
+            if (GameID > 0)
             {
-                var Packing = _context.Packing.FirstOrDefault(p => p.Id == PackingID);
-                PackingFees = Packing.Price;
+                var Game = _context.Game.FirstOrDefault(p => p.Id == GameID);
             }
 
-            return Json(new { ShippingFees = ShippingFees, ZoneName = ZoneName, PackingFees = PackingFees });
+            return Json(
+                new
+                {
+                    ShippingFees = ShippingFees,
+                    ZoneName = ZoneName,
+                    GameFees = GameFees
+                }
+            );
         }
 
         [AllowAnonymous]
@@ -286,7 +319,9 @@ namespace DicomApp.Portal.Controllers
         {
             int shipID = int.Parse(EncryptionManager.Decrypt(s));
 
-            ViewBag.ZoneList = ZoneService.GetZones(new ZoneRequest { context = _context }).ZoneDTOs;
+            ViewBag.ZoneList = ZoneService
+                .GetZones(new ZoneRequest { context = _context })
+                .ZoneDTOs;
 
             //*** Get shipment details
             var model = new ShipDTO();
@@ -313,7 +348,10 @@ namespace DicomApp.Portal.Controllers
                 RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
                 UserID = AuthHelper.GetClaimValue(User, "UserID"),
                 context = _context,
-                AccountDTO = new CommonDefinitions.DTO.CashDTOs.AccountDTO { UserId = shipResponse.ShipDTO.VendorDetailsDTO.VendorId },
+                AccountDTO = new CommonDefinitions.DTO.CashDTOs.AccountDTO
+                {
+                    UserId = shipResponse.ShipDTO.VendorDetailsDTO.VendorId
+                },
                 HasTransactionsDTOs = false
             };
             var accResponse = DicomApp.BL.Services.AccountService.GetAccount(accRequest);
@@ -325,14 +363,24 @@ namespace DicomApp.Portal.Controllers
                 RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
                 UserID = AuthHelper.GetClaimValue(User, "UserID"),
                 context = _context,
-                AccountTransactionDTO = new CommonDefinitions.DTO.CashDTOs.AccountTransactionDTO { ShipmentId = shipResponse.ShipDTO.ShipmentId },
+                AccountTransactionDTO = new CommonDefinitions.DTO.CashDTOs.AccountTransactionDTO
+                {
+                    ShipmentId = shipResponse.ShipDTO.ShipmentId
+                },
                 applyFilter = true
             };
-            var trResponse = DicomApp.BL.Services.AccountTransactionService.GetAllTransactions(trRequest);
-            var redTransaction = trResponse.AccountTransactionDTOs.FirstOrDefault(r => r.ReceiverId == (int)EnumAccountId.RED_Main_Account);
-            var vendorTransaction = trResponse.AccountTransactionDTOs.FirstOrDefault(r => r.ReceiverId == accResponse.AccountDTO.AccountId);
+            var trResponse = DicomApp.BL.Services.AccountTransactionService.GetAllTransactions(
+                trRequest
+            );
+            var redTransaction = trResponse.AccountTransactionDTOs.FirstOrDefault(r =>
+                r.ReceiverId == (int)EnumAccountId.RED_Main_Account
+            );
+            var vendorTransaction = trResponse.AccountTransactionDTOs.FirstOrDefault(r =>
+                r.ReceiverId == accResponse.AccountDTO.AccountId
+            );
 
-            shipResponse.ShipDTO.FeesDetailsDTO.TotalReceived = vendorTransaction.Total + redTransaction.Total;
+            shipResponse.ShipDTO.FeesDetailsDTO.TotalReceived =
+                vendorTransaction.Total + redTransaction.Total;
             shipResponse.ShipDTO.FeesDetailsDTO.VendorCash = vendorTransaction.Total;
             shipResponse.ShipDTO.FeesDetailsDTO.TotalRedFees = redTransaction.Total;
 
@@ -349,7 +397,10 @@ namespace DicomApp.Portal.Controllers
             if (model.RefundCash <= 0)
             {
                 TempData["ErrorMsg"] = "Refund cash can't be negative value";
-                return RedirectToAction("Refund", new { s = EncryptionManager.Encrypt(model.ShipmentId.ToString()) });
+                return RedirectToAction(
+                    "Refund",
+                    new { s = EncryptionManager.Encrypt(model.ShipmentId.ToString()) }
+                );
             }
 
             // Check vendor balance
@@ -358,7 +409,10 @@ namespace DicomApp.Portal.Controllers
                 RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
                 UserID = AuthHelper.GetClaimValue(User, "UserID"),
                 context = _context,
-                AccountDTO = new CommonDefinitions.DTO.CashDTOs.AccountDTO { UserId = model.VendorDetailsDTO.VendorId },
+                AccountDTO = new CommonDefinitions.DTO.CashDTOs.AccountDTO
+                {
+                    UserId = model.VendorDetailsDTO.VendorId
+                },
                 HasTransactionsDTOs = false
             };
             var accResponse = DicomApp.BL.Services.AccountService.GetAccount(accRequest);
@@ -367,7 +421,10 @@ namespace DicomApp.Portal.Controllers
             if ((model.RefundCash + zoneTax.Tax) > accResponse.AccountDTO.Balance)
             {
                 TempData["ErrorMsg"] = "You don't have enough balance";
-                return RedirectToAction("Refund", new { s = EncryptionManager.Encrypt(model.ShipmentId.ToString()) });
+                return RedirectToAction(
+                    "Refund",
+                    new { s = EncryptionManager.Encrypt(model.ShipmentId.ToString()) }
+                );
             }
 
             #endregion
@@ -399,10 +456,10 @@ namespace DicomApp.Portal.Controllers
 
             ViewBag.areas = _context.City.ToList();
             ViewBag.Status = _context.Status.ToList();
-            ViewBag.Packing = _context.PackingType.ToList();
+            ViewBag.Game = _context.Category.ToList();
             ViewBag.ShipmentService = _context.ShipmentService.ToList();
-            ViewBag.PackingType = _context.PackingType.ToList();
-            ViewBag.PackingBox = _context.Packing.Where(p => p.PackingTypeId == 1).ToList();
+            ViewBag.Category = _context.Category.ToList();
+            ViewBag.GameBox = _context.Game.Where(p => p.CategoryId == 1).ToList();
             ViewBag.AreasList = _context.City.ToList();
             ViewBag.vendors = GeneralHelper.GetUsers((int)EnumRole.Vendor, _context);
             ViewBag.ZoneList = _context.Zone.Where(z => !z.IsDeleted).ToList();
@@ -451,7 +508,14 @@ namespace DicomApp.Portal.Controllers
 
         [AuthorizePerRole("ShipmentEditAddress")]
         [HttpPost]
-        public IActionResult EditAddress(int shipID, string Address, string Location, string Landmark, int Floor, int Apartment)
+        public IActionResult EditAddress(
+            int shipID,
+            string Address,
+            string Location,
+            string Landmark,
+            int Floor,
+            int Apartment
+        )
         {
             var request = new ShipmentRequest
             {
@@ -478,7 +542,12 @@ namespace DicomApp.Portal.Controllers
         }
 
         [AuthorizePerRole("ShipmentCancel")]
-        public IActionResult Cancel(int shipID, string Comment, bool IsTripCompleted, int ReasonType)
+        public IActionResult Cancel(
+            int shipID,
+            string Comment,
+            bool IsTripCompleted,
+            int ReasonType
+        )
         {
             var request = new ShipmentRequest
             {
@@ -493,11 +562,7 @@ namespace DicomApp.Portal.Controllers
                     IsTripCompleted = IsTripCompleted,
                     ProblemDTOs = new List<ShipProblemDTO>
                     {
-                        new ShipProblemDTO
-                        {
-                            ProblemTypeId = ReasonType,
-                            Note = Comment,
-                        }
+                        new ShipProblemDTO { ProblemTypeId = ReasonType, Note = Comment, }
                     }
                 }
             };
@@ -532,7 +597,14 @@ namespace DicomApp.Portal.Controllers
         }
 
         [AuthorizePerRole("ShipmentPostpone")]
-        public IActionResult Postpone(int shipID, DateTime? Date, DateTime? From, DateTime? To, string Note, bool IsConfirmed)
+        public IActionResult Postpone(
+            int shipID,
+            DateTime? Date,
+            DateTime? From,
+            DateTime? To,
+            string Note,
+            bool IsConfirmed
+        )
         {
             var request = new ShipmentRequest
             {
@@ -572,15 +644,14 @@ namespace DicomApp.Portal.Controllers
                 HasFeesDetailsDTO = true,
                 HasShipItemDTOs = true,
 
-                ShipDTO = new ShipDTO
-                {
-                    ShipmentId = shipID
-                }
+                ShipDTO = new ShipDTO { ShipmentId = shipID }
             };
 
             var response = BL.Services.ShipmentService.GetShipment(request);
 
-            string footer = "--no-stop-slow-scripts --javascript-delay 10000  --footer-right \"Date: [date] [time]\" " + "--footer-center \"Page: [page] of [toPage]\" --footer-line --footer-font-size \"9\" --footer-spacing 5 --footer-font-name \"calibri light\"";
+            string footer =
+                "--no-stop-slow-scripts --javascript-delay 10000  --footer-right \"Date: [date] [time]\" "
+                + "--footer-center \"Page: [page] of [toPage]\" --footer-line --footer-font-size \"9\" --footer-spacing 5 --footer-font-name \"calibri light\"";
             var pdfFile = new ViewAsPdf("~/Views/Shipment/Print.cshtml", response.ShipDTO)
             {
                 CustomSwitches = footer,
@@ -622,7 +693,10 @@ namespace DicomApp.Portal.Controllers
         [AuthorizePerRole("ShipmentPrint")]
         public IActionResult PrintAll(string ShipmentsIds)
         {
-            List<int> ShipmentsList = ShipmentsIds.Split(',').Select<string, int>(int.Parse).ToList();
+            List<int> ShipmentsList = ShipmentsIds
+                .Split(',')
+                .Select<string, int>(int.Parse)
+                .ToList();
             var request = new ShipmentRequest
             {
                 RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
@@ -639,7 +713,9 @@ namespace DicomApp.Portal.Controllers
 
             var response = BL.Services.ShipmentService.GetAllShipments(request);
 
-            string footer = "--no-stop-slow-scripts --javascript-delay 10000  --footer-right \"Date: [date] [time]\" " + "--footer-center \"Page: [page] of [toPage]\" --footer-line --footer-font-size \"9\" --footer-spacing 5 --footer-font-name \"calibri light\"";
+            string footer =
+                "--no-stop-slow-scripts --javascript-delay 10000  --footer-right \"Date: [date] [time]\" "
+                + "--footer-center \"Page: [page] of [toPage]\" --footer-line --footer-font-size \"9\" --footer-spacing 5 --footer-font-name \"calibri light\"";
             var pdfFile = new ViewAsPdf("~/Views/Shipment/PrintAll.cshtml", response.ShipDTOs)
             {
                 CustomSwitches = footer,
@@ -708,7 +784,12 @@ namespace DicomApp.Portal.Controllers
         }
 
         [AuthorizePerRole("ShipmentReportProblemToVendor")]
-        public IActionResult ReportToVendor(int shipID, string Note, int ProblemTypeID, bool IsCoruierProblem)
+        public IActionResult ReportToVendor(
+            int shipID,
+            string Note,
+            int ProblemTypeID,
+            bool IsCoruierProblem
+        )
         {
             var request = new ShipmentRequest
             {
@@ -833,11 +914,7 @@ namespace DicomApp.Portal.Controllers
                     ShipmentId = shipID,
                     ProblemDTOs = new List<ShipProblemDTO>
                     {
-                        new ShipProblemDTO
-                        {
-                            IsDeleted = true,
-                            IsCourierProblem = false
-                        }
+                        new ShipProblemDTO { IsDeleted = true, IsCourierProblem = false }
                     }
                 }
             };
@@ -860,11 +937,7 @@ namespace DicomApp.Portal.Controllers
                     ShipmentId = shipID,
                     ProblemDTOs = new List<ShipProblemDTO>
                     {
-                        new ShipProblemDTO
-                        {
-                            IsDeleted = true,
-                            IsCourierProblem = true
-                        }
+                        new ShipProblemDTO { IsDeleted = true, IsCourierProblem = true }
                     }
                 }
             };
@@ -879,22 +952,42 @@ namespace DicomApp.Portal.Controllers
         #region Shipment list
 
         [AuthorizePerRole("ShipmentsList")]
-        public IActionResult All(string Search, string OrderByColumn, bool? IsDesc, int PageIndex, DateTime? From, DateTime? To,
-            int ZoneId, int StatusId, int VendorId, int AreaId, int Filter, string ActionType = null)
+        public IActionResult All(
+            string Search,
+            string OrderByColumn,
+            bool? IsDesc,
+            int PageIndex,
+            DateTime? From,
+            DateTime? To,
+            int ZoneId,
+            int StatusId,
+            int VendorId,
+            int AreaId,
+            int Filter,
+            string ActionType = null
+        )
         {
             ViewModel<ShipDTO> ViewData = new ViewModel<ShipDTO>();
 
-            if (ActionType != Constants.ActionType.Table)
+            if (ActionType != SystemConstants.ActionType.Table)
             {
-                ViewData.Lookup = BaseHelper.GetLookup(new List<byte> {
-                    (byte)EnumSelectListType.Zone,
-                    (byte)EnumSelectListType.Vendor,
-                    (byte)EnumSelectListType.Area,
-                    (byte)EnumSelectListType.Status
-                }, _context);
+                ViewData.Lookup = BaseHelper.GetLookup(
+                    new List<byte>
+                    {
+                        (byte)EnumSelectListType.Zone,
+                        (byte)EnumSelectListType.Vendor,
+                        (byte)EnumSelectListType.Area,
+                        (byte)EnumSelectListType.Status
+                    },
+                    _context
+                );
             }
-            ViewBag.ProblemType = _context.ProblemType.Where(r => r.Type == (int)EnumProblemType.ProblemType).ToList();
-            ViewBag.CancelReason = _context.ProblemType.Where(r => r.Type == (int)EnumProblemType.CancelType).ToList();
+            ViewBag.ProblemType = _context
+                .ProblemType.Where(r => r.Type == (int)EnumProblemType.ProblemType)
+                .ToList();
+            ViewBag.CancelReason = _context
+                .ProblemType.Where(r => r.Type == (int)EnumProblemType.CancelType)
+                .ToList();
 
             var filter = new ShipDTO();
 
@@ -905,18 +998,14 @@ namespace DicomApp.Portal.Controllers
                     (int)EnumStatus.Ready_For_Delivery,
                     (int)EnumStatus.Assigned_For_Delivery,
                     (int)EnumStatus.Out_For_Delivery,
-
                     (int)EnumStatus.Ready_For_Pickup,
                     (int)EnumStatus.Assigned_For_Pickup,
                     (int)EnumStatus.Picked_Up,
-
                     (int)EnumStatus.At_Warehouse,
                     (int)EnumStatus.Postponed,
-
                     (int)EnumStatus.Ready_For_Return,
                     (int)EnumStatus.Assigned_For_Return,
                     (int)EnumStatus.Out_For_Return,
-
                     (int)EnumStatus.Ready_For_Refund,
                     (int)EnumStatus.Assigned_For_Refund,
                     (int)EnumStatus.Out_For_Refund,
@@ -931,7 +1020,12 @@ namespace DicomApp.Portal.Controllers
             else if (StatusId == (int)EnumStatus.Cancelled)
                 filter.StatusId = (int)EnumStatus.Cancelled;
             else if (StatusId == (int)EnumStatus.Done)
-                filter.StatusIDs = new List<int> { (int)EnumStatus.Delivered, (int)EnumStatus.Paid_To_Vendor, (int)EnumStatus.Refunded };
+                filter.StatusIDs = new List<int>
+                {
+                    (int)EnumStatus.Delivered,
+                    (int)EnumStatus.Paid_To_Vendor,
+                    (int)EnumStatus.Refunded
+                };
             else
                 filter.StatusId = StatusId;
 
@@ -969,28 +1063,23 @@ namespace DicomApp.Portal.Controllers
 
             ViewData.ObjDTOs = response.ShipDTOs;
 
-            if (ActionType == Constants.ActionType.PartialView)
+            if (ActionType == SystemConstants.ActionType.PartialView)
                 return PartialView(ViewData);
-            else if (ActionType == Constants.ActionType.Table)
+            else if (ActionType == SystemConstants.ActionType.Table)
             {
                 if (StatusId == (int)EnumStatus.All)
                     return PartialView("_All", response.ShipDTOs);
-
                 else if (StatusId == (int)EnumStatus.Current)
                     return PartialView("_Current", response.ShipDTOs);
-
                 else if (StatusId == (int)EnumStatus.CourierReturn)
                     return PartialView("_Returned", response.ShipDTOs);
-
                 else if (StatusId == (int)EnumStatus.Cancelled)
                     return PartialView("_Cancelled", response.ShipDTOs);
-
                 else if (StatusId == (int)EnumStatus.Done)
                     return PartialView("_Done", response.ShipDTOs);
-
-                else return PartialView("_All", response.ShipDTOs);
+                else
+                    return PartialView("_All", response.ShipDTOs);
             }
-
             else
                 return View(ViewData);
         }
@@ -1000,19 +1089,30 @@ namespace DicomApp.Portal.Controllers
         #region Assign shipments
 
         [AuthorizePerRole("ShipmentsAssignList")]
-        public IActionResult Assign(int AreaId, string Search, string OrderByColumn, bool? IsDesc, int PageIndex, int ZoneID = 0, string ActionType = null)
+        public IActionResult Assign(
+            int AreaId,
+            string Search,
+            string OrderByColumn,
+            bool? IsDesc,
+            int PageIndex,
+            int ZoneID = 0,
+            string ActionType = null
+        )
         {
             ViewModel<ShipDTO> ViewData = new ViewModel<ShipDTO>();
 
             ViewData.Lookup = BaseHelper.GetLookup(
-                new List<byte>
-                {
-                    (byte)EnumSelectListType.Courier,
-                    (byte)EnumSelectListType.Area,
-                }, _context);
+                new List<byte> { (byte)EnumSelectListType.Courier, (byte)EnumSelectListType.Area, },
+                _context
+            );
 
             var filter = new ShipDTO();
-            filter.StatusIDs = new List<int> { (int)EnumStatus.Ready_For_Delivery, (int)EnumStatus.Ready_For_Return, (int)EnumStatus.Ready_For_Refund };
+            filter.StatusIDs = new List<int>
+            {
+                (int)EnumStatus.Ready_For_Delivery,
+                (int)EnumStatus.Ready_For_Return,
+                (int)EnumStatus.Ready_For_Refund
+            };
             filter.ZoneId = ZoneID;
             filter.AreaId = AreaId;
             filter.Search = Search;
@@ -1036,9 +1136,9 @@ namespace DicomApp.Portal.Controllers
 
             var response = BL.Services.ShipmentService.GetAllShipments(request);
             ViewData.ObjDTOs = response.ShipDTOs;
-            if (ActionType == Constants.ActionType.PartialView)
+            if (ActionType == SystemConstants.ActionType.PartialView)
                 return PartialView(ViewData);
-            else if (ActionType == Constants.ActionType.Table)
+            else if (ActionType == SystemConstants.ActionType.Table)
                 return PartialView("_Assign", ViewData);
             else
                 return View(ViewData);
@@ -1062,7 +1162,6 @@ namespace DicomApp.Portal.Controllers
                 TempData["SuccessMsg"] = response.Message;
             else
                 TempData["ErrorMsg"] = response.Message;
-
 
             return RedirectToAction("Assign");
         }

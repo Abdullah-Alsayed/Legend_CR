@@ -26,7 +26,7 @@
     {
         foreach (var ship in Model)
         {
-            double REDFees = ship.FeesDetailsDTO.ShippingFees + ship.FeesDetailsDTO.PackingFees + ship.FeesDetailsDTO.WeightFees + ship.FeesDetailsDTO.SizeFees + ship.FeesDetailsDTO.PartialDeliveryFees;
+            double REDFees = ship.FeesDetailsDTO.ShippingFees + ship.FeesDetailsDTO.GameFees + ship.FeesDetailsDTO.WeightFees + ship.FeesDetailsDTO.SizeFees + ship.FeesDetailsDTO.PartialDeliveryFees;
 
             <tr id="TableRow_@ship.ShipmentId">
                 <td class="text-center text-nowrap pl-1 pr-1" onclick="ShipmentDetails('Shipment',@ship.ShipmentId)" data-toggle="modal" data-target="#ShipmentDetails"><b>@ship.RefId</b></td>

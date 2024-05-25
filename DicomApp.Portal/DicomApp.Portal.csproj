@@ -63,11 +63,9 @@
     <None Include="Views\Home\Index3.cshtml" />
     <None Include="Views\Home\_AccountDashboard.cshtml" />
     <None Include="Views\Home\_IndexPartial.cshtml" />
-    <None Include="Views\Packing\AddpackingType.cshtml" />
-    <None Include="Views\Packing\PackingForm.cshtml" />
-    <None Include="Views\Packing\PackingList.cshtml" />
-    <None Include="Views\Packing\PackingTypeForm.cshtml" />
-    <None Include="Views\Packing\PackingTypeList.cshtml" />
+    <None Include="Views\Category\AddCategory.cshtml" />
+    <None Include="Views\Category\CategoryForm.cshtml" />
+    <None Include="Views\Category\CategoryList.cshtml" />
     <None Include="Views\Product\ProductForm.cshtml" />
     <None Include="Views\Product\ProductList.cshtml" />
     <None Include="Views\Role\AddRole.cshtml" />

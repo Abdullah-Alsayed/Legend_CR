@@ -93,9 +93,9 @@
                                 {
                                     <li><a href="/Report/Couriers" class="MenuNavigation Navigation">Couriers Report</a></li>
                                 }
-                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_ReportsPacking", connectionString: connectionString))
+                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_ReportsGame", connectionString: connectionString))
                                 {
-                                    <li><a class="MenuNavigation Navigation" href="/Report/Packings">Packaging Report</a></li>
+                                    <li><a class="MenuNavigation Navigation" href="/Report/Games">Packaging Report</a></li>
                                 }
                                 @if (BaseService.CheckRoleAccessability(roleID, "Menu_ReportsCustomerFollowup", connectionString: connectionString))
                                 {
@@ -108,7 +108,7 @@
                             </ul>
                         </li>
                         <li class="cursor-pointer" onclick="OpenSection('REDManagement-Ul')">
-                            <a><img class="Img-Ul" src="~/dist/images/Icons/REDManagement.png" /> RED Management</a>
+                            <a><img class="Img-Ul" src="~/dist/images/Icons/REDManagement.png" />Management</a>
                             <ul id="REDManagement-Ul" class="d-none Nested-sidebar-menu">
                                 @if (BaseService.CheckRoleAccessability(roleID, "Menu_Staff", connectionString: connectionString))
                                 {
@@ -118,9 +118,13 @@
                                 {
                                     <li><a class="MenuNavigation Navigation" href="/User/ListAccount">Vendors</a></li>
                                 }
-                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_Packing", connectionString: connectionString))
+                                @if (BaseService.CheckRoleAccessability(roleID, SystemConstants.Permission.GameList, connectionString: connectionString))
                                 {
-                                    <li><a class="MenuNavigation Navigation" href="/Packing/PackingList">Packing</a></li>
+                                    <li><a class="MenuNavigation Navigation" href="/Game/GameList">Game</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, SystemConstants.Permission.CategoryList, connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Category/CategoryList">Category</a></li>
                                 }
                                 @if (BaseService.CheckRoleAccessability(roleID, "Menu_Areas", connectionString: connectionString))
                                 {
@@ -142,6 +146,7 @@
                                 {
                                     <li><a class="MenuNavigation Navigation" href="/ProblemType/ProblemTypeList">Problem Types</a></li>
                                 }
+
                             </ul>
                         </li>
                         <li class="cursor-pointer" onclick="OpenSection('PickupManagement-Ul')">

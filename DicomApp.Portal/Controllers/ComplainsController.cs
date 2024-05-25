@@ -1,4 +1,6 @@
-
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using DicomApp.BL.Services;
 using DicomApp.CommonDefinitions.DTO;
 using DicomApp.DAL.DB;
@@ -10,26 +12,33 @@ using DicomDB.CommonDefinitions.Requests;
 using Microsoft.AspNetCore.Mvc;
 using Rotativa.AspNetCore;
 using Rotativa.AspNetCore.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace DicomDB.Portal.Controllers
 {
-
     public class ComplainsController : Controller
     {
         private readonly ShippingDBContext _context;
+
         public ComplainsController(ShippingDBContext context)
         {
             _context = context;
         }
 
         [AuthorizePerRole("ComplainsList")]
-        public ActionResult ComplainsManagement(string ActionType, string Search, int VendorId, string OrderByColumn, bool? IsDesc, int PageIndex,
-                                                int EmployeeId, bool? Solved, string Department, DateTime? From, DateTime? To)
+        public ActionResult ComplainsManagement(
+            string ActionType,
+            string Search,
+            int VendorId,
+            string OrderByColumn,
+            bool? IsDesc,
+            int PageIndex,
+            int EmployeeId,
+            bool? Solved,
+            string Department,
+            DateTime? From,
+            DateTime? To
+        )
         {
-           
             ViewModel<ComplainsDTO> ViewData = new ViewModel<ComplainsDTO>();
             ComplainsDTO filter = new ComplainsDTO();
             filter.Search = Search;
@@ -60,20 +69,28 @@ namespace DicomDB.Portal.Controllers
             };
             var ComplainsRespons = ComplainsService.GetComplains(ComplainsRequest);
             ViewData.ObjDTOs = ComplainsRespons.ComplainsDTOs;
-            if (ActionType != Constants.ActionType.Table && ActionType != Constants.ActionType.Print)
-                ViewData.Lookup = BaseHelper.GetLookup(new List<byte> {
+            if (
+                ActionType != SystemConstants.ActionType.Table
+                && ActionType != SystemConstants.ActionType.Print
+            )
+                ViewData.Lookup = BaseHelper.GetLookup(
+                    new List<byte>
+                    {
                         (byte)EnumSelectListType.Vendor,
                         (byte)EnumSelectListType.Employee
-                    }, _context);
+                    },
+                    _context
+                );
 
-            if (ActionType == Constants.ActionType.PartialView)
+            if (ActionType == SystemConstants.ActionType.PartialView)
                 return PartialView(ViewData);
-
-            else if (ActionType == Constants.ActionType.Table)
+            else if (ActionType == SystemConstants.ActionType.Table)
                 return PartialView("_ComplainsList", ViewData.ObjDTOs);
-
-            else if (ActionType == Constants.ActionType.Print)
-                return BaseHelper.GeneratePDF<List<ComplainsDTO>>("ComplainsManagementPDF.cshtml", ViewData.ObjDTOs);
+            else if (ActionType == SystemConstants.ActionType.Print)
+                return BaseHelper.GeneratePDF<List<ComplainsDTO>>(
+                    "ComplainsManagementPDF.cshtml",
+                    ViewData.ObjDTOs
+                );
             else
                 return View(ViewData);
         }
@@ -91,8 +108,10 @@ namespace DicomDB.Portal.Controllers
             };
             var ComplainsRespons = ComplainsService.DeleteComplains(ComplainsRequst);
 
-            if (ComplainsRespons.Success) return Json(true);
-            else return Json(false);
+            if (ComplainsRespons.Success)
+                return Json(true);
+            else
+                return Json(false);
         }
 
         [HttpPost]
@@ -114,7 +133,6 @@ namespace DicomDB.Portal.Controllers
                 return PartialView("_ComplainsList", ComplainsResult.ComplainsDTOs);
             else
                 return Json(new { message = "Failed" });
-
         }
 
         [HttpPost]
@@ -129,8 +147,10 @@ namespace DicomDB.Portal.Controllers
                 context = _context
             };
             var ComplainsRespons = ComplainsService.SolveComplains(ComplainsRequst);
-            if (ComplainsRespons.Success) return Json(true);
-            else return Json(false);
+            if (ComplainsRespons.Success)
+                return Json(true);
+            else
+                return Json(false);
         }
     }
 }

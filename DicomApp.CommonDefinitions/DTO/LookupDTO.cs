@@ -1,5 +1,5 @@
-﻿using DicomApp.CommonDefinitions.Records;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using DicomApp.CommonDefinitions.Records;
 
 namespace DicomApp.CommonDefinitions.DTO
 {
@@ -14,7 +14,7 @@ namespace DicomApp.CommonDefinitions.DTO
         public List<UserDTO> EmployeeDTOs { get; set; }
         public List<RoleDTO> RoleDTOs { get; set; }
         public List<CityDTO> AreaDTOs { get; set; }
-        public List<PackingTypeDTO> PackingTypeDTOs { get; set; }
+        public List<CategoryDTO> CategoryDTOs { get; set; }
         public UserDTO UserDTO { get; set; }
     }
 }

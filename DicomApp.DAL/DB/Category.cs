@@ -1,14 +1,13 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace DicomApp.DAL.DB
 {
-    public partial class PackingType
+    public partial class Category
     {
-        public PackingType()
+        public Category()
         {
-            Packing = new HashSet<Packing>();
+            Game = new HashSet<Game>();
         }
 
         public int Id { get; set; }
@@ -18,9 +17,7 @@ namespace DicomApp.DAL.DB
         public DateTime CreatedAt { get; set; }
         public int? LastModifiedBy { get; set; }
         public DateTime LastModifiedAt { get; set; }
-        public int? BranchId { get; set; }
 
-        public virtual Branch Branch { get; set; }
-        public virtual ICollection<Packing> Packing { get; set; }
+        public virtual ICollection<Game> Game { get; set; }
     }
 }

@@ -1,4 +1,7 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using DicomApp.BL.Services;
 using DicomApp.CommonDefinitions.DTO;
 using DicomApp.CommonDefinitions.DTO.VendorProductDTOs;
@@ -12,10 +15,6 @@ using DicomDB.CommonDefinitions.DTO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DicomApp.Portal.Controllers
 {
@@ -58,20 +57,24 @@ namespace DicomApp.Portal.Controllers
             var ProductResponse = VendorProductService.GetAllProducts(VendorProductRequest);
             ViewData.ObjDTOs = ProductResponse.VendorProductDTOs;
 
-            if (ActionType != Constants.ActionType.Table && ActionType != Constants.ActionType.Print)
-                ViewData.Lookup = BaseHelper.GetLookup(new List<byte> {
-                        (byte)EnumSelectListType.Vendor,
-                    }, _context);
+            if (
+                ActionType != SystemConstants.ActionType.Table
+                && ActionType != SystemConstants.ActionType.Print
+            )
+                ViewData.Lookup = BaseHelper.GetLookup(
+                    new List<byte> { (byte)EnumSelectListType.Vendor, },
+                    _context
+                );
 
-            if (ActionType == Constants.ActionType.PartialView)
+            if (ActionType == SystemConstants.ActionType.PartialView)
                 return PartialView("_ProductList", ViewData);
-
-            else if (ActionType == Constants.ActionType.Print)
-                return BaseHelper.GeneratePDF<List<VendorProductDTO>>("/Views/Product/ProductReportPDF.cshtml", ViewData.ObjDTOs);
-
-            else if (ActionType == Constants.ActionType.Table)
+            else if (ActionType == SystemConstants.ActionType.Print)
+                return BaseHelper.GeneratePDF<List<VendorProductDTO>>(
+                    "/Views/Product/ProductReportPDF.cshtml",
+                    ViewData.ObjDTOs
+                );
+            else if (ActionType == SystemConstants.ActionType.Table)
                 return PartialView("_ProductTable", ViewData.ObjDTOs);
-
             else
                 return View(ViewData);
         }
@@ -79,7 +82,7 @@ namespace DicomApp.Portal.Controllers
         [AuthorizePerRole("AddProduct")]
         public IActionResult AddProduct(string ActionType = null)
         {
-            if (ActionType == Constants.ActionType.PartialView)
+            if (ActionType == SystemConstants.ActionType.PartialView)
                 return PartialView("ProductForm");
             else
                 return View("ProductForm");
@@ -91,7 +94,11 @@ namespace DicomApp.Portal.Controllers
         {
             if (ModelState.IsValid)
             {
-                model.ImageUrl = BaseHelper.UploadImg(model.File, hosting.WebRootPath, model.ImageUrl);
+                model.ImageUrl = BaseHelper.UploadImg(
+                    model.File,
+                    hosting.WebRootPath,
+                    model.ImageUrl
+                );
                 if (model.VendorId == 0)
                     model.VendorId = AuthHelper.GetClaimValue(User, "UserID");
                 try
@@ -106,7 +113,10 @@ namespace DicomApp.Portal.Controllers
                     var productResponse = VendorProductService.AddProduct(VendorProductRequest);
                     var productData = VendorProductService.GetLastProduct(VendorProductRequest);
                     if (productResponse.Success)
-                        return PartialView("_ProductTable", new List<VendorProductDTO>() { productData.VendorProductDTO });
+                        return PartialView(
+                            "_ProductTable",
+                            new List<VendorProductDTO>() { productData.VendorProductDTO }
+                        );
                     else
                         return Json(false);
                 }
@@ -132,7 +142,7 @@ namespace DicomApp.Portal.Controllers
                 Description = model.Description,
                 ImageUrl = model.ImageUrl
             };
-            if (ActionType == Constants.ActionType.PartialView)
+            if (ActionType == SystemConstants.ActionType.PartialView)
                 return PartialView("ProductForm", VendorProductDTO);
             else
                 return View("ProductForm", VendorProductDTO);
@@ -160,7 +170,7 @@ namespace DicomApp.Portal.Controllers
             else
                 return Json(false);
         }
-        
+
         [AuthorizePerRole("DeletProduct")]
         public IActionResult DeletProduct(int Id)
         {

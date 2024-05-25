@@ -9,20 +9,27 @@ namespace DicomApp.DAL.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "AppServiceClass",
+                name: "AppService",
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(maxLength: 250, nullable: true),
-                    Description = table.Column<string>(nullable: true),
+                    AllowAnonymous = table.Column<bool>(nullable: false),
                     CreatedBy = table.Column<int>(nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
-                    IsDeleted = table.Column<bool>(nullable: false)
+                    CreationDate = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    ModificationDate = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
+                    ModifiedBy = table.Column<int>(nullable: true),
+                    Name = table.Column<string>(maxLength: 150, nullable: false),
+                    ShowToUser = table.Column<bool>(nullable: false, defaultValueSql: "((1))"),
+                    Title = table.Column<string>(maxLength: 150, nullable: false),
+                    ClassName = table.Column<string>(maxLength: 150, nullable: true),
+                    AllowLog = table.Column<bool>(nullable: false),
+                    LogMessage = table.Column<string>(maxLength: 2000, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AppServiceClass", x => x.ID);
+                    table.PrimaryKey("PK_AppService", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -46,6 +53,24 @@ namespace DicomApp.DAL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Branch", x => x.BranchId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Category",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Name_Ar = table.Column<string>(maxLength: 150, nullable: false),
+                    Name_En = table.Column<string>(maxLength: 150, nullable: false),
+                    CreatedBy = table.Column<int>(nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
+                    LastModifiedBy = table.Column<int>(nullable: true),
+                    LastModifiedAt = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Category", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -165,7 +190,9 @@ namespace DicomApp.DAL.Migrations
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(maxLength: 50, nullable: true)
+                    NameEN = table.Column<string>(maxLength: 50, nullable: true),
+                    NameAR = table.Column<string>(maxLength: 50, nullable: true),
+                    StatusType = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -207,51 +234,29 @@ namespace DicomApp.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AppServiceGroup",
-                columns: table => new
-                {
-                    ID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(maxLength: 250, nullable: true),
-                    Description = table.Column<string>(nullable: true),
-                    AppServiceClassID = table.Column<int>(nullable: true),
-                    CreatedBy = table.Column<int>(nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
-                    IsDeleted = table.Column<bool>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AppServiceGroup", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_AppServiceGroup_AppServiceClass",
-                        column: x => x.AppServiceClassID,
-                        principalTable: "AppServiceClass",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PackingType",
+                name: "Game",
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name_Ar = table.Column<string>(maxLength: 150, nullable: false),
                     Name_En = table.Column<string>(maxLength: 150, nullable: false),
+                    ImgUrl = table.Column<string>(nullable: false),
+                    Description = table.Column<string>(maxLength: 250, nullable: true),
+                    CategoryId = table.Column<int>(nullable: false),
                     CreatedBy = table.Column<int>(nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
                     LastModifiedBy = table.Column<int>(nullable: true),
-                    LastModifiedAt = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
-                    BranchId = table.Column<int>(nullable: true)
+                    LastModifiedAt = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PackingType", x => x.ID);
+                    table.PrimaryKey("PK_Game", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Branch_PackingType",
-                        column: x => x.BranchId,
-                        principalTable: "Branch",
-                        principalColumn: "BranchId",
+                        name: "FK_Game_Category",
+                        column: x => x.CategoryId,
+                        principalTable: "Category",
+                        principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -323,76 +328,33 @@ namespace DicomApp.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AppService",
+                name: "RoleAppService",
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    AllowAnonymous = table.Column<bool>(nullable: false),
                     CreatedBy = table.Column<int>(nullable: true),
                     CreationDate = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
                     IsDeleted = table.Column<bool>(nullable: false),
                     ModificationDate = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
                     ModifiedBy = table.Column<int>(nullable: true),
-                    Name = table.Column<string>(maxLength: 150, nullable: false),
-                    ShowToUser = table.Column<bool>(nullable: false, defaultValueSql: "((1))"),
-                    Title = table.Column<string>(maxLength: 150, nullable: false),
-                    ClassName = table.Column<string>(maxLength: 150, nullable: true),
-                    AllowLog = table.Column<bool>(nullable: false),
-                    LogMessage = table.Column<string>(maxLength: 2000, nullable: true),
-                    AppServiceClassID = table.Column<int>(nullable: true),
-                    AppServiceGroupID = table.Column<int>(nullable: true)
+                    AppServiceID = table.Column<int>(nullable: false),
+                    Enabled = table.Column<bool>(nullable: false),
+                    RoleID = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AppService", x => x.ID);
+                    table.PrimaryKey("PK_RoleAppService", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_AppService_AppServiceClass",
-                        column: x => x.AppServiceClassID,
-                        principalTable: "AppServiceClass",
+                        name: "FK_RoleAppService_AppService",
+                        column: x => x.AppServiceID,
+                        principalTable: "AppService",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_AppService_AppServiceGroup",
-                        column: x => x.AppServiceGroupID,
-                        principalTable: "AppServiceGroup",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Packing",
-                columns: table => new
-                {
-                    ID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name_Ar = table.Column<string>(maxLength: 150, nullable: false),
-                    Name_En = table.Column<string>(maxLength: 150, nullable: false),
-                    Size = table.Column<string>(maxLength: 100, nullable: false),
-                    ImgUrl = table.Column<string>(nullable: false),
-                    Count = table.Column<int>(nullable: false),
-                    Price = table.Column<double>(nullable: false),
-                    PackingTypeId = table.Column<int>(nullable: false),
-                    CreatedBy = table.Column<int>(nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
-                    LastModifiedBy = table.Column<int>(nullable: true),
-                    LastModifiedAt = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
-                    BranchId = table.Column<int>(nullable: true),
-                    Description = table.Column<string>(maxLength: 250, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Packing", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_Branch_Packing",
-                        column: x => x.BranchId,
-                        principalTable: "Branch",
-                        principalColumn: "BranchId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Packing_PackingType",
-                        column: x => x.PackingTypeId,
-                        principalTable: "PackingType",
+                        name: "FK_RoleAppService_Role1",
+                        column: x => x.RoleID,
+                        principalTable: "Role",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -695,38 +657,6 @@ namespace DicomApp.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RoleAppService",
-                columns: table => new
-                {
-                    ID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CreatedBy = table.Column<int>(nullable: true),
-                    CreationDate = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    ModificationDate = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
-                    ModifiedBy = table.Column<int>(nullable: true),
-                    AppServiceID = table.Column<int>(nullable: false),
-                    Enabled = table.Column<bool>(nullable: false),
-                    RoleID = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RoleAppService", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_RoleAppService_AppService",
-                        column: x => x.AppServiceID,
-                        principalTable: "AppService",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_RoleAppService_Role1",
-                        column: x => x.RoleID,
-                        principalTable: "Role",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "City",
                 columns: table => new
                 {
@@ -960,9 +890,9 @@ namespace DicomApp.DAL.Migrations
                     IsFragilePackage = table.Column<bool>(nullable: false),
                     IsStock = table.Column<bool>(nullable: false),
                     IsAfford = table.Column<bool>(nullable: true),
-                    PackingId = table.Column<int>(nullable: true),
-                    WarehousePackingId = table.Column<int>(nullable: true),
-                    PackingFees = table.Column<double>(nullable: false),
+                    GameId = table.Column<int>(nullable: true),
+                    WarehouseGameId = table.Column<int>(nullable: true),
+                    GameFees = table.Column<double>(nullable: false),
                     Weight = table.Column<int>(nullable: false),
                     WarehouseWeight = table.Column<int>(nullable: false),
                     WeightFees = table.Column<double>(nullable: false),
@@ -1029,15 +959,15 @@ namespace DicomApp.DAL.Migrations
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Shipment_CommonUser3",
-                        column: x => x.LastModifiedBy,
-                        principalTable: "CommonUser",
+                        name: "FK_Shipment_Game",
+                        column: x => x.GameId,
+                        principalTable: "Game",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Shipment_Packing",
-                        column: x => x.PackingId,
-                        principalTable: "Packing",
+                        name: "FK_Shipment_CommonUser3",
+                        column: x => x.LastModifiedBy,
+                        principalTable: "CommonUser",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -1071,9 +1001,9 @@ namespace DicomApp.DAL.Migrations
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Shipment_WarehousePackingId",
-                        column: x => x.WarehousePackingId,
-                        principalTable: "Packing",
+                        name: "FK_Shipment_WarehouseGameId",
+                        column: x => x.WarehouseGameId,
+                        principalTable: "Game",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -1098,7 +1028,7 @@ namespace DicomApp.DAL.Migrations
                     StatusId = table.Column<int>(nullable: true),
                     ShipmentId = table.Column<int>(nullable: true),
                     PickupRequestId = table.Column<int>(nullable: true),
-                    PackingFees = table.Column<double>(nullable: false),
+                    GameFees = table.Column<double>(nullable: false),
                     WeightFees = table.Column<double>(nullable: false),
                     SizeFees = table.Column<double>(nullable: false),
                     PartialDeliveryFees = table.Column<double>(nullable: false),
@@ -1445,25 +1375,10 @@ namespace DicomApp.DAL.Migrations
                 column: "VendorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AppService_AppServiceClassID",
-                table: "AppService",
-                column: "AppServiceClassID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AppService_AppServiceGroupID",
-                table: "AppService",
-                column: "AppServiceGroupID");
-
-            migrationBuilder.CreateIndex(
                 name: "Service_Name_unique",
                 table: "AppService",
                 column: "Name",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AppServiceGroup_AppServiceClassID",
-                table: "AppServiceGroup",
-                column: "AppServiceClassID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CashTransfer_AreaId",
@@ -1558,6 +1473,11 @@ namespace DicomApp.DAL.Migrations
                 column: "ShipmentId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Game_CategoryId",
+                table: "Game",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Notification_RecipientRoleId",
                 table: "Notification",
                 column: "RecipientRoleId");
@@ -1566,21 +1486,6 @@ namespace DicomApp.DAL.Migrations
                 name: "IX_Notification_SenderID",
                 table: "Notification",
                 column: "SenderID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Packing_BranchId",
-                table: "Packing",
-                column: "BranchId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Packing_PackingTypeId",
-                table: "Packing",
-                column: "PackingTypeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PackingType_BranchId",
-                table: "PackingType",
-                column: "BranchId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PickupRequest_AreaId",
@@ -1674,14 +1579,14 @@ namespace DicomApp.DAL.Migrations
                 column: "DeliveryManId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Shipment_GameId",
+                table: "Shipment",
+                column: "GameId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Shipment_LastModifiedBy",
                 table: "Shipment",
                 column: "LastModifiedBy");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Shipment_PackingId",
-                table: "Shipment",
-                column: "PackingId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Shipment_PickupRequestId",
@@ -1709,9 +1614,9 @@ namespace DicomApp.DAL.Migrations
                 column: "VendorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Shipment_WarehousePackingId",
+                name: "IX_Shipment_WarehouseGameId",
                 table: "Shipment",
-                column: "WarehousePackingId");
+                column: "WarehouseGameId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Shipment_ZoneID",
@@ -1855,13 +1760,10 @@ namespace DicomApp.DAL.Migrations
                 name: "Shipment");
 
             migrationBuilder.DropTable(
-                name: "AppServiceGroup");
-
-            migrationBuilder.DropTable(
                 name: "CashTransfer");
 
             migrationBuilder.DropTable(
-                name: "Packing");
+                name: "Game");
 
             migrationBuilder.DropTable(
                 name: "PickupRequest");
@@ -1873,13 +1775,10 @@ namespace DicomApp.DAL.Migrations
                 name: "ShipmentType");
 
             migrationBuilder.DropTable(
-                name: "AppServiceClass");
-
-            migrationBuilder.DropTable(
                 name: "Account");
 
             migrationBuilder.DropTable(
-                name: "PackingType");
+                name: "Category");
 
             migrationBuilder.DropTable(
                 name: "City");

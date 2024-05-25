@@ -8,7 +8,7 @@ namespace DicomApp.CommonDefinitions.DTO.ShipmentDTOs
     {
         public double ShippingFeesPaid { get; set; }
         public bool? IsAfford { get; set; }
-        public double PackingFees { get; set; }
+        public double GameFees { get; set; }
         public double ShippingFees { get; set; }
         public double VendorCash { get; set; }
         public double Total { get; set; }

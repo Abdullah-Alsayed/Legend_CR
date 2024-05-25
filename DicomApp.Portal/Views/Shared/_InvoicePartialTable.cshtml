@@ -106,7 +106,7 @@ else if (ViewBag.ActionName == EnumActionName.Treasury)
                     @item.Where(p => p.InvoiceTypeId == 1).Sum(p => p.ShippingFees)
                 </td>
                 <td>
-                    @item.Where(p => p.InvoiceTypeId == 1).Sum(p => p.PackingFees)
+                    @item.Where(p => p.InvoiceTypeId == 1).Sum(p => p.GameFees)
                 </td>
                 <td>
                     @item.Where(p => p.InvoiceTypeId == 1).Sum(p => GeneralHelper.CalcWeight((int)p.ReturnedAmount))

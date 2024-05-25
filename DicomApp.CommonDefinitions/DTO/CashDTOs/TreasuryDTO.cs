@@ -9,7 +9,7 @@ namespace DicomApp.CommonDefinitions.DTO.CashDTOs
         public int AccountId { get; set; }
         public int? VendorId { get; set; }
         public string VendorName { get; set; }
-        public double PackingFees { get; set; }
+        public double GameFees { get; set; }
         public double WeightFees { get; set; }
         public double SizeFees { get; set; }
         public double PartialDeliveryFees { get; set; }

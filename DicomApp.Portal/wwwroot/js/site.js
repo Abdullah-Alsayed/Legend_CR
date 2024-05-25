@@ -280,7 +280,7 @@ MenuNavigationList.forEach((item) => {
     item.addEventListener("click", MenuNavigation);
 });
 
-function displayPremition(className) {
+function displayPermissions(className) {
 
     $('.nav-link').removeClass('active');
     $('.todo-item').fadeOut('fast');
@@ -408,7 +408,7 @@ function GetPramter(ControllerName, ActionName, ActionType) {
     var ZoneId = $("#ZoneId").val();
     var VendorID = $("#VendorID").val();
     var StatusId = $("#StatusId").val();
-    var PackingTypeId = $("#PackingTypeId").val();
+    var CategoryId = $("#CategoryId").val();
     var Quantity = $("#Quantity").val();
     var Status = $(".Active").data('status');
     var DeliveryManId = $(`#DeliveryManId`).val();
@@ -418,7 +418,7 @@ function GetPramter(ControllerName, ActionName, ActionType) {
     var Solved = $(`#Solved`).val();
     var url = `/${ControllerName}/${ActionName}?ActionType=${ActionType}&Search=${Search}&From=${From}
                 &To=${To}&AreaId=${AreaId}&ZoneId=${ZoneId}&VendorID=${VendorID}&areadIDs=${areadIDs}
-                &StatusId=${StatusId}&Status=${Status}&DeliveryManId=${DeliveryManId}&PackingTypeId=${PackingTypeId}   
+                &StatusId=${StatusId}&Status=${Status}&DeliveryManId=${DeliveryManId}&CategoryId=${CategoryId}   
                 &Quantity=${Quantity}&RoleId=${RoleId}&Department=${Department}&EmployeeId=${EmployeeId}&Solved=${Solved}`;
     return url;
 };
@@ -464,28 +464,28 @@ function ShipmentDetails(ControllerName, ShipmentID) {
     })
 }
 
-function GetPacking(id) {
+function GetGame(id) {
     alert(id);
-    $.get("/Packing/GetPackingList", { ID: id }, function (data) {
-        $("#Packingdiv").append(`<label class="font-w-600">Packing Size</label>`)
-        $.each(data, function (index, Packing) {
-            $("#Packingdiv").append('<div><label for="' + Packing.id + '" class="radio-card"><input type="radio" value="' + Packing.id + '" onclick="GetTotalPrice()" name="SettingDTO.PackingId" id="' + Packing.id + '"  /><div class="card-content-wrapper"><span class="check-icon"></span><div class="card-content"><img src="/dist/images/' + Packing.imgUrl + '" alt=""  width="100" /><p class="Packing-Price">' + Packing.price + ' EGP</p><p class="float-end Packing-Name">' + Packing.nameEn + '</p><p class="Packing-Size">' + Packing.size + '<h4/></div></div></label></div>');
+    $.get("/Game/GetGameList", { ID: id }, function (data) {
+        $("#Gamediv").append(`<label class="font-w-600">Game Size</label>`)
+        $.each(data, function (index, Game) {
+            $("#Gamediv").append('<div><label for="' + Game.id + '" class="radio-card"><input type="radio" value="' + Game.id + '" onclick="GetTotalPrice()" name="SettingDTO.GameId" id="' + Game.id + '"  /><div class="card-content-wrapper"><span class="check-icon"></span><div class="card-content"><img src="/dist/images/' + Game.imgUrl + '" alt=""  width="100" /><p class="Game-Price">' + Game.price + ' EGP</p><p class="float-end Game-Name">' + Game.nameEn + '</p><p class="Game-Size">' + Game.size + '<h4/></div></div></label></div>');
         });
     });
-    //$("#Packingdiv").empty();
+    //$("#Gamediv").empty();
 }
 
-function PackingType(ID) {
-    //$("#Packingdiv").fadeOut(900);
-    //GetPacking(ID);
-    $.get("/Packing/GetPackingList", { ID: ID }, function (data) {
-        $("#Packingdiv").append(`<label class="font-w-600">Packing Size</label>`)
-        $.each(data, function (index, Packing) {
-            $("#Packingdiv").append('<div><label for="' + Packing.id + '" class="radio-card"><input type="radio" value="' + Packing.id + '" onclick="GetTotalPrice()" name="SettingDTO.PackingId" id="' + Packing.id + '"  /><div class="card-content-wrapper"><span class="check-icon"></span><div class="card-content"><img src="/dist/images/' + Packing.imgUrl + '" alt=""  width="100" /><p class="Packing-Price">' + Packing.price + ' EGP</p><p class="float-end Packing-Name">' + Packing.nameEn + '</p><p class="Packing-Size">' + Packing.size + '<h4/></div></div></label></div>');
+function Category(ID) {
+    //$("#Gamediv").fadeOut(900);
+    //GetGame(ID);
+    $.get("/Game/GetGameList", { ID: ID }, function (data) {
+        $("#Gamediv").append(`<label class="font-w-600">Game Size</label>`)
+        $.each(data, function (index, Game) {
+            $("#Gamediv").append('<div><label for="' + Game.id + '" class="radio-card"><input type="radio" value="' + Game.id + '" onclick="GetTotalPrice()" name="SettingDTO.GameId" id="' + Game.id + '"  /><div class="card-content-wrapper"><span class="check-icon"></span><div class="card-content"><img src="/dist/images/' + Game.imgUrl + '" alt=""  width="100" /><p class="Game-Price">' + Game.price + ' EGP</p><p class="float-end Game-Name">' + Game.nameEn + '</p><p class="Game-Size">' + Game.size + '<h4/></div></div></label></div>');
         });
     });
-    $("#Packingdiv").empty();
-    //$("#Packingdiv").slideDown(1000);
+    $("#Gamediv").empty();
+    //$("#Gamediv").slideDown(1000);
 }
 
 
@@ -695,8 +695,8 @@ function EditEntity(ControllerName, ActionName, FormID, Tr) {
                 }
                 else {
                     alertSuccess(result.message);
-                    for (let ProblemType of formData)
-                        $(`#${Tr} #${ProblemType.name}`).text(ProblemType.value);
+                    for (let data of formData)
+                        $(`#${Tr} #${data.name}`).text(data.value);
 
                     $(`${FormID} #BtnSend`).prop('disabled', false);
                     $(".Spinner").addClass("d-none");
@@ -713,6 +713,45 @@ function EditEntity(ControllerName, ActionName, FormID, Tr) {
         $(`#${FormID}`).submit();
     }
 }
+
+//function EditEntity(ControllerName, ActionName, FormID, Tr) {
+//    if ($(`#${FormID}`).valid()) {
+//        $(`${FormID} #BtnSend`).prop('disabled', true);
+//        $(".Spinner").removeClass("d-none");
+//        let formData = $(`#${FormID}`).serializeArray();
+//        $.ajax({
+//            url: `/${ControllerName}/${ActionName}`,
+//            type: 'POST',
+//            data: formData,
+//            success: function (result) {
+//                if (result.success == false) {
+//                    alertError();
+//                    $(`${FormID} #BtnSend`).prop('disabled', false);
+//                    $(".Spinner").addClass("d-none");
+//                }
+//                else {
+//                    alertSuccess(result.message);
+//                    for (let ProblemType of formData)
+//                        if (ProblemType.name == "Type")
+//                            $(`#${Tr} #${ProblemType.name}`).text(ProblemType.value == 0 ? 'Problem' : 'Reason');
+//                        else
+//                            $(`#${Tr} #${ProblemType.name}`).text(ProblemType.value);
+
+//                    $(`${FormID} #BtnSend`).prop('disabled', false);
+//                    $(".Spinner").addClass("d-none");
+//                }
+
+//            },
+//            error: function (error) {
+//                alertError();
+//                $("#BtnSend").prop('disabled', false);
+//            }
+//        })
+//    }
+//    else {
+//        $(`#${FormID}`).submit();
+//    }
+//}
 
 function DeleteEntity(ControllerName, ActionName, Tr, id = 0) {
     if (id == 0)
@@ -737,45 +776,6 @@ function DeleteEntity(ControllerName, ActionName, Tr, id = 0) {
 }
 
 function EditProblemType(ControllerName, ActionName, FormID, Tr) {
-    if ($(`#${FormID}`).valid()) {
-        $(`${FormID} #BtnSend`).prop('disabled', true);
-        $(".Spinner").removeClass("d-none");
-        let formData = $(`#${FormID}`).serializeArray();
-        $.ajax({
-            url: `/${ControllerName}/${ActionName}`,
-            type: 'POST',
-            data: formData,
-            success: function (result) {
-                if (result.success == false) {
-                    alertError();
-                    $(`${FormID} #BtnSend`).prop('disabled', false);
-                    $(".Spinner").addClass("d-none");
-                }
-                else {
-                    alertSuccess(result.message);
-                    for (let ProblemType of formData)
-                        if (ProblemType.name == "Type")
-                            $(`#${Tr} #${ProblemType.name}`).text(ProblemType.value == 0 ? 'Problem' : 'Reason');
-                        else
-                            $(`#${Tr} #${ProblemType.name}`).text(ProblemType.value);
-
-                    $(`${FormID} #BtnSend`).prop('disabled', false);
-                    $(".Spinner").addClass("d-none");
-                }
-
-            },
-            error: function (error) {
-                alertError();
-                $("#BtnSend").prop('disabled', false);
-            }
-        })
-    }
-    else {
-        $(`#${FormID}`).submit();
-    }
-}
-
-function EditEntity(ControllerName, ActionName, FormID, Tr) {
     if ($(`#${FormID}`).valid()) {
         $(`${FormID} #BtnSend`).prop('disabled', true);
         $(".Spinner").removeClass("d-none");
@@ -1150,12 +1150,12 @@ function GetCustomerFollowup(id) {
     });
 }
 
-//////////////Packing///////////
+//////////////Game///////////
 
-function OpenEditPackingModel(id, Modal) {
+function OpenEditGameModel(id, Modal) {
     $.ajax({
         type: "GET",
-        url: `/Packing/EditPacking/${id}`,
+        url: `/Game/EditGame/${id}`,
         success: function (result) {
             if (!result) {
                 Swal.fire({
@@ -1171,10 +1171,10 @@ function OpenEditPackingModel(id, Modal) {
                 $(`#${Modal} #Size`).val(result.size);
                 $(`#${Modal} #NameEn`).val(result.nameEn);
                 $(`#${Modal} #NameAr`).val(result.nameAr);
-                $(`#${Modal} #PackingTypeId`).val(result.packingTypeId);
-                $(`#${Modal} #Count`).val(result.count);
-                $(`#${Modal} #Price`).val(result.price);
+                $(`#${Modal} #CategoryId`).val(result.categoryId);
+                $(`#${Modal} #Description`).val(result.description);
                 $(`#${Modal} #ImgUrl`).val(result.imgUrl);
+                $(`#${Modal} #GameImg`).attr("src",result.imgUrl);
 
                 $(`#${Modal}`).modal('show');
             }
@@ -1183,17 +1183,17 @@ function OpenEditPackingModel(id, Modal) {
     });
 }
 
-function EditPacking(Modal, FormID) {
+function EditGame(Modal, FormID) {
     if ($(`#${FormID}`).valid()) {
         $("#BtnSend").prop('disabled', true);
         $(".Spinner").removeClass("d-none");
-        let packingId = $(`#${Modal} #id`).val();
-        let Tr = `Tr_${packingId}`
+        let GameId = $(`#${Modal} #id`).val();
+        let Tr = `Tr_${GameId}`
         let formData = formSerialize(FormID);
-        let PackingTypeName = $(`#${Modal}`).find(":selected").text();
+        let CategoryName = $(`#${Modal}`).find(":selected").text();
         $.ajax({
             type: "POST",
-            url: `/Packing/EditPacking`,
+            url: `/Game/EditGame`,
             data: formData,
             processData: false,
             contentType: false,
@@ -1214,7 +1214,7 @@ function EditPacking(Modal, FormID) {
                     $(`#${Tr} #Size`).text(result.model.size);
                     $(`#${Tr} #NameEn`).text(result.model.nameEn);
                     $(`#${Tr} #NameAr`).text(result.model.nameAr);
-                    $(`#${Tr} #PackingTypeName b`).text(PackingTypeName);
+                    $(`#${Tr} #CategoryName b`).text(CategoryName);
                     $(`#${Tr} #Count`).text(result.model.count);
                     $(`#${Tr} #Price`).text(result.model.price);
 
@@ -1241,7 +1241,7 @@ function EditPacking(Modal, FormID) {
     }
 }
 
-//////////////End Packing///////////
+//////////////End Game///////////
 
 ////////////Select Shipments
 
@@ -1312,8 +1312,8 @@ function PrintTable() {
 
 }
 
-function PackingUnselect(e) {
-    $('input[name="SettingDTO.PackingId"]').prop('checked', false);
+function GameUnselect(e) {
+    $('input[name="SettingDTO.GameId"]').prop('checked', false);
     GetTotalPrice();
 }
 
@@ -1755,13 +1755,13 @@ function ReceiveReturn() {
     }
 }
 
-function GetPackingByPackingType(ShipId) {
-    let PackingTypeId = $(`#WarehousePackingTypeId_${ShipId}`).val();
-    $(`#WarehousePackingId_${ShipId}`).empty();
-    $(`#WarehousePackingId_${ShipId}`).append(`<option value="0">--- N/A ---</option>`);
-    $.get("/packing/GetPackingList", { ID: PackingTypeId }, function (data) {
+function GetGameByCategory(ShipId) {
+    let CategoryId = $(`#WarehouseCategoryId_${ShipId}`).val();
+    $(`#WarehouseGameId_${ShipId}`).empty();
+    $(`#WarehouseGameId_${ShipId}`).append(`<option value="0">--- N/A ---</option>`);
+    $.get("/Game/GetGameList", { ID: CategoryId }, function (data) {
         $.each(data, function (key, value) {
-            $(`#WarehousePackingId_${ShipId}`).append(`<option value="${value.id}">${value.nameEn}</option>`);
+            $(`#WarehouseGameId_${ShipId}`).append(`<option value="${value.id}">${value.nameEn}</option>`);
         });
     });
 }
@@ -1850,10 +1850,10 @@ function PrintMany() {
     window.open(Url, "_blank");
 }
 
-function EditWarehousePacking(ShipmentID) {
-    let DataForm = $(`#VerifyPacking-Form_${ShipmentID}`).serialize();
+function EditWarehouseGame(ShipmentID) {
+    let DataForm = $(`#VerifyGame-Form_${ShipmentID}`).serialize();
     $.ajax({
-        url: "/Warehouse/EditPacking",
+        url: "/Warehouse/EditGame",
         type: "GET",
         data: DataForm,
         success: function (response) {

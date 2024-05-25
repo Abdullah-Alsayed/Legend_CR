@@ -4090,7 +4090,7 @@ body {
 
     .table:not(.table-dark) thead th, .table:not(.table-dark) tfoot th, .table:not(.table-dark) td, .table:not(.table-dark) th {
         /*padding: 2% 0;*/
-        border-bottom: 1px solid #3B4758;
+        border-bottom: 1px solid #28303c;
         border-top: none;
         text-align: center;
     }
@@ -4104,7 +4104,7 @@ body {
         /*padding-right: 20px;*/
         /* padding-top: 30px; */
         /* padding-bottom: 20px; */
-        border-bottom: 1px solid #3B4758;
+        border-bottom: 1px solid #28303c;
         border-top: none;
         text-align: center;
     }
@@ -4123,8 +4123,7 @@ body {
 }
 
 .table tbody tr {
-    background: #354050;
-    border-bottom: 1px solid #354050;
+    border-bottom: 1px solid #28303c;
     border-radius: 20px;
     flex: none;
     order: 2;
@@ -4255,7 +4254,7 @@ body {
     }
 
 .table tbody tr:hover {
-    background: #1D232C;
+    background: #0077e480;
 }
 
     .status-td {

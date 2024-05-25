@@ -1,12 +1,12 @@
-﻿using DicomApp.CommonDefinitions.DTO;
+﻿using System;
+using System.Linq;
+using System.Net;
+using DicomApp.CommonDefinitions.DTO;
 using DicomApp.CommonDefinitions.DTO.CashDTOs;
 using DicomApp.CommonDefinitions.Requests;
 using DicomApp.CommonDefinitions.Responses;
 using DicomApp.DAL.DB;
 using DicomApp.Helpers;
-using System;
-using System.Linq;
-using System.Net;
 
 namespace DicomApp.BL.Services
 {
@@ -28,7 +28,7 @@ namespace DicomApp.BL.Services
                     ShipmentId = dto.ShipmentId,
                     PickupRequestId = dto.PickupRequestId,
 
-                    PackingFees = dto.PackingFees,
+                    GameFees = dto.GameFees,
                     WeightFees = dto.WeightFees,
                     SizeFees = dto.SizeFees,
                     PartialDeliveryFees = dto.PartialDeliveryFees,
@@ -51,7 +51,11 @@ namespace DicomApp.BL.Services
                 context.AccountTransaction.Add(transaction);
                 context.SaveChanges();
 
-                transaction.RefId = BaseHelper.GenerateRefId(EnumRefIdType.Account_Transaction, transaction.AccountTransactionId, transaction.TypeId);
+                transaction.RefId = BaseHelper.GenerateRefId(
+                    EnumRefIdType.Account_Transaction,
+                    transaction.AccountTransactionId,
+                    transaction.TypeId
+                );
 
                 //if (string.IsNullOrEmpty(transaction.Otp))
                 //{
@@ -81,126 +85,156 @@ namespace DicomApp.BL.Services
         public static AccountTransactionResponse GetTransaction(AccountTransactionRequest request)
         {
             var response = new AccountTransactionResponse();
-            RunBase(request, response, (AccountTransactionRequest req) =>
-            {
-                try
+            RunBase(
+                request,
+                response,
+                (AccountTransactionRequest req) =>
                 {
-                    var query = request.context.AccountTransaction.Where(s => s.AccountTransactionId == request.AccountTransactionDTO.AccountTransactionId && !s.IsDeleted)
-                    .Select(s => new AccountTransactionDTO
+                    try
                     {
-                        AccountTransactionId = s.AccountTransactionId,
-                        RefId = s.RefId,
-                        TypeId = s.TypeId,
-                        SenderId = s.SenderId,
-                        ReceiverId = s.ReceiverId,
-                        VendorId = s.VendorId,
-                        StatusId = s.StatusId,
-                        StatusName = s.StatusId.HasValue ? s.Status.Name : null,
-                        ShipmentId = s.ShipmentId,
-                        PickupRequestId = s.PickupRequestId,
-                        PackingFees = s.PackingFees,
-                        WeightFees = s.WeightFees,
-                        SizeFees = s.SizeFees,
-                        PartialDeliveryFees = s.PartialDeliveryFees,
-                        CancelFees = s.CancelFees,
-                        PickupFees = s.PickupFees,
-                        ShippingFees = s.ShippingFees,
-                        ShippingFeesPaid = s.ShippingFeesPaid,
-                        VendorCash = s.VendorCash,
-                        Total = s.Total,
-                        CreatedAt = s.CreatedAt,
-                        LastModifiedAt = s.LastModifiedAt,
-                        CreatedBy = s.CreatedBy,
-                        LastModifiedBy = s.LastModifiedBy,
+                        var query = request
+                            .context.AccountTransaction.Where(s =>
+                                s.AccountTransactionId
+                                    == request.AccountTransactionDTO.AccountTransactionId
+                                && !s.IsDeleted
+                            )
+                            .Select(s => new AccountTransactionDTO
+                            {
+                                AccountTransactionId = s.AccountTransactionId,
+                                RefId = s.RefId,
+                                TypeId = s.TypeId,
+                                SenderId = s.SenderId,
+                                ReceiverId = s.ReceiverId,
+                                VendorId = s.VendorId,
+                                StatusId = s.StatusId,
+                                StatusName = s.StatusId.HasValue ? s.Status.NameEN : null,
 
-                        CashTransferId = s.CashTransferId,
-                        CashTransferRefId = s.CashTransferId.HasValue ? s.CashTransfer.RefId : null,
+                                ShipmentId = s.ShipmentId,
+                                PickupRequestId = s.PickupRequestId,
+                                GameFees = s.GameFees,
+                                WeightFees = s.WeightFees,
+                                SizeFees = s.SizeFees,
+                                PartialDeliveryFees = s.PartialDeliveryFees,
+                                CancelFees = s.CancelFees,
+                                PickupFees = s.PickupFees,
+                                ShippingFees = s.ShippingFees,
+                                ShippingFeesPaid = s.ShippingFeesPaid,
+                                VendorCash = s.VendorCash,
+                                Total = s.Total,
+                                CreatedAt = s.CreatedAt,
+                                LastModifiedAt = s.LastModifiedAt,
+                                CreatedBy = s.CreatedBy,
+                                LastModifiedBy = s.LastModifiedBy,
 
-                        RefundCash = s.RefundCash,
-                        RefundFees = s.RefundFees,
-                    });
+                                CashTransferId = s.CashTransferId,
+                                CashTransferRefId = s.CashTransferId.HasValue
+                                    ? s.CashTransfer.RefId
+                                    : null,
 
-                    response.AccountTransactionDTO = query.FirstOrDefault();
+                                RefundCash = s.RefundCash,
+                                RefundFees = s.RefundFees,
+                            });
 
-                    response.Message = HttpStatusCode.OK.ToString();
-                    response.Success = true;
-                    response.StatusCode = HttpStatusCode.OK;
+                        response.AccountTransactionDTO = query.FirstOrDefault();
+
+                        response.Message = HttpStatusCode.OK.ToString();
+                        response.Success = true;
+                        response.StatusCode = HttpStatusCode.OK;
+                    }
+                    catch (Exception ex)
+                    {
+                        response.Message = ex.Message;
+                        response.Success = false;
+                        LogHelper.LogException(ex.Message, ex.StackTrace);
+                    }
+                    return response;
                 }
-                catch (Exception ex)
-                {
-                    response.Message = ex.Message;
-                    response.Success = false;
-                    LogHelper.LogException(ex.Message, ex.StackTrace);
-                }
-                return response;
-            });
+            );
             return response;
         }
 
-        public static AccountTransactionResponse GetAllTransactions(AccountTransactionRequest request)
+        public static AccountTransactionResponse GetAllTransactions(
+            AccountTransactionRequest request
+        )
         {
             var response = new AccountTransactionResponse();
-            RunBase(request, response, (AccountTransactionRequest req) =>
-            {
-                try
+            RunBase(
+                request,
+                response,
+                (AccountTransactionRequest req) =>
                 {
-                    var query = request.context.AccountTransaction.Where(s => !s.IsDeleted)
-                    .Select(s => new AccountTransactionDTO
+                    try
                     {
-                        AccountTransactionId = s.AccountTransactionId,
-                        RefId = s.RefId,
-                        TypeId = s.TypeId,
-                        SenderId = s.SenderId,
-                        ReceiverId = s.ReceiverId,
-                        VendorId = s.VendorId,
-                        StatusId = s.StatusId,
-                        StatusName = s.StatusId.HasValue ? s.Status.Name : null,
-                        ShipmentId = s.ShipmentId,
-                        PickupRequestId = s.PickupRequestId,
-                        PackingFees = s.PackingFees,
-                        WeightFees = s.WeightFees,
-                        SizeFees = s.SizeFees,
-                        PartialDeliveryFees = s.PartialDeliveryFees,
-                        CancelFees = s.CancelFees,
-                        PickupFees = s.PickupFees,
-                        ShippingFees = s.ShippingFees,
-                        ShippingFeesPaid = s.ShippingFeesPaid,
-                        VendorCash = s.VendorCash,
-                        Total = s.Total,
-                        CreatedAt = s.CreatedAt,
-                        LastModifiedAt = s.LastModifiedAt,
-                        CreatedBy = s.CreatedBy,
-                        LastModifiedBy = s.LastModifiedBy,
+                        var query = request
+                            .context.AccountTransaction.Where(s => !s.IsDeleted)
+                            .Select(s => new AccountTransactionDTO
+                            {
+                                AccountTransactionId = s.AccountTransactionId,
+                                RefId = s.RefId,
+                                TypeId = s.TypeId,
+                                SenderId = s.SenderId,
+                                ReceiverId = s.ReceiverId,
+                                VendorId = s.VendorId,
+                                StatusId = s.StatusId,
+                                StatusName = s.StatusId.HasValue ? s.Status.NameEN : null,
+                                ShipmentId = s.ShipmentId,
+                                PickupRequestId = s.PickupRequestId,
+                                GameFees = s.GameFees,
+                                WeightFees = s.WeightFees,
+                                SizeFees = s.SizeFees,
+                                PartialDeliveryFees = s.PartialDeliveryFees,
+                                CancelFees = s.CancelFees,
+                                PickupFees = s.PickupFees,
+                                ShippingFees = s.ShippingFees,
+                                ShippingFeesPaid = s.ShippingFeesPaid,
+                                VendorCash = s.VendorCash,
+                                Total = s.Total,
+                                CreatedAt = s.CreatedAt,
+                                LastModifiedAt = s.LastModifiedAt,
+                                CreatedBy = s.CreatedBy,
+                                LastModifiedBy = s.LastModifiedBy,
 
-                        CashTransferId = s.CashTransferId,
-                        CashTransferRefId = s.CashTransferId.HasValue ? s.CashTransfer.RefId : null,
+                                CashTransferId = s.CashTransferId,
+                                CashTransferRefId = s.CashTransferId.HasValue
+                                    ? s.CashTransfer.RefId
+                                    : null,
 
-                        RefundCash = s.RefundCash,
-                        RefundFees = s.RefundFees,
+                                RefundCash = s.RefundCash,
+                                RefundFees = s.RefundFees,
+                            });
 
-                    });
+                        if (request.applyFilter)
+                            query = ApplyFilter(
+                                query,
+                                request.AccountTransactionDTO,
+                                request.RoleID,
+                                request.UserID
+                            );
 
-                    if (request.applyFilter)
-                        query = ApplyFilter(query, request.AccountTransactionDTO, request.RoleID, request.UserID);
+                        response.AccountTransactionDTOs = query.ToList();
 
-                    response.AccountTransactionDTOs = query.ToList();
-
-                    response.Message = HttpStatusCode.OK.ToString();
-                    response.Success = true;
-                    response.StatusCode = HttpStatusCode.OK;
+                        response.Message = HttpStatusCode.OK.ToString();
+                        response.Success = true;
+                        response.StatusCode = HttpStatusCode.OK;
+                    }
+                    catch (Exception ex)
+                    {
+                        response.Message = ex.Message;
+                        response.Success = false;
+                        LogHelper.LogException(ex.Message, ex.StackTrace);
+                    }
+                    return response;
                 }
-                catch (Exception ex)
-                {
-                    response.Message = ex.Message;
-                    response.Success = false;
-                    LogHelper.LogException(ex.Message, ex.StackTrace);
-                }
-                return response;
-            });
+            );
             return response;
         }
 
-        private static IQueryable<AccountTransactionDTO> ApplyFilter(IQueryable<AccountTransactionDTO> query, AccountTransactionDTO filter, int RoleId, int UserId)
+        private static IQueryable<AccountTransactionDTO> ApplyFilter(
+            IQueryable<AccountTransactionDTO> query,
+            AccountTransactionDTO filter,
+            int RoleId,
+            int UserId
+        )
         {
             if (filter.SenderId > 0)
                 query = query.Where(p => p.SenderId == filter.SenderId);
@@ -213,7 +247,6 @@ namespace DicomApp.BL.Services
 
             if (filter.ShipmentId > 0)
                 query = query.Where(p => p.ShipmentId == filter.ShipmentId);
-
 
             if (filter.PickupRequestId > 0)
                 query = query.Where(p => p.PickupRequestId == filter.PickupRequestId);

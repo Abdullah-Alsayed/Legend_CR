@@ -1,4 +1,7 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using DicomApp.BL.Services;
 using DicomApp.BL.Services.Helpers;
 using DicomApp.BLL;
@@ -12,11 +15,7 @@ using DicomApp.Portal.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using Constants = DicomApp.Helpers.Constants;
+using SystemConstants = DicomApp.Helpers.SystemConstants;
 
 namespace DicomApp.Portal.Controllers
 {
@@ -41,7 +40,9 @@ namespace DicomApp.Portal.Controllers
                 MarkAsSeen = true,
             };
 
-            var notificationResponse = UserNotificationService.ListUserNotification(notificationRequest);
+            var notificationResponse = UserNotificationService.ListUserNotification(
+                notificationRequest
+            );
             return View(notificationResponse.UserNotificationRecords);
         }
 
@@ -72,14 +73,19 @@ namespace DicomApp.Portal.Controllers
                 TopDriver = 20,
             };
 
-            if (ActionType == Constants.ActionType.PartialView)
+            if (ActionType == SystemConstants.ActionType.PartialView)
                 return PartialView(DashboardHelper.GenerateDashboard(Request));
             else
                 return View(DashboardHelper.GenerateDashboard(Request));
         }
 
         [AuthorizePerRole("AccountDashboard")]
-        public IActionResult AccountDashboard(DateTime? From, DateTime? To, int VendorID, string ActionType)
+        public IActionResult AccountDashboard(
+            DateTime? From,
+            DateTime? To,
+            int VendorID,
+            string ActionType
+        )
         {
             int UserID = AuthHelper.GetClaimValue(User, "UserID");
             int RolID = AuthHelper.GetClaimValue(User, "RoleID");
@@ -100,9 +106,10 @@ namespace DicomApp.Portal.Controllers
             #endregion
 
             if (RolID != (int)EnumRole.Vendor)
-                ViewData.Lookup = BaseHelper.GetLookup(new List<byte> {
-                    (byte)EnumSelectListType.Vendor,
-                }, _context);
+                ViewData.Lookup = BaseHelper.GetLookup(
+                    new List<byte> { (byte)EnumSelectListType.Vendor, },
+                    _context
+                );
 
             var Request = new DashboardRequest()
             {
@@ -118,13 +125,11 @@ namespace DicomApp.Portal.Controllers
 
             ViewData.ObjDTO = DashboardHelper.GenerateAccountDashboard(Request, VendorID);
 
-            if (ActionType == Constants.ActionType.PartialView)
+            if (ActionType == SystemConstants.ActionType.PartialView)
                 return PartialView("_AccountDashboard", ViewData);
             else
                 return View(ViewData);
         }
-
-
 
         [AuthorizePerRole("RedDashboard")]
         public IActionResult IndexPartial(DateTime? From, DateTime? To)
@@ -254,8 +259,8 @@ namespace DicomApp.Portal.Controllers
             //    .OrderByDescending(p => p.Value2).Take(10).ToArray();
             #endregion
             return PartialView("_IndexPartial", record);
-
         }
+
         [AuthorizePerRole("RedDashboard")]
         public IActionResult AllOrdersIncome(DateTime? From, DateTime? To)
         {
@@ -307,6 +312,7 @@ namespace DicomApp.Portal.Controllers
             #endregion
             return Json(record);
         }
+
         [AuthorizePerRole("RedDashboard")]
         public IActionResult TodayOrdersIncome(DateTime? From, DateTime? To)
         {
@@ -361,6 +367,7 @@ namespace DicomApp.Portal.Controllers
             //#endregion
             return Json(record);
         }
+
         [AuthorizePerRole("RedDashboard")]
         public IActionResult AllOrdersCount(DateTime? From, DateTime? To)
         {
@@ -404,7 +411,6 @@ namespace DicomApp.Portal.Controllers
             //#endregion
 
             var record = new DashboardDTO();
-
 
             //#region All Orders Count
             //record.AllOrders_Count = AllOrders.Count();
@@ -607,11 +613,12 @@ namespace DicomApp.Portal.Controllers
 
             return View(record);
         }
+
         public IActionResult About()
         {
-
             return View();
         }
+
         [AllowAnonymous]
         public IActionResult Contact()
         {
@@ -619,6 +626,7 @@ namespace DicomApp.Portal.Controllers
 
             return View();
         }
+
         public IActionResult Error()
         {
             var exceptionFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
@@ -631,15 +639,22 @@ namespace DicomApp.Portal.Controllers
                 // Get the exception that occurred
                 Exception exceptionThatOccurred = exceptionFeature.Error;
 
-                LogHelper.LogException(routeWhereExceptionOccurred + " ** " + exceptionThatOccurred.Message, exceptionThatOccurred.StackTrace);
+                LogHelper.LogException(
+                    routeWhereExceptionOccurred + " ** " + exceptionThatOccurred.Message,
+                    exceptionThatOccurred.StackTrace
+                );
             }
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(
+                new ErrorViewModel
+                {
+                    RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+                }
+            );
         }
 
         public IActionResult Privacy()
         {
             return View();
         }
-
     }
 }

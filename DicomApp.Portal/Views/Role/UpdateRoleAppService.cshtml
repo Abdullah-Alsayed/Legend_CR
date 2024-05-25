@@ -86,7 +86,7 @@
                         @foreach (var services in Model.GroupBy(x=>x.ClassName) )
                         {
                             <li class="nav-item">
-                                <a class="nav-link" onclick="displayPremition('@services.FirstOrDefault().ClassName')" data-todotype="@services.FirstOrDefault().ClassName">
+                                <a class="nav-link" onclick="displayPermissions('@services.FirstOrDefault().ClassName')" data-todotype="@services.FirstOrDefault().ClassName">
                                     <i class="icon-list"></i> &nbsp;@services.FirstOrDefault().ClassName
                                 </a>
                             </li>

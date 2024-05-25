@@ -1,6 +1,6 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace DicomApp.DAL.DB
 {
@@ -49,6 +49,8 @@ namespace DicomApp.DAL.DB
         public int RoleId { get; set; }
         public string PhoneNumber { get; set; }
         public bool IsLoggedIn { get; set; }
+
+        [Required(AllowEmptyStrings = true)]
         public string NationalId { get; set; }
         public int? AreaId { get; set; }
         public string Code { get; set; }

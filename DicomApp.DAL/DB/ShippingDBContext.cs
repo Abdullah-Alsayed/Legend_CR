@@ -25,8 +25,8 @@ namespace DicomApp.DAL.DB
         public virtual DbSet<FollowUp> FollowUp { get; set; }
         public virtual DbSet<FollowUpType> FollowUpType { get; set; }
         public virtual DbSet<Notification> Notification { get; set; }
-        public virtual DbSet<Packing> Packing { get; set; }
-        public virtual DbSet<PackingType> PackingType { get; set; }
+        public virtual DbSet<Game> Game { get; set; }
+        public virtual DbSet<Category> Category { get; set; }
         public virtual DbSet<PickupRequest> PickupRequest { get; set; }
         public virtual DbSet<PickupRequestItem> PickupRequestItem { get; set; }
         public virtual DbSet<PickupRequestType> PickupRequestType { get; set; }
@@ -632,7 +632,7 @@ namespace DicomApp.DAL.DB
                     .HasConstraintName("FK_Notification_Notification");
             });
 
-            modelBuilder.Entity<Packing>(entity =>
+            modelBuilder.Entity<Game>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
 
@@ -662,23 +662,15 @@ namespace DicomApp.DAL.DB
                     .HasColumnName("Name_En")
                     .HasMaxLength(150);
 
-                entity.Property(e => e.Size).IsRequired().HasMaxLength(100);
-
                 entity
-                    .HasOne(d => d.Branch)
-                    .WithMany(p => p.Packing)
-                    .HasForeignKey(d => d.BranchId)
-                    .HasConstraintName("FK_Branch_Packing");
-
-                entity
-                    .HasOne(d => d.PackingType)
-                    .WithMany(p => p.Packing)
-                    .HasForeignKey(d => d.PackingTypeId)
+                    .HasOne(d => d.Category)
+                    .WithMany(p => p.Game)
+                    .HasForeignKey(d => d.CategoryId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Packing_PackingType");
+                    .HasConstraintName("FK_Game_Category");
             });
 
-            modelBuilder.Entity<PackingType>(entity =>
+            modelBuilder.Entity<Category>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
 
@@ -703,12 +695,6 @@ namespace DicomApp.DAL.DB
                     .IsRequired()
                     .HasColumnName("Name_En")
                     .HasMaxLength(150);
-
-                entity
-                    .HasOne(d => d.Branch)
-                    .WithMany(p => p.PackingType)
-                    .HasForeignKey(d => d.BranchId)
-                    .HasConstraintName("FK_Branch_PackingType");
             });
 
             modelBuilder.Entity<PickupRequest>(entity =>
@@ -972,10 +958,10 @@ namespace DicomApp.DAL.DB
                     .HasConstraintName("FK_Shipment_CommonUser3");
 
                 entity
-                    .HasOne(d => d.Packing)
-                    .WithMany(p => p.ShipmentPacking)
-                    .HasForeignKey(d => d.PackingId)
-                    .HasConstraintName("FK_Shipment_Packing");
+                    .HasOne(d => d.Game)
+                    .WithMany(p => p.ShipmentGame)
+                    .HasForeignKey(d => d.GameId)
+                    .HasConstraintName("FK_Shipment_Game");
 
                 entity
                     .HasOne(d => d.PickupRequest)
@@ -1012,10 +998,10 @@ namespace DicomApp.DAL.DB
                     .HasConstraintName("FK_Shipment_CommonUser1");
 
                 entity
-                    .HasOne(d => d.WarehousePacking)
-                    .WithMany(p => p.ShipmentWarehousePacking)
-                    .HasForeignKey(d => d.WarehousePackingId)
-                    .HasConstraintName("FK_Shipment_WarehousePackingId");
+                    .HasOne(d => d.WarehouseGame)
+                    .WithMany(p => p.ShipmentWarehouseGame)
+                    .HasForeignKey(d => d.WarehouseGameId)
+                    .HasConstraintName("FK_Shipment_WarehouseGameId");
 
                 entity
                     .HasOne(d => d.Zone)
@@ -1129,7 +1115,8 @@ namespace DicomApp.DAL.DB
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.Name).HasMaxLength(50);
+                entity.Property(e => e.NameAR).HasMaxLength(50);
+                entity.Property(e => e.NameEN).HasMaxLength(50);
             });
 
             modelBuilder.Entity<UserLocation>(entity =>

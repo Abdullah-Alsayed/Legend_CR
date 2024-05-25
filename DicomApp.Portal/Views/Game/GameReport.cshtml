@@ -4,7 +4,7 @@
 @using DicomApp.Helpers;
 @using DicomApp.BL.Services;
 @using DicomApp.DAL.DB;
-@model List<PackingDTO>
+@model List<GameDTO>
 <main>
     <div class="container-fluid site-width">
         <!-- START: Filter-->
@@ -45,7 +45,7 @@
         <!-- Start: Filter-->
         <div class="row Red-Row">
             @{
-                await Html.RenderPartialAsync("_ToolsRow", new OptionDTO { Action = "PackagingReport", Controller = "Packing", SelectListType = new byte[] { (byte)EnumSelectListType.PackingType, (byte)EnumSelectListType.Quantity } });
+                await Html.RenderPartialAsync("_ToolsRow", new OptionDTO { Action = "PackagingReport", Controller = "Game", SelectListType = new byte[] { (byte)EnumSelectListType.Category, (byte)EnumSelectListType.Quantity } });
             }
         </div>
         <!-- END  : Filter-->
@@ -72,11 +72,10 @@
                     foreach (var item in Model)
                     {
                         <tr>
-                            <td>@item.id</td>
+                            <td>@item.Id</td>
                             <td>@item.NameEn</td>
                             <td class="">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod</td>
                             <td> @item.Size </td>
-                            <td>@item.Count</td>
                             <td class="text-center"><img src="~/dist/images/@item.ImgUrl" width="97" /></td>
                         </tr>
                     }
@@ -95,7 +94,7 @@
                 <tr>
                     <td colspan="10">
                         @{
-                            await Html.RenderPartialAsync("_Pagination", new OptionDTO { Action = "PackagingReport", Controller = "packing" });
+                            await Html.RenderPartialAsync("_Pagination", new OptionDTO { Action = "PackagingReport", Controller = "Game" });
                         }
                     </td>
                 </tr>

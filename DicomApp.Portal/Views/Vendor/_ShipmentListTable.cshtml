@@ -6,7 +6,7 @@
  {
     foreach (var ship in Model)
     {
-        double REDFees = ship.FeesDetailsDTO.ShippingFees + ship.FeesDetailsDTO.PackingFees + ship.FeesDetailsDTO.WeightFees + ship.FeesDetailsDTO.SizeFees + ship.FeesDetailsDTO.PartialDeliveryFees;
+        double REDFees = ship.FeesDetailsDTO.ShippingFees + ship.FeesDetailsDTO.GameFees + ship.FeesDetailsDTO.WeightFees + ship.FeesDetailsDTO.SizeFees + ship.FeesDetailsDTO.PartialDeliveryFees;
 
         <tr onclick="ShipmentDetails('Vendor',@ship.ShipmentId)" data-toggle="modal" data-target="#ShipmentDetails">
             <td class="font-weight-bold">@ship.RefId</td>

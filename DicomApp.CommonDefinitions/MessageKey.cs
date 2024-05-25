@@ -1,5 +1,4 @@
-﻿
-namespace DicomApp.CommonDefinitions.DTO
+﻿namespace DicomApp.CommonDefinitions.DTO
 {
     public enum MessageKey : int
     {
@@ -109,13 +108,13 @@ namespace DicomApp.CommonDefinitions.DTO
         From = 10,
         To = 11,
         AreaMultiple = 12,
-        PackingType = 13,
+        Category = 13,
         Quantity = 14,
         Role = 15,
         Solved,
         Department,
         Employee,
-        UserData
+        UserData,
     }
 
     public enum EnumVendorActionName : byte
@@ -148,7 +147,7 @@ namespace DicomApp.CommonDefinitions.DTO
         PickupRequestVendor = 16,
         VendorReport = 17,
         CouriersReport = 18,
-        PackingList = 19,
+        GameList = 19,
         PackagingReport = 20,
         InvoiceReport = 21,
         Invoices = 22,
@@ -225,5 +224,12 @@ namespace DicomApp.CommonDefinitions.DTO
     {
         ProblemType = 0,
         CancelType = 1
+    }
+
+    public enum StatusTypeEnum : int
+    {
+        InProgress = 1,
+        Complete,
+        Reject,
     }
 }
