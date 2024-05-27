@@ -151,23 +151,15 @@ namespace DicomApp.Portal.Controllers
                 new List<byte> { (byte)EnumSelectListType.Role },
                 _context
             );
-            var currRoleID = AuthHelper.GetClaimValue(User, "RoleID");
-            if (currRoleID == (int)EnumRole.SuperAdmin)
-                ViewData.Lookup.RoleDTOs = ViewData
-                    .Lookup.RoleDTOs.Where(r => r.Id != (int)EnumRole.Vendor)
-                    .ToList();
-            else if (currRoleID == (int)EnumRole.Admin)
-                ViewData.Lookup.RoleDTOs = ViewData
-                    .Lookup.RoleDTOs.Where(r =>
-                        r.Id != (int)EnumRole.SuperAdmin && r.Id != (int)EnumRole.Vendor
-                    )
-                    .ToList();
-            else
+            var currRoleName = AuthHelper.GetUserName(User, "RoleID");
+            if (
+                currRoleName == SystemConstants.Role.SuperAdmin
+                || currRoleName == SystemConstants.Role.Admin
+            )
                 ViewData.Lookup.RoleDTOs = ViewData
                     .Lookup.RoleDTOs.Where(r =>
-                        r.Id != (int)EnumRole.SuperAdmin
-                        && r.Id != (int)EnumRole.Admin
-                        && r.Id != (int)EnumRole.Vendor
+                        r.Name != SystemConstants.Role.Gamer
+                        && r.Name != SystemConstants.Role.SuperAdmin
                     )
                     .ToList();
 

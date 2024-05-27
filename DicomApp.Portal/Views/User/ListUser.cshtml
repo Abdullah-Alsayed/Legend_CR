@@ -38,7 +38,7 @@
             }
             <div class="row Red-Row w-100">
                 <div class="col-lg-12 RedBtn-Section">
-                    <a href="#" data-toggle="modal" data-target="#AddStaff-Model" class="Red-Btn btn-info">
+                    <a href="#" data-toggle="modal" data-target="#AddStaff-Model" class="Red-Btn">
                         <i class="fas h5 mr-2 fa-plus-circle"></i>Add New User
                     </a>
                 </div>
@@ -70,11 +70,11 @@
                         @{
                             await Html.RenderPartialAsync("_Pagination",
                             new OptionDTO
-            {
-                Action = "ListUser",
-                Controller = "User",
-                Count = Model.ObjDTOs != null ? Model.ObjDTOs.Count : 0
-            });
+                            {
+                                Action = "ListUser",
+                                Controller = "User",
+                                Count = Model.ObjDTOs != null ? Model.ObjDTOs.Count : 0
+                            });
                         }
                     </td>
                 </tr>

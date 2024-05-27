@@ -16,7 +16,7 @@ namespace DicomApp.BL.Services
 {
     public class CategoryService : BaseService
     {
-        public static CategoryResponse GetCategory(CategoryRequest request)
+        public static CategoryResponse GetCategorys(CategoryRequest request)
         {
             var res = new CategoryResponse();
             RunBase(
@@ -26,16 +26,18 @@ namespace DicomApp.BL.Services
                 {
                     try
                     {
-                        var query = request.context.Category.Select(p => new CategoryDTO
-                        {
-                            Id = p.Id,
-                            CreatedBy = p.CreatedBy,
-                            LastModifiedAt = p.LastModifiedAt,
-                            LastModifiedBy = p.LastModifiedBy,
-                            NameEn = p.NameEn,
-                            NameAr = p.NameAr,
-                            CreatedAt = p.CreatedAt,
-                        });
+                        var query = request
+                            .context.Category.Where(x => !x.IsDeleted)
+                            .Select(p => new CategoryDTO
+                            {
+                                Id = p.Id,
+                                CreatedBy = p.CreatedBy,
+                                LastModifiedAt = p.LastModifiedAt,
+                                LastModifiedBy = p.LastModifiedBy,
+                                NameEn = p.NameEn,
+                                NameAr = p.NameAr,
+                                CreatedAt = p.CreatedAt,
+                            });
 
                         if (request.CategoryDTO != null)
                             query = ApplyFilter(query, request.CategoryDTO);
@@ -68,6 +70,60 @@ namespace DicomApp.BL.Services
             return res;
         }
 
+        public static CategoryResponse GetCategory(CategoryRequest request)
+        {
+            var res = new CategoryResponse();
+            RunBase(
+                request,
+                res,
+                (CategoryRequest req) =>
+                {
+                    try
+                    {
+                        var query = request
+                            .context.Category.Where(x => x.Id == req.ID)
+                            .Select(p => new CategoryDTO
+                            {
+                                Id = p.Id,
+                                CreatedBy = p.CreatedBy,
+                                LastModifiedAt = p.LastModifiedAt,
+                                LastModifiedBy = p.LastModifiedBy,
+                                NameEn = p.NameEn,
+                                NameAr = p.NameAr,
+                                CreatedAt = p.CreatedAt,
+                            });
+
+                        if (request.CategoryDTO != null)
+                            query = ApplyFilter(query, request.CategoryDTO);
+
+                        res.TotalCount = query.Count();
+
+                        query = OrderByDynamic(
+                            query,
+                            request.OrderByColumn ?? "Id",
+                            request.IsDesc
+                        );
+
+                        if (request.PageSize > 0)
+                            query = ApplyPaging(query, request.PageSize, request.PageIndex);
+
+                        res.CategoryDTO = query.FirstOrDefault();
+                        res.Message = HttpStatusCode.OK.ToString();
+                        res.Success = true;
+                        res.StatusCode = HttpStatusCode.OK;
+                    }
+                    catch (Exception ex)
+                    {
+                        res.Message = ex.Message;
+                        res.Success = false;
+                        LogHelper.LogException(ex.Message, ex.StackTrace);
+                    }
+                    return res;
+                }
+            );
+            return res;
+        }
+
         public static CategoryResponse DeleteCategory(CategoryRequest request)
         {
             var res = new CategoryResponse();
@@ -84,7 +140,9 @@ namespace DicomApp.BL.Services
                         );
                         if (Category != null)
                         {
-                            request.context.Category.Remove(Category);
+                            Category.IsDeleted = true;
+                            Category.DeletedOn = DateTime.UtcNow;
+                            Category.DeleteBy = request.UserID;
                             request.context.SaveChanges();
 
                             res.CategoryDTOs = new List<CategoryDTO>

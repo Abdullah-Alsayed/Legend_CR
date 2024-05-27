@@ -27,7 +27,7 @@ namespace DicomApp.Portal.Controllers
         }
 
         [HttpPost]
-        [AuthorizePerRole(SystemConstants.Permission.GameAdd)]
+        [AuthorizePerRole(SystemConstants.Permission.AddGame)]
         public IActionResult AddGame(GameDTO model)
         {
             model.ImgUrl = BaseHelper.UploadImg(model.File, hosting.WebRootPath, model.ImgUrl);
@@ -47,33 +47,40 @@ namespace DicomApp.Portal.Controllers
         }
 
         [HttpPost]
-        [AuthorizePerRole(SystemConstants.Permission.GameEdit)]
+        [AuthorizePerRole(SystemConstants.Permission.EditGame)]
         public IActionResult EditGame(GameDTO model)
         {
-            model.ImgUrl = BaseHelper.UploadImg(model.File, hosting.WebRootPath, model.ImgUrl);
-            var GameRequest = new GameRequest
+            try
             {
-                RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
-                UserID = AuthHelper.GetClaimValue(User, "UserID"),
-                context = _context,
-                GameDTO = model
-            };
-            var userResponse = GameService.EditGame(GameRequest);
-            if (userResponse.Success)
-                return Json(
-                    new
-                    {
-                        message = "Edit Successfully",
-                        success = true,
-                        model = model
-                    }
-                );
-            else
-                return Json(new { message = userResponse.Message, success = false });
+                model.ImgUrl = BaseHelper.UploadImg(model.File, hosting.WebRootPath, model.ImgUrl);
+                var GameRequest = new GameRequest
+                {
+                    RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
+                    UserID = AuthHelper.GetClaimValue(User, "UserID"),
+                    context = _context,
+                    GameDTO = model
+                };
+                var userResponse = GameService.EditGame(GameRequest);
+                if (userResponse.Success)
+                    return Json(
+                        new
+                        {
+                            message = "Edit Successfully",
+                            success = true,
+                            model = model
+                        }
+                    );
+                else
+                    return Json(new { message = userResponse.Message, success = false });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { message = ex.Message, success = false });
+            }
         }
 
         [HttpGet]
-        [AuthorizePerRole(SystemConstants.Permission.GameEdit)]
+        [AuthorizePerRole(SystemConstants.Permission.EditGame)]
         public IActionResult EditGame(int id)
         {
             var GameRequest = new GameRequest
@@ -86,15 +93,12 @@ namespace DicomApp.Portal.Controllers
             var GameResponse = GameService.GetGame(GameRequest);
 
             if (GameResponse.Success)
-            {
-                GameResponse.GameDTO.ImgUrl = $"/dist/images/{GameResponse.GameDTO.ImgUrl}";
                 return Json(GameResponse.GameDTO);
-            }
             else
                 return Json(false);
         }
 
-        [AuthorizePerRole(SystemConstants.Permission.GameList)]
+        [AuthorizePerRole(SystemConstants.Permission.ListGame)]
         public IActionResult GameList(
             DateTime? From,
             int? Quantity,
@@ -152,11 +156,39 @@ namespace DicomApp.Portal.Controllers
                 return View(ViewData);
         }
 
-        [AuthorizePerRole(SystemConstants.Permission.GameList)]
+        [AuthorizePerRole(SystemConstants.Permission.ListGame)]
         public IActionResult GetGameList(int ID)
         {
             var Game = _context.Game.Where(p => p.CategoryId == ID).ToList();
             return Json(Game);
+        }
+
+        [AuthorizePerRole(SystemConstants.Permission.GameDelete)]
+        public IActionResult DeleteGame(int Id)
+        {
+            var Filter = new GameDTO { Id = Id };
+            var GameRequest = new GameRequest();
+            var GameResponse = new GameResponse();
+            try
+            {
+                GameRequest.RoleID = AuthHelper.GetClaimValue(User, "RoleID");
+                GameRequest.UserID = AuthHelper.GetClaimValue(User, "UserID");
+                GameRequest.context = _context;
+                GameRequest.GameDTO = Filter;
+
+                GameResponse = GameService.DeleteGame(GameRequest);
+                if (GameResponse.Success)
+                    return Json(
+                        "Game-" + GameResponse.GameDTOs.FirstOrDefault().NameEn + " Is Deleted"
+                    );
+                else
+                    return Json(false);
+            }
+            catch (Exception ex)
+            {
+                GameResponse.Message = ex.Message;
+            }
+            return Json(GameResponse.Message);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using DicomApp.CommonDefinitions.DTO;
@@ -22,22 +23,24 @@ namespace DicomApp.BL.Services
                 {
                     try
                     {
-                        var query = request.context.Game.Select(p => new GameDTO
-                        {
-                            Id = p.Id,
-                            CreatedAt = p.CreatedAt,
-                            CreatedBy = p.CreatedBy,
-                            ImgUrl = p.ImgUrl,
-                            NameAr = p.NameAr,
-                            NameEn = p.NameEn,
-                            CategoryId = p.CategoryId,
-                            CategoryName = p.Category.NameEn,
-                            Description = p.Description,
-                            ShipDTOs = p.ShipmentWarehouseGame.Select(s => new ShipDTO
+                        var query = request
+                            .context.Game.Where(x => !x.IsDeleted)
+                            .Select(p => new GameDTO
                             {
-                                ShipmentId = s.ShipmentId
-                            })
-                        });
+                                Id = p.Id,
+                                CreatedAt = p.CreatedAt,
+                                CreatedBy = p.CreatedBy,
+                                ImgUrl = p.ImgUrl,
+                                NameAr = p.NameAr,
+                                NameEn = p.NameEn,
+                                CategoryId = p.CategoryId,
+                                CategoryName = p.Category.NameEn,
+                                Description = p.Description,
+                                ShipDTOs = p.ShipmentWarehouseGame.Select(s => new ShipDTO
+                                {
+                                    ShipmentId = s.ShipmentId
+                                })
+                            });
 
                         if (request.GameDTO != null)
                             query = ApplyFilter(query, request.GameDTO);
@@ -172,7 +175,6 @@ namespace DicomApp.BL.Services
                         var Game = request.context.Game.Find(GameID);
                         if (Game != null)
                         {
-                            //update whole Game
                             Game = AddOrEditGame(request.UserID, request.GameDTO, Game);
                             request.context.SaveChanges();
 
@@ -266,6 +268,60 @@ namespace DicomApp.BL.Services
                 query = query.Where(p => p.CreatedAt.Date <= GameDTO.DateTo);
 
             return query;
+        }
+
+        public static GameResponse DeleteGame(GameRequest request)
+        {
+            var res = new GameResponse();
+            RunBase(
+                request,
+                res,
+                (GameRequest req) =>
+                {
+                    try
+                    {
+                        var model = request.GameDTO;
+                        var game = request.context.Game.FirstOrDefault(c => c.Id == model.Id);
+                        if (game != null)
+                        {
+                            game.IsDeleted = true;
+                            game.DeletedOn = DateTime.UtcNow;
+                            game.DeleteBy = request.UserID;
+                            request.context.SaveChanges();
+
+                            res.GameDTOs = new List<GameDTO>
+                            {
+                                new GameDTO
+                                {
+                                    Id = game.Id,
+                                    NameAr = game.NameAr,
+                                    NameEn = game.NameEn,
+                                    ImgUrl = game.ImgUrl,
+                                    LastModifiedAt = DateTime.Now,
+                                    CreatedAt = game.CreatedAt,
+                                    CreatedBy = game.CreatedBy,
+                                }
+                            };
+                            res.Message = MessageKey.DeletedSuccessfully.ToString();
+                            res.Success = true;
+                            res.StatusCode = HttpStatusCode.OK;
+                        }
+                        else
+                        {
+                            res.Message = MessageKey.InvalidData.ToString();
+                            res.Success = false;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        res.Message = ex.Message;
+                        res.Success = false;
+                        LogHelper.LogException(ex.Message, ex.StackTrace);
+                    }
+                    return res;
+                }
+            );
+            return res;
         }
     }
 }

@@ -16,9 +16,8 @@ namespace DicomApp.Portal
                 new Role
                 {
                     Editable = false,
-                    Name = SystemConstants.Role.Admin,
+                    Name = SystemConstants.Role.SuperAdmin,
                     CreationDate = System.DateTime.Now,
-                    IsInternal = true,
                     IsDeleted = false
                 },
                 new Role
@@ -26,7 +25,6 @@ namespace DicomApp.Portal
                     Editable = false,
                     Name = SystemConstants.Role.Gamer,
                     CreationDate = System.DateTime.Now,
-                    IsInternal = false,
                     IsDeleted = false
                 }
             };

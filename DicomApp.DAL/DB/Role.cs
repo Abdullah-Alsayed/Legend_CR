@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace DicomApp.DAL.DB
@@ -21,8 +20,9 @@ namespace DicomApp.DAL.DB
         public DateTime ModificationDate { get; set; }
         public int? ModifiedBy { get; set; }
         public string Name { get; set; }
-        public bool? Editable { get; set; }
-        public bool IsInternal { get; set; }
+        public bool Editable { get; set; }
+        public int DeleteBy { get; set; }
+        public DateTime DeleteAt { get; set; }
 
         public virtual ICollection<Account> Account { get; set; }
         public virtual ICollection<CommonUser> CommonUser { get; set; }

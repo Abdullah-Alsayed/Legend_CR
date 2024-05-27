@@ -139,7 +139,7 @@ namespace DicomApp.BL.Services
 
             if (LookType.Contains((byte)EnumSelectListType.Category))
                 lookup.CategoryDTOs = CategoryService
-                    .GetCategory(new CategoryRequest { context = Context })
+                    .GetCategorys(new CategoryRequest { context = Context })
                     .CategoryDTOs;
 
             if (LookType.Contains((byte)EnumSelectListType.Role))
@@ -175,7 +175,7 @@ namespace DicomApp.BL.Services
             {
                 Img = ImgUrl;
             }
-            return Img;
+            return string.IsNullOrEmpty(Img) ? SystemConstants.Imges.Default : Img;
         }
 
         public static string GenerateRefId(

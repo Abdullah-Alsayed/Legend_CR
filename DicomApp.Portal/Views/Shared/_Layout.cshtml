@@ -118,7 +118,11 @@
                                 {
                                     <li><a class="MenuNavigation Navigation" href="/User/ListAccount">Vendors</a></li>
                                 }
-                                @if (BaseService.CheckRoleAccessability(roleID, SystemConstants.Permission.GameList, connectionString: connectionString))
+                                @if (BaseService.CheckRoleAccessability(roleID, SystemConstants.Permission.ListRole, connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Role/listrole">Roles & Permissions</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, SystemConstants.Permission.ListGame, connectionString: connectionString))
                                 {
                                     <li><a class="MenuNavigation Navigation" href="/Game/GameList">Game</a></li>
                                 }
@@ -137,11 +141,7 @@
                                 @if (BaseService.CheckRoleAccessability(roleID, "Menu_Branches", connectionString: connectionString))
                                 {
                                     <li><a class="MenuNavigation Navigation" href="/Branch/BranchList">Branches</a></li>
-                                }
-                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_Roles", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/Role/listrole">Roles & Permissions</a></li>
-                                }
+                                }                          
                                 @if (BaseService.CheckRoleAccessability(roleID, "Menu_ProblemType", connectionString: connectionString))
                                 {
                                     <li><a class="MenuNavigation Navigation" href="/ProblemType/ProblemTypeList">Problem Types</a></li>

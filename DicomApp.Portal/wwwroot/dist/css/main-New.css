@@ -578,15 +578,16 @@ File: Main Style
 .sidebar .sidebar-menu > li .active a:hover img {
     filter:none;
 }
-    .sidebar .sidebar-menu > li .active > a {
-        background: rgba(239, 49, 56, 0.08);
-        box-shadow: 0px 8px 12px rgb(0 0 0 / 14%);
-        flex: none;
-        order: 0;
-        color: #7C7C7A;
-        flex-grow: 0;
-        border-radius: 10px;
-    }
+.sidebar .sidebar-menu > li .active > a {
+    background: var(--Red);
+    box-shadow: 0px 8px 12px rgb(0 0 0 / 14%);
+    flex: none;
+    order: 0;
+    color: #7C7C7A;
+    flex-grow: 0;
+    border-radius: 10px;
+}
+
 
 .sidebar .sidebar-menu > li > a {
     font-weight: 600;
@@ -4130,6 +4131,10 @@ body {
     flex-grow: 0;
     cursor: pointer;
 }
+
+    .table tbody tr img{
+        border-radius:20px;
+    }
 
     .table:not(.table-dark).table-bordered {
         border-color: var(--bordercolor);

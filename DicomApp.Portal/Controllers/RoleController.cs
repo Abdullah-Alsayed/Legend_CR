@@ -30,7 +30,7 @@ namespace DicomApp.Portal.Controllers
             _context = context;
         }
 
-        [AuthorizePerRole("ListRole")]
+        [AuthorizePerRole(SystemConstants.Permission.ListRole)]
         public ActionResult ListRole(string Search, string ActionType = null)
         {
             var filter = new RoleDTO();
@@ -61,7 +61,7 @@ namespace DicomApp.Portal.Controllers
                 return View(roleResponse.RoleDTOs);
         }
 
-        [AuthorizePerRole("ListRole")]
+        [AuthorizePerRole(SystemConstants.Permission.ListRole)]
         public ActionResult LoadRole(
             string orderByColumn = null,
             string searchVal = null,
@@ -79,7 +79,7 @@ namespace DicomApp.Portal.Controllers
             );
         }
 
-        [AuthorizePerRole("DeleteRole")]
+        [AuthorizePerRole(SystemConstants.Permission.DeleteRole)]
         public string DeleteRole(int ID)
         {
             var roleRequest = new RoleRequest
@@ -93,13 +93,13 @@ namespace DicomApp.Portal.Controllers
             return roleResponse.Message;
         }
 
-        [AuthorizePerRole("AddRole")]
+        [AuthorizePerRole(SystemConstants.Permission.AddRole)]
         public ActionResult AddRole()
         {
             return View();
         }
 
-        [AuthorizePerRole("AddRole")]
+        [AuthorizePerRole(SystemConstants.Permission.AddRole)]
         [HttpPost]
         public ActionResult AddRole(RoleDTO model)
         {
@@ -117,7 +117,7 @@ namespace DicomApp.Portal.Controllers
                 return Json(roleResponse);
         }
 
-        [AuthorizePerRole("EditRole")]
+        [AuthorizePerRole(SystemConstants.Permission.EditRole)]
         public ActionResult EditRole(int id)
         {
             var roleRequest = new RoleRequest
@@ -136,7 +136,7 @@ namespace DicomApp.Portal.Controllers
             return View();
         }
 
-        [AuthorizePerRole("EditRole")]
+        [AuthorizePerRole(SystemConstants.Permission.EditRole)]
         [HttpPost]
         public ActionResult EditRole(RoleDTO model)
         {
@@ -151,7 +151,7 @@ namespace DicomApp.Portal.Controllers
             return Json(roleResponse);
         }
 
-        [AuthorizePerRole("UpdateRoleAppService")]
+        [AuthorizePerRole(SystemConstants.Permission.EditRoleAppService)]
         public ActionResult UpdateRoleAppService(int roleID, string ActionType = null)
         {
             if (roleID <= 0)
@@ -176,7 +176,7 @@ namespace DicomApp.Portal.Controllers
                 return RedirectToAction(nameof(ListRole));
         }
 
-        [AuthorizePerRole("UpdateRoleAppService")]
+        [AuthorizePerRole(SystemConstants.Permission.EditRoleAppService)]
         [HttpPost]
         public ActionResult UpdateRoleAppService(AppServiceDTO model)
         {

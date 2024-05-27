@@ -55,7 +55,7 @@ namespace DicomApp.Portal.Controllers
                 OrderByColumn = OrderByColumn ?? "Id",
                 applyFilter = true
             };
-            var CategoryResponse = CategoryService.GetCategory(CategoryRequest);
+            var CategoryResponse = CategoryService.GetCategorys(CategoryRequest);
             ViewData.ObjDTOs = CategoryResponse.CategoryDTOs;
 
             if (ActionType == SystemConstants.ActionType.PartialView)
@@ -145,7 +145,7 @@ namespace DicomApp.Portal.Controllers
                 CategoryResponse = CategoryService.DeleteCategory(CategoryRequest);
                 if (CategoryResponse.Success)
                     return Json(
-                        "Product-"
+                        "Category-"
                             + CategoryResponse.CategoryDTOs.FirstOrDefault().NameEn
                             + " Is Deleted"
                     );

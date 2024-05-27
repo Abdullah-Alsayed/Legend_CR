@@ -106,7 +106,10 @@
                                 </div>
                                 <div class="col-lg-12">
                                     <button class="Red-Btn-OutLine OutLine-white Btn-Model mt-3" onclick="OpenFileInput('AddGame-Form')" type="button">Upload Image</button>
-                                    <input type="file" accept="image/*,.png,.jpg,.gif" id="ImgFile" name="File" class="form-control d-none Add-Photo" placeholder="Photo">
+                                    <input type="file" accept="image/*,.png,.jpg,.gif" id="ImgFile" name="File" class="form-control d-none Add-Photo" onchange="UpdateImgDisplay(event,'AddGameImg')" placeholder="Photo">
+                                </div>
+                                <div class="row justify-content-center pt-3">
+                                    <div> <img width="250" id="AddGameImg" /> </div>
                                 </div>
                                 <div class="col-lg-12 pt-5 pb-5">
                                     <label class="Label-Model">Description</label>
@@ -161,13 +164,15 @@
                                         Please Select Category
                                     </div>
                                 </div>
+                                <div class="col-lg-6 pt-3 d-flex justify-content-center">
+                                    <div class="Logo-Edit">
+                                        photo <span onclick="OpenFileInput('EditGame-Form')"><i class="icon-note F-Medium"></i></span>
+                                        <input type="file" accept="image/*,.png,.jpg,.gif" id="ImgFile" onchange="UpdateImgDisplay(event,'GameImg')"
+                                               name="File" class="form-control d-none Edit-Photo" placeholder="Photo">
+                                    </div>
+                                </div>
                                 <div class="col-lg-12">
-                                    <div class="row justify-content-between align-items-baseline">
-                                        <div class="Logo-Edit">
-                                            photo <span onclick="OpenFileInput('EditGame-Form')"><i class="icon-note F-Medium"></i></span>
-                                            <input type="file" accept="image/*,.png,.jpg,.gif" id="ImgFile"
-                                                   name="File" class="form-control d-none Edit-Photo" placeholder="Photo">
-                                        </div>
+                                    <div class="row justify-content-center pt-3">
                                         <div> <img width="250" id="GameImg" /> </div>
                                     </div>
                                     <div class="col-lg-12 pt-5 pb-3">
@@ -205,7 +210,7 @@
                     <input type="hidden" id="EntityId" />
                     <div class="col-lg-12">
                         <button class="Red-Btn-OutLine OutLine-Red ml-3 Btn-Model" type="button" data-dismiss="modal"> Cancel</button>
-                        <button class="Red-Btn-OutLine OutLine-White Btn-Model" type="button" data-dismiss="modal" id="BtnDelete">Delete </button>
+                        <button class="Red-Btn-OutLine OutLine-White Btn-Model" type="button" onclick="DeleteEntity('Game','DeleteGame','Game_')" data-dismiss="modal" id="BtnDelete">Delete </button>
                     </div>
                 </div>
             </div>

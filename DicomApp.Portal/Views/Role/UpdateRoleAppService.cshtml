@@ -67,13 +67,14 @@
         cursor: pointer;
     }
 </style>
+
 <main>
     <div class="container-fluid site-width">
         <div class="row Red-Row">
             <div class="col-12 col-lg-12 col-xl-12 col-sm-12">
                 <div class="sub-header mb-3 d-flex">
                     <div>
-                        <span class="Header-Titel">@Model.FirstOrDefault().RoleName - Permissions</span>
+                        <span class="Header-Titel">@Model.FirstOrDefault()?.RoleName - Permissions</span>
                     </div>
                 </div>
             </div>
@@ -86,8 +87,8 @@
                         @foreach (var services in Model.GroupBy(x=>x.ClassName) )
                         {
                             <li class="nav-item">
-                                <a class="nav-link" onclick="displayPermissions('@services.FirstOrDefault().ClassName')" data-todotype="@services.FirstOrDefault().ClassName">
-                                    <i class="icon-list"></i> &nbsp;@services.FirstOrDefault().ClassName
+                                <a class="nav-link" onclick="displayPermissions('@services.FirstOrDefault()?.ClassName')" data-todotype="@services.FirstOrDefault()?.ClassName">
+                                    <i class="icon-list"></i> &nbsp;@services.FirstOrDefault()?.ClassName
                                 </a>
                             </li>
                         }
@@ -96,11 +97,13 @@
             </div>
             <div class="col-12 col-lg-9 mt-3 pl-lg-0">
                 <form class="panel-body" action="@Url.Action("UpdateRoleAppService")" id="UpdateRoleAppService-Form" method="post">
-                    <input hidden name="RoleID" value="@Model.FirstOrDefault().RoleID" />
+                    <input hidden name="RoleID" value="@Model?.FirstOrDefault()?.RoleID" />
                     <div class="card h-100 todo-list-section">
                         <div class="card-body p-0">
                             <ul class="todo-list">
-                                @foreach (var groups in Model.GroupBy(x=>x.ClassName))
+                                @if (Model !=null && Model.Any())
+                                {
+                                    foreach (var groups in Model.GroupBy(x=>x.ClassName))
                                 {
                                     foreach (var item in groups)
                                         {
@@ -120,6 +123,7 @@
                                             </li>
                                         }
                                     
+                                }
                                 }
                             </ul>
                             <div class="row justify-content-around p-3">

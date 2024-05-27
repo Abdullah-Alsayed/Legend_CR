@@ -661,6 +661,7 @@ function AddEntity(ControllerName, ActionName, FormID) {
                 else {
                     ResetForm(FormID);
                     $(`tbody`).prepend(result);
+                    $(`#${FormID} img`).attr('src','');
                     alertSuccess()
                 }
             },
@@ -1174,7 +1175,7 @@ function OpenEditGameModel(id, Modal) {
                 $(`#${Modal} #CategoryId`).val(result.categoryId);
                 $(`#${Modal} #Description`).val(result.description);
                 $(`#${Modal} #ImgUrl`).val(result.imgUrl);
-                $(`#${Modal} #GameImg`).attr("src",result.imgUrl);
+                $(`#${Modal} #GameImg`).attr("src",`/dist/images/${result.imgUrl}`);
 
                 $(`#${Modal}`).modal('show');
             }
@@ -1206,6 +1207,7 @@ function EditGame(Modal, FormID) {
                         showConfirmButton: false,
                         timer: 4000
                     });
+                    $(".Spinner").addClass("d-none");
                 }
                 else {
                     let file = document.querySelector(`#${FormID} #ImgFile`);
@@ -1238,6 +1240,7 @@ function EditGame(Modal, FormID) {
     else {
         $(`#${FormID}`).submit();
         $("label:contains('This field is required.')").css("display", "none");
+        $(".Spinner").addClass("d-none");
     }
 }
 
@@ -1277,6 +1280,19 @@ function SelectShipment(Key) {
 
 function OpenFileInput(form) {
     $(`#${form} #ImgFile`).trigger('click');
+}
+
+function UpdateImgDisplay(event , id) {
+     const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+        $(`#${id}`).attr('src', e.target.result);
+    }
+
+    if (file) {
+        reader.readAsDataURL(file);
+    }
 }
 
 function DisplayUpdateImg(file) {

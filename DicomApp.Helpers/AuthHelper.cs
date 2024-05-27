@@ -13,7 +13,7 @@ namespace DicomApp.Helpers
             return 0;
         }
 
-        public static string GetUserName(ClaimsPrincipal user)
+        public static string GetUserName(ClaimsPrincipal user, string Name = "Name")
         {
             var identity = user.Identity as ClaimsIdentity;
             var claim = identity.FindFirst(c => c.Type == "Name");

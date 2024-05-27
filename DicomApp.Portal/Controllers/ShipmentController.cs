@@ -243,7 +243,7 @@ namespace DicomApp.Portal.Controllers
         public IActionResult Add(string ActionType = null)
         {
             ViewBag.Category = CategoryService
-                .GetCategory(new CategoryRequest { context = _context })
+                .GetCategorys(new CategoryRequest { context = _context })
                 .CategoryDTOs;
             ViewBag.ShipmentService = _context.ShipmentService.Where(s =>
                 s.Id == (int)EnumShipmentService.PickupDelivery
