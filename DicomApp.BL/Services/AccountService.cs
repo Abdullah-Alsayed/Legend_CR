@@ -150,7 +150,7 @@ namespace DicomApp.BL.Services
                                         {
                                             AccountTransactionId = t.AccountTransactionId,
                                             RefId = t.RefId,
-                                            ShipRefId = t.ShipmentId.HasValue
+                                            ShipRefId = t.AdvertisementId.HasValue
                                                 ? t.Shipment.RefId
                                                 : null,
                                             TypeId = t.TypeId,
@@ -161,7 +161,7 @@ namespace DicomApp.BL.Services
                                             StatusName = t.StatusId.HasValue
                                                 ? t.Status.NameEN
                                                 : null,
-                                            ShipmentId = t.ShipmentId,
+                                            ShipmentId = t.AdvertisementId,
                                             PickupRequestId = t.PickupRequestId,
                                             GameFees = t.GameFees,
                                             WeightFees = t.WeightFees,
@@ -235,7 +235,7 @@ namespace DicomApp.BL.Services
                                         {
                                             AccountTransactionId = t.AccountTransactionId,
                                             RefId = t.RefId,
-                                            ShipRefId = t.ShipmentId.HasValue
+                                            ShipRefId = t.AdvertisementId.HasValue
                                                 ? t.Shipment.RefId
                                                 : null,
                                             TypeId = t.TypeId,
@@ -246,7 +246,7 @@ namespace DicomApp.BL.Services
                                             StatusName = t.StatusId.HasValue
                                                 ? t.Status.NameEN
                                                 : null,
-                                            ShipmentId = t.ShipmentId,
+                                            ShipmentId = t.AdvertisementId,
                                             PickupRequestId = t.PickupRequestId,
                                             GameFees = t.GameFees,
                                             WeightFees = t.WeightFees,
@@ -303,22 +303,21 @@ namespace DicomApp.BL.Services
                     {
                         var hasDelvieredShipsIDs = request
                             .context.FollowUp.Where(f => f.StatusId == (int)EnumStatus.Delivered)
-                            .Select(f => f.ShipmentId.Value)
+                            .Select(f => f.AdvertisementId.Value)
                             .ToList();
 
                         var nonPaidShips = request
-                            .context.Shipment.Where(s =>
+                            .context.Advertisement.Where(s =>
                                 s.VendorId == request.AccountDTO.UserId
-                                && !s.IsPaidToVendor
-                                && hasDelvieredShipsIDs.Contains(s.ShipmentId)
+                                && hasDelvieredShipsIDs.Contains(s.AdvertisementId)
                             )
-                            .Select(t => t.ShipmentId)
+                            .Select(t => t.AdvertisementId)
                             .ToList();
 
                         var query = request
                             .context.Account.Where(s =>
                                 !s.IsDeleted
-                                && s.RoleId == (int)EnumRole.Vendor
+                                && s.RoleId == (int)EnumRole.Gamer
                                 && s.UserId == request.AccountDTO.UserId
                             )
                             .Select(s => new TreasuryDTO
@@ -330,24 +329,26 @@ namespace DicomApp.BL.Services
                                 Total = s
                                     .AccountTransactionVendor.Where(t =>
                                         t.ReceiverId == s.AccountId
-                                        && nonPaidShips.Contains(t.ShipmentId.Value)
+                                        && nonPaidShips.Contains(t.AdvertisementId.Value)
                                     )
                                     .Sum(t => t.Total),
 
                                 TransactionDTOs = s
                                     .AccountTransactionVendor.Where(t =>
                                         t.ReceiverId == s.AccountId
-                                        && nonPaidShips.Contains(t.ShipmentId.Value)
+                                        && nonPaidShips.Contains(t.AdvertisementId.Value)
                                     )
                                     .Select(t => new AccountTransactionDTO
                                     {
                                         AccountTransactionId = t.AccountTransactionId,
-                                        ShipRefId = t.ShipmentId.HasValue ? t.Shipment.RefId : null,
+                                        ShipRefId = t.AdvertisementId.HasValue
+                                            ? t.Shipment.RefId
+                                            : null,
                                         TypeId = t.TypeId,
                                         SenderId = t.SenderId,
                                         ReceiverId = t.ReceiverId,
                                         VendorId = t.VendorId,
-                                        ShipmentId = t.ShipmentId,
+                                        ShipmentId = t.AdvertisementId,
                                         PickupRequestId = t.PickupRequestId,
                                         GameFees = t.GameFees,
                                         WeightFees = t.WeightFees,
@@ -367,7 +368,7 @@ namespace DicomApp.BL.Services
                                         StatusDTO = new StatusDTO
                                         {
                                             Id = t.StatusId.Value,
-                                            Name = t.Status.NameEN,
+                                            NameEN = t.Status.NameEN,
                                         },
                                         CreatedAt = t.CreatedAt,
                                     }),
@@ -403,7 +404,7 @@ namespace DicomApp.BL.Services
                     {
                         var query = request
                             .context.Account.Where(s =>
-                                !s.IsDeleted && s.RoleId == (int)EnumRole.Vendor
+                                !s.IsDeleted && s.RoleId == (int)EnumRole.Gamer
                             )
                             .Select(s => new TreasuryDTO
                             {
@@ -504,7 +505,9 @@ namespace DicomApp.BL.Services
                                     .Select(t => new AccountTransactionDTO
                                     {
                                         AccountTransactionId = t.AccountTransactionId,
-                                        ShipRefId = t.ShipmentId.HasValue ? t.Shipment.RefId : null,
+                                        ShipRefId = t.AdvertisementId.HasValue
+                                            ? t.Shipment.RefId
+                                            : null,
                                         PickupRefId = t.PickupRequestId.HasValue
                                             ? t.PickupRequest.RefId
                                             : null,
@@ -516,7 +519,7 @@ namespace DicomApp.BL.Services
                                         SenderId = t.SenderId,
                                         ReceiverId = t.ReceiverId,
                                         VendorId = t.VendorId,
-                                        ShipmentId = t.ShipmentId,
+                                        ShipmentId = t.AdvertisementId,
                                         PickupRequestId = t.PickupRequestId,
                                         GameFees = t.GameFees,
                                         WeightFees = t.WeightFees,
@@ -537,7 +540,7 @@ namespace DicomApp.BL.Services
                                             ? new StatusDTO
                                             {
                                                 Id = t.StatusId.Value,
-                                                Name = t.Status.NameEN,
+                                                NameEN = t.Status.NameEN,
                                             }
                                             : null,
                                         CreatedAt = t.CreatedAt,

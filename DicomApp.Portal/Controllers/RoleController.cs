@@ -49,7 +49,7 @@ namespace DicomApp.Portal.Controllers
                 .RoleDTOs.Where(r =>
                     r.Id != (int)EnumRole.SuperAdmin
                     && r.Id != (int)EnumRole.Admin
-                    && r.Id != (int)EnumRole.Vendor
+                    && r.Id != (int)EnumRole.Gamer
                 )
                 .ToList();
 

@@ -1,4 +1,4 @@
-﻿namespace DicomApp.CommonDefinitions.DTO.ShipmentDTOs
+﻿namespace DicomApp.CommonDefinitions.DTO.AdvertisementDTOs
 {
     public class ShipItemDTO
     {

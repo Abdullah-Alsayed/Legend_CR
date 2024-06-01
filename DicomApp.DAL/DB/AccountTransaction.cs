@@ -12,7 +12,7 @@ namespace DicomApp.DAL.DB
         public int ReceiverId { get; set; }
         public int? VendorId { get; set; }
         public int? StatusId { get; set; }
-        public int? ShipmentId { get; set; }
+        public int? AdvertisementId { get; set; }
         public int? PickupRequestId { get; set; }
         public double GameFees { get; set; }
         public double WeightFees { get; set; }
@@ -39,7 +39,7 @@ namespace DicomApp.DAL.DB
         public virtual PickupRequest PickupRequest { get; set; }
         public virtual Account Receiver { get; set; }
         public virtual Account Sender { get; set; }
-        public virtual Shipment Shipment { get; set; }
+        public virtual Advertisement Shipment { get; set; }
         public virtual Status Status { get; set; }
         public virtual Account Vendor { get; set; }
     }

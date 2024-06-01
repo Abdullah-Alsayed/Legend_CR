@@ -1,7 +1,7 @@
-﻿using DicomApp.DAL.DB;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using DicomApp.DAL.DB;
 
 namespace DicomApp.CommonDefinitions.DTO.PickupDTOs
 {
@@ -21,5 +21,6 @@ namespace DicomApp.CommonDefinitions.DTO.PickupDTOs
         public DateTime CreatedAt { get; set; }
         public int CreatedBy { get; set; }
         public bool IsDeleted { get; set; }
+        public int AdvertisementId { get; set; }
     }
 }

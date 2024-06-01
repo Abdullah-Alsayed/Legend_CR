@@ -24,12 +24,12 @@ namespace DicomApp.DAL.DB
             Notification = new HashSet<Notification>();
             PickupRequestDeliveryMan = new HashSet<PickupRequest>();
             PickupRequestVendor = new HashSet<PickupRequest>();
-            ShipmentCustomer = new HashSet<Shipment>();
+            ShipmentCustomer = new HashSet<Advertisement>();
             ShipmentCustomerFollowUp = new HashSet<ShipmentCustomerFollowUp>();
-            ShipmentDeliveryMan = new HashSet<Shipment>();
-            ShipmentLastModifiedByNavigation = new HashSet<Shipment>();
+            ShipmentDeliveryMan = new HashSet<Advertisement>();
+            ShipmentLastModifiedByNavigation = new HashSet<Advertisement>();
             ShipmentProblem = new HashSet<ShipmentProblem>();
-            ShipmentVendor = new HashSet<Shipment>();
+            ShipmentVendor = new HashSet<Advertisement>();
             UserLocation = new HashSet<UserLocation>();
             VendorProduct = new HashSet<VendorProduct>();
             ZoneCreatedByNavigation = new HashSet<Zone>();
@@ -101,12 +101,12 @@ namespace DicomApp.DAL.DB
         public virtual ICollection<Notification> Notification { get; set; }
         public virtual ICollection<PickupRequest> PickupRequestDeliveryMan { get; set; }
         public virtual ICollection<PickupRequest> PickupRequestVendor { get; set; }
-        public virtual ICollection<Shipment> ShipmentCustomer { get; set; }
+        public virtual ICollection<Advertisement> ShipmentCustomer { get; set; }
         public virtual ICollection<ShipmentCustomerFollowUp> ShipmentCustomerFollowUp { get; set; }
-        public virtual ICollection<Shipment> ShipmentDeliveryMan { get; set; }
-        public virtual ICollection<Shipment> ShipmentLastModifiedByNavigation { get; set; }
+        public virtual ICollection<Advertisement> ShipmentDeliveryMan { get; set; }
+        public virtual ICollection<Advertisement> ShipmentLastModifiedByNavigation { get; set; }
         public virtual ICollection<ShipmentProblem> ShipmentProblem { get; set; }
-        public virtual ICollection<Shipment> ShipmentVendor { get; set; }
+        public virtual ICollection<Advertisement> ShipmentVendor { get; set; }
         public virtual ICollection<UserLocation> UserLocation { get; set; }
         public virtual ICollection<VendorProduct> VendorProduct { get; set; }
         public virtual ICollection<Zone> ZoneCreatedByNavigation { get; set; }

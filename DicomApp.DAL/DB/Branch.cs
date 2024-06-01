@@ -10,7 +10,7 @@ namespace DicomApp.DAL.DB
             CityNavigation = new HashSet<City>();
             CommonUser = new HashSet<CommonUser>();
             PickupRequest = new HashSet<PickupRequest>();
-            Shipment = new HashSet<Shipment>();
+            Shipment = new HashSet<Advertisement>();
             Zone = new HashSet<Zone>();
         }
 
@@ -30,7 +30,7 @@ namespace DicomApp.DAL.DB
         public virtual ICollection<City> CityNavigation { get; set; }
         public virtual ICollection<CommonUser> CommonUser { get; set; }
         public virtual ICollection<PickupRequest> PickupRequest { get; set; }
-        public virtual ICollection<Shipment> Shipment { get; set; }
+        public virtual ICollection<Advertisement> Shipment { get; set; }
         public virtual ICollection<Zone> Zone { get; set; }
     }
 }

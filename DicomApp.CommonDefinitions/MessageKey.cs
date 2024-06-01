@@ -27,7 +27,7 @@
         Admin = 1,
         BranchManger = 2,
         Customer = 3,
-        Vendor = 4,
+        Gamer = 4,
         DeliveryMan = 5,
         Accounting = 6,
         DataEntry = 7,
@@ -161,8 +161,8 @@
 
     public enum EnumFollowupType : int
     {
-        Order_Added = 1,
-        Order_Updated = 2,
+        Ads_Added = 1,
+        Advertisement_Updated = 2,
         Problem_Added = 3,
         Problem_Deleted = 4,
         Problem_Solved = 5,
@@ -209,7 +209,7 @@
 
     public enum EnumRefIdType
     {
-        Shipment,
+        Advertisement,
         Delivery_Pickup,
         Stock_Pickup,
         Cash_Delivery,
@@ -229,7 +229,9 @@
     public enum StatusTypeEnum : int
     {
         InProgress = 1,
-        Complete,
+        Accept,
+        Published,
         Reject,
+        Sold,
     }
 }

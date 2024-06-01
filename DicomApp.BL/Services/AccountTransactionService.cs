@@ -25,7 +25,7 @@ namespace DicomApp.BL.Services
                     CashTransferId = dto.CashTransferId,
 
                     StatusId = dto.StatusId,
-                    ShipmentId = dto.ShipmentId,
+                    AdvertisementId = dto.ShipmentId,
                     PickupRequestId = dto.PickupRequestId,
 
                     GameFees = dto.GameFees,
@@ -109,7 +109,7 @@ namespace DicomApp.BL.Services
                                 StatusId = s.StatusId,
                                 StatusName = s.StatusId.HasValue ? s.Status.NameEN : null,
 
-                                ShipmentId = s.ShipmentId,
+                                ShipmentId = s.AdvertisementId,
                                 PickupRequestId = s.PickupRequestId,
                                 GameFees = s.GameFees,
                                 WeightFees = s.WeightFees,
@@ -177,7 +177,7 @@ namespace DicomApp.BL.Services
                                 VendorId = s.VendorId,
                                 StatusId = s.StatusId,
                                 StatusName = s.StatusId.HasValue ? s.Status.NameEN : null,
-                                ShipmentId = s.ShipmentId,
+                                ShipmentId = s.AdvertisementId,
                                 PickupRequestId = s.PickupRequestId,
                                 GameFees = s.GameFees,
                                 WeightFees = s.WeightFees,

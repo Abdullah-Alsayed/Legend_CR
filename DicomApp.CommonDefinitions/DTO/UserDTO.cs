@@ -1,9 +1,8 @@
-﻿using DicomApp.CommonDefinitions.DTO.ShipmentDTOs;
-using Microsoft.AspNetCore.Http;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
+using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
+using Microsoft.AspNetCore.Http;
 
 namespace DicomApp.CommonDefinitions.DTO
 {
@@ -18,7 +17,6 @@ namespace DicomApp.CommonDefinitions.DTO
 
         [Required(ErrorMessage = "Required")]
         public string Name { get; set; }
-
 
         [Required(ErrorMessage = " Please Enter a Email")]
         [EmailAddress(ErrorMessage = "Please Enter a valid Email")]
@@ -43,7 +41,7 @@ namespace DicomApp.CommonDefinitions.DTO
 
         public string RoleName { get; set; }
 
-        public DateTime LastLoginDate { get; set; }
+        public DateTime? LastLoginDate { get; set; }
 
         [Required(ErrorMessage = "Required")]
         [RegularExpression(@"\d{10,15}$", ErrorMessage = "Not a valid phone number 10-15 digits")]
@@ -85,7 +83,6 @@ namespace DicomApp.CommonDefinitions.DTO
         public int? Apartment { get; set; }
         public DateTime CreationDate { get; set; }
 
-        public IEnumerable<ShipDTO> CourierShipments { get; set; }
         public bool HasCourierShipments { get; set; }
         public string Bank { get; set; }
         public string AccountName { get; set; }
@@ -101,5 +98,7 @@ namespace DicomApp.CommonDefinitions.DTO
         public bool IsDeleted { get; set; }
 
         public string HashedPassword { get; set; }
+
+        public IEnumerable<AdsDTO> Advertisement { get; set; }
     }
 }

@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace DicomApp.DAL.DB
@@ -7,7 +6,7 @@ namespace DicomApp.DAL.DB
     public partial class FollowUp
     {
         public int Id { get; set; }
-        public int? ShipmentId { get; set; }
+        public int? AdvertisementId { get; set; }
         public int? StatusId { get; set; }
         public string Comment { get; set; }
         public int CreatedBy { get; set; }
@@ -22,6 +21,6 @@ namespace DicomApp.DAL.DB
 
         public virtual CommonUser CreatedByNavigation { get; set; }
         public virtual FollowUpType FollowUpType { get; set; }
-        public virtual Shipment Shipment { get; set; }
+        public virtual Advertisement Advertisement { get; set; }
     }
 }

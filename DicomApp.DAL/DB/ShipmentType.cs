@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace DicomApp.DAL.DB
@@ -8,12 +7,12 @@ namespace DicomApp.DAL.DB
     {
         public ShipmentType()
         {
-            Shipment = new HashSet<Shipment>();
+            Shipment = new HashSet<Advertisement>();
         }
 
         public int ShipmentTypeId { get; set; }
         public string Name { get; set; }
 
-        public virtual ICollection<Shipment> Shipment { get; set; }
+        public virtual ICollection<Advertisement> Shipment { get; set; }
     }
 }

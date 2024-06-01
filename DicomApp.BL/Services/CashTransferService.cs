@@ -5,8 +5,8 @@ using System.Linq;
 using System.Net;
 using System.Security.Principal;
 using DicomApp.CommonDefinitions.DTO;
+using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
 using DicomApp.CommonDefinitions.DTO.CashDTOs;
-using DicomApp.CommonDefinitions.DTO.ShipmentDTOs;
 using DicomApp.CommonDefinitions.Requests;
 using DicomApp.CommonDefinitions.Responses;
 using DicomApp.DAL.DB;
@@ -78,14 +78,11 @@ namespace DicomApp.BL.Services
                         #region Update Shipments
                         foreach (var trans in Transactions)
                         {
-                            if (trans.ShipmentId.HasValue)
+                            if (trans.AdvertisementId.HasValue)
                             {
-                                var ship = request.context.Shipment.FirstOrDefault(r =>
-                                    r.ShipmentId == trans.ShipmentId
+                                var ship = request.context.Advertisement.FirstOrDefault(r =>
+                                    r.AdvertisementId == trans.AdvertisementId
                                 );
-                                ship.CashTransferId = cashTransfer.CashTransferId;
-                                ship.IsPaidToVendor = true;
-                                ship.PaidToVendorAt = DateTime.Now;
                                 ship.StatusId = (int)EnumStatus.Paid_To_Vendor;
                                 ship.LastModifiedAt = DateTime.Now;
                                 ship.LastModifiedBy = request.UserID;
@@ -93,7 +90,7 @@ namespace DicomApp.BL.Services
                                 //Add follow up
                                 var follow = new FollowUpDTO
                                 {
-                                    FollowUpTypeId = (int)EnumFollowupType.Order_Updated,
+                                    FollowUpTypeId = (int)EnumFollowupType.Advertisement_Updated,
                                     Title = request
                                         .context.Status.FirstOrDefault(s => s.Id == ship.StatusId)
                                         .NameEN,
@@ -103,7 +100,7 @@ namespace DicomApp.BL.Services
                                         )
                                         .Name,
                                     CreatedBy = request.UserID,
-                                    ShipmentId = trans.ShipmentId,
+                                    AdvertisementId = trans.AdvertisementId,
                                     StatusId = trans.StatusId
                                 };
                                 FollowUpService.Add(follow, request.context);
@@ -284,7 +281,7 @@ namespace DicomApp.BL.Services
                     try
                     {
                         var currVendorAccountId = 0;
-                        if (request.RoleID == (int)EnumRole.Vendor)
+                        if (request.RoleID == (int)EnumRole.Gamer)
                             currVendorAccountId = request
                                 .context.Account.FirstOrDefault(a => a.UserId == request.UserID)
                                 .AccountId;
@@ -294,7 +291,7 @@ namespace DicomApp.BL.Services
                         result.VendorBalance = request
                             .context.Account.Where(s =>
                                 !s.IsDeleted
-                                && s.RoleId == (int)EnumRole.Vendor
+                                && s.RoleId == (int)EnumRole.Gamer
                                 && (
                                     currVendorAccountId > 0
                                         ? s.AccountId == currVendorAccountId
@@ -484,11 +481,11 @@ namespace DicomApp.BL.Services
                                     .context.AccountTransaction.Where(t =>
                                         t.ReceiverId != (int)EnumAccountId.Main_Treasury
                                         && request
-                                            .context.Shipment.Where(sh =>
+                                            .context.Advertisement.Where(sh =>
                                                 sh.CashTransferId == s.CashTransferId
                                             )
-                                            .Select(sh => sh.ShipmentId)
-                                            .Contains(t.ShipmentId.Value)
+                                            .Select(sh => sh.AdvertisementId)
+                                            .Contains(t.AdvertisementId.Value)
                                         && t.StatusId == (int)EnumStatus.Delivered
                                         && (
                                             currVendorAccountId > 0
@@ -499,7 +496,9 @@ namespace DicomApp.BL.Services
                                     .Select(t => new AccountTransactionDTO
                                     {
                                         AccountTransactionId = t.AccountTransactionId,
-                                        ShipRefId = t.ShipmentId.HasValue ? t.Shipment.RefId : null,
+                                        ShipRefId = t.AdvertisementId.HasValue
+                                            ? t.Shipment.RefId
+                                            : null,
                                         PickupRefId = t.PickupRequestId.HasValue
                                             ? t.PickupRequest.RefId
                                             : null,
@@ -509,7 +508,7 @@ namespace DicomApp.BL.Services
                                         SenderId = t.SenderId,
                                         ReceiverId = t.ReceiverId,
                                         VendorId = t.VendorId,
-                                        ShipmentId = t.ShipmentId,
+                                        ShipmentId = t.AdvertisementId,
                                         PickupRequestId = t.PickupRequestId,
                                         GameFees = t.GameFees,
                                         WeightFees = t.WeightFees,
@@ -531,7 +530,7 @@ namespace DicomApp.BL.Services
                                         StatusDTO = new StatusDTO
                                         {
                                             Id = t.StatusId.Value,
-                                            Name = t.Status.NameEN,
+                                            NameEN = t.Status.NameEN,
                                         },
                                     })
                             })

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using DicomApp.CommonDefinitions.DTO.ShipmentDTOs;
+using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
+using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
 using Microsoft.AspNetCore.Http;
 
 namespace DicomApp.CommonDefinitions.DTO
@@ -20,7 +21,7 @@ namespace DicomApp.CommonDefinitions.DTO
         public DateTime LastModifiedAt { get; set; }
         public string Description { get; set; }
         public IFormFile File { get; set; }
-        public IEnumerable<ShipDTO> ShipDTOs { get; set; }
+        public IEnumerable<AdsDTO> ShipDTOs { get; set; }
         public string Messege { get; set; }
         public string search { get; set; }
         public string CategoryName { get; set; }

@@ -38,15 +38,27 @@ namespace DicomApp.Portal
                 },
                 new Status
                 {
+                    NameEN = "Accept",
+                    NameAR = "مقبول",
+                    StatusType = (int)StatusTypeEnum.Accept
+                },
+                new Status
+                {
                     NameEN = "Reject",
-                    NameAR = "ملغي",
+                    NameAR = "مرفوض",
                     StatusType = (int)StatusTypeEnum.Reject
                 },
                 new Status
                 {
-                    NameEN = "Complete",
-                    NameAR = "مكتمل",
-                    StatusType = (int)StatusTypeEnum.Complete
+                    NameEN = "Published",
+                    NameAR = "منشور",
+                    StatusType = (int)StatusTypeEnum.Published
+                },
+                new Status
+                {
+                    NameEN = "Sold",
+                    NameAR = "مباع",
+                    StatusType = (int)StatusTypeEnum.Sold
                 }
             };
 

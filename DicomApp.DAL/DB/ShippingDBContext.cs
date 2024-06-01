@@ -33,7 +33,7 @@ namespace DicomApp.DAL.DB
         public virtual DbSet<ProblemType> ProblemType { get; set; }
         public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<RoleAppService> RoleAppService { get; set; }
-        public virtual DbSet<Shipment> Shipment { get; set; }
+        public virtual DbSet<Advertisement> Advertisement { get; set; }
         public virtual DbSet<ShipmentCustomerFollowUp> ShipmentCustomerFollowUp { get; set; }
         public virtual DbSet<ShipmentItem> ShipmentItem { get; set; }
         public virtual DbSet<ShipmentProblem> ShipmentProblem { get; set; }
@@ -46,6 +46,7 @@ namespace DicomApp.DAL.DB
         public virtual DbSet<Warehouse> Warehouse { get; set; }
         public virtual DbSet<Zone> Zone { get; set; }
         public virtual DbSet<ZoneTax> ZoneTax { get; set; }
+        public virtual DbSet<AdvertisementPhotos> AdvertisementPhotos { get; set; }
 
         //        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //        {
@@ -164,14 +165,8 @@ namespace DicomApp.DAL.DB
                 entity
                     .HasOne(d => d.Shipment)
                     .WithMany(p => p.AccountTransaction)
-                    .HasForeignKey(d => d.ShipmentId)
+                    .HasForeignKey(d => d.AdvertisementId)
                     .HasConstraintName("FK_AccountTransaction_Shipment");
-
-                entity
-                    .HasOne(d => d.Status)
-                    .WithMany(p => p.AccountTransaction)
-                    .HasForeignKey(d => d.StatusId)
-                    .HasConstraintName("FK_AccountTransaction_Status");
 
                 entity
                     .HasOne(d => d.Vendor)
@@ -585,9 +580,9 @@ namespace DicomApp.DAL.DB
                     .HasConstraintName("FK_FollowUp_FollowUpType");
 
                 entity
-                    .HasOne(d => d.Shipment)
+                    .HasOne(d => d.Advertisement)
                     .WithMany(p => p.FollowUp)
-                    .HasForeignKey(d => d.ShipmentId)
+                    .HasForeignKey(d => d.AdvertisementId)
                     .HasConstraintName("FK_FollowUp_Shipment");
             });
 
@@ -752,13 +747,6 @@ namespace DicomApp.DAL.DB
                     .HasConstraintName("FK_PickupRequestType_PickupRequest");
 
                 entity
-                    .HasOne(d => d.Status)
-                    .WithMany(p => p.PickupRequest)
-                    .HasForeignKey(d => d.StatusId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PickupRequest_StatusId");
-
-                entity
                     .HasOne(d => d.Vendor)
                     .WithMany(p => p.PickupRequestVendor)
                     .HasForeignKey(d => d.VendorId)
@@ -786,19 +774,6 @@ namespace DicomApp.DAL.DB
                     .HasForeignKey(d => d.PickupRequestId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PickupRequestItem_PickupRequest");
-
-                entity
-                    .HasOne(d => d.Shipment)
-                    .WithMany(p => p.PickupRequestItem)
-                    .HasForeignKey(d => d.ShipmentId)
-                    .HasConstraintName("FK_PickupRequestItem_Shipment");
-
-                entity
-                    .HasOne(d => d.Status)
-                    .WithMany(p => p.PickupRequestItem)
-                    .HasForeignKey(d => d.StatusId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PickupRequestItem_StatusId");
 
                 entity
                     .HasOne(d => d.VendorProduct)
@@ -878,84 +853,25 @@ namespace DicomApp.DAL.DB
                     .HasConstraintName("FK_RoleAppService_Role1");
             });
 
-            modelBuilder.Entity<Shipment>(entity =>
+            modelBuilder.Entity<Advertisement>(entity =>
             {
-                entity.Property(e => e.AreaId).HasColumnName("AreaID");
-
-                entity.Property(e => e.CancelComment).HasMaxLength(500);
+                entity.Property(e => e.Description).HasMaxLength(500);
 
                 entity
                     .Property(e => e.CreatedAt)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
 
-                entity.Property(e => e.CustomerAddress).HasMaxLength(500);
+                entity.Property(e => e.UserName).HasMaxLength(500);
 
-                entity.Property(e => e.CustomerName).HasMaxLength(250);
-
-                entity.Property(e => e.CustomerPhone).HasMaxLength(250);
-
-                entity.Property(e => e.CustomerPhone2).HasMaxLength(250);
-
-                entity.Property(e => e.Landmark).HasMaxLength(255);
+                entity.Property(e => e.Password).HasMaxLength(250);
 
                 entity
                     .Property(e => e.LastModifiedAt)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
 
-                entity.Property(e => e.PaidToVendorAt).HasColumnType("datetime");
-
                 entity.Property(e => e.RefId).HasMaxLength(255);
-
-                entity.Property(e => e.Size).HasMaxLength(100);
-
-                entity.Property(e => e.VendorName).IsRequired().HasMaxLength(250);
-
-                entity.Property(e => e.VendorPhone).IsRequired().HasMaxLength(250);
-
-                entity.Property(e => e.WarehouseSize).HasMaxLength(100);
-
-                entity.Property(e => e.ZoneId).HasColumnName("ZoneID");
-
-                entity
-                    .HasOne(d => d.Area)
-                    .WithMany(p => p.Shipment)
-                    .HasForeignKey(d => d.AreaId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Shipment_City");
-
-                entity
-                    .HasOne(d => d.Branch)
-                    .WithMany(p => p.Shipment)
-                    .HasForeignKey(d => d.BranchId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Shipment_Branch");
-
-                entity
-                    .HasOne(d => d.CashTransfer)
-                    .WithMany(p => p.Shipment)
-                    .HasForeignKey(d => d.CashTransferId)
-                    .HasConstraintName("FK_Shipment_CashTransfer");
-
-                entity
-                    .HasOne(d => d.Customer)
-                    .WithMany(p => p.ShipmentCustomer)
-                    .HasForeignKey(d => d.CustomerId)
-                    .HasConstraintName("FK_Shipment_CommonUser");
-
-                entity
-                    .HasOne(d => d.DeliveryMan)
-                    .WithMany(p => p.ShipmentDeliveryMan)
-                    .HasForeignKey(d => d.DeliveryManId)
-                    .HasConstraintName("FK_Shipment_Shipment");
-
-                entity
-                    .HasOne(d => d.LastModifiedByNavigation)
-                    .WithMany(p => p.ShipmentLastModifiedByNavigation)
-                    .HasForeignKey(d => d.LastModifiedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Shipment_CommonUser3");
 
                 entity
                     .HasOne(d => d.Game)
@@ -964,51 +880,11 @@ namespace DicomApp.DAL.DB
                     .HasConstraintName("FK_Shipment_Game");
 
                 entity
-                    .HasOne(d => d.PickupRequest)
-                    .WithMany(p => p.Shipment)
-                    .HasForeignKey(d => d.PickupRequestId)
-                    .HasConstraintName("FK_Shipment_PickupRequest");
-
-                entity
-                    .HasOne(d => d.ShipmentService)
-                    .WithMany(p => p.Shipment)
-                    .HasForeignKey(d => d.ShipmentServiceId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Shipment_ShipmentService");
-
-                entity
-                    .HasOne(d => d.ShipmentType)
-                    .WithMany(p => p.Shipment)
-                    .HasForeignKey(d => d.ShipmentTypeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Shipment_ShipmentType");
-
-                entity
-                    .HasOne(d => d.Status)
-                    .WithMany(p => p.Shipment)
-                    .HasForeignKey(d => d.StatusId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Shipment_Status");
-
-                entity
                     .HasOne(d => d.Vendor)
                     .WithMany(p => p.ShipmentVendor)
                     .HasForeignKey(d => d.VendorId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Shipment_CommonUser1");
-
-                entity
-                    .HasOne(d => d.WarehouseGame)
-                    .WithMany(p => p.ShipmentWarehouseGame)
-                    .HasForeignKey(d => d.WarehouseGameId)
-                    .HasConstraintName("FK_Shipment_WarehouseGameId");
-
-                entity
-                    .HasOne(d => d.Zone)
-                    .WithMany(p => p.Shipment)
-                    .HasForeignKey(d => d.ZoneId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Shipment_Zone");
             });
 
             modelBuilder.Entity<ShipmentCustomerFollowUp>(entity =>
@@ -1033,13 +909,6 @@ namespace DicomApp.DAL.DB
                     .HasForeignKey(d => d.CreatedBy)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ShipmentCustomerFollowup_CommonUser");
-
-                entity
-                    .HasOne(d => d.Shipment)
-                    .WithMany(p => p.ShipmentCustomerFollowUp)
-                    .HasForeignKey(d => d.ShipmentId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ShipmentCustomerFollowup_Shipment");
             });
 
             modelBuilder.Entity<ShipmentItem>(entity =>
@@ -1050,20 +919,6 @@ namespace DicomApp.DAL.DB
                     .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.Size).HasMaxLength(100);
-
-                entity
-                    .HasOne(d => d.Shipment)
-                    .WithMany(p => p.ShipmentItem)
-                    .HasForeignKey(d => d.ShipmentId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ShipmentItem_Shipment");
-
-                entity
-                    .HasOne(d => d.Status)
-                    .WithMany(p => p.ShipmentItem)
-                    .HasForeignKey(d => d.StatusId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ShipmentItem_StatusId");
 
                 entity
                     .HasOne(d => d.VendorProduct)
@@ -1092,13 +947,6 @@ namespace DicomApp.DAL.DB
                     .HasForeignKey(d => d.ProblemTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ShipmentProblem_ProblemType");
-
-                entity
-                    .HasOne(d => d.Shipment)
-                    .WithMany(p => p.ShipmentProblem)
-                    .HasForeignKey(d => d.ShipmentId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ShipmentProblem_Shipment");
             });
 
             modelBuilder.Entity<ShipmentService>(entity =>

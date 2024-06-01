@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace DicomApp.DAL.DB
@@ -9,7 +8,7 @@ namespace DicomApp.DAL.DB
         public CashTransfer()
         {
             AccountTransaction = new HashSet<AccountTransaction>();
-            Shipment = new HashSet<Shipment>();
+            Shipment = new HashSet<Advertisement>();
         }
 
         public int CashTransferId { get; set; }
@@ -40,6 +39,6 @@ namespace DicomApp.DAL.DB
         public virtual Account Receiver { get; set; }
         public virtual Zone Zone { get; set; }
         public virtual ICollection<AccountTransaction> AccountTransaction { get; set; }
-        public virtual ICollection<Shipment> Shipment { get; set; }
+        public virtual ICollection<Advertisement> Shipment { get; set; }
     }
 }

@@ -5,9 +5,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using DicomApp.BL.Services;
 using DicomApp.CommonDefinitions.DTO;
+using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
+using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
 using DicomApp.CommonDefinitions.DTO.CashDTOs;
 using DicomApp.CommonDefinitions.DTO.PickupDTOs;
-using DicomApp.CommonDefinitions.DTO.ShipmentDTOs;
 using DicomApp.CommonDefinitions.DTO.VendorProductDTOs;
 using DicomApp.CommonDefinitions.Requests;
 using DicomApp.CommonDefinitions.Responses;
@@ -43,29 +44,15 @@ namespace DicomApp.Portal.Controllers
             string ActionType = null
         )
         {
-            var model = new ShipDTO();
-            if (StatusId == (int)EnumStatus.Current)
-                model.StatusIDs = new List<int>
-                {
-                    (int)EnumStatus.Ready_For_Delivery,
-                    (int)EnumStatus.Assigned_For_Delivery,
-                    (int)EnumStatus.Assigned_For_Pickup,
-                    (int)EnumStatus.At_Warehouse,
-                    (int)EnumStatus.Picked_Up,
-                    (int)EnumStatus.Out_For_Delivery
-                };
-            else if (StatusId == 0)
+            var model = new AdsDTO();
+
+            if (StatusId == 0)
                 model.StatusId = Status;
             else
                 model.StatusId = StatusId;
 
             model.Search = Search;
-            model.VendorDetailsDTO = new VendorDetailsDTO
-            {
-                VendorId = AuthHelper.GetClaimValue(User, "UserID")
-            };
-            model.ZoneId = ZoneId;
-            model.DeliveryManId = DeliveryManId;
+            model.VendorId = AuthHelper.GetClaimValue(User, "UserID");
             if (From.HasValue)
                 model.DateFrom = From.Value;
 
@@ -75,43 +62,42 @@ namespace DicomApp.Portal.Controllers
             var PageSize =
                 ActionType == SystemConstants.ActionType.Print ? 0 : BaseHelper.Constants.PageSize;
 
-            var shipmentRequest = new ShipmentRequest
+            var shipmentRequest = new AdvertisementRequest
             {
                 RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
                 UserID = AuthHelper.GetClaimValue(User, "UserID"),
                 context = _context,
-                ShipDTO = model,
-                HasCustomerDetailsDTO = true,
-                HasVendorDetailsDTO = true,
-                HasFeesDetailsDTO = true,
-                HasSettingDTO = true,
+                AdsDTO = model,
+
                 applyFilter = true,
                 OrderByColumn = OrderByColumn ?? "id",
                 PageSize = PageSize,
                 PageIndex = PageIndex,
             };
 
-            var shipmentResponse = BL.Services.ShipmentService.GetAllShipments(shipmentRequest);
+            var shipmentResponse = BL.Services.AdvertisementService.GetAllAdvertisements(
+                shipmentRequest
+            );
 
             if (ActionType == SystemConstants.ActionType.PartialView)
                 return PartialView(
                     "/Views/Vendor/Reports/Order/_OrderReports.cshtml",
-                    shipmentResponse.ShipDTOs
+                    shipmentResponse.AdsDTOs
                 );
             else if (ActionType == SystemConstants.ActionType.Table)
                 return PartialView(
                     "/Views/Vendor/Reports/Order/_OrderReportsTable.cshtml",
-                    shipmentResponse.ShipDTOs
+                    shipmentResponse.AdsDTOs
                 );
             else if (ActionType == SystemConstants.ActionType.Print)
-                return BaseHelper.GeneratePDF<List<ShipDTO>>(
+                return BaseHelper.GeneratePDF<List<AdsDTO>>(
                     "/Views/Vendor/Reports/Order/OrderReportsPDF.cshtml",
-                    shipmentResponse.ShipDTOs
+                    shipmentResponse.AdsDTOs
                 );
             else
                 return View(
                     "/Views/Vendor/Reports/Order/OrderReports.cshtml",
-                    shipmentResponse.ShipDTOs
+                    shipmentResponse.AdsDTOs
                 );
         }
 
@@ -245,11 +231,10 @@ namespace DicomApp.Portal.Controllers
         )
         {
             var userID = AuthHelper.GetClaimValue(User, "UserID");
-            var filter = new ShipDTO();
+            var filter = new AdsDTO();
             filter.Search = Search;
-            filter.VendorDetailsDTO = new VendorDetailsDTO { VendorId = userID };
+            filter.VendorId = userID;
             filter.StatusId = StatusId;
-            filter.HasProblem = true;
             if (From.HasValue)
                 filter.DateFrom = From.Value;
 
@@ -258,47 +243,42 @@ namespace DicomApp.Portal.Controllers
 
             var PageSize =
                 ActionType == SystemConstants.ActionType.Print ? 0 : BaseHelper.Constants.PageSize;
-            var shipmentRequest = new ShipmentRequest
+            var shipmentRequest = new AdvertisementRequest
             {
                 RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
                 UserID = userID,
                 context = _context,
-                ShipDTO = filter,
+                AdsDTO = filter,
                 IsDesc = true,
                 PageIndex = PageIndex,
                 PageSize = PageSize,
-                HasFeesDetailsDTO = true,
-                HasFollowUpDTOs = true,
-                HasSettingDTO = true,
-                HasVendorDetailsDTO = true,
-                HasCustomerDetailsDTO = true,
-                HasCustomerFollowUpDTO = true,
-                HasProblemDTOs = true,
                 applyFilter = true
             };
 
-            var ShipmentResponse = BL.Services.ShipmentService.GetAllShipments(shipmentRequest);
+            var ShipmentResponse = BL.Services.AdvertisementService.GetAllAdvertisements(
+                shipmentRequest
+            );
 
             if (ActionType == SystemConstants.ActionType.PartialView)
                 return PartialView(
                     "/Views/Vendor/Reports/Problem/_ProblemReport.cshtml",
-                    ShipmentResponse.ShipDTOs
+                    ShipmentResponse.AdsDTOs
                 );
 
             if (ActionType == SystemConstants.ActionType.Table)
                 return PartialView(
                     "/Views/Vendor/Reports/Problem/_ProblemReportTable.cshtml",
-                    ShipmentResponse.ShipDTOs
+                    ShipmentResponse.AdsDTOs
                 );
             else if (ActionType == SystemConstants.ActionType.Print)
-                return BaseHelper.GeneratePDF<List<ShipDTO>>(
+                return BaseHelper.GeneratePDF<List<AdsDTO>>(
                     "/Views/Vendor/Reports/Problem/ProblemReportPDF.cshtml",
-                    ShipmentResponse.ShipDTOs
+                    ShipmentResponse.AdsDTOs
                 );
             else
                 return View(
                     "/Views/Vendor/Reports/Problem/ProblemReport.cshtml",
-                    ShipmentResponse.ShipDTOs
+                    ShipmentResponse.AdsDTOs
                 );
         }
 
@@ -314,8 +294,8 @@ namespace DicomApp.Portal.Controllers
         )
         {
             var userID = AuthHelper.GetClaimValue(User, "UserID");
-            var model = new ShipDTO();
-            model.VendorDetailsDTO = new VendorDetailsDTO { VendorId = userID };
+            var model = new AdsDTO();
+            model.VendorId = userID;
             model.Search = Search;
             if (From.HasValue)
                 model.DateFrom = From.Value;
@@ -326,34 +306,30 @@ namespace DicomApp.Portal.Controllers
             var PageSize =
                 ActionType == SystemConstants.ActionType.Print ? 0 : BaseHelper.Constants.PageSize;
 
-            var shipmentRequest = new ShipmentRequest
+            var shipmentRequest = new AdvertisementRequest
             {
                 RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
                 UserID = userID,
                 context = _context,
-                ShipDTO = model,
-                HasCustomerDetailsDTO = true,
-                HasVendorDetailsDTO = true,
-                HasFeesDetailsDTO = true,
-                HasSettingDTO = true,
+                AdsDTO = model,
                 applyFilter = true,
                 PageIndex = PageIndex,
                 PageSize = PageSize
             };
-            var shipmentResponse = DicomApp.BL.Services.ShipmentService.GetAllShipments(
+            var shipmentResponse = DicomApp.BL.Services.AdvertisementService.GetAllAdvertisements(
                 shipmentRequest
             );
             if (ActionType == SystemConstants.ActionType.PartialView)
-                return PartialView("_ShipmentList", shipmentResponse.ShipDTOs);
+                return PartialView("_ShipmentList", shipmentResponse.AdsDTOs);
             else if (ActionType == SystemConstants.ActionType.Print)
-                return BaseHelper.GeneratePDF<List<ShipDTO>>(
+                return BaseHelper.GeneratePDF<List<AdsDTO>>(
                     "ShipmentListPDF",
-                    shipmentResponse.ShipDTOs
+                    shipmentResponse.AdsDTOs
                 );
             else if (ActionType == SystemConstants.ActionType.Table)
-                return PartialView("_ShipmentListTable", shipmentResponse.ShipDTOs);
+                return PartialView("_ShipmentListTable", shipmentResponse.AdsDTOs);
             else
-                return View(shipmentResponse.ShipDTOs);
+                return View(shipmentResponse.AdsDTOs);
         }
 
         [AuthorizePerRole("Vendor_AddShipment")]
@@ -364,36 +340,12 @@ namespace DicomApp.Portal.Controllers
                 .ShipmentService.Where(s => s.Id != (int)EnumShipmentService.PaymentCollection)
                 .ToList();
             ViewBag.ZoneList = _context.Zone.ToList();
-            ViewBag.Vendors = GeneralHelper.GetUsers((int)EnumRole.Vendor, _context);
+            ViewBag.Vendors = GeneralHelper.GetUsers((int)EnumRole.Gamer, _context);
 
             if (ActionType == SystemConstants.ActionType.PartialView)
                 return PartialView("/Views/Shared/Shipment/_AddOrder.cshtml");
             else
                 return View();
-        }
-
-        [AuthorizePerRole("Vendor_ProblemReply")]
-        public IActionResult VendorReply(int OrderID, string Solution)
-        {
-            var request = new ShipmentRequest
-            {
-                context = _context,
-                RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
-                UserID = AuthHelper.GetClaimValue(User, "UserID"),
-                ShipDTO = new ShipDTO
-                {
-                    ShipmentId = OrderID,
-                    ProblemDTOs = new List<ShipProblemDTO>
-                    {
-                        new ShipProblemDTO { Solution = Solution }
-                    }
-                }
-            };
-
-            var response = BL.Services.ShipmentService.VendorReply(request);
-
-            return Json(response.Message);
-            return Json(new { success = response.Success, message = response.Message });
         }
 
         [HttpGet]
@@ -406,15 +358,11 @@ namespace DicomApp.Portal.Controllers
             string ActionType = null
         )
         {
-            ViewModel<ShipDTO> viewModel = new ViewModel<ShipDTO>();
-            var filter = new ShipDTO();
+            ViewModel<AdsDTO> viewModel = new ViewModel<AdsDTO>();
+            var filter = new AdsDTO();
             filter.Search = Search;
             filter.StatusId = (int)EnumStatus.Ready_For_Pickup;
-            filter.VendorDetailsDTO = new VendorDetailsDTO
-            {
-                VendorId = AuthHelper.GetClaimValue(User, "UserID")
-            };
-            filter.HasPickup = false;
+            filter.VendorId = AuthHelper.GetClaimValue(User, "UserID");
 
             if (From.HasValue)
                 filter.DateFrom = From.Value;
@@ -422,23 +370,19 @@ namespace DicomApp.Portal.Controllers
             if (To.HasValue)
                 filter.DateTo = To.Value;
 
-            var request = new ShipmentRequest()
+            var request = new AdvertisementRequest()
             {
                 RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
                 UserID = AuthHelper.GetClaimValue(User, "UserID"),
                 context = _context,
-                ShipDTO = filter,
+                AdsDTO = filter,
                 IsDesc = IsDesc ?? true,
                 applyFilter = true,
-                HasCustomerDetailsDTO = true,
-                HasVendorDetailsDTO = true,
-                HasSettingDTO = true,
-                //IsForNewPickup = true
             };
 
-            var response = BL.Services.ShipmentService.GetAllShipments(request);
+            var response = BL.Services.AdvertisementService.GetAllAdvertisements(request);
 
-            viewModel.ObjDTOs = response.ShipDTOs;
+            viewModel.ObjDTOs = response.AdsDTOs;
 
             if (
                 ActionType != SystemConstants.ActionType.Table
@@ -459,7 +403,7 @@ namespace DicomApp.Portal.Controllers
                     viewModel.ObjDTOs
                 );
             else if (ActionType == SystemConstants.ActionType.Print)
-                return BaseHelper.GeneratePDF<List<ShipDTO>>(
+                return BaseHelper.GeneratePDF<List<AdsDTO>>(
                     "/Views/Vendor/PickUp/PickUpRequestPDF.cshtml",
                     viewModel.ObjDTOs
                 );
@@ -470,7 +414,7 @@ namespace DicomApp.Portal.Controllers
         [AuthorizePerRole("Vendor_PickupStock")]
         public IActionResult FulfillmentRequest(string ActionType)
         {
-            ViewModel<ShipDTO> viewModel = new ViewModel<ShipDTO>();
+            ViewModel<AdsDTO> viewModel = new ViewModel<AdsDTO>();
 
             if (
                 ActionType != SystemConstants.ActionType.Table
@@ -505,56 +449,56 @@ namespace DicomApp.Portal.Controllers
                 return View("/Views/Vendor/PickUp/FulfillmentRequest.cshtml", viewModel);
         }
 
-        [AuthorizePerRole("Vendor_PickupList")]
-        public IActionResult PickupList(
-            string Search,
-            string OrderByColumn,
-            bool? IsDesc,
-            int PageIndex,
-            string ActionType = null
-        )
-        {
-            ViewModel<PickupDTO> viewModel = new ViewModel<PickupDTO>();
-            var model = new PickupDTO();
-            model.IsDeleted = false;
-            model.VendorId = AuthHelper.GetClaimValue(User, "UserID");
-            model.Search = Search;
-            var PickUpRequestRequest = new PickUpRequestRequest
-            {
-                RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
-                UserID = AuthHelper.GetClaimValue(User, "UserID"),
-                context = _context,
-                PickupDTO = model,
-                PageIndex = PageIndex,
-                PageSize = BaseHelper.Constants.PageSize,
-                IsDesc = IsDesc ?? true,
-                OrderByColumn = OrderByColumn ?? "PickUpRequestId",
-                HasPickupItemDTO = true,
-                applyFilter = true
-            };
+        //[AuthorizePerRole("Vendor_PickupList")]
+        //public IActionResult PickupList(
+        //    string Search,
+        //    string OrderByColumn,
+        //    bool? IsDesc,
+        //    int PageIndex,
+        //    string ActionType = null
+        //)
+        //{
+        //    ViewModel<PickupDTO> viewModel = new ViewModel<PickupDTO>();
+        //    var model = new PickupDTO();
+        //    model.IsDeleted = false;
+        //    model.VendorId = AuthHelper.GetClaimValue(User, "UserID");
+        //    model.Search = Search;
+        //    var PickUpRequestRequest = new PickUpRequestRequest
+        //    {
+        //        RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
+        //        UserID = AuthHelper.GetClaimValue(User, "UserID"),
+        //        context = _context,
+        //        PickupDTO = model,
+        //        PageIndex = PageIndex,
+        //        PageSize = BaseHelper.Constants.PageSize,
+        //        IsDesc = IsDesc ?? true,
+        //        OrderByColumn = OrderByColumn ?? "PickUpRequestId",
+        //        HasPickupItemDTO = true,
+        //        applyFilter = true
+        //    };
 
-            viewModel.Lookup = BaseHelper.GetLookup(
-                new List<byte> { (byte)EnumSelectListType.Area },
-                _context
-            );
+        //    viewModel.Lookup = BaseHelper.GetLookup(
+        //        new List<byte> { (byte)EnumSelectListType.Area },
+        //        _context
+        //    );
 
-            var PickUpRequestResponse = PickUpRequestService.GetAllPickUpRequests(
-                PickUpRequestRequest
-            );
-            viewModel.ObjDTOs = PickUpRequestResponse.PickupDTOs;
+        //    var PickUpRequestResponse = PickUpRequestService.GetAllPickUpRequests(
+        //        PickUpRequestRequest
+        //    );
+        //    viewModel.ObjDTOs = PickUpRequestResponse.PickupDTOs;
 
-            if (ActionType == SystemConstants.ActionType.PartialView)
-                return PartialView("/Views/Vendor/PickUp/_PickupList.cshtml", viewModel);
-            else if (ActionType == SystemConstants.ActionType.Print)
-                return BaseHelper.GeneratePDF<List<PickupDTO>>(
-                    "/Views/Vendor/PickUp/PickupListPDF.cshtml",
-                    viewModel.ObjDTOs
-                );
-            else if (ActionType == SystemConstants.ActionType.Table)
-                return PartialView("/Views/Vendor/PickUp/_PickupListTable.cshtml", viewModel);
-            else
-                return View("/Views/Vendor/PickUp/PickupList.cshtml", viewModel);
-        }
+        //    if (ActionType == SystemConstants.ActionType.PartialView)
+        //        return PartialView("/Views/Vendor/PickUp/_PickupList.cshtml", viewModel);
+        //    else if (ActionType == SystemConstants.ActionType.Print)
+        //        return BaseHelper.GeneratePDF<List<PickupDTO>>(
+        //            "/Views/Vendor/PickUp/PickupListPDF.cshtml",
+        //            viewModel.ObjDTOs
+        //        );
+        //    else if (ActionType == SystemConstants.ActionType.Table)
+        //        return PartialView("/Views/Vendor/PickUp/_PickupListTable.cshtml", viewModel);
+        //    else
+        //        return View("/Views/Vendor/PickUp/PickupList.cshtml", viewModel);
+        //}
 
         [AuthorizePerRole("Vendor_ShippingCalculator")]
         public IActionResult ShippingCalculator(string ActionType = null)
@@ -569,48 +513,6 @@ namespace DicomApp.Portal.Controllers
                 return PartialView("_ShippingCalculator", model);
             else
                 return View(model);
-        }
-
-        [AuthorizePerRole("Vendor_ShippingCalculator")]
-        [HttpPost]
-        public IActionResult ShippingCalculator(
-            int ServiceId,
-            string Size,
-            int weight,
-            int Destination
-        )
-        {
-            var model = new ShippingCalculatorDTO();
-            model.ShipmentServiceId = ServiceId;
-            model.Size = Size;
-            model.Weight = weight;
-            //model.SourceAreaId = Source;
-            model.DestinationAreaId = Destination;
-
-            var request = new ShipmentRequest
-            {
-                RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
-                UserID = AuthHelper.GetClaimValue(User, "UserID"),
-                context = _context,
-                ShippingCalculatorDTO = model
-            };
-
-            var response = DicomApp.BL.Services.ShipmentService.CalculateShipping(request);
-            ViewBag.ShipmentService = _context.ShipmentService.Where(s =>
-                s.Id == (int)EnumShipmentService.PickupDelivery
-            );
-            ViewBag.Area = _context.City.Where(c => c.ZoneId.HasValue).ToList();
-
-            //return PartialView("_ShippingCalculator", response.ShippingCalculatorDTO);
-            return Json(
-                new
-                {
-                    //sourceFees = response.ShippingCalculatorDTO.SourceShippingFees,
-                    destinationFees = response.ShippingCalculatorDTO.DestinationShippingFees,
-                    weightFees = response.ShippingCalculatorDTO.WeightFees,
-                    totalFees = response.ShippingCalculatorDTO.TotalFees
-                }
-            );
         }
 
         [AuthorizePerRole("Vendor_ContactUs")]
@@ -709,7 +611,7 @@ namespace DicomApp.Portal.Controllers
             //    OrderByColumn = "ShipmentId"
             //};
             //var userResponse = DicomApp.BL.Services.ShipmentService.ListShipment(shipmentRequest);
-            //return PartialView("_ShipmentDetails", userResponse.ShipmentDTOs.FirstOrDefault());
+            //return PartialView("_ShipmentDetails", userResponse.AdvertisementDTOs.FirstOrDefault());
             return View();
         }
 

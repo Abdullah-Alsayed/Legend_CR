@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
 
-namespace DicomApp.CommonDefinitions.DTO.ShipmentDTOs
+namespace DicomApp.CommonDefinitions.DTO.AdvertisementDTOs
 {
     public class VendorReportDTO
     {
@@ -31,6 +32,6 @@ namespace DicomApp.CommonDefinitions.DTO.ShipmentDTOs
         public double PickupFees { get; set; }
         public double VendorCash { get; set; }
 
-        public IEnumerable<ShipDTO> lstShips { get; set; }
+        public IEnumerable<AdsDTO> lstShips { get; set; }
     }
 }

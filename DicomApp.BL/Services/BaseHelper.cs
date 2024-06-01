@@ -115,7 +115,7 @@ namespace DicomApp.BL.Services
                         {
                             context = Context,
                             applyFilter = true,
-                            UserDTO = new UserDTO { RoleID = (int)EnumRole.Vendor }
+                            UserDTO = new UserDTO { RoleID = (int)EnumRole.Gamer }
                         }
                     )
                     .UserDTOs;
@@ -186,7 +186,7 @@ namespace DicomApp.BL.Services
         {
             switch (RefIdType)
             {
-                case EnumRefIdType.Shipment:
+                case EnumRefIdType.Advertisement:
                     return "SH" + ID;
                 case EnumRefIdType.Delivery_Pickup:
                     return "DP" + ID;

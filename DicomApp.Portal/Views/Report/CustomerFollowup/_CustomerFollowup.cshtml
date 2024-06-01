@@ -1,7 +1,7 @@
 ﻿
 @using DicomApp.CommonDefinitions.DTO;
-@using DicomApp.CommonDefinitions.DTO.ShipmentDTOs;
-@model List<ShipDTO>
+@using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
+@model List<AdsDTO>
 @if (Model != null && Model.Count() > 0)
 {
     foreach (var item in Model.Where(p => p.ProblemDTOs.Count() > 0))

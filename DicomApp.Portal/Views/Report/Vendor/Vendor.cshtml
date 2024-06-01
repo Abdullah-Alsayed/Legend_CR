@@ -1,6 +1,6 @@
 ﻿@using DicomApp.CommonDefinitions.DTO.CashDTOs
 @using DicomApp.CommonDefinitions.DTO
-@using DicomApp.CommonDefinitions.DTO.ShipmentDTOs;
+@using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
 @using DicomApp.Helpers
 @using DicomApp.BL.Services
 @model List<VendorReportDTO>
@@ -182,7 +182,7 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            @foreach (var groupedSHIPS in vendor.lstShips.Where(t => ShipmentService.GetStatusGroup((int)EnumStatus.Current).Contains(t.StatusId)).GroupBy(t => t.StatusId))
+                                                            @foreach (var groupedSHIPS in vendor.lstShips.Where(t => AdvertisementService.GetStatusGroup((int)EnumStatus.Current).Contains(t.StatusId)).GroupBy(t => t.StatusId))
                                                             {
                                                                 <tr>
                                                                     <td class="td-small text-nowrap text-center mt-2" colspan="8">
@@ -253,7 +253,7 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            @foreach (var groupedSHIPS in vendor.lstShips.Where(t => ShipmentService.GetStatusGroup((int)EnumStatus.Done).Contains(t.StatusId)).GroupBy(t => t.StatusId))
+                                                            @foreach (var groupedSHIPS in vendor.lstShips.Where(t => AdvertisementService.GetStatusGroup((int)EnumStatus.Done).Contains(t.StatusId)).GroupBy(t => t.StatusId))
                                                             {
                                                                 <tr>
                                                                     <td class="td-small text-nowrap text-center mt-2" colspan="8">
@@ -337,7 +337,7 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            @foreach (var groupedSHIPS in vendor.lstShips.Where(t => ShipmentService.GetStatusGroup((int)EnumStatus.Cancelled).Contains(t.StatusId)).GroupBy(t => t.StatusId))
+                                                            @foreach (var groupedSHIPS in vendor.lstShips.Where(t => AdvertisementService.GetStatusGroup((int)EnumStatus.Cancelled).Contains(t.StatusId)).GroupBy(t => t.StatusId))
                                                             {
                                                                 <tr>
                                                                     <td class="td-small text-nowrap text-center mt-2" colspan="8">

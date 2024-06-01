@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DicomApp.CommonDefinitions.DTO.ShipmentDTOs
+namespace DicomApp.CommonDefinitions.DTO.AdvertisementDTOs
 {
     public class VendorDetailsDTO
     {
@@ -12,6 +12,5 @@ namespace DicomApp.CommonDefinitions.DTO.ShipmentDTOs
         public string VendorAddress { get; set; }
         public DateTime? PaidToVendorAt { get; set; }
         public bool IsPaidToVendor { get; set; }
-
     }
 }

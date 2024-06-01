@@ -1,24 +1,22 @@
-﻿
-@using DicomApp.CommonDefinitions.DTO.ShipmentDTOs
+﻿@using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs
 @using DicomApp.CommonDefinitions.DTO
 @using DicomApp.Helpers
-@model List<ShipDTO>
+@model List<AdsDTO>
+
 <thead>
     <tr>
         <th class="text-center">Code</th>
         <th class="text-center">Vendor</th>
         <th class="Sort-Column text-center">Date</th>
         <th class="text-center">Customer</th>
-        <th class="text-center">Branch</th>
         <th class="text-center">Service</th>
+        <th class="text-center">Branch</th>
         <th class="text-center">RED Fees</th>
         <th class="Sort-Column text-center">COD</th>
         <th class="text-center">Status</th>
-        <th class="text-center">Issues</th>
-        <th class="text-center text-wrap">Courier Problems</th>
-        <th class="text-center text-wrap">Vendor Recommendation</th>
-        <th class="text-center text-wrap">Vendor Report</th>
-        <th class="text-center">Action</th>
+        <th class="text-center">Paid Date</th>
+        <th class="text-center">Invoice No.</th>
+        <th class="text-center">Actions</th>
     </tr>
 </thead>
 <tbody id="TableBody">
@@ -37,31 +35,24 @@
                     <br />
                     <label class="text-nowrap mt-1"><i class="fa fa-map-marker"></i>&nbsp;@ship.AreaName</label>
                 </td>
-                <td class="text-center">@ship.BranchName</td>
                 <td style=" min-width:80px" class="text-center pl-1 pr-1">@ship.ShipmentServiceName</td>
+                <td class="text-center">@ship.BranchName</td>
                 <td class="text-center text-nowrap pl-1 pr-1">@REDFees EGP</td>
                 <td class="text-center text-nowrap pl-1 pr-1">@ship.FeesDetailsDTO.Total EGP</td>
                 <partial name="~/Views/Shared/Shipment/_StatusSwitch.cshtml" model="@ship.StatusDTO"></partial>
-                <td class="text-center pl-1 pr-1">
-                    <partial name="~/Views/Shared/Shipment/_Problems.cshtml" model="@ship"></partial>
-                </td>
-                <td class="text-center pl-1 pr-1">
-                    <partial name="~/Views/Shared/Shipment/_CourierProblems.cshtml" model="@ship"></partial>
-                </td>
-                <td class="text-center pl-1 pr-1">
-                    
-                </td>
-                <td class="text-center pl-1 pr-1" id="ReportToVendor_@ship.ShipmentId">
-                    @if (ship.ProblemDTOs.Any(s => s.IsReportToVendor))
-                    {
-                        <b>
-                            @ship.ProblemDTOs.LastOrDefault(s=>s.IsReportToVendor).ProblemTypeName
-                        </b>
-                        @ship.ProblemDTOs.LastOrDefault(s=>s.IsReportToVendor).Note
-                    }
-                </td>
-                <td class="text-center pr-0" id="TableTD_@ship.ShipmentId">
-                    <partial name="~/Views/Shared/Shipment/_CommonActions.cshtml" model="@ship"></partial>
+                <td class="text-center pl-1 pr-1 font-weight-bold">@(ship.VendorDetailsDTO.PaidToVendorAt.HasValue ? ship.VendorDetailsDTO.PaidToVendorAt.Value.ToString("dd MMM yyyy") : "")</td>
+                <td class="text-center pl-1 pr-1 font-weight-bold">@ship.CashTransferRefId</td>
+                <td class="text-center">
+                    <div class="Actions-Buttons">
+                        <ul>
+                            @if (!ship.HasRefunded && ship.ShipmentServiceId != (int)EnumShipmentService.Refund)
+                            {
+                                <li class="Red-Bg">
+                                    <a style="color:white" target="_blank" href="@Url.Action("Refund","Shipment", new { s = EncryptionManager.Encrypt(ship.ShipmentId.ToString()) })"><i class="fas fa-redo"></i></a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
                 </td>
             </tr>
         }
@@ -77,7 +68,7 @@
     <tr>
         <td colspan="13">
             @{
-                await Html.RenderPartialAsync("_Pagination", new OptionDTO { Action = "All", Controller = "Shipment", Count = Model.Count, StatusId = (int)EnumStatus.Current });
+                await Html.RenderPartialAsync("_Pagination", new OptionDTO { Action = "All", Controller = "Shipment", Count = Model.Count, StatusId = (int)EnumStatus.Done });
             }
         </td>
     </tr>

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DicomApp.CommonDefinitions.DTO.ShipmentDTOs
+namespace DicomApp.CommonDefinitions.DTO.AdvertisementDTOs
 {
     public class ShipSettingDTO
     {

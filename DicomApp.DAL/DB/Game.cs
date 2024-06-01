@@ -7,8 +7,8 @@ namespace DicomApp.DAL.DB
     {
         public Game()
         {
-            ShipmentGame = new HashSet<Shipment>();
-            ShipmentWarehouseGame = new HashSet<Shipment>();
+            ShipmentGame = new HashSet<Advertisement>();
+            ShipmentWarehouseGame = new HashSet<Advertisement>();
         }
 
         public int Id { get; set; }
@@ -26,7 +26,7 @@ namespace DicomApp.DAL.DB
         public int DeleteBy { get; set; }
 
         public virtual Category Category { get; set; }
-        public virtual ICollection<Shipment> ShipmentGame { get; set; }
-        public virtual ICollection<Shipment> ShipmentWarehouseGame { get; set; }
+        public virtual ICollection<Advertisement> ShipmentGame { get; set; }
+        public virtual ICollection<Advertisement> ShipmentWarehouseGame { get; set; }
     }
 }

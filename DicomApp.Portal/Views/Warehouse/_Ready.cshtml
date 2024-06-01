@@ -1,7 +1,7 @@
 ﻿
-@using DicomApp.CommonDefinitions.DTO.ShipmentDTOs
+@using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs
 @using DicomApp.CommonDefinitions.DTO
-@model List<ShipDTO>
+@model List<AdsDTO>
 
 <thead>
     <tr>
@@ -24,24 +24,16 @@
         foreach (var ship in Model)
         {
             <tr id="@ship.ShipmentId">
-                <td><input type="checkbox" onchange="PendingShipmentsSelect()" value="@ship.ShipmentId" id="checkbox_@ship.ShipmentId" name="ShipmentIDs" checked=@ship.SELECTED></td>
+                <td><input type="checkbox" onchange="PendingShipmentsSelect()" value="@ship.AdvertisementId" id="checkbox_@ship.AdvertisementId" name="AdvertisementIDs" checked=@ship.SELECTED></td>
                 <td onclick="ShipmentDetails('Shipment',@ship.ShipmentId)" data-toggle="modal" data-target="#ShipmentDetails"><b>@ship.RefId</b></td>
                 <td>
                     @ship.CustomerDetailsDTO.CustomerName
                     <br />
-                    <label class="text-nowrap mt-1"><i class="fa fa-map-marker"></i> @ship.AreaName</label>
+                    <label class="text-nowrap mt-1"><i class="fa fa-map-marker"></i> 0</label>
                 </td>
-                <td>@ship.BranchName</td>
-                <td>@ship.VendorDetailsDTO.VendorName</td>
-                @if (ship.ShipmentTypeId == (int)EnumShipmentType.PickupDelivery)
-                {
-                    <td><span class="Shipment-Type Pickup-Bg font-weight-bold">Pickup</span></td>
-                }
-                else if (ship.ShipmentTypeId == (int)EnumShipmentType.StockDelivery)
-                {
-                    <td><span class="Shipment-Type Gold-Bg font-weight-bold">Stock</span></td>
-                }
-                <td id="GameName_@ship.ShipmentId">@(ship.SettingDTO.GameName ?? "N/A")</td>
+                <td>@ship.0</td>
+                <td>@ship.VendorName</td>
+                <td id="GameName_@ship.AdvertisementId">0</td>
                 <td id="CategoryName_@ship.ShipmentId">@(ship.SettingDTO.CategoryName ?? "N/A")</td>
                 <td id="PackagDetails_@ship.ShipmentId" class="text-center">
                     @(ship.SettingDTO.WarehouseWeight) KG
