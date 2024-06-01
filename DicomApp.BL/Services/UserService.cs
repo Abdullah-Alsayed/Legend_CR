@@ -355,9 +355,8 @@ namespace DicomApp.BL.Services
                         var user = request.context.CommonUser.FirstOrDefault(c =>
                             !c.IsDeleted && c.Id == model.Id
                         );
-                        if (user != null && user.Role.Name == SystemConstants.Role.SuperAdmin)
+                        if (user != null && user.Role.Name != SystemConstants.Role.SuperAdmin)
                         {
-                            //update user IsDeleted
                             user.IsDeleted = true;
                             user.ModificationDate = DateTime.Now;
                             request.context.SaveChanges();
