@@ -1,0 +1,31 @@
+﻿@using DicomApp.CommonDefinitions.DTO;
+@using DicomApp.CommonDefinitions.DTO.ShipmentDTOs;
+@model List<ShipDTO>
+
+@if (Model != null && Model.Count > 0)
+{
+    foreach (var item in Model)
+    {
+        <tr onclick="ShipmentDetails('Shipment',@item.ShipmentId)" data-toggle="modal" data-target="#ShipmentDetails">
+            <td class="text-nowrap"><b>@item.RefId</b></td>
+            <td>@item.VendorDetailsDTO.VendorName</td>
+            <td class="text-nowrap Date-Table">@item.CreatedAt.ToString("MMM") @item.CreatedAt.ToString("dd"),@item.CreatedAt.ToString("yyy")</td>
+            <td>@item.CustomerDetailsDTO.CustomerName</td>
+            <td class="text-center">@item.BranchName</td>
+            <td>@(item.ShipmentServiceName ?? "---")</td>
+            <td class="text-nowrap ">@item.FeesDetailsDTO.ShippingFees EGP</td>
+            <td class="text-nowrap ">@item.FeesDetailsDTO.Total EGP</td>
+            <partial name="/Views/Shared/Shipment/_StatusSwitch.cshtml" model="@item.StatusDTO" />
+            <td><span class="Comments-Table">@item.Description</span></td>
+        </tr>
+    }
+}
+else
+{
+    <tr>
+        <td colspan="20">
+            <h6 class="text-center text-danger my-5">No data available in table</h6>
+        </td>
+    </tr>
+}
+<input type="hidden" value="@(Model != null ? Model.Count:0)" id="DataCount" />

@@ -1,0 +1,144 @@
+﻿
+@using DicomApp.CommonDefinitions.DTO
+@using DicomApp.DAL.DB;
+@using DicomApp.Helpers;
+@using DicomApp.CommonDefinitions.DTO
+@model OptionDTO
+@{
+    Model.Columns = Model.Columns == 0 ? 6 : Model.Columns;
+}
+@if (Model.SelectListType != null && Model.SelectListType.Count() > 0)
+{
+    <div class="Filter-Container @Model.ClassName" id="Filter-Model">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form asp-action="@Model.Action" asp-controller="@Model.Controller" enctype="multipart/form-data" id="FilterForm">
+                    <div class="container-fluid P-5">
+                        <div class="row">
+                            @if (Model.SelectListType != null && Model.SelectListType.Count() > 0)
+                            {
+                                    <div class="col-lg-@Model.Columns pt-3">
+                                        <label class="Label-Model">From</label>
+                                        <input type="date" id="From" name="From" class="input-Model">
+                                    </div>
+                                
+                                    <div class="col-lg-@Model.Columns pt-3">
+                                        <label class="Label-Model">To</label>
+                                        <input type="date" id="To" name="To" class="input-Model">
+                                    </div>
+                                
+                                if (Model.SelectListType.Contains((byte)EnumSelectListType.Area))
+                                {
+                                    <div class="col-lg-@Model.Columns pt-3">
+                                        <label class="Label-Model">Area</label>
+                                        @Html.DropDownList("AreaId", new SelectList(Model.Lookup.AreaDTOs, "Id", "CityNameAr"),"--- Select Area ---", new {@class="input-Model"})
+                                    </div>
+                                }
+                                if (Model.SelectListType.Contains((byte)EnumSelectListType.AreaMultiple))
+                                {
+                                    <div class="col-lg-@Model.Columns pt-3">
+                                        <label class="Label-Model">Area</label>
+                                        <select id="areadIDs" name="areadIDs" multiple class="input-Model">
+                                            <option>--- Select Area ---</option>
+                                            @foreach (var item in ViewBag.areas)
+                                            {
+                                                <option value="@item.Id">@item.CityNameAr</option>
+                                            }
+                                        </select>
+                                    </div>
+                                }
+                                if (Model.SelectListType.Contains((byte)EnumSelectListType.Zone))
+                                {
+                                    <div class="col-lg-@Model.Columns pt-3">
+                                        <label class="Label-Model">Zone</label>
+                                        @Html.DropDownList("ZoneId", new SelectList(Model.Lookup.ZoneDTOs, "Id", "NameEn"),"--- Select Zone ---", new {@class="input-Model"})
+                                    </div>
+                                }
+                                if (Model.SelectListType.Contains((byte)EnumSelectListType.Vendor))
+                                {
+                                    <div class="col-lg-@Model.Columns pt-3">
+                                        <label class="Label-Model">Vendor</label>
+                                        @Html.DropDownList("VendorID", new SelectList(Model.Lookup.VendorDTOs, nameof(UserDTO.Id), nameof(UserDTO.Name)),"--- Select Vendor ---", new {@class="input-Model"})
+                                    </div>
+                                }
+                                if (Model.SelectListType.Contains((byte)EnumSelectListType.Courier))
+                                {
+                                    <div class="col-lg-@Model.Columns pt-3">
+                                        <label class="Label-Model">Couriers</label>
+                                        @Html.DropDownList("DeliveryManId", new SelectList(Model.Lookup.CourierDTOs, nameof(UserDTO.Id), nameof(UserDTO.Name)),"--- Select Couriers ---", new {@class="input-Model"})
+                                    </div>
+                                }
+                                if (Model.SelectListType.Contains((byte)EnumSelectListType.Category))
+                                {
+                                    <div class="col-lg-@Model.Columns pt-3">
+                                        <label class="Label-Model">Category</label>
+                                        @Html.DropDownList("CategoryId", new SelectList(Model.Lookup.CategoryDTOs, nameof(Category.Id), nameof(Category.NameEn)),"--- Select Game Type ---", new {@class="input-Model"})
+                                    </div>
+                                }
+                                if (Model.SelectListType.Contains((byte)EnumSelectListType.Quantity))
+                                {
+                                    <div class="col-lg-@Model.Columns pt-3">
+                                        <label class="Label-Model">Quantity less than</label>
+                                        <input type="number" min="0" id="Quantity" name="Quantity" class="input-Model">
+                                    </div>
+                                }
+                                if (Model.SelectListType.Contains((byte)EnumSelectListType.Status))
+                                {
+                                    <div class="col-lg-@Model.Columns pt-3">
+                                        <label class="Label-Model">Status</label>
+                                        @Html.DropDownList("StatusId", new SelectList(Model.Lookup.StatusDTOs, "Id", "Name"),"--- Select Status ---", new {@class="input-Model"})
+                                    </div>
+                                }
+                                if (Model.SelectListType.Contains((byte)EnumSelectListType.Role))
+                                {
+                                    <div class="col-lg-@Model.Columns pt-3">
+                                        <label class="Label-Model">Role</label>
+                                        @Html.DropDownList("RoleId", new SelectList(Model.Lookup.RoleDTOs, "Id", "Name"),"--- Select Status ---", new {@class="input-Model"})
+                                    </div>
+                                }
+                                if (Model.SelectListType.Contains((byte)EnumSelectListType.Department))
+                                {
+                                    <div class="col-lg-@Model.Columns pt-3">
+                                        <label class="Label-Model">Department</label>
+                                        <partial name="_DepartmentList" />
+                                    </div>
+                                }
+                                if (Model.SelectListType.Contains((byte)EnumSelectListType.Employee))
+                                {
+                                    <div class="col-lg-@Model.Columns pt-3">
+                                        <label class="Label-Model">Employee</label>
+                                        @Html.DropDownList("EmployeeId", new SelectList(Model.Lookup.EmployeeDTOs, "Id", "Name"),"--- Select Employee ---", new { @class = "form-control select" ,@required="required"})
+                                    </div>
+                                }
+                                if (Model.SelectListType.Contains((byte)EnumSelectListType.Solved))
+                                {
+                                    <div class="col-lg-@Model.Columns pt-3">
+                                        <label class="Label-Model">Solved</label>
+                                        <select class="form-control" required id="Solved" name="Solved">
+                                            <option value="">--- Select ---</option>
+                                            <option value="true">Solved</option>
+                                            <option value="false">Pending</option>
+                                        </select>
+                                    </div>
+                                }
+                                <div class="col-lg-12 d-flex justify-content-between pt-3">
+                                    <button type="button" onclick="ClearFilter()" class="Red-Btn-OutLine OutLine-white Btn-Sm"> Clear </button>
+                                    @if (Model.ClassName == "Filter-Container-Dashbord")
+                                    {
+                                        <button type="button" onclick="DashbordFilter('@Model.Action','@Model.Controller')" class="Red-Btn-OutLine OutLine-Red Btn-Sm"> Filter </button>
+                                    }else
+                                    {
+                                        <button type="button" onclick="Filter('@Model.Action','@Model.Controller')" class="Red-Btn-OutLine OutLine-Red Btn-Sm"> Filter </button>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+<script src="~/dist/vendors/select2/js/select2.full.min.js"></script>
+<script src="~/dist/js/select2.script.js"></script>

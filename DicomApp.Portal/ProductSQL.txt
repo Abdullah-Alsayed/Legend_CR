@@ -1,0 +1,9 @@
+ALTER TABLE Product
+ADD AccountId INT NOT NULL,
+ADD CONSTRAINT FK_Product_CommonUser FOREIGN KEY (AccountId) REFERENCES CommonUser (ID);
+
+INSERT AppService (Name, Title, AllowAnonymous, ShowToUser, ModifiedBy, ModificationDate, IsDeleted, CreatedBy, CreationDate,ClassName) VALUES (N'Menu_AddProduct', N'Menu_AddProduct', 0, 1, NULL, NULL, 0, 0, getdate(),N'Menu');
+INSERT AppService (Name, Title, AllowAnonymous, ShowToUser, ModifiedBy, ModificationDate, IsDeleted, CreatedBy, CreationDate,ClassName) VALUES (N'Menu_ProductList', N'Menu_ProductList', 0, 1, NULL, NULL, 0, 0, getdate(),N'Menu');
+INSERT AppService (Name, Title, AllowAnonymous, ShowToUser, ModifiedBy, ModificationDate, IsDeleted, CreatedBy, CreationDate,ClassName) VALUES (N'DeletProduct', N'DeletProduct', 0, 1, NULL, NULL, 0, 0, getdate(),N'Product');
+INSERT AppService (Name, Title, AllowAnonymous, ShowToUser, ModifiedBy, ModificationDate, IsDeleted, CreatedBy, CreationDate,ClassName) VALUES (N'AddProduct', N'AddProduct', 0, 1, NULL, NULL, 0, 0, getdate(),N'Product');
+INSERT AppService (Name, Title, AllowAnonymous, ShowToUser, ModifiedBy, ModificationDate, IsDeleted, CreatedBy, CreationDate,ClassName) VALUES (N'EditProduct', N'EditProduct', 0, 1, NULL, NULL, 0, 0, getdate(),N'Product');

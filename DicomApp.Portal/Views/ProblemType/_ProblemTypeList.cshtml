@@ -1,0 +1,119 @@
+﻿
+@using DicomApp.CommonDefinitions.DTO;
+@model List<ProblemTypeDTO>
+@if (Model != null && Model.Count > 0)
+{
+    foreach (var item in Model)
+    {
+        <tr id="ProblemType_@item.ProblemTypeId">
+            <td>@item.ProblemTypeId</td>
+            <td id="NameEn">@item.NameEn</td>
+            <td id="NameAr">@item.NameAr</td>
+            <td class="font-weight-bold" id="Type">@(item.Type == 0 ? "Problem Type" : "Cancel Type")</td>
+            <td>
+                <div class="Actions-Buttons">
+                    <ul class="m-0 p-0">
+                        <li class="Green-Bg">
+                            <!-- START: Edit Form -->
+                            <a data-toggle="modal" data-target="#EditForm_@item.ProblemTypeId"><i class="icon-note F-Medium"></i></a>
+                            <div class="modal fade" id="EditForm_@item.ProblemTypeId" tabindex="-1" role="dialog" aria-labelledby="AddProblemTypeLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div>
+                                            <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h2 class="Model-Titel">Edit type</h2>
+                                            <form asp-action="EditProblemType" asp-controller="ProblemType" class="needs-validation" enctype="multipart/form-data" id="EditProblemType-Form_@item.ProblemTypeId">
+                                                <div class="container-fluid P-Model">
+                                                    <div class="row pt-5">
+                                                        <div class="col-lg-4 pt-3">
+                                                            <label class="Label-Model">English Name</label>
+                                                            <input class="input-Model" required id="NameEn" name="NameEn" value="@item.NameEn" placeholder="Problem Name English" />
+                                                             <div class="invalid-feedback">
+                                                                   Please enter type English Name
+                                                             </div>
+                                                        </div>
+                                                        <div class="col-lg-4 pt-3">
+                                                            <label class="Label-Model">Arabic Name</label>
+                                                            <input class="input-Model" required id="NameAr" name="NameAr" value="@item.NameAr" placeholder="Problem Name Arabic" />
+                                                             <div class="invalid-feedback">
+                                                                   Please enter type Arabic Name
+                                                             </div>
+                                                        </div>
+                                                        <div class="col-lg-4 pt-3">
+                                                            <label class="Label-Model">Type</label>
+                                                            <select name="Type" class="input-Model" required>
+                                                                <option value=""> ---Select type --- </option>
+                                                                @if (item.Type == 0)
+                                                                {
+                                                                    <option selected value="0">Problem Type</option>
+                                                                    <option value="1"> Cancel Type</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="0">Problem type</option>
+                                                                    <option selected value="1">Cancel Type</option>
+                                                                }
+                                                            </select>
+                                                            <div class="invalid-feedback">
+                                                                Please Select type
+                                                            </div>
+                                                        </div>
+                                                        <input type="hidden" value="@item.ProblemTypeId" name="ProblemTypeId" id="ProblemTypeId" />
+                                                        <div class="col-lg-12">
+                                                            <button class="Red-Btn-OutLine OutLine-Red Btn-Model" type="button" 
+                                                            onclick="EditProblemType('ProblemType','EditProblemType','EditProblemType-Form_@item.ProblemTypeId','ProblemType_@item.ProblemTypeId')" id="BtnSend">
+                                                                Edit type
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- END: Edit Form -->
+                        </li>
+                        <li class="Red-Bg">
+                            <a data-toggle="modal" data-target="#DeletForm_@item.ProblemTypeId"><i class="icon-trash F-Medium"></i></a>
+                            <!-- Delete ProblemType Model -->
+                            <div class="modal fade" id="DeletForm_@item.ProblemTypeId" tabindex="-1" role="dialog" aria-labelledby="DeleteVendorLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div>
+                                            <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h2 class="Model-Titel w-75">are you sure you want to delete this Problem Type?</h2>
+                                            <h5 class="Model-Contetn"> Deleting the selected Problem is permanent. You won’t be able to undo this action.</h5>
+                                            <input type="hidden" id="EntityId" />
+                                            <div class="col-lg-12">
+                                                <button class="Red-Btn-OutLine OutLine-Red ml-3 Btn-Model" type="button" data-dismiss="modal"> Cancel</button>
+                                                <button class="Red-Btn-OutLine OutLine-White Btn-Model" type="button" onclick="DeleteEntity('ProblemType','DeleteProblemType','ProblemType_',@item.ProblemTypeId)" data-dismiss="modal">Delete </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+            </td>
+        </tr>
+    }
+}
+else
+{
+    <tr>
+        <td colspan="20">
+            <h6 class="text-center text-danger my-5">No data available in table</h6>
+        </td>
+    </tr>
+}

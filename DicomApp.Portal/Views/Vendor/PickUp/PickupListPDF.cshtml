@@ -1,0 +1,44 @@
+﻿
+@using DicomApp.CommonDefinitions.DTO;
+@using DicomApp.CommonDefinitions.DTO.PickupDTOs;
+@using DicomApp.Helpers;
+@model List<PickupDTO>
+@{
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+}
+<table class="table">
+    <thead>
+        <partial name="_ReportHeder" model="11" />
+        <tr>
+            <td>Code</td>
+            <td>PickupDate </td>
+            <td>ReadyTime </td>
+            <td>Last Time Available </td>
+            <td># Orders </td>
+            <td>Status</td>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Count > 0)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td><b onclick="GetDeliveryPickups('@item.RefId')" data-target="#PickupRequstDetails" data-toggle="modal">@item.RefId</b></td>
+                    <td>@(item.PickupDate.ToLongDateString())</td>
+                    <td>@item.TimeFrom.ToShortTimeString()</td>
+                    <td>@item.TimeTo.ToShortTimeString()</td>
+                    <td></td>
+                    <partial name="_StatusPickupSwitch" model="item" />
+                </tr>
+
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="10" class="text-danger text-center"><h3>No data available in table</h3></td>
+            </tr>
+        }
+    </tbody>
+</table>

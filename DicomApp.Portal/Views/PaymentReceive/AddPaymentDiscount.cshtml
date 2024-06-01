@@ -1,0 +1,86 @@
+﻿
+@*@using DicomApp.CommonDefinitions.DTO
+@using DicomApp.Helpers;
+
+@model PaymentReceiveDTO
+
+<div class="col-md-12 col-sm-12 col-xs-12 table-responsive ">
+    <div class="page-title ">
+        <div class="title_right">
+            <h3 class=" alignright">اشعار خصم</h3>
+        </div>
+    </div>
+
+</div>
+@using (Html.BeginForm("AddPayment", "Payment", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal form-label-left" }))
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card_content">
+                    <div class="row demo-container" dir="rtl">
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">
+                                Account
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.DropDownListFor(model => model.ClientId, new SelectList(@ViewBag.client, "ID", "Name"), new { @class = "form-control  col-md-7 col-xs-12 select2_single" })
+
+                                @Html.ValidationMessageFor(model => model.ClientId, "", new { @class = "validation-message" })
+                            </div>
+                        </div>
+
+
+                        <input hidden type="text" id="PaymentTypeID" name="PaymentTypeID" value="1" />
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">
+                                Value
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.TextBoxFor(model => model.PaymentAmount, new { @class = "form-control col-md-7 col-xs-12", @type = "number" })
+                                @Html.ValidationMessageFor(model => model.PaymentAmount, "", new { @class = "validation-message" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">
+                                Notes
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.TextBoxFor(model => model.Notes, new { @class = "form-control col-md-7 col-xs-12" })
+                                @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "validation-message" })
+                            </div>
+                        </div>
+
+
+                        <input hidden id="bigint" name="bigint" value="@((long)EnumPurchasingType.Discount)" />
+                        <input hidden name="Code" value="0" />
+
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="submit" class="btn btn-success btn-block" value="Add" onclick="return confirm('هل أنت متاكد  ؟ ?');" />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<script>
+    $(document).on('invalid-form.validate', 'form', function () {
+        var button = $(this).find('input[type="submit"]');
+        setTimeout(function () {
+            button.removeAttr('disabled');
+        }, 1);
+    });
+    $(document).on('submit', 'form', function () {
+        var button = $(this).find('input[type="submit"]');
+        setTimeout(function () {
+            button.attr('disabled', 'disabled');
+        }, 0);
+    });
+</script>*@

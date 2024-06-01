@@ -1,0 +1,36 @@
+﻿
+@using DicomApp.CommonDefinitions.DTO.ShipmentDTOs
+@model List<ShipItemDTO>
+
+<h2 class="Model-Titel">Shipment Items</h2>
+<div class="Table-container Max-height">
+    <table class="table text-center">
+        <thead>
+            <tr>
+                <td>Name</td>
+                <td>Size</td>
+                <td>Price</td>
+                <td>Quantity</td>
+                <td>Delivered</td>
+                <td>Returned</td>
+                <td>Status</td>
+                <td>Image</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Size</td>
+                    <td>@item.Price</td>
+                    <td class="font-weight-bold">@item.Quantity</td>
+                    <td class="font-weight-bold">@item.CourierQuantityDelivered</td>
+                    <td class="font-weight-bold">@item.CourierQuantityReturned</td>
+                    <partial name="~/Views/Shared/Shipment/_StatusSwitch.cshtml" model="@item.StatusDTO"></partial>
+                    <td><img src="/dist/images/@item.ImageUrl" width="50" /></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

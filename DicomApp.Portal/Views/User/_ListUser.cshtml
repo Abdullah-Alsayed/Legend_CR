@@ -1,0 +1,69 @@
+﻿
+@using DicomApp.CommonDefinitions.DTO;
+@using DicomApp.CommonDefinitions.DTO;
+@using DicomApp.Helpers;
+@using DicomApp.BL.Services;
+@model List<UserDTO>
+
+@if (Model != null && Model.Count > 0)
+{
+    foreach (var item in Model)
+    {
+        <tr id="User_@item.Id">
+            <td class="font-weight-bold td-small text-nowrap" id="Td-Name">@item.Name</td>
+            <td class="font-weight-bold td-small" id="Td-Role">@item.RoleName</td>
+            <td class="td-small">@item.Email</td>
+            <td class="td-small">@item.PhoneNumber</td>
+            <td class="td-small">@item.CreationDate.ToString("dd/MM/yyyy")</td>
+            <td class="td-small pt-5">
+                <div class="Actions-Buttons">
+                    <ul>
+                        <li class="Green-Bg"><a onclick="OpenEditUserModel(@item.Id , 'EditEmployee-Model')"><i class="icon-note font-weight-bold"></i></a></li>
+
+                        <li onclick="OpenModal(@item.Id ,'DeleteEmployee-Model')" class="Red-Bg"><i class="icon-trash font-weight-bold"></i></li>
+
+                        <li class="Blue-Bg">
+                            <a data-toggle="modal" data-target="#ChangePasswordModal_@item.Id"><i class="icon-key font-weight-bold"></i></a>
+
+                            <!--Change Password Modal-->
+                            <div class="modal fade" id="ChangePasswordModal_@item.Id" tabindex="-1" role="dialog" aria-labelledby="ChangePasswordModal" aria-hidden="true">
+                                <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                        <h2 class="Model-Titel">Change User Password</h2>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                        <div class="modal-body">
+                                            <form id="ChangePassword-Form_@item.Id" asp-action="ChangePassword" asp-controller="User" method="post">
+                                                <input id="Id" name="Id" value="@item.Id" type="hidden" />
+                                                <div class="Change-Password">
+                                                    <div class="row">
+                                                        <div class="col-lg-6 col-md-6">
+                                                            <label class="Shipment-Details-label pull-left mb-3 text-danger" style="font-size: 18px;">New Password</label>
+                                                            <input type="password" class="mb-3 text-danger" id="NewPassword_@item.Id" name="NewPassword" placeholder="New Password" required />
+                                                        </div>
+                                                        <div class="col-lg-6 col-md-6">
+                                                            <label class="Shipment-Details-label pull-left mb-3 text-danger" style="font-size: 18px;">Confirm New Password</label>
+                                                            <input type="password" class="mb-3 text-danger" id="ConfirmPassword_@item.Id" name="ConfirmPassword" placeholder="Confirm Password" required />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 mt-4">
+                                                    <button class="Red-Btn btn-success pull-right" type="submit">Change Password</button>
+                                                    <button class="Red-Btn btn-danger pull-left" type="button" data-dismiss="modal">Cancel</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    }
+}
+<input type="hidden" value="@(Model != null ? Model.Count : 0)" id="DataCount" />

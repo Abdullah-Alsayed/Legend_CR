@@ -1,0 +1,29 @@
+﻿
+@using DicomApp.CommonDefinitions.DTO.ShipmentDTOs;
+@model List<ShipDTO>
+
+ @if (Model != null && Model.Count > 0)
+ {
+    foreach (var ship in Model)
+    {
+        double REDFees = ship.FeesDetailsDTO.ShippingFees + ship.FeesDetailsDTO.GameFees + ship.FeesDetailsDTO.WeightFees + ship.FeesDetailsDTO.SizeFees + ship.FeesDetailsDTO.PartialDeliveryFees;
+
+        <tr onclick="ShipmentDetails('Vendor',@ship.ShipmentId)" data-toggle="modal" data-target="#ShipmentDetails">
+            <td class="font-weight-bold">@ship.RefId</td>
+            <td class="text-nowrap Date-Table">@ship.CreatedAt.ToString("dd MMM yyyy")</td>
+            <td>@ship.CustomerDetailsDTO.CustomerName</td>
+            <td>@ship.AreaName</td>
+            <td class="text-center pl-1 pr-1">@ship.ShipmentServiceName</td>
+            <td class="text-center text-nowrap pl-1 pr-1">@REDFees EGP</td>
+            <td class="text-center text-nowrap pl-1 pr-1">@ship.FeesDetailsDTO.Total EGP</td>
+            <partial name="/Views/Shared/Shipment/_StatusSwitch.cshtml" model="@ship.StatusDTO" />
+        </tr>
+    }
+}
+else
+{
+    <tr>
+        <td colspan="10" class="text-danger text-center"><h3>No data available in table</h3></td>
+    </tr>
+}
+<input type="hidden" value="@(Model != null ? Model.Count:0)" id="DataCount" />

@@ -1,0 +1,123 @@
+﻿@using DicomApp.CommonDefinitions.DTO.ShipmentDTOs
+@using DicomApp.CommonDefinitions.DTO.CashDTOs
+@using DicomApp.CommonDefinitions.DTO
+@model TreasuryDTO
+@{
+    double FinalVendorCash = 0;
+    double FinalVendorBalance = 0;
+    double FinalAmount = 0;
+}
+
+<thead>
+    <tr>
+        <td></td>
+        <td class="text-nowrap">Code</td>
+        <td class="text-nowrap">Status</td>
+        <td class="text-nowrap">Total</td>
+    </tr>
+</thead>
+<tbody>
+    @if (Model != null)
+    {
+        @foreach (var trans in Model.TransactionDTOs)
+        {
+            <tr>
+                <td class="text-center">
+                    <input onchange="GetTotalTransferAmount(@trans.AccountTransactionId)" type="checkbox" value="@trans.AccountTransactionId" name="AccountTransactionId" id="cbx_@trans.AccountTransactionId" checked />
+                </td>
+                <td class="text-nowrap"><b>@trans.ShipRefId</b></td>
+                <partial name="~/Views/Shared/Shipment/_StatusSwitch.cshtml" model="@trans.StatusDTO"></partial>
+                <td class="text-nowrap">
+                    <label id="lblTotal_@trans.AccountTransactionId" class="font-weight-bold">@trans.Total</label>
+                </td>
+                @{
+                    FinalVendorCash += trans.Total;
+                }
+            </tr>
+        }
+        <tr>
+            <td class="font-weight-bold text-left" colspan="3">
+                <label class="" style="font-size: 16px;">Vendor Balance &nbsp; : &nbsp; @Model.Balance</label> <label class="" style="font-size: 12px;">EGP</label>
+                @{
+                    @if (Model.Balance >= FinalVendorCash)
+                    {
+                        FinalVendorBalance = Model.Balance - FinalVendorCash;
+                        FinalAmount = FinalVendorCash;
+                    }
+                    else
+                    {
+                        FinalVendorBalance = 0;
+                        FinalAmount = Model.Balance;
+                    }
+                }
+                <br />
+                <h3 class="mt-4 mb-3">Transfer Details</h3>
+                <div>
+                    <i class="fas fa-hashtag F-Medium"></i>&nbsp;
+                    <label style="font-size: 16px;">Current Balance &nbsp; : &nbsp; @Model.Balance</label> <label style="font-size: 12px;">EGP</label>
+                </div>
+                <div style="border-bottom: 1px solid;">
+                    <i class="fas fa-hashtag F-Medium"></i>&nbsp;
+                    <label style="font-size: 16px;">Total &nbsp; : &nbsp; <label id="lblFinalTotal2">@FinalVendorCash</label></label> <label style="font-size: 12px;">EGP</label>
+                    @if (Model.Balance < FinalVendorCash)
+                    {
+                        <label id="lblNoBalance" class="text-danger ml-2" style="font-size: 14px;">NOT enough balance.</label>
+                    }
+                </div>
+                <div class="mt-3">
+                    <i class="fas fa-check F-Medium text-success"></i>&nbsp;
+                    <label style="font-size: 16px;">Final Balance &nbsp; : &nbsp; <label style="font-size: 22px;" id="lblFinalVendorBalance">@FinalVendorBalance</label></label> <label style="font-size: 12px;">EGP</label>
+                </div>
+                <div>
+                    <i class="fas fa-check F-Medium text-success"></i>&nbsp;
+                    <label style="font-size: 16px;">Transfer Amount &nbsp; : &nbsp; <label style="font-size: 22px;" id="lblFinalAmount">@FinalAmount</label></label> <label style="font-size: 12px;">EGP</label>
+                </div>
+            </td>
+            <td class="text-center font-weight-bold">
+                <label style="font-size: 16px;">Total &nbsp; : &nbsp; <label id="lblFinalTotal">@FinalVendorCash</label></label> <label style="font-size: 12px;">EGP</label>
+            </td>
+        </tr>
+    }
+    else
+    {
+        <tr>
+            <td colspan="20" class="text-danger text-center"><h3>No data available in table</h3></td>
+        </tr>
+    }
+</tbody>
+<input type="hidden" id="FinalTotal" value="@FinalVendorCash" />
+
+<script>
+    function GetTotalTransferAmount(TransID) {
+        var isChecked = $(`#cbx_${TransID}`).is(':checked');
+        var lblAmount = $(`#lblTotal_${TransID}`).text();
+        var lblFinalTotal = $(`#lblFinalTotal`).text();
+
+        if (isChecked) {
+            $("#lblFinalTotal").text((Number(lblFinalTotal) + Number(lblAmount)));
+            $("#lblFinalTotal2").text((Number(lblFinalTotal) + Number(lblAmount)));
+        }
+        else {
+            $("#lblFinalTotal").text((Number(lblFinalTotal) - Number(lblAmount)));
+            $("#lblFinalTotal2").text((Number(lblFinalTotal) - Number(lblAmount)));
+        }
+
+        CheckBalance();
+    }
+
+    function CheckBalance() {
+        var balance = @Model.Balance;
+        var lblFinalTotal = $(`#lblFinalTotal`).text();
+
+        if (Number(balance) < Number(lblFinalTotal)) {
+            $(`#lblNoBalance`).removeClass(`d-none`);
+            $("#lblFinalVendorBalance").text(0);
+            $("#lblFinalAmount").text(Number(balance));
+        }
+        else {
+            $(`#lblNoBalance`).addClass(`d-none`);
+            $("#lblFinalVendorBalance").text((Number(balance) - Number(lblFinalTotal)));
+            $("#lblFinalAmount").text(Number(lblFinalTotal));
+        }
+    }
+</script>

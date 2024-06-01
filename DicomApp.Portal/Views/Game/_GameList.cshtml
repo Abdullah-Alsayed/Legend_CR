@@ -1,0 +1,27 @@
+﻿
+@using DicomApp.CommonDefinitions.DTO;
+@using DicomApp.CommonDefinitions.DTO;
+@model List<GameDTO>
+
+@if (Model != null && Model.Count > 0)
+{
+    foreach (var item in Model)
+    {
+        <tr id="Game_@item.Id">
+            <td id="NameAr">@item.NameAr</td>
+            <td id="NameEn">@item.NameEn</td>
+            <td id="CategoryName"><b>@item.CategoryName</b></td>
+            <td id="Description"><b>@item.Description</b></td>
+            <td id="ImgUrl"><img src="/dist/images/@item.ImgUrl" width="150" /></td>
+            <td>
+                <div class="Actions-Buttons">
+                    <ul class="">
+                        <li class="Green-Bg" onclick="OpenEditGameModel(@item.Id,'EditGame-Model')"><a href="javascript:;"><i class="icon-note F-Medium text-white"></i></a></li>
+                        <li onclick="OpenModal(@item.Id ,'DeleteGame-Model')" class="Red-Bg"><i class="icon-trash F-Medium"></i></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    }
+}
+<input type="hidden" value="@(Model != null ? Model.Count : 0)" id="DataCount" />

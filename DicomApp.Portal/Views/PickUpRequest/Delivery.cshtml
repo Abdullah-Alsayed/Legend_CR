@@ -1,0 +1,258 @@
+﻿
+@using DicomApp.CommonDefinitions.DTO.PickupDTOs;
+@using DicomApp.CommonDefinitions.DTO;
+@using DicomApp.Helpers;
+@model ViewModel<PickupDTO>
+@{
+    var MinDate = DateTimeHelper.MinDate(true);
+}
+<main>
+    <form asp-action="AddDeliveryPickup" id="PickupRequest-Form" class="needs-validation" asp-controller="PickupRequest">
+        <div id="PickupRequest-Div" style="display:none; overflow:hidden">
+            <div class="container-fluid site-width">
+                <div class="row Red-Row">
+                    <div class="col-12 col-lg-12 col-xl-12 col-sm-12">
+                        <div class="sub-header">
+                            <span class="Header-Titel">Delivery Pickup Request</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="Shipment-container">
+                <div class="row Red-Row w-100">
+                    <div class="col-lg-4">
+                        <h6 class="my-4 ml-2 font-w-500">Vendor Details</h6>
+                        <div class="Shipment-Details-Section">
+                            <div class="col-lg-12">
+                                <label class="Shipment-Details-label">Name</label>
+                                <input type="text" id="VendorName" name="VendorName" required placeholder="Name" />
+                                <div class="invalid-feedback">
+                                    Please enter Name
+                                </div>
+                            </div>
+                            <div class="col-lg-12 mt-3">
+                                <label class="Shipment-Details-label">Number</label>
+                                <input type="text" id="VendorPhone" name="VendorPhone" required placeholder="Number" />
+                                <div class="invalid-feedback">
+                                    Please enter Number
+                                </div>
+                            </div>
+                            <div class="col-lg-12 mt-3">
+                                <label class="Shipment-Details-label">Address</label>
+                                <input type="text" placeholder="Address" id="VendorAddress" name="VendorAddress" />
+                                <div class="invalid-feedback">
+                                    Please enter Address
+                                </div>
+                            </div>
+                            <div class="col-lg-12 mt-3">
+                                <label class="Shipment-Details-label">Location Url</label>
+                                <input placeholder="Location Url" class="Input-Txt" id="VendorLocation" name="VendorLocation">
+                                <div class="invalid-feedback">
+                                    Please enter a valid Location Url.
+                                </div>
+                            </div>
+                            <div class="col-lg-12 mt-3">
+                                <label class="Shipment-Details-label">Landmark</label>
+                                <input type="text" placeholder="Landmark" id="VendorLandmark" name="VendorLandmark">
+                                <div class="invalid-feedback">
+                                    Please enter a valid Landmark.
+                                </div>
+                            </div>
+                            <div class="col-lg-6 mt-3">
+                                <label class="Shipment-Details-label">Floor</label>
+                                <input type="number" min="0" class="input-Number" id="VendorFloor" name="VendorFloor" placeholder="Floor" required />
+                                <div class="invalid-feedback">
+                                    Please enter Floor.
+                                </div>
+                            </div>
+                            <div class="col-lg-6 mt-3">
+                                <label class="Shipment-Details-label">Apartment</label>
+                                <input type="number" min="0" class="input-Number" id="VendorApartment" name="VendorApartment" placeholder="Apartment" />
+                                <div class="invalid-feedback">
+                                    Please enter No. of Apartment.
+                                </div>
+                            </div>
+                            <div class="col-lg-12 mt-3">
+                                <label class="Shipment-Details-label">Governament</label>
+                                @Html.DropDownList("ZoneId", new SelectList(Model.Lookup.ZoneDTOs, "Id", "NameAr"),"--- Select Governament ---", new { @class = "form-control select",@onchange="GetAreasByZone(event)"})
+                            </div>
+                            <div class="col-lg-12 mt-3">
+                                <label class="Shipment-Details-label">Area</label>
+                                @Html.DropDownList("AreaId", new SelectList(Model.Lookup.AreaDTOs, "Id", "CityNameAr"),"--- Select Area ---", new { @class = "form-control"})
+                                <div class="invalid-feedback">
+                                    Please Select Area.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8 w-100 Picku-Scehdule">
+                        <h6 class="my-4 ml-2 font-w-500">Pickup Schedule</h6>
+                        <div style="width:98%" class="Shipment-Details-Section">
+                            <div class="row Red-Row Stock-Modal">
+                                <div class="col-lg-6">
+                                    <label class="Shipment-Details-label">Date</label>
+                                    <input type="date" min="@MinDate" name="PickupDate" required id="PickupDate" placeholder="dd/mm/yyyy" />
+                                    <div class="invalid-feedback">
+                                        Please enter Pickup Date.
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label class="Shipment-Details-label">Ready Time</label>
+                                    <input type="time" id="TimeFrom" name="TimeFrom" required placeholder="hh:ss - hh:ss" />
+                                    <div class="invalid-feedback">
+                                        Please enter Ready Time.
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 mt-4">
+                                    <label class="Shipment-Details-label">Last Time Available</label>
+                                    <input type="time" id="TimeTo" name="TimeTo" required placeholder="hh:ss - hh:ss" />
+                                    <div class="invalid-feedback">
+                                        Please enter Last Time Available.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row Red-Row mt-4">
+                                <div class="col-lg-6">
+                                    <label class="Shipment-Details-label">Special Instructions</label>
+                                    <textarea class="h-auto" Rows="5" id="Notes" name="Notes" placeholder="Special Instructions ..."></textarea>
+                                </div>
+                                <div class="col-lg-6">
+                                    <input type="checkbox" id="cbxIncludeReturns" name="cbxIncludeReturns" />
+                                    <label class="Shipment-Details-label font-weight-bold" for="IncludeReturns">Include Returned Shipments</label>
+                                    <button type="button" class="Edit-Partial-Delivery" onclick="GetReadyForReturn()" data-target="#ReturnedShipments" data-toggle="modal">View Shipments</button>
+
+                                    <!-- START : Ready for return shipments popup -->
+                                    <div class="modal fade" id="ReturnedShipments" tabindex="-1" role="dialog" aria-labelledby="ReturnedShipments-ModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-xl" role="document">
+                                            <div class="modal-content">
+                                                <div>
+                                                    <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body" id="ReturnedShipments-Body">
+                                                    <h2 class="ml-4"></h2>
+                                                    <h2 class="Model-Titel">Ready for return shipments</h2>
+                                                    <div class="Table-container" id="ReturnedShipments-TableSection">
+                                                        <table id="Red-Table" class="table"></table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- END -->
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row ml-0 Red-Row PickupRequest">
+                    <input type="hidden" id="vendorId" name="vendorId" />
+                    <div class="col-lg-12 col-12 ml-3 Buttons-Submit-Section justify-content-between">
+                        <button type="button" onclick="PickupRequestToggel('PickupRequest-Div','PickupRequest-List')" class="Red-Btn"><img class="mr-2" src="~/dist/images/Icons/Shipped.png" />Back</button>
+
+                        <button type="button" id="BtnSend" onclick="AddDeliveryPickup('PickupRequest-Form')" class="Red-Btn"><img class="mr-2" src="~/dist/images/Icons/Shipped.png" />Confirm <span class="Spinner spinner-border spinner-border-sm ml-2 mb-1 d-none" role="status" aria-hidden="true"></span></button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="PickupRequest-List">
+            <div class="container-fluid site-width">
+                <div class="row Red-Row">
+                    <div class="col-12 col-lg-12 col-xl-12 col-sm-12">
+                        <div class="sub-header">
+                            <span class="Header-Titel">Delivery Pickup Request</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="Shipment-container">
+                <div class="row Red-Row mt-3">
+                    @{
+                        await Html.RenderPartialAsync("_ToolsRow",
+                        new OptionDTO
+            {
+                Action = "Delivery",
+                Controller = "PickUpRequest",
+                Lookup = Model.Lookup,
+                SelectListType = new byte[] { (byte)EnumSelectListType.Vendor }
+            });
+                    }
+                    <div class="col-lg-12 Buttons-Pickup-Section">
+                        <button onclick="PickupRequestToggel('PickupRequest-List','PickupRequest-Div')" type="button" class="Red-Btn"><img class="mr-2" src="~/dist/images/Icons/shipped.png" />Pickup</button>
+                    </div>
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="ShipmentDetails" tabindex="-1" aria-labelledby="ShipmentDetailsLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div id="ShipmentDetails-Body" class="modal-body">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <span id="Ajaxloader" class="Ajaxloader d-none"></span>
+            </div>
+            <div class="Table-container">
+                <table class="table" id="Table">
+                    <thead>
+                        <tr>
+                            <td><input id="Allcheckbox" onclick="SelectAllCheckbox()" type="checkbox" /></td>
+                            <td>Code</td>
+                            <td>Vendor</td>
+                            <td>Customer</td>
+                            <td>Service</td>
+                            <td># of Items</td>
+                            <td>Weight</td>
+                        </tr>
+                    </thead>
+                    <tbody id="Shipments-Body">
+                        @if (Model.ObjDTO.Shipments != null)
+                        {
+                            foreach (var item in Model.ObjDTO.Shipments)
+                            {
+                                <tr id="@item.ShipmentId" data-Vendor="@item.VendorDetailsDTO.VendorId">
+                                    <td><input type="checkbox" value="@item.ShipmentId" id="checkbox_@item.ShipmentId" name="ShipmentId" class="ShipmentSelect"></td>
+                                    <td onclick="ShipmentDetails('Shipment',@item.ShipmentId)" data-toggle="modal" data-target="#ShipmentDetails"><b>@item.RefId</b></td>
+                                    <td>@item.VendorDetailsDTO.VendorName</td>
+                                    <td>@item.CustomerDetailsDTO.CustomerName</td>
+                                    <td>@item.ShipmentServiceName</td>
+                                    <td>@item.NoOfItems</td>
+                                    <td>@item.SettingDTO.Weight KG</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="10" class="text-danger text-center"><h3>No data available in table</h3></td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="10">
+                                @{
+                                    await Html.RenderPartialAsync("_Pagination", new OptionDTO
+            {
+                Action = "Delivery",
+                Controller = "PickupRequest",
+                Count = Model.ObjDTO != null ? Model.ObjDTO.Shipments.Count() : 0
+            });
+                                }
+                            </td>
+                        </tr>
+                    </tfoot>
+
+                </table>
+            </div>
+        </div>
+    </form>
+</main>
+<script src="~/dist/vendors/select2/js/select2.full.min.js"></script>
+<script src="~/dist/js/select2.script.js"></script>
