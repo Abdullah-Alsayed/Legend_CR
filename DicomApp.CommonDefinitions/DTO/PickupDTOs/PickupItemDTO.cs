@@ -13,7 +13,7 @@ namespace DicomApp.CommonDefinitions.DTO.PickupDTOs
         public string StatusName { get; set; }
         public int? VendorProductId { get; set; }
         public string VendorProductName { get; set; }
-        public int? ShipmentId { get; set; }
+        public int? AdvertisementId { get; set; }
         public string RefId { get; set; }
 
         public int? Quantity { get; set; }
@@ -21,6 +21,5 @@ namespace DicomApp.CommonDefinitions.DTO.PickupDTOs
         public DateTime CreatedAt { get; set; }
         public int CreatedBy { get; set; }
         public bool IsDeleted { get; set; }
-        public int AdvertisementId { get; set; }
     }
 }

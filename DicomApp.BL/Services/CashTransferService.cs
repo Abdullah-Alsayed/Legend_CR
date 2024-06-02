@@ -496,9 +496,6 @@ namespace DicomApp.BL.Services
                                     .Select(t => new AccountTransactionDTO
                                     {
                                         AccountTransactionId = t.AccountTransactionId,
-                                        ShipRefId = t.AdvertisementId.HasValue
-                                            ? t.Shipment.RefId
-                                            : null,
                                         PickupRefId = t.PickupRequestId.HasValue
                                             ? t.PickupRequest.RefId
                                             : null,
@@ -508,7 +505,7 @@ namespace DicomApp.BL.Services
                                         SenderId = t.SenderId,
                                         ReceiverId = t.ReceiverId,
                                         VendorId = t.VendorId,
-                                        ShipmentId = t.AdvertisementId,
+                                        AdvertisementId = t.AdvertisementId,
                                         PickupRequestId = t.PickupRequestId,
                                         GameFees = t.GameFees,
                                         WeightFees = t.WeightFees,
@@ -525,8 +522,6 @@ namespace DicomApp.BL.Services
                                         RefId = t.RefId,
                                         CreatedAt = t.CreatedAt,
 
-                                        StatusId = t.Shipment.StatusId,
-                                        StatusName = t.Shipment.Status.NameEN,
                                         StatusDTO = new StatusDTO
                                         {
                                             Id = t.StatusId.Value,

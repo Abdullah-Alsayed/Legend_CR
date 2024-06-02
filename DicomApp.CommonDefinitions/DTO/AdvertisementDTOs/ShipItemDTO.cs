@@ -3,7 +3,7 @@
     public class ShipItemDTO
     {
         public int ShipmentItemId { get; set; }
-        public int ShipmentId { get; set; }
+        public int AdvertisementId { get; set; }
         public int StatusId { get; set; }
         public StatusDTO StatusDTO { get; set; }
         public int? VendorProductId { get; set; }

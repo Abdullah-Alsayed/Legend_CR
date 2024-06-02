@@ -106,10 +106,10 @@
 //            if (model.VendorId == 0)
 //                model.VendorId = request.UserID;
 
-//            var ShipmentIDs = model.ShipmentIDs.Split(',').Select(int.Parse).ToList();
+//            var AdvertisementIds = model.AdvertisementIds.Split(',').Select(int.Parse).ToList();
 
-//            for (int i = 0; i < ShipmentIDs.Count; i++)
-//                items.Add(new PickupItemDTO { ShipmentId = ShipmentIDs[i] });
+//            for (int i = 0; i < AdvertisementIds.Count; i++)
+//                items.Add(new PickupItemDTO { AdvertisementId = AdvertisementIds[i] });
 
 //            request.PickupDTO = new PickupDTO()
 //            {
@@ -530,14 +530,14 @@
 
 //        [AuthorizePerRole("PickupAssign")]
 //        [HttpPost]
-//        public IActionResult Assign(List<int> ShipmentIDs, int ddldriver)
+//        public IActionResult Assign(List<int> AdvertisementIds, int ddldriver)
 //        {
 //            var request = new PickUpRequestRequest
 //            {
 //                RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
 //                UserID = AuthHelper.GetClaimValue(User, "UserID"),
 //                context = _context,
-//                PickupDTO = new PickupDTO { PickupIDs = ShipmentIDs, DeliveryManId = ddldriver }
+//                PickupDTO = new PickupDTO { PickupIDs = AdvertisementIds, DeliveryManId = ddldriver }
 //            };
 
 //            var response = PickUpRequestService.AssignPickupRequests(request);

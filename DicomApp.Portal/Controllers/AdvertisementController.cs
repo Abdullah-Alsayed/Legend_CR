@@ -28,7 +28,7 @@ namespace DicomApp.Portal.Controllers
 
         #region Advertisement details popup
 
-        [AuthorizePerRole("AdvertisementTrack")]
+        [AuthorizePerRole(SystemConstants.Permission.TrackAdvertisement)]
         public ActionResult TrackAdvertisement(string TrackAdvertisement)
         {
             var RoleID = AuthHelper.GetClaimValue(User, "RoleID");
@@ -70,7 +70,7 @@ namespace DicomApp.Portal.Controllers
 
         #region Advertisement actions
 
-        [AuthorizePerRole("AdvertisementAdd")]
+        [AuthorizePerRole(SystemConstants.Permission.AddAdvertisement)]
         [HttpPost]
         public IActionResult Add(AdsDTO model, string PartialItems)
         {
@@ -93,7 +93,7 @@ namespace DicomApp.Portal.Controllers
             return Json(response.Message);
         }
 
-        [AuthorizePerRole("AdvertisementAdd")]
+        [AuthorizePerRole(SystemConstants.Permission.AddAdvertisement)]
         public IActionResult Add(string ActionType = null)
         {
             ViewBag.Category = CategoryService
@@ -168,7 +168,7 @@ namespace DicomApp.Portal.Controllers
             return Json(new { ShippingFees = ShippingFees, ZoneName = ZoneName });
         }
 
-        [AuthorizePerRole("AdvertisementEdit")]
+        [AuthorizePerRole(SystemConstants.Permission.EditAdvertisement)]
         public IActionResult Edit(int shipID)
         {
             //var AdvertisementID = int.Parse(EncryptionHelper.Decrypt(OrderID));
@@ -196,7 +196,7 @@ namespace DicomApp.Portal.Controllers
             return View(response.AdsDTO);
         }
 
-        [AuthorizePerRole("AdvertisementEdit")]
+        [AuthorizePerRole(SystemConstants.Permission.EditAdvertisement)]
         [HttpPost]
         public ActionResult Edit(AdsDTO model)
         {
@@ -214,7 +214,7 @@ namespace DicomApp.Portal.Controllers
             return Json(response.Message);
         }
 
-        [AuthorizePerRole("AdvertisementPrint")]
+        [AuthorizePerRole(SystemConstants.Permission.PrintAdvertisement)]
         public IActionResult Print(int AdvertisementId)
         {
             var request = new AdvertisementRequest
@@ -240,7 +240,7 @@ namespace DicomApp.Portal.Controllers
             return pdfFile;
         }
 
-        [AuthorizePerRole("AdvertisementPrint")]
+        [AuthorizePerRole(SystemConstants.Permission.PrintAdvertisement)]
         public IActionResult PrintAll(string AdvertisementsIds)
         {
             List<int> AdvertisementsList = AdvertisementsIds
@@ -274,7 +274,7 @@ namespace DicomApp.Portal.Controllers
 
         #region Advertisement list
 
-        [AuthorizePerRole("AdvertisementsList")]
+        [AuthorizePerRole(SystemConstants.Permission.ListAdvertisement)]
         public IActionResult All(
             string Search,
             string OrderByColumn,

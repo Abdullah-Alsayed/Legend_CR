@@ -1,16 +1,11 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace DicomApp.DAL.DB
 {
     public partial class VendorProduct
     {
-        public VendorProduct()
-        {
-            PickupRequestItem = new HashSet<PickupRequestItem>();
-            ShipmentItem = new HashSet<ShipmentItem>();
-        }
+        public VendorProduct() { }
 
         public int VendorProductId { get; set; }
         public string Name { get; set; }
@@ -26,7 +21,5 @@ namespace DicomApp.DAL.DB
         public string Size { get; set; }
 
         public virtual CommonUser Vendor { get; set; }
-        public virtual ICollection<PickupRequestItem> PickupRequestItem { get; set; }
-        public virtual ICollection<ShipmentItem> ShipmentItem { get; set; }
     }
 }

@@ -39,7 +39,6 @@ namespace DicomApp.DAL.DB
         public virtual PickupRequest PickupRequest { get; set; }
         public virtual Account Receiver { get; set; }
         public virtual Account Sender { get; set; }
-        public virtual Advertisement Shipment { get; set; }
         public virtual Status Status { get; set; }
         public virtual Account Vendor { get; set; }
     }

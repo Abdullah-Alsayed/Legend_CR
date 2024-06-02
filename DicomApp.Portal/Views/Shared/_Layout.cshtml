@@ -149,6 +149,21 @@
 
                             </ul>
                         </li>
+                        <li class="cursor-pointer" onclick="OpenSection('ShippingManagement-Ul')">
+                            <a><img class="Img-Ul" src="~/dist/images/Icons/Shipment.png" /> Advertisement</a>
+                            <ul id="ShippingManagement-Ul" class="d-none Nested-sidebar-menu">
+                                @if (BaseService.CheckRoleAccessability(roleID, SystemConstants.Permission.AddAdvertisement, connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Advertisement/Add">Add New Shipment</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, SystemConstants.Permission.ListAdvertisement, connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Advertisement/All">Shipments List</a></li>
+                                }
+                            </ul>
+                        </li>
+
+
                         <li class="cursor-pointer" onclick="OpenSection('PickupManagement-Ul')">
                             <a><img class="Img-Ul" src="~/dist/images/Icons/Pickup.png" /> Pickup Management</a>
                             <ul id="PickupManagement-Ul" class="d-none Nested-sidebar-menu">
@@ -170,23 +185,7 @@
                                 }
                             </ul>
                         </li>
-                        <li class="cursor-pointer" onclick="OpenSection('ShippingManagement-Ul')">
-                            <a><img class="Img-Ul" src="~/dist/images/Icons/Shipment.png" /> Shipping Management</a>
-                            <ul id="ShippingManagement-Ul" class="d-none Nested-sidebar-menu">
-                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_AddShipment", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/Shipment/Add">Add New Shipment</a></li>
-                                }
-                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_ShipmentList", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/Shipment/All">Shipments List</a></li>
-                                }
-                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_AssignShipments", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/Shipment/Assign">Assign Shipments</a></li>
-                                }
-                            </ul>
-                        </li>
+
                         <li class="cursor-pointer" onclick="OpenSection('Warehouse-Packaging-Ul')">
                             <a><img class="Img-Ul" src="~/dist/images/Icons/Warehouse-Packaging.png" /> Warehouse & Packaging</a>
                             <ul id="Warehouse-Packaging-Ul" class="d-none Nested-sidebar-menu">

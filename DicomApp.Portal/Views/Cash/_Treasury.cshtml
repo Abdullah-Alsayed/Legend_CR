@@ -58,7 +58,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach (var ShipTrans in account.TransactionDTOs.GroupBy(t => new { t.CashTransferId, t.ShipmentId, t.PickupRequestId }))
+                                                @foreach (var ShipTrans in account.TransactionDTOs.GroupBy(t => new { t.CashTransferId, t.AdvertisementId, t.PickupRequestId }))
                                                 {
                                                     var RED = ShipTrans.FirstOrDefault(t => t.ReceiverId == (int)EnumAccountId.RED_Main_Account);
                                                     var Vendor = ShipTrans.FirstOrDefault(t => t.ReceiverId == account.AccountId);

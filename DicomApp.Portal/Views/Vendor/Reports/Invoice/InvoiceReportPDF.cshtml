@@ -29,7 +29,7 @@
                     <td class="text-center">@item.Name</td>
                     <td class="text-center Date-Table">@item.CreatedAt.ToString("dd MMM yyyy")</td>
                     <td class="text-center">
-                        @item.AccountTransactionDTOs.GroupBy(t => t.ShipmentId).Count()
+                        @item.AccountTransactionDTOs.GroupBy(t => t.AdvertisementId).Count()
                     </td>
                     <td class="text-center font-weight-bold">@item.Amount EGP</td>
                     <td class="text-center">

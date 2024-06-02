@@ -7,30 +7,30 @@
     case (int)EnumStatus.Delivered:
     case (int)EnumStatus.Paid_To_Vendor:
     case (int)EnumStatus.Refunded:
-        <span style="margin-bottom:0px; background-color:#0ebc934d; color:#008000" class="Filter-Table font-weight-bold">@Model.Name</span>
+        <span style="margin-bottom:0px; background-color:#0ebc934d; color:#008000" class="Filter-Table font-weight-bold">@Model.NameEN</span>
         break;
     case (int)EnumStatus.Cancelled:
     case (int)EnumStatus.Cancelled_Pickup:
     case (int)EnumStatus.Cancelled_Refund:
-        <span style="margin-bottom:0px; background-color:#fff3f3; color:#ff0000" class="Filter-Table font-weight-bold">@Model.Name</span>
+        <span style="margin-bottom:0px; background-color:#fff3f3; color:#ff0000" class="Filter-Table font-weight-bold">@Model.NameEN</span>
         break;
     case (int)EnumStatus.Not_Received:
-        <span style="margin-bottom:0px; background-color:#fff3f3; color:#ff0000" class="Filter-Table font-weight-bold">@Model.Name</span>
+        <span style="margin-bottom:0px; background-color:#fff3f3; color:#ff0000" class="Filter-Table font-weight-bold">@Model.NameEN</span>
         break;
     case (int)EnumStatus.Ready_For_Delivery:
     case (int)EnumStatus.Ready_For_Pickup:
     case (int)EnumStatus.Ready_For_Return:
     case (int)EnumStatus.Ready_For_Refund:
-        <span style="margin-bottom:0px; background-color:#fdffea; color:#f0b400" class="Filter-Table font-weight-bold">@Model.Name</span>
+        <span style="margin-bottom:0px; background-color:#fdffea; color:#f0b400" class="Filter-Table font-weight-bold">@Model.NameEN</span>
         break;
     case (int)EnumStatus.Assigned_For_Delivery:
     case (int)EnumStatus.Assigned_For_Pickup:
     case (int)EnumStatus.Assigned_For_Return:
     case (int)EnumStatus.Assigned_For_Refund:
         <span style="margin-bottom:0px; background-color:#fff89e; color:#d9a300" class="Filter-Table font-weight-bold">
-            @Model.Name
+            @Model.NameEN
             <br />
-            <span><i class="fa fa-user-circle-o" aria-hidden="true"></i>&nbsp;@Model.DeliveryManName</span>
+            <span><i class="fa fa-user-circle-o" aria-hidden="true"></i>&nbsp;@Model.NameEN</span>
         </span>
         break;
     case (int)EnumStatus.Out_For_Delivery:
@@ -38,14 +38,14 @@
     case (int)EnumStatus.Out_For_Return:
     case (int)EnumStatus.Returned:
     case (int)EnumStatus.Out_For_Refund:
-        <span style="margin-bottom:0px; background-color:#0ebc9314; color:#008000a8" class="Filter-Table font-weight-bold">@Model.Name</span>
+        <span style="margin-bottom:0px; background-color:#0ebc9314; color:#008000a8" class="Filter-Table font-weight-bold">@Model.NameEN</span>
         break;
     case (int)EnumStatus.At_Warehouse:
     case (int)EnumStatus.Postponed:
     case (int)EnumStatus.Archive:
-        <span style="margin-bottom:0px; background-color:#d6eaff; color:#427fc1" class="Filter-Table font-weight-bold">@Model.Name</span>
+        <span style="margin-bottom:0px; background-color:#d6eaff; color:#427fc1" class="Filter-Table font-weight-bold">@Model.NameEN</span>
         break;
     default:
-        <span style="margin-bottom:0px; background-color:#d6eaff; color:#427fc1" class="Filter-Table font-weight-bold">@Model.Name</span>
+        <span style="margin-bottom:0px; background-color:#d6eaff; color:#427fc1" class="Filter-Table font-weight-bold">@Model.NameEN</span>
         break;
 }

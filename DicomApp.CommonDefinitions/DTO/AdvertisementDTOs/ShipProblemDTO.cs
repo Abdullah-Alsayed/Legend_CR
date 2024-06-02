@@ -3,7 +3,7 @@
     public class ShipProblemDTO
     {
         public int ShipmentProblemId { get; set; }
-        public int ShipmentId { get; set; }
+        public int AdvertisementId { get; set; }
         public int ProblemTypeId { get; set; }
         public string ProblemTypeName { get; set; }
         public bool IsSolved { get; set; }

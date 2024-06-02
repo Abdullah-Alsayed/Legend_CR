@@ -105,7 +105,7 @@
 //                        (int)EnumStatus.Refunded
 //                    },
 //                    DeliveryManId = request.ShipDTO_Filter.DeliveryManId,
-//                    ShipmentId = request.ShipDTO_Filter.ShipmentId,
+//                    AdvertisementId = request.ShipDTO_Filter.AdvertisementId,
 //                };
 //                request.ShipDTO = model;
 //                request.context = _context;
@@ -177,7 +177,7 @@
 //                        (int)EnumStatus.Assigned_For_Refund
 //                    },
 //                    DeliveryManId = request.ShipDTO_Filter.DeliveryManId,
-//                    ShipmentId = request.ShipDTO_Filter.ShipmentId,
+//                    AdvertisementId = request.ShipDTO_Filter.AdvertisementId,
 //                };
 //                request.ShipDTO = model;
 //                request.context = _context;
@@ -237,7 +237,7 @@
 
 //                //*** (2) START : Receive Shipments From Warehouse
 //                else if (
-//                    request.ShipDTO_Filter.ShipmentIds != null
+//                    request.ShipDTO_Filter.AdvertisementIds != null
 //                    && (
 //                        request.ShipDTO_Filter.StatusId == (int)EnumStatus.Out_For_Delivery
 //                        || request.ShipDTO_Filter.StatusId == (int)EnumStatus.Out_For_Return
@@ -250,7 +250,7 @@
 //                    request.UserID = AuthHelper.GetClaimValue(User, "UserID");
 //                    request.ShipDTO = new AdsDTO
 //                    {
-//                        ShipmentIDs = request.ShipDTO_Filter.ShipmentIds,
+//                        AdvertisementIds = request.ShipDTO_Filter.AdvertisementIds,
 //                        StatusId = request.ShipDTO_Filter.StatusId,
 //                    };
 
@@ -261,7 +261,7 @@
 
 //                //*** (3) START : Deliver/Return/Refund Shipments To Customer/Vendor
 //                else if (
-//                    request.ShipDTO_Filter.ShipmentIds != null
+//                    request.ShipDTO_Filter.AdvertisementIds != null
 //                    && (
 //                        request.ShipDTO_Filter.StatusId == (int)EnumStatus.Delivered
 //                        || request.ShipDTO_Filter.StatusId == (int)EnumStatus.Returned
@@ -274,7 +274,7 @@
 //                    request.UserID = AuthHelper.GetClaimValue(User, "UserID");
 //                    request.ShipDTO = new AdsDTO
 //                    {
-//                        ShipmentIDs = request.ShipDTO_Filter.ShipmentIds,
+//                        AdvertisementIds = request.ShipDTO_Filter.AdvertisementIds,
 //                        ShipItemDTOs =
 //                            request.ShipDTO_Filter.ShipItemDTOs != null
 //                                ? request.ShipDTO_Filter.ShipItemDTOs
@@ -318,7 +318,7 @@
 //                request.UserID = AuthHelper.GetClaimValue(User, "UserID");
 //                request.ShipDTO = new AdsDTO()
 //                {
-//                    ShipmentId = request.ShipDTO_Filter.ShipmentId,
+//                    AdvertisementId = request.ShipDTO_Filter.AdvertisementId,
 //                    FeesDetailsDTO = request.ShipDTO_Filter.ShippingFeesPaid.HasValue
 //                        ? new FeesDetailsDTO
 //                        {

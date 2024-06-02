@@ -336,9 +336,7 @@ namespace DicomApp.Portal.Controllers
         public IActionResult AddOrder(string ActionType = null)
         {
             ViewBag.Category = _context.Category.ToList();
-            ViewBag.ShipmentService = _context
-                .ShipmentService.Where(s => s.Id != (int)EnumShipmentService.PaymentCollection)
-                .ToList();
+
             ViewBag.ZoneList = _context.Zone.ToList();
             ViewBag.Vendors = GeneralHelper.GetUsers((int)EnumRole.Gamer, _context);
 
@@ -503,9 +501,6 @@ namespace DicomApp.Portal.Controllers
         [AuthorizePerRole("Vendor_ShippingCalculator")]
         public IActionResult ShippingCalculator(string ActionType = null)
         {
-            ViewBag.ShipmentService = _context.ShipmentService.Where(s =>
-                s.Id == (int)EnumShipmentService.PickupDelivery
-            );
             ViewBag.Area = _context.City.Where(c => c.ZoneId.HasValue).ToList();
             var model = new ShippingCalculatorDTO();
 
@@ -599,7 +594,7 @@ namespace DicomApp.Portal.Controllers
         {
             //var model = new ShipmentDTO();
             //model.IsDeleted = false;
-            //model.ShipmentId = id;
+            //model.AdvertisementId = id;
             //model.VendorId = AuthHelper.GetClaimValue(User, "UserID");
             //var shipmentRequest = new ShipmentRequest
             //{
@@ -608,7 +603,7 @@ namespace DicomApp.Portal.Controllers
             //    context = _context,
             //    ShipmentDTO = model,
             //    IsDetails = true,
-            //    OrderByColumn = "ShipmentId"
+            //    OrderByColumn = "AdvertisementId"
             //};
             //var userResponse = DicomApp.BL.Services.ShipmentService.ListShipment(shipmentRequest);
             //return PartialView("_ShipmentDetails", userResponse.AdvertisementDTOs.FirstOrDefault());

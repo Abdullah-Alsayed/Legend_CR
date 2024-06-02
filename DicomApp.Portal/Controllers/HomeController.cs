@@ -147,7 +147,7 @@ namespace DicomApp.Portal.Controllers
             //    .Where(p => p.StatusId != (int)EnumStatus.Archive)
             //    .Select(p => new ShipmentDTO
             //    {
-            //        ShipmentId = p.ShipmentId,
+            //        AdvertisementId = p.AdvertisementId,
             //        CreatedAt = p.ShipmentDate,
             //        LastStatusAt = p.DeliveryDate,
             //        PaidAt = p.OrderDate,
@@ -271,7 +271,7 @@ namespace DicomApp.Portal.Controllers
             //    .Where(p => p.StatusId != (int)EnumStatus.Archive)
             //    .Select(p => new ShipmentDTO
             //    {
-            //        ShipmentId = p.ShipmentId,
+            //        AdvertisementId = p.AdvertisementId,
             //        CreatedAt = p.ShipmentDate,
             //        LastStatusAt = p.DeliveryDate,
             //        PaidAt = p.OrderDate,
@@ -323,7 +323,7 @@ namespace DicomApp.Portal.Controllers
             //    .Where(p => p.StatusId != (int)EnumStatus.Archive)
             //    .Select(p => new ShipmentDTO
             //    {
-            //        ShipmentId = p.ShipmentId,
+            //        AdvertisementId = p.AdvertisementId,
             //        CreatedAt = p.ShipmentDate,
             //        LastStatusAt = p.DeliveryDate,
             //        PaidAt = p.OrderDate,
@@ -378,7 +378,7 @@ namespace DicomApp.Portal.Controllers
             //    .Where(p => p.StatusId != (int)EnumStatus.Archive)
             //    .Select(p => new ShipmentDTO
             //    {
-            //        ShipmentId = p.ShipmentId,
+            //        AdvertisementId = p.AdvertisementId,
             //        CreatedAt = p.ShipmentDate,
             //        LastStatusAt = p.DeliveryDate,
             //        PaidAt = p.OrderDate,
@@ -446,7 +446,7 @@ namespace DicomApp.Portal.Controllers
             //    .Where(p => p.StatusId != (int)EnumStatus.Archive && p.VendorId == VendorID)
             //    .Select(p => new ShipmentDTO
             //    {
-            //        ShipmentId = p.ShipmentId,
+            //        AdvertisementId = p.AdvertisementId,
             //        CreatedAt = p.ShipmentDate,
             //        LastStatusAt = p.DeliveryDate,
             //        PaidAt = p.OrderDate,
@@ -550,7 +550,7 @@ namespace DicomApp.Portal.Controllers
             //    .OrderByDescending(p => p.Value2).Take(10).ToArray();
             //#endregion
 
-            //record.Orders = AllOrders.OrderByDescending(p => p.ShipmentId).Take(10).ToList();
+            //record.Orders = AllOrders.OrderByDescending(p => p.AdvertisementId).Take(10).ToList();
             return PartialView("_AccountDashboard", record);
         }
 

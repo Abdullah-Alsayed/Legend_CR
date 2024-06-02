@@ -6,17 +6,17 @@
  {
     foreach (var ship in Model)
     {
-        double REDFees = ship.FeesDetailsDTO.ShippingFees + ship.FeesDetailsDTO.GameFees + ship.FeesDetailsDTO.WeightFees + ship.FeesDetailsDTO.SizeFees + ship.FeesDetailsDTO.PartialDeliveryFees;
+        double REDFees = 0;
 
-        <tr onclick="ShipmentDetails('Vendor',@ship.ShipmentId)" data-toggle="modal" data-target="#ShipmentDetails">
+        <tr onclick="ShipmentDetails('Vendor',@ship.AdvertisementId)" data-toggle="modal" data-target="#ShipmentDetails">
             <td class="font-weight-bold">@ship.RefId</td>
             <td class="text-nowrap Date-Table">@ship.CreatedAt.ToString("dd MMM yyyy")</td>
-            <td>@ship.CustomerDetailsDTO.CustomerName</td>
-            <td>@ship.AreaName</td>
-            <td class="text-center pl-1 pr-1">@ship.ShipmentServiceName</td>
+            <td>0</td>
+            <td>0</td>
+            <td class="text-center pl-1 pr-1">0</td>
             <td class="text-center text-nowrap pl-1 pr-1">@REDFees EGP</td>
-            <td class="text-center text-nowrap pl-1 pr-1">@ship.FeesDetailsDTO.Total EGP</td>
-            <partial name="/Views/Shared/Shipment/_StatusSwitch.cshtml" model="@ship.StatusDTO" />
+            <td class="text-center text-nowrap pl-1 pr-1">0 EGP</td>
+            <partial name="/Views/Shared/Shipment/_StatusSwitch.cshtml" model="@ship.Status" />
         </tr>
     }
 }

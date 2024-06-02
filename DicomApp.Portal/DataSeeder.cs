@@ -81,7 +81,7 @@ namespace DicomApp.Portal
                         Email = "admin@admin.com",
                         Password = "123",
                         RoleId = dBContext
-                            .Role.FirstOrDefault(x => x.Name == SystemConstants.Role.Admin)
+                            .Role.FirstOrDefault(x => x.Name == SystemConstants.Role.SuperAdmin)
                             .Id,
                         PhoneNumber = "01111111111",
                     }

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace DicomApp.DAL.DB
 {
@@ -7,7 +9,6 @@ namespace DicomApp.DAL.DB
     {
         public Advertisement()
         {
-            AccountTransaction = new HashSet<AccountTransaction>();
             FollowUp = new HashSet<FollowUp>();
         }
 
@@ -15,8 +16,13 @@ namespace DicomApp.DAL.DB
         public string RefId { get; set; }
         public int GameId { get; set; }
         public int StatusId { get; set; }
+
+        [ForeignKey(nameof(Vendor))]
         public int VendorId { get; set; }
+
+        [ForeignKey(nameof(Buyer))]
         public int? BuyerId { get; set; }
+
         public int? AdvertisementRequestId { get; set; }
         public int CashTransferId { get; set; }
 
@@ -34,12 +40,12 @@ namespace DicomApp.DAL.DB
 
         public virtual Game Game { get; set; }
         public virtual Status Status { get; set; }
+
         public virtual CommonUser Vendor { get; set; }
         public virtual CommonUser Buyer { get; set; }
 
         public virtual CashTransfer CashTransfer { get; set; }
         public virtual ICollection<AdvertisementPhotos> AdvertisementPhotos { get; set; }
-        public virtual ICollection<AccountTransaction> AccountTransaction { get; set; }
         public virtual ICollection<FollowUp> FollowUp { get; set; }
     }
 }

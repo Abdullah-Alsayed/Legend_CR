@@ -6,7 +6,7 @@ namespace DicomApp.DAL.DB
     public partial class ShipmentCustomerFollowUp
     {
         public int ShipmentCustomerFollowUpId { get; set; }
-        public int ShipmentId { get; set; }
+        public int AdvertisementId { get; set; }
         public string Note { get; set; }
         public bool? IsConfirmed { get; set; }
         public bool? IsCallAnswered { get; set; }

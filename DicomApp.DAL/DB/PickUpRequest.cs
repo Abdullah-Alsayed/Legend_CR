@@ -8,7 +8,6 @@ namespace DicomApp.DAL.DB
         public PickupRequest()
         {
             AccountTransaction = new HashSet<AccountTransaction>();
-            PickupRequestItem = new HashSet<PickupRequestItem>();
             Shipment = new HashSet<Advertisement>();
         }
 
@@ -45,7 +44,6 @@ namespace DicomApp.DAL.DB
         public virtual CommonUser Vendor { get; set; }
         public virtual Zone Zone { get; set; }
         public virtual ICollection<AccountTransaction> AccountTransaction { get; set; }
-        public virtual ICollection<PickupRequestItem> PickupRequestItem { get; set; }
         public virtual ICollection<Advertisement> Shipment { get; set; }
         public int? AdvertisementRequestId { get; set; }
     }

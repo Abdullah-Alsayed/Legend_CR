@@ -25,7 +25,7 @@ namespace DicomApp.BL.Services
                     CashTransferId = dto.CashTransferId,
 
                     StatusId = dto.StatusId,
-                    AdvertisementId = dto.ShipmentId,
+                    AdvertisementId = dto.AdvertisementId,
                     PickupRequestId = dto.PickupRequestId,
 
                     GameFees = dto.GameFees,
@@ -109,7 +109,7 @@ namespace DicomApp.BL.Services
                                 StatusId = s.StatusId,
                                 StatusName = s.StatusId.HasValue ? s.Status.NameEN : null,
 
-                                ShipmentId = s.AdvertisementId,
+                                AdvertisementId = s.AdvertisementId,
                                 PickupRequestId = s.PickupRequestId,
                                 GameFees = s.GameFees,
                                 WeightFees = s.WeightFees,
@@ -177,7 +177,7 @@ namespace DicomApp.BL.Services
                                 VendorId = s.VendorId,
                                 StatusId = s.StatusId,
                                 StatusName = s.StatusId.HasValue ? s.Status.NameEN : null,
-                                ShipmentId = s.AdvertisementId,
+                                AdvertisementId = s.AdvertisementId,
                                 PickupRequestId = s.PickupRequestId,
                                 GameFees = s.GameFees,
                                 WeightFees = s.WeightFees,
@@ -245,8 +245,8 @@ namespace DicomApp.BL.Services
             if (filter.VendorId > 0)
                 query = query.Where(p => p.VendorId == filter.VendorId);
 
-            if (filter.ShipmentId > 0)
-                query = query.Where(p => p.ShipmentId == filter.ShipmentId);
+            if (filter.AdvertisementId > 0)
+                query = query.Where(p => p.AdvertisementId == filter.AdvertisementId);
 
             if (filter.PickupRequestId > 0)
                 query = query.Where(p => p.PickupRequestId == filter.PickupRequestId);

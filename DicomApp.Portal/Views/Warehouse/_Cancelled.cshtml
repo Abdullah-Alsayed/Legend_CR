@@ -21,29 +21,22 @@
     {
         foreach (var ship in Model)
         {
-            <tr id="@ship.ShipmentId">
-                <td onclick="ShipmentDetails('Shipment',@ship.ShipmentId)" data-toggle="modal" data-target="#ShipmentDetails"><b>@ship.RefId</b></td>
+            <tr id="@ship.AdvertisementId">
+                <td onclick="ShipmentDetails('Shipment',@ship.AdvertisementId)" data-toggle="modal" data-target="#ShipmentDetails"><b>@ship.RefId</b></td>
                 <td>
-                    @ship.CustomerDetailsDTO.CustomerName
+                    0
                     <br />
-                    <label class="text-nowrap mt-1"><i class="fa fa-map-marker"></i> @ship.AreaName</label>
+                    <label class="text-nowrap mt-1"><i class="fa fa-map-marker"></i> 0</label>
                 </td>
-                <td>@ship.BranchName</td>
-                <td>@ship.VendorDetailsDTO.VendorName</td>
-                @if (ship.ShipmentTypeId == (int)EnumShipmentType.PickupDelivery)
-                {
-                    <td><span class="Shipment-Type Pickup-Bg font-weight-bold">Pickup</span></td>
-                }
-                else if (ship.ShipmentTypeId == (int)EnumShipmentType.StockDelivery)
-                {
-                    <td><span class="Shipment-Type Gold-Bg font-weight-bold">Stock</span></td>
-                }
-                <td id="GameName_@ship.ShipmentId">@(ship.SettingDTO.GameName ?? "N/A")</td>
-                <td id="CategoryName_@ship.ShipmentId">@(ship.SettingDTO.CategoryName ?? "N/A")</td>
-                <td id="PackagDetails_@ship.ShipmentId" class="text-center">
-                    @(ship.SettingDTO.WarehouseWeight) KG
+                <td>0</td>
+                <td>0</td>
+                <td><span class="Shipment-Type Gold-Bg font-weight-bold">Stock</span></td>
+                <td id="GameName_@ship.AdvertisementId">0</td>
+                <td id="CategoryName_@ship.AdvertisementId">0</td>
+                <td id="PackagDetails_@ship.AdvertisementId" class="text-center">
+                  0 KG
                     <br>
-                    @(ship.SettingDTO.WarehouseSize ?? "0") cm<sap>3</sap>
+                   0 cm<sap>3</sap>
                 </td>
             </tr>
         }

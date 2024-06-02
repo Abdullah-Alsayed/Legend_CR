@@ -150,9 +150,6 @@ namespace DicomApp.BL.Services
                                         {
                                             AccountTransactionId = t.AccountTransactionId,
                                             RefId = t.RefId,
-                                            ShipRefId = t.AdvertisementId.HasValue
-                                                ? t.Shipment.RefId
-                                                : null,
                                             TypeId = t.TypeId,
                                             SenderId = t.SenderId,
                                             ReceiverId = t.ReceiverId,
@@ -161,7 +158,7 @@ namespace DicomApp.BL.Services
                                             StatusName = t.StatusId.HasValue
                                                 ? t.Status.NameEN
                                                 : null,
-                                            ShipmentId = t.AdvertisementId,
+                                            AdvertisementId = t.AdvertisementId,
                                             PickupRequestId = t.PickupRequestId,
                                             GameFees = t.GameFees,
                                             WeightFees = t.WeightFees,
@@ -235,9 +232,6 @@ namespace DicomApp.BL.Services
                                         {
                                             AccountTransactionId = t.AccountTransactionId,
                                             RefId = t.RefId,
-                                            ShipRefId = t.AdvertisementId.HasValue
-                                                ? t.Shipment.RefId
-                                                : null,
                                             TypeId = t.TypeId,
                                             SenderId = t.SenderId,
                                             ReceiverId = t.ReceiverId,
@@ -246,7 +240,7 @@ namespace DicomApp.BL.Services
                                             StatusName = t.StatusId.HasValue
                                                 ? t.Status.NameEN
                                                 : null,
-                                            ShipmentId = t.AdvertisementId,
+                                            AdvertisementId = t.AdvertisementId,
                                             PickupRequestId = t.PickupRequestId,
                                             GameFees = t.GameFees,
                                             WeightFees = t.WeightFees,
@@ -341,14 +335,11 @@ namespace DicomApp.BL.Services
                                     .Select(t => new AccountTransactionDTO
                                     {
                                         AccountTransactionId = t.AccountTransactionId,
-                                        ShipRefId = t.AdvertisementId.HasValue
-                                            ? t.Shipment.RefId
-                                            : null,
                                         TypeId = t.TypeId,
                                         SenderId = t.SenderId,
                                         ReceiverId = t.ReceiverId,
                                         VendorId = t.VendorId,
-                                        ShipmentId = t.AdvertisementId,
+                                        AdvertisementId = t.AdvertisementId,
                                         PickupRequestId = t.PickupRequestId,
                                         GameFees = t.GameFees,
                                         WeightFees = t.WeightFees,
@@ -505,9 +496,6 @@ namespace DicomApp.BL.Services
                                     .Select(t => new AccountTransactionDTO
                                     {
                                         AccountTransactionId = t.AccountTransactionId,
-                                        ShipRefId = t.AdvertisementId.HasValue
-                                            ? t.Shipment.RefId
-                                            : null,
                                         PickupRefId = t.PickupRequestId.HasValue
                                             ? t.PickupRequest.RefId
                                             : null,
@@ -519,7 +507,7 @@ namespace DicomApp.BL.Services
                                         SenderId = t.SenderId,
                                         ReceiverId = t.ReceiverId,
                                         VendorId = t.VendorId,
-                                        ShipmentId = t.AdvertisementId,
+                                        AdvertisementId = t.AdvertisementId,
                                         PickupRequestId = t.PickupRequestId,
                                         GameFees = t.GameFees,
                                         WeightFees = t.WeightFees,

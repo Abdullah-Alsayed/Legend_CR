@@ -55,7 +55,7 @@ namespace DicomApp.CommonDefinitions.DTO.PickupDTOs
         public string ProductIDs { get; set; }
         public string ProductsQuantity { get; set; }
         public string ProductsPrice { get; set; }
-        public string ShipmentIDs { get; set; }
+        public string AdvertisementIds { get; set; }
         public bool IncludeReturns { get; set; }
     }
 }

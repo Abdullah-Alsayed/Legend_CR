@@ -25,17 +25,17 @@
      <tbody>
         @if (Model != null && Model.Count > 0)
         {
-            foreach (var item in Model.OrderBy(s=>s.DeliveryManName))
+            foreach (var item in Model.OrderBy(s=>s.AccountTransaction))
             {
             <tr>
-                <td>@item.VendorDetailsDTO.VendorName</td>
+                <td>0</td>
                 <td><b>@item.RefId</b></td>
                     <td class="text-nowrap Date-Table">@item.CreatedAt.ToString("MMM dd ,yyy")</td>
-                <td>@item.DeliveryManName</td>
-                <td>@(item.ShipmentServiceName ?? "---")</td>
-                <td class="text-nowrap ">@item.FeesDetailsDTO.ShippingFees EGP</td>
-                <td class="text-nowrap ">@item.FeesDetailsDTO.Total EGP</td>
-                    <partial name="~/Views/Shared/Shipment/_StatusSwitch.cshtml" model="@item.StatusDTO" />
+                <td>@item.UserName</td>
+                <td>0</td>
+                <td class="text-nowrap ">0 EGP</td>
+                <td class="text-nowrap ">0 EGP</td>
+                    <partial name="~/Views/Shared/Shipment/_StatusSwitch.cshtml" model="@item.Status" />
                 <td><span class="Comments-Table">@item.Description</span></td>
             </tr>
             }

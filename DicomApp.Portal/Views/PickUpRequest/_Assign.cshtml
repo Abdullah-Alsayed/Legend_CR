@@ -59,7 +59,7 @@
                                                                 @foreach (var pickUpRequest in item)
                                                                 {
                                                                     <tr>
-                                                                        <td><input type="checkbox" value="@pickUpRequest.PickupRequestId" name="ShipmentIDs" id="checkbox_@pickUpRequest.PickupRequestId" checked=@pickUpRequest.SELECTED /></td>
+                                                                        <td><input type="checkbox" value="@pickUpRequest.PickupRequestId" name="AdvertisementIds" id="checkbox_@pickUpRequest.PickupRequestId" checked=@pickUpRequest.SELECTED /></td>
                                                                         <td>
                                                                             <b onclick="@(pickUpRequest.PickupRequestTypeId == (int)EnumPickupRequestType.DeliveryPickup ? "GetDeliveryPickups":"GetStockPickups")('@pickUpRequest.PickupRequestId')" data-target="@(pickUpRequest.PickupRequestTypeId == (int)EnumPickupRequestType.DeliveryPickup ? "#PickupRequstDetails":"#PickupStocktDetails")" data-toggle="modal">@pickUpRequest.RefId</b>
 

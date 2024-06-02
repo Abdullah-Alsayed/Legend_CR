@@ -6,7 +6,7 @@ namespace DicomApp.CommonDefinitions.DTO.AdvertisementDTOs
 {
     public class AdsDTO_Filter
     {
-        public int ShipmentId { get; set; }
+        public int AdvertisementId { get; set; }
         public string RefId { get; set; }
         public int ShipmentTypeId { get; set; }
         public int StatusId { get; set; }
@@ -30,7 +30,7 @@ namespace DicomApp.CommonDefinitions.DTO.AdvertisementDTOs
         public string CancelComment { get; set; }
         public bool? IsAfford { get; set; }
         public double? ShippingFeesPaid { get; set; }
-        public List<int> ShipmentIds { get; set; }
+        public List<int> AdvertisementIds { get; set; }
         public List<int> ShipmentItemIds { get; set; }
         public List<ShipItemDTO> ShipItemDTOs { get; set; }
         public int ProblemTypeID { get; set; }

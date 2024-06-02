@@ -23,27 +23,27 @@
     {
         foreach (var ship in Model)
         {
-            <tr id="@ship.ShipmentId">
+            <tr id="@ship.AdvertisementId">
                 <td><input type="checkbox" onchange="PendingShipmentsSelect()" value="@ship.AdvertisementId" id="checkbox_@ship.AdvertisementId" name="AdvertisementIDs" checked=@ship.SELECTED></td>
-                <td onclick="ShipmentDetails('Shipment',@ship.ShipmentId)" data-toggle="modal" data-target="#ShipmentDetails"><b>@ship.RefId</b></td>
+                <td onclick="ShipmentDetails('Shipment',@ship.AdvertisementId)" data-toggle="modal" data-target="#ShipmentDetails"><b>@ship.RefId</b></td>
                 <td>
-                    @ship.CustomerDetailsDTO.CustomerName
+                   0
                     <br />
                     <label class="text-nowrap mt-1"><i class="fa fa-map-marker"></i> 0</label>
                 </td>
                 <td>@ship.0</td>
                 <td>@ship.VendorName</td>
                 <td id="GameName_@ship.AdvertisementId">0</td>
-                <td id="CategoryName_@ship.ShipmentId">@(ship.SettingDTO.CategoryName ?? "N/A")</td>
-                <td id="PackagDetails_@ship.ShipmentId" class="text-center">
-                    @(ship.SettingDTO.WarehouseWeight) KG
+                <td id="CategoryName_@ship.AdvertisementId">0</td>
+                <td id="PackagDetails_@ship.AdvertisementId" class="text-center">
+                    @(ship.AdvertisementId) KG
                     <br>
-                    @(ship.SettingDTO.WarehouseSize ?? "0") cm<sap>3</sap>
+                    0
                 </td>
                 <td class="text-center">
                     <div class="Actions-Buttons">
                         <ul>
-                            <li class="Red-Bg" onclick="BackToWarehouse(@ship.ShipmentId)"><a><i class="fa fa-undo"></i></a></li>
+                            <li class="Red-Bg" onclick="BackToWarehouse(@ship.AdvertisementId)"><a><i class="fa fa-undo"></i></a></li>
                         </ul>
                     </div>
                 </td>

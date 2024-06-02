@@ -132,11 +132,11 @@ function AddStockPickup(FormID) {
 }
 
 function PickupRequestToggel(fadeOut, fadeIn) {
-    let ShipmentiDs = $("tbody td input:checkbox:checked").map(function () {
+    let AdvertisementIds = $("tbody td input:checkbox:checked").map(function () {
         return $(this).val();
     }).get();
-    var ValidFlag = ValidateShipmentPickupRequest(ShipmentiDs);
-    if (ShipmentiDs.length == 0) {
+    var ValidFlag = ValidateShipmentPickupRequest(AdvertisementIds);
+    if (AdvertisementIds.length == 0) {
         Swal.fire({
             position: 'center',
             icon: 'error',
@@ -157,7 +157,7 @@ function PickupRequestToggel(fadeOut, fadeIn) {
         return false;
     }
     ToggleFade(fadeOut, fadeIn)
-    var Vendor = $(`#${ShipmentiDs[0]}`).data('vendor');
+    var Vendor = $(`#${AdvertisementIds[0]}`).data('vendor');
     GetVendorInfo(Vendor);
 
     $.ajax({
@@ -172,7 +172,7 @@ function PickupRequestToggel(fadeOut, fadeIn) {
 
 function AddDeliveryPickup(FormID) {
     var IncludeReturns = $('#cbxIncludeReturns').is(':checked');
-    let ShipmentiDs = $("tbody td input:checkbox:checked").map(function () {
+    let AdvertisementIds = $("tbody td input:checkbox:checked").map(function () {
         return $(this).val();
     }).get();
     if ($(`#${FormID}`).valid()) {
@@ -191,7 +191,7 @@ function AddDeliveryPickup(FormID) {
 
         //let DataForm = formSerialize(FormID, true);
         let DataForm = $(`#${FormID}`).serialize();
-        DataForm = DataForm + "&ShipmentIDs=" + ShipmentiDs.toString();
+        DataForm = DataForm + "&AdvertisementIds=" + AdvertisementIds.toString();
         DataForm = DataForm + "&IncludeReturns=" + IncludeReturns;
 
         $("#PickupRequestBtn").prop('disabled', true);

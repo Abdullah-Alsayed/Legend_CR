@@ -172,15 +172,15 @@
 
 //        [AuthorizePerRole("ConfirmReceiveReturn")]
 //        [HttpPost]
-//        public IActionResult ReceiveReturn(string shipmentIDs)
+//        public IActionResult ReceiveReturn(string AdvertisementIds)
 //        {
-//            var ListIDs = shipmentIDs.Split(',').Select<string, int>(int.Parse).ToList();
+//            var ListIDs = AdvertisementIds.Split(',').Select<string, int>(int.Parse).ToList();
 //            var request = new AdvertisementRequest
 //            {
 //                context = _context,
 //                RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
 //                UserID = AuthHelper.GetClaimValue(User, "UserID"),
-//                ShipDTO = new AdsDTO { ShipmentIDs = ListIDs }
+//                ShipDTO = new AdsDTO { AdvertisementIds = ListIDs }
 //            };
 
 //            var response = DicomApp.BL.Services.AdvertisementService.ReceiveReturns(request);
@@ -266,7 +266,7 @@
 //                UserID = AuthHelper.GetClaimValue(User, "UserID"),
 //                ShipDTO = new AdsDTO
 //                {
-//                    ShipmentId = shipId,
+//                    AdvertisementId = shipId,
 //                    StatusId = (int)EnumStatus.Ready_For_Delivery
 //                }
 //            };
@@ -302,7 +302,7 @@
 //                UserID = AuthHelper.GetClaimValue(User, "UserID"),
 //                ShipDTO = new AdsDTO
 //                {
-//                    ShipmentId = shipId,
+//                    AdvertisementId = shipId,
 //                    StatusId = (int)EnumStatus.At_Warehouse
 //                }
 //            };

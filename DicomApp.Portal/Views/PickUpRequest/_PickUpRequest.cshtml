@@ -173,14 +173,14 @@
                     {
                         foreach (var item in Model.Shipments)
                         {
-                            <tr id="@item.ShipmentId" data-Vendor="@item.VendorDetailsDTO.VendorId">
-                                <td><input type="checkbox" value="@item.ShipmentId" id="checkbox_@item.ShipmentId" name="ShipmentIDs" checked=@item.SELECTED></td>
-                                <td onclick="ShipmentDetails('Shipment',@item.ShipmentId)" data-toggle="modal" data-target="#ShipmentDetails"><b>@item.RefId</b></td>
-                                <td>@item.VendorDetailsDTO.VendorName</td>
-                                <td>@item.CustomerDetailsDTO.CustomerName</td>
-                                <td>@item.ShipmentServiceName</td>
-                                <td>@item.NoOfItems</td>
-                                <td>@item.SettingDTO.Weight KG</td>
+                            <tr id="@item.AdvertisementId" data-Vendor="0">
+                                <td><input type="checkbox" value="@item.AdvertisementId" id="checkbox_@item.AdvertisementId" name="AdvertisementIds" checked=@item.SELECTED></td>
+                                <td onclick="ShipmentDetails('Shipment',@item.AdvertisementId)" data-toggle="modal" data-target="#ShipmentDetails"><b>@item.RefId</b></td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0 KG</td>
                             </tr>
                         }
                     }

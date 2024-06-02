@@ -24,33 +24,30 @@
     {
         foreach (var ship in Model)
         {
-            double REDFees = ship.FeesDetailsDTO.ShippingFees + ship.FeesDetailsDTO.GameFees + ship.FeesDetailsDTO.WeightFees + ship.FeesDetailsDTO.SizeFees + ship.FeesDetailsDTO.PartialDeliveryFees;
+            double REDFees = 0;
 
-            <tr id="TableRow_@ship.ShipmentId">
-                <td class="text-center text-nowrap pl-1 pr-1" onclick="ShipmentDetails('Shipment',@ship.ShipmentId)" data-toggle="modal" data-target="#ShipmentDetails"><b>@ship.RefId</b></td>
-                <td class="text-center pl-1 pr-1" style="min-width:100px;">@ship.VendorDetailsDTO.VendorName</td>
+            <tr id="TableRow_@ship.AdvertisementId">
+                <td class="text-center text-nowrap pl-1 pr-1" onclick="ShipmentDetails('Shipment',@ship.AdvertisementId)" data-toggle="modal" data-target="#ShipmentDetails"><b>@ship.RefId</b></td>
+                <td class="text-center pl-1 pr-1" style="min-width:100px;">0</td>
                 <td class="text-center text-nowrap pl-1 pr-1 Date-Table">@ship.CreatedAt.ToString("dd MMM yyyy")</td>
                 <td class="text-center pl-1 pr-1">
-                    @ship.CustomerDetailsDTO.CustomerName
+                   0
                     <br />
-                    <label class="text-nowrap mt-1"><i class="fa fa-map-marker"></i>&nbsp;@ship.AreaName</label>
+                    <label class="text-nowrap mt-1"><i class="fa fa-map-marker"></i>&nbsp;0</label>
                 </td>
-                <td style=" min-width:80px" class="text-center pl-1 pr-1">@ship.ShipmentServiceName</td>
-                <td class="text-center">@ship.BranchName</td>
+                <td style=" min-width:80px" class="text-center pl-1 pr-1">0</td>
+                <td class="text-center">0</td>
                 <td class="text-center text-nowrap pl-1 pr-1">@REDFees EGP</td>
-                <td class="text-center text-nowrap pl-1 pr-1">@ship.FeesDetailsDTO.Total EGP</td>
-                <partial name="~/Views/Shared/Shipment/_StatusSwitch.cshtml" model="@ship.StatusDTO"></partial>
-                <td class="text-center pl-1 pr-1 font-weight-bold">@(ship.VendorDetailsDTO.PaidToVendorAt.HasValue ? ship.VendorDetailsDTO.PaidToVendorAt.Value.ToString("dd MMM yyyy") : "")</td>
-                <td class="text-center pl-1 pr-1 font-weight-bold">@ship.CashTransferRefId</td>
+                <td class="text-center text-nowrap pl-1 pr-1">0 EGP</td>
+                <partial name="~/Views/Shared/Shipment/_StatusSwitch.cshtml" model="@ship.Status"></partial>
+                <td class="text-center pl-1 pr-1 font-weight-bold">0</td>
+                <td class="text-center pl-1 pr-1 font-weight-bold">0</td>
                 <td class="text-center">
                     <div class="Actions-Buttons">
                         <ul>
-                            @if (!ship.HasRefunded && ship.ShipmentServiceId != (int)EnumShipmentService.Refund)
-                            {
-                                <li class="Red-Bg">
-                                    <a style="color:white" target="_blank" href="@Url.Action("Refund","Shipment", new { s = EncryptionManager.Encrypt(ship.ShipmentId.ToString()) })"><i class="fas fa-redo"></i></a>
-                                </li>
-                            }
+                            <li class="Red-Bg">
+                                <a style="color:white" target="_blank" href="@Url.Action("Refund","Shipment", new { s = EncryptionManager.Encrypt(ship.AdvertisementId.ToString()) })"><i class="fas fa-redo"></i></a>
+                            </li>
                         </ul>
                     </div>
                 </td>

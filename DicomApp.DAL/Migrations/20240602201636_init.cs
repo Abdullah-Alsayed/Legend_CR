@@ -66,7 +66,10 @@ namespace DicomApp.DAL.Migrations
                     CreatedBy = table.Column<int>(nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
                     LastModifiedBy = table.Column<int>(nullable: true),
-                    LastModifiedAt = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())")
+                    LastModifiedAt = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeletedOn = table.Column<DateTime>(nullable: false),
+                    DeleteBy = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -151,24 +154,12 @@ namespace DicomApp.DAL.Migrations
                     ModifiedBy = table.Column<int>(nullable: true),
                     Name = table.Column<string>(maxLength: 150, nullable: false),
                     Editable = table.Column<bool>(nullable: false, defaultValueSql: "((1))"),
-                    IsInternal = table.Column<bool>(nullable: false)
+                    DeleteBy = table.Column<int>(nullable: false),
+                    DeleteAt = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Role", x => x.ID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ShipmentService",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ServiceName = table.Column<string>(maxLength: 150, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ShipmentService", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -206,6 +197,7 @@ namespace DicomApp.DAL.Migrations
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     ConnectionID = table.Column<string>(unicode: false, maxLength: 100, nullable: false),
+                    UserId = table.Column<string>(nullable: true),
                     IsOnline = table.Column<bool>(nullable: false),
                     CreatedBy = table.Column<int>(nullable: true),
                     CreationDate = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
@@ -247,7 +239,10 @@ namespace DicomApp.DAL.Migrations
                     CreatedBy = table.Column<int>(nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
                     LastModifiedBy = table.Column<int>(nullable: true),
-                    LastModifiedAt = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())")
+                    LastModifiedAt = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeletedOn = table.Column<DateTime>(nullable: false),
+                    DeleteBy = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -808,7 +803,8 @@ namespace DicomApp.DAL.Migrations
                     RefID = table.Column<string>(nullable: true),
                     DeliveryManId = table.Column<int>(nullable: true),
                     Notes = table.Column<string>(nullable: true),
-                    BranchId = table.Column<int>(nullable: true)
+                    BranchId = table.Column<int>(nullable: true),
+                    AdvertisementRequestId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -838,11 +834,11 @@ namespace DicomApp.DAL.Migrations
                         principalColumn: "PickupRequestTypeId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_PickupRequest_StatusId",
+                        name: "FK_PickupRequest_Status_StatusId",
                         column: x => x.StatusId,
                         principalTable: "Status",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_PickupRequest_CommonUser",
                         column: x => x.VendorId,
@@ -852,163 +848,6 @@ namespace DicomApp.DAL.Migrations
                     table.ForeignKey(
                         name: "FK_PickupRequest_Zone",
                         column: x => x.ZoneId,
-                        principalTable: "Zone",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Shipment",
-                columns: table => new
-                {
-                    ShipmentId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    RefId = table.Column<string>(maxLength: 255, nullable: true),
-                    ShipmentTypeId = table.Column<int>(nullable: false),
-                    ShipmentServiceId = table.Column<int>(nullable: false),
-                    StatusId = table.Column<int>(nullable: false),
-                    BranchId = table.Column<int>(nullable: false),
-                    VendorId = table.Column<int>(nullable: false),
-                    VendorName = table.Column<string>(maxLength: 250, nullable: false),
-                    VendorPhone = table.Column<string>(maxLength: 250, nullable: false),
-                    DeliveryManId = table.Column<int>(nullable: true),
-                    CustomerId = table.Column<int>(nullable: true),
-                    CustomerName = table.Column<string>(maxLength: 250, nullable: true),
-                    CustomerPhone = table.Column<string>(maxLength: 250, nullable: true),
-                    CustomerPhone2 = table.Column<string>(maxLength: 250, nullable: true),
-                    CustomerAddress = table.Column<string>(maxLength: 500, nullable: true),
-                    AreaID = table.Column<int>(nullable: false),
-                    ZoneID = table.Column<int>(nullable: false),
-                    Floor = table.Column<int>(nullable: false),
-                    Apartment = table.Column<int>(nullable: false),
-                    Landmark = table.Column<string>(maxLength: 255, nullable: true),
-                    Location = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
-                    NoOfItems = table.Column<int>(nullable: false),
-                    PickupRequestId = table.Column<int>(nullable: true),
-                    IsOpenPackage = table.Column<bool>(nullable: false),
-                    IsFragilePackage = table.Column<bool>(nullable: false),
-                    IsStock = table.Column<bool>(nullable: false),
-                    IsAfford = table.Column<bool>(nullable: true),
-                    GameId = table.Column<int>(nullable: true),
-                    WarehouseGameId = table.Column<int>(nullable: true),
-                    GameFees = table.Column<double>(nullable: false),
-                    Weight = table.Column<int>(nullable: false),
-                    WarehouseWeight = table.Column<int>(nullable: false),
-                    WeightFees = table.Column<double>(nullable: false),
-                    Size = table.Column<string>(maxLength: 100, nullable: true),
-                    WarehouseSize = table.Column<string>(maxLength: 100, nullable: true),
-                    SizeFees = table.Column<double>(nullable: false),
-                    IsPartialDelivery = table.Column<bool>(nullable: false),
-                    PartialDeliveryFees = table.Column<double>(nullable: false),
-                    ShippingFees = table.Column<double>(nullable: false),
-                    ShippingFeesPaid = table.Column<double>(nullable: false),
-                    VendorCash = table.Column<double>(nullable: false),
-                    Total = table.Column<double>(nullable: false),
-                    CancelFees = table.Column<double>(nullable: false),
-                    CancelComment = table.Column<string>(maxLength: 500, nullable: true),
-                    ReturnCount = table.Column<int>(nullable: false),
-                    CallAnswerCount = table.Column<int>(nullable: false),
-                    CallNotAnswerCount = table.Column<int>(nullable: false),
-                    IsTripCompleted = table.Column<bool>(nullable: false),
-                    IsCashReceived = table.Column<bool>(nullable: false),
-                    IsPaidToVendor = table.Column<bool>(nullable: false),
-                    PaidToVendorAt = table.Column<DateTime>(type: "datetime", nullable: true),
-                    CashTransferId = table.Column<int>(nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
-                    CreatedBy = table.Column<int>(nullable: false),
-                    LastModifiedAt = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
-                    LastModifiedBy = table.Column<int>(nullable: false),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    IsCourierReturned = table.Column<bool>(nullable: false),
-                    ShipToRefundId = table.Column<int>(nullable: true),
-                    RefundCash = table.Column<double>(nullable: true),
-                    RefundFees = table.Column<double>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Shipment", x => x.ShipmentId);
-                    table.ForeignKey(
-                        name: "FK_Shipment_City",
-                        column: x => x.AreaID,
-                        principalTable: "City",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Shipment_Branch",
-                        column: x => x.BranchId,
-                        principalTable: "Branch",
-                        principalColumn: "BranchId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Shipment_CashTransfer",
-                        column: x => x.CashTransferId,
-                        principalTable: "CashTransfer",
-                        principalColumn: "CashTransferId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Shipment_CommonUser",
-                        column: x => x.CustomerId,
-                        principalTable: "CommonUser",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Shipment_Shipment",
-                        column: x => x.DeliveryManId,
-                        principalTable: "CommonUser",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Shipment_Game",
-                        column: x => x.GameId,
-                        principalTable: "Game",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Shipment_CommonUser3",
-                        column: x => x.LastModifiedBy,
-                        principalTable: "CommonUser",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Shipment_PickupRequest",
-                        column: x => x.PickupRequestId,
-                        principalTable: "PickupRequest",
-                        principalColumn: "PickupRequestId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Shipment_ShipmentService",
-                        column: x => x.ShipmentServiceId,
-                        principalTable: "ShipmentService",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Shipment_ShipmentType",
-                        column: x => x.ShipmentTypeId,
-                        principalTable: "ShipmentType",
-                        principalColumn: "ShipmentTypeId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Shipment_Status",
-                        column: x => x.StatusId,
-                        principalTable: "Status",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Shipment_CommonUser1",
-                        column: x => x.VendorId,
-                        principalTable: "CommonUser",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Shipment_WarehouseGameId",
-                        column: x => x.WarehouseGameId,
-                        principalTable: "Game",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Shipment_Zone",
-                        column: x => x.ZoneID,
                         principalTable: "Zone",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
@@ -1026,7 +865,7 @@ namespace DicomApp.DAL.Migrations
                     ReceiverId = table.Column<int>(nullable: false),
                     VendorId = table.Column<int>(nullable: true),
                     StatusId = table.Column<int>(nullable: true),
-                    ShipmentId = table.Column<int>(nullable: true),
+                    AdvertisementId = table.Column<int>(nullable: true),
                     PickupRequestId = table.Column<int>(nullable: true),
                     GameFees = table.Column<double>(nullable: false),
                     WeightFees = table.Column<double>(nullable: false),
@@ -1087,13 +926,7 @@ namespace DicomApp.DAL.Migrations
                         principalColumn: "AccountId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_AccountTransaction_Shipment",
-                        column: x => x.ShipmentId,
-                        principalTable: "Shipment",
-                        principalColumn: "ShipmentId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_AccountTransaction_Status",
+                        name: "FK_AccountTransaction_Status_StatusId",
                         column: x => x.StatusId,
                         principalTable: "Status",
                         principalColumn: "ID",
@@ -1107,12 +940,161 @@ namespace DicomApp.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Advertisement",
+                columns: table => new
+                {
+                    AdvertisementId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    RefId = table.Column<string>(maxLength: 255, nullable: true),
+                    GameId = table.Column<int>(nullable: false),
+                    StatusId = table.Column<int>(nullable: false),
+                    VendorId = table.Column<int>(nullable: false),
+                    BuyerId = table.Column<int>(nullable: true),
+                    AdvertisementRequestId = table.Column<int>(nullable: true),
+                    CashTransferId = table.Column<int>(nullable: false),
+                    Description = table.Column<string>(maxLength: 500, nullable: true),
+                    UserName = table.Column<string>(maxLength: 500, nullable: true),
+                    Password = table.Column<string>(maxLength: 250, nullable: true),
+                    Price = table.Column<int>(nullable: false),
+                    IsRefund = table.Column<bool>(nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
+                    CreatedBy = table.Column<int>(nullable: false),
+                    LastModifiedAt = table.Column<DateTime>(type: "datetime", nullable: true, defaultValueSql: "(getdate())"),
+                    LastModifiedBy = table.Column<int>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    BranchId = table.Column<int>(nullable: true),
+                    CityId = table.Column<int>(nullable: true),
+                    CommonUserId = table.Column<int>(nullable: true),
+                    CommonUserId1 = table.Column<int>(nullable: true),
+                    CommonUserId2 = table.Column<int>(nullable: true),
+                    CommonUserId3 = table.Column<int>(nullable: true),
+                    GameId1 = table.Column<int>(nullable: true),
+                    PickupRequestId = table.Column<int>(nullable: true),
+                    ShipmentTypeId = table.Column<int>(nullable: true),
+                    ZoneId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Advertisement", x => x.AdvertisementId);
+                    table.ForeignKey(
+                        name: "FK_Advertisement_Branch_BranchId",
+                        column: x => x.BranchId,
+                        principalTable: "Branch",
+                        principalColumn: "BranchId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Advertisement_CommonUser_BuyerId",
+                        column: x => x.BuyerId,
+                        principalTable: "CommonUser",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Advertisement_CashTransfer_CashTransferId",
+                        column: x => x.CashTransferId,
+                        principalTable: "CashTransfer",
+                        principalColumn: "CashTransferId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Advertisement_City_CityId",
+                        column: x => x.CityId,
+                        principalTable: "City",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Advertisement_CommonUser_CommonUserId",
+                        column: x => x.CommonUserId,
+                        principalTable: "CommonUser",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Advertisement_CommonUser_CommonUserId1",
+                        column: x => x.CommonUserId1,
+                        principalTable: "CommonUser",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Advertisement_CommonUser_CommonUserId2",
+                        column: x => x.CommonUserId2,
+                        principalTable: "CommonUser",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Advertisement_CommonUser_CommonUserId3",
+                        column: x => x.CommonUserId3,
+                        principalTable: "CommonUser",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Shipment_Game",
+                        column: x => x.GameId,
+                        principalTable: "Game",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Advertisement_Game_GameId1",
+                        column: x => x.GameId1,
+                        principalTable: "Game",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Advertisement_PickupRequest_PickupRequestId",
+                        column: x => x.PickupRequestId,
+                        principalTable: "PickupRequest",
+                        principalColumn: "PickupRequestId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Advertisement_ShipmentType_ShipmentTypeId",
+                        column: x => x.ShipmentTypeId,
+                        principalTable: "ShipmentType",
+                        principalColumn: "ShipmentTypeId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Advertisement_Status_StatusId",
+                        column: x => x.StatusId,
+                        principalTable: "Status",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Shipment_CommonUser1",
+                        column: x => x.VendorId,
+                        principalTable: "CommonUser",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Advertisement_Zone_ZoneId",
+                        column: x => x.ZoneId,
+                        principalTable: "Zone",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AdvertisementPhotos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    AdvertisementId = table.Column<int>(nullable: false),
+                    Url = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AdvertisementPhotos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AdvertisementPhotos_Advertisement_AdvertisementId",
+                        column: x => x.AdvertisementId,
+                        principalTable: "Advertisement",
+                        principalColumn: "AdvertisementId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "FollowUp",
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ShipmentId = table.Column<int>(nullable: true),
+                    AdvertisementId = table.Column<int>(nullable: true),
                     StatusID = table.Column<int>(nullable: true),
                     Comment = table.Column<string>(maxLength: 500, nullable: true),
                     CreatedBy = table.Column<int>(nullable: false),
@@ -1129,6 +1111,12 @@ namespace DicomApp.DAL.Migrations
                 {
                     table.PrimaryKey("PK_FollowUp", x => x.ID);
                     table.ForeignKey(
+                        name: "FK_FollowUp_Shipment",
+                        column: x => x.AdvertisementId,
+                        principalTable: "Advertisement",
+                        principalColumn: "AdvertisementId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_Visit_FollowUp_CommonUser",
                         column: x => x.CreatedBy,
                         principalTable: "CommonUser",
@@ -1140,57 +1128,6 @@ namespace DicomApp.DAL.Migrations
                         principalTable: "FollowUpType",
                         principalColumn: "FollowUpTypeID",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_FollowUp_Shipment",
-                        column: x => x.ShipmentId,
-                        principalTable: "Shipment",
-                        principalColumn: "ShipmentId",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PickupRequestItem",
-                columns: table => new
-                {
-                    PickupRequestItemId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    PickupRequestId = table.Column<int>(nullable: false),
-                    VendorProductId = table.Column<int>(nullable: true),
-                    ShipmentId = table.Column<int>(nullable: true),
-                    Quantity = table.Column<int>(nullable: true),
-                    Price = table.Column<double>(nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
-                    CreatedBy = table.Column<int>(nullable: false),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    StatusId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PickupRequestItem", x => x.PickupRequestItemId);
-                    table.ForeignKey(
-                        name: "FK_PickupRequestItem_PickupRequest",
-                        column: x => x.PickupRequestId,
-                        principalTable: "PickupRequest",
-                        principalColumn: "PickupRequestId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_PickupRequestItem_Shipment",
-                        column: x => x.ShipmentId,
-                        principalTable: "Shipment",
-                        principalColumn: "ShipmentId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_PickupRequestItem_StatusId",
-                        column: x => x.StatusId,
-                        principalTable: "Status",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_PickupRequestItem_VendorProduct",
-                        column: x => x.VendorProductId,
-                        principalTable: "VendorProduct",
-                        principalColumn: "VendorProductId",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1199,7 +1136,7 @@ namespace DicomApp.DAL.Migrations
                 {
                     ShipmentCustomerFollowUpId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ShipmentId = table.Column<int>(nullable: false),
+                    AdvertisementId = table.Column<int>(nullable: false),
                     Note = table.Column<string>(nullable: true),
                     IsConfirmed = table.Column<bool>(nullable: true),
                     IsCallAnswered = table.Column<bool>(nullable: true),
@@ -1213,99 +1150,16 @@ namespace DicomApp.DAL.Migrations
                 {
                     table.PrimaryKey("PK_ShipmentCustomerFollowUp", x => x.ShipmentCustomerFollowUpId);
                     table.ForeignKey(
+                        name: "FK_ShipmentCustomerFollowUp_Advertisement_AdvertisementId",
+                        column: x => x.AdvertisementId,
+                        principalTable: "Advertisement",
+                        principalColumn: "AdvertisementId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_ShipmentCustomerFollowup_CommonUser",
                         column: x => x.CreatedBy,
                         principalTable: "CommonUser",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ShipmentCustomerFollowup_Shipment",
-                        column: x => x.ShipmentId,
-                        principalTable: "Shipment",
-                        principalColumn: "ShipmentId",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ShipmentItem",
-                columns: table => new
-                {
-                    ShipmentItemId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ShipmentId = table.Column<int>(nullable: false),
-                    VendorProductId = table.Column<int>(nullable: true),
-                    Quantity = table.Column<int>(nullable: false),
-                    Price = table.Column<double>(nullable: false),
-                    Size = table.Column<string>(maxLength: 100, nullable: true),
-                    Name = table.Column<string>(nullable: true),
-                    ImageUrl = table.Column<string>(nullable: true),
-                    CourierQuantityDelivered = table.Column<int>(nullable: false),
-                    CourierQuantityReturned = table.Column<int>(nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
-                    CreatedBy = table.Column<int>(nullable: false),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    StatusId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ShipmentItem", x => x.ShipmentItemId);
-                    table.ForeignKey(
-                        name: "FK_ShipmentItem_Shipment",
-                        column: x => x.ShipmentId,
-                        principalTable: "Shipment",
-                        principalColumn: "ShipmentId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ShipmentItem_StatusId",
-                        column: x => x.StatusId,
-                        principalTable: "Status",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ShipmentItem_VendorProduct",
-                        column: x => x.VendorProductId,
-                        principalTable: "VendorProduct",
-                        principalColumn: "VendorProductId",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ShipmentProblem",
-                columns: table => new
-                {
-                    ShipmentProblemId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ShipmentId = table.Column<int>(nullable: false),
-                    ProblemTypeId = table.Column<int>(nullable: false),
-                    IsSolved = table.Column<bool>(nullable: false),
-                    Solution = table.Column<string>(nullable: true),
-                    Note = table.Column<string>(nullable: true),
-                    IsCourierProblem = table.Column<bool>(nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
-                    CreatedBy = table.Column<int>(nullable: false),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    IsReportToVendor = table.Column<bool>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ShipmentProblem", x => x.ShipmentProblemId);
-                    table.ForeignKey(
-                        name: "FK_ShipmentProblem_CommonUser",
-                        column: x => x.CreatedBy,
-                        principalTable: "CommonUser",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ShipmentProblem_ProblemType",
-                        column: x => x.ProblemTypeId,
-                        principalTable: "ProblemType",
-                        principalColumn: "ProblemTypeId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ShipmentProblem_Shipment",
-                        column: x => x.ShipmentId,
-                        principalTable: "Shipment",
-                        principalColumn: "ShipmentId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -1360,11 +1214,6 @@ namespace DicomApp.DAL.Migrations
                 column: "SenderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AccountTransaction_ShipmentId",
-                table: "AccountTransaction",
-                column: "ShipmentId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_AccountTransaction_StatusId",
                 table: "AccountTransaction",
                 column: "StatusId");
@@ -1373,6 +1222,86 @@ namespace DicomApp.DAL.Migrations
                 name: "IX_AccountTransaction_VendorId",
                 table: "AccountTransaction",
                 column: "VendorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Advertisement_BranchId",
+                table: "Advertisement",
+                column: "BranchId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Advertisement_BuyerId",
+                table: "Advertisement",
+                column: "BuyerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Advertisement_CashTransferId",
+                table: "Advertisement",
+                column: "CashTransferId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Advertisement_CityId",
+                table: "Advertisement",
+                column: "CityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Advertisement_CommonUserId",
+                table: "Advertisement",
+                column: "CommonUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Advertisement_CommonUserId1",
+                table: "Advertisement",
+                column: "CommonUserId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Advertisement_CommonUserId2",
+                table: "Advertisement",
+                column: "CommonUserId2");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Advertisement_CommonUserId3",
+                table: "Advertisement",
+                column: "CommonUserId3");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Advertisement_GameId",
+                table: "Advertisement",
+                column: "GameId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Advertisement_GameId1",
+                table: "Advertisement",
+                column: "GameId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Advertisement_PickupRequestId",
+                table: "Advertisement",
+                column: "PickupRequestId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Advertisement_ShipmentTypeId",
+                table: "Advertisement",
+                column: "ShipmentTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Advertisement_StatusId",
+                table: "Advertisement",
+                column: "StatusId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Advertisement_VendorId",
+                table: "Advertisement",
+                column: "VendorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Advertisement_ZoneId",
+                table: "Advertisement",
+                column: "ZoneId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AdvertisementPhotos_AdvertisementId",
+                table: "AdvertisementPhotos",
+                column: "AdvertisementId");
 
             migrationBuilder.CreateIndex(
                 name: "Service_Name_unique",
@@ -1458,6 +1387,11 @@ namespace DicomApp.DAL.Migrations
                 column: "UserID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_FollowUp_AdvertisementId",
+                table: "FollowUp",
+                column: "AdvertisementId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_FollowUp_CreatedBy",
                 table: "FollowUp",
                 column: "CreatedBy");
@@ -1466,11 +1400,6 @@ namespace DicomApp.DAL.Migrations
                 name: "IX_FollowUp_FollowUpTypeID",
                 table: "FollowUp",
                 column: "FollowUpTypeID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_FollowUp_ShipmentId",
-                table: "FollowUp",
-                column: "ShipmentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Game_CategoryId",
@@ -1523,26 +1452,6 @@ namespace DicomApp.DAL.Migrations
                 column: "ZoneId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PickupRequestItem_PickupRequestId",
-                table: "PickupRequestItem",
-                column: "PickupRequestId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PickupRequestItem_ShipmentId",
-                table: "PickupRequestItem",
-                column: "ShipmentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PickupRequestItem_StatusId",
-                table: "PickupRequestItem",
-                column: "StatusId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PickupRequestItem_VendorProductId",
-                table: "PickupRequestItem",
-                column: "VendorProductId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_RoleAppService_RoleID",
                 table: "RoleAppService",
                 column: "RoleID");
@@ -1554,114 +1463,14 @@ namespace DicomApp.DAL.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Shipment_AreaID",
-                table: "Shipment",
-                column: "AreaID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Shipment_BranchId",
-                table: "Shipment",
-                column: "BranchId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Shipment_CashTransferId",
-                table: "Shipment",
-                column: "CashTransferId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Shipment_CustomerId",
-                table: "Shipment",
-                column: "CustomerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Shipment_DeliveryManId",
-                table: "Shipment",
-                column: "DeliveryManId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Shipment_GameId",
-                table: "Shipment",
-                column: "GameId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Shipment_LastModifiedBy",
-                table: "Shipment",
-                column: "LastModifiedBy");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Shipment_PickupRequestId",
-                table: "Shipment",
-                column: "PickupRequestId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Shipment_ShipmentServiceId",
-                table: "Shipment",
-                column: "ShipmentServiceId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Shipment_ShipmentTypeId",
-                table: "Shipment",
-                column: "ShipmentTypeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Shipment_StatusId",
-                table: "Shipment",
-                column: "StatusId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Shipment_VendorId",
-                table: "Shipment",
-                column: "VendorId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Shipment_WarehouseGameId",
-                table: "Shipment",
-                column: "WarehouseGameId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Shipment_ZoneID",
-                table: "Shipment",
-                column: "ZoneID");
+                name: "IX_ShipmentCustomerFollowUp_AdvertisementId",
+                table: "ShipmentCustomerFollowUp",
+                column: "AdvertisementId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ShipmentCustomerFollowUp_CreatedBy",
                 table: "ShipmentCustomerFollowUp",
                 column: "CreatedBy");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ShipmentCustomerFollowUp_ShipmentId",
-                table: "ShipmentCustomerFollowUp",
-                column: "ShipmentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ShipmentItem_ShipmentId",
-                table: "ShipmentItem",
-                column: "ShipmentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ShipmentItem_StatusId",
-                table: "ShipmentItem",
-                column: "StatusId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ShipmentItem_VendorProductId",
-                table: "ShipmentItem",
-                column: "VendorProductId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ShipmentProblem_CreatedBy",
-                table: "ShipmentProblem",
-                column: "CreatedBy");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ShipmentProblem_ProblemTypeId",
-                table: "ShipmentProblem",
-                column: "ProblemTypeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ShipmentProblem_ShipmentId",
-                table: "ShipmentProblem",
-                column: "ShipmentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserLocation_UserID",
@@ -1700,6 +1509,9 @@ namespace DicomApp.DAL.Migrations
                 name: "AccountTransaction");
 
             migrationBuilder.DropTable(
+                name: "AdvertisementPhotos");
+
+            migrationBuilder.DropTable(
                 name: "Common_Resource");
 
             migrationBuilder.DropTable(
@@ -1718,7 +1530,7 @@ namespace DicomApp.DAL.Migrations
                 name: "Notification");
 
             migrationBuilder.DropTable(
-                name: "PickupRequestItem");
+                name: "ProblemType");
 
             migrationBuilder.DropTable(
                 name: "RoleAppService");
@@ -1727,16 +1539,13 @@ namespace DicomApp.DAL.Migrations
                 name: "ShipmentCustomerFollowUp");
 
             migrationBuilder.DropTable(
-                name: "ShipmentItem");
-
-            migrationBuilder.DropTable(
-                name: "ShipmentProblem");
-
-            migrationBuilder.DropTable(
                 name: "Userhubconnection");
 
             migrationBuilder.DropTable(
                 name: "UserLocation");
+
+            migrationBuilder.DropTable(
+                name: "VendorProduct");
 
             migrationBuilder.DropTable(
                 name: "Warehouse");
@@ -1751,13 +1560,7 @@ namespace DicomApp.DAL.Migrations
                 name: "AppService");
 
             migrationBuilder.DropTable(
-                name: "VendorProduct");
-
-            migrationBuilder.DropTable(
-                name: "ProblemType");
-
-            migrationBuilder.DropTable(
-                name: "Shipment");
+                name: "Advertisement");
 
             migrationBuilder.DropTable(
                 name: "CashTransfer");
@@ -1767,9 +1570,6 @@ namespace DicomApp.DAL.Migrations
 
             migrationBuilder.DropTable(
                 name: "PickupRequest");
-
-            migrationBuilder.DropTable(
-                name: "ShipmentService");
 
             migrationBuilder.DropTable(
                 name: "ShipmentType");

@@ -10,7 +10,7 @@ namespace DicomApp.CommonDefinitions.DTO.AdvertisementDTOs
         public int CallNotAnswerCount { get; set; }
 
         public int ShipmentCustomerFollowUpId { get; set; }
-        public int ShipmentId { get; set; }
+        public int AdvertisementId { get; set; }
         public string Note { get; set; }
 
         public bool? IsConfirmed { get; set; }

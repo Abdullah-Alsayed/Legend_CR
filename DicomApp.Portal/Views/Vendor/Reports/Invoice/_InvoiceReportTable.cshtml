@@ -14,7 +14,7 @@
             <td class="text-center">
                 <button data-toggle="modal" data-target="#Transactions-Modal_@item.CashTransferId" class="Red-Btn Btn-Sm">
                     <img class="mr-2" src="~/dist/images/Icons/Remaining.png" />
-                    @item.AccountTransactionDTOs.GroupBy(t => t.ShipmentId).Count()
+                    @item.AccountTransactionDTOs.GroupBy(t => t.AdvertisementId).Count()
                 </button>
 
                 <!-- START : Invoice Shipments -->
@@ -46,7 +46,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach (var ShipTrans in item.AccountTransactionDTOs.GroupBy(t => t.ShipmentId))
+                                            @foreach (var ShipTrans in item.AccountTransactionDTOs.GroupBy(t => t.AdvertisementId))
                                             {
                                                 var RED = ShipTrans.FirstOrDefault(t => t.ReceiverId == (int)EnumAccountId.RED_Main_Account);
                                                 var Vendor = ShipTrans.FirstOrDefault(t => t.ReceiverId == item.ReceiverId);

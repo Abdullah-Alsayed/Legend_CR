@@ -49,13 +49,13 @@
                 </div>*@
                 <div class="col-lg-4">
                     <label class="Shipment-Details-label">Cash on delivery</label>
-                    <input type="text" asp-for="FeesDetailsDTO.Total" class="mb-3" placeholder="Enter Cash on delivery" onchange="GetTotalPrice()" required />
+                    <input type="text" class="mb-3" placeholder="Enter Cash on delivery" onchange="GetTotalPrice()" required />
                     <div class="invalid-feedback">
                         Please enter a Cash on delivery.
                     </div>
                     <div class="mt-2">
                         <label class="Shipment-Details-label">Shipping Fees (for Cancellation or Partial Delivery)</label>
-                        <input type="number" asp-for="FeesDetailsDTO.CancelFees" class="input-Number" min="0" placeholder="Shipping Fees (for Cancellation or Partial Delivery)" />
+                        <input type="number" class="input-Number" min="0" placeholder="Shipping Fees (for Cancellation or Partial Delivery)" />
                     </div>
                 </div>
                 <div class="col-lg-4">

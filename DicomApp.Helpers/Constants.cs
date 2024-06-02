@@ -26,6 +26,13 @@ namespace DicomApp.Helpers
             public const string EditRole = "EditRole";
             public const string AddRole = "AddRole";
             public const string DeleteRole = "DeleteRole";
+
+            //Advertisement
+            public const string TrackAdvertisement = "TrackAdvertisement";
+            public const string AddAdvertisement = "AddAdvertisement";
+            public const string EditAdvertisement = "EditAdvertisement";
+            public const string PrintAdvertisement = "PrintAdvertisement";
+            public const string ListAdvertisement = "ListAdvertisement";
         }
 
         public static class ActionType

@@ -26,22 +26,22 @@
     {
         foreach (var ship in Model)
         {
-            double REDFees = ship.FeesDetailsDTO.ShippingFees + ship.FeesDetailsDTO.GameFees + ship.FeesDetailsDTO.WeightFees + ship.FeesDetailsDTO.SizeFees + ship.FeesDetailsDTO.PartialDeliveryFees;
+            double REDFees = 0;
 
-            <tr id="TableRow_@ship.ShipmentId">
-                <td class="text-center text-nowrap pl-1 pr-1" onclick="ShipmentDetails('Shipment',@ship.ShipmentId)" data-toggle="modal" data-target="#ShipmentDetails"><b>@ship.RefId</b></td>
-                <td class="text-center pl-1 pr-1" style="min-width:100px;">@ship.VendorDetailsDTO.VendorName</td>
+            <tr id="TableRow_@ship.AdvertisementId">
+                <td class="text-center text-nowrap pl-1 pr-1" onclick="ShipmentDetails('Shipment',@ship.AdvertisementId)" data-toggle="modal" data-target="#ShipmentDetails"><b>@ship.RefId</b></td>
+                <td class="text-center pl-1 pr-1" style="min-width:100px;">0</td>
                 <td class="text-center text-nowrap pl-1 pr-1 Date-Table">@ship.CreatedAt.ToString("dd MMM yyyy")</td>
                 <td class="text-center pl-1 pr-1">
-                    @ship.CustomerDetailsDTO.CustomerName
+                    0
                     <br />
-                    <label class="text-nowrap mt-1"><i class="fa fa-map-marker"></i>&nbsp;@ship.AreaName</label>
+                    <label class="text-nowrap mt-1"><i class="fa fa-map-marker"></i>&nbsp;0</label>
                 </td>
-                <td class="text-center">@ship.BranchName</td>
-                <td style=" min-width:80px" class="text-center pl-1 pr-1">@ship.ShipmentServiceName</td>
+                <td class="text-center">0</td>
+                <td style=" min-width:80px" class="text-center pl-1 pr-1">0</td>
                 <td class="text-center text-nowrap pl-1 pr-1">@REDFees EGP</td>
-                <td class="text-center text-nowrap pl-1 pr-1">@ship.FeesDetailsDTO.Total EGP</td>
-                <partial name="~/Views/Shared/Shipment/_StatusSwitch.cshtml" model="@ship.StatusDTO"></partial>
+                <td class="text-center text-nowrap pl-1 pr-1">0</td>
+                <partial name="~/Views/Shared/Shipment/_StatusSwitch.cshtml" model="@ship.Status"></partial>
                 <td class="text-center pl-1 pr-1">
                     <partial name="~/Views/Shared/Shipment/_Problems.cshtml" model="@ship"></partial>
                 </td>
@@ -51,16 +51,10 @@
                 <td class="text-center pl-1 pr-1">
                     
                 </td>
-                <td class="text-center pl-1 pr-1" id="ReportToVendor_@ship.ShipmentId">
-                    @if (ship.ProblemDTOs.Any(s => s.IsReportToVendor))
-                    {
-                        <b>
-                            @ship.ProblemDTOs.LastOrDefault(s=>s.IsReportToVendor).ProblemTypeName
-                        </b>
-                        @ship.ProblemDTOs.LastOrDefault(s=>s.IsReportToVendor).Note
-                    }
+                <td class="text-center pl-1 pr-1" id="ReportToVendor_@ship.AdvertisementId">
+                   0
                 </td>
-                <td class="text-center pr-0" id="TableTD_@ship.ShipmentId">
+                <td class="text-center pr-0" id="TableTD_@ship.AdvertisementId">
                     <partial name="~/Views/Shared/Shipment/_CommonActions.cshtml" model="@ship"></partial>
                 </td>
             </tr>
