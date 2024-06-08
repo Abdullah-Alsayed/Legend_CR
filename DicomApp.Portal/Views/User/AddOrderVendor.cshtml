@@ -2,7 +2,7 @@
 @using DicomApp.DAL.DB
 @using DicomApp.CommonDefinitions.DTO
 @using DicomApp.Helpers
-@model Shipment
+@model Advertisement
 @{
     var RoleID = AuthHelper.GetClaimValue(User, "RoleID");
 }
@@ -27,14 +27,14 @@
             <div class="row Red-Row ml-4 Shipment-Details-Section">
                 <div class="col-lg-4">
                     <label class="Shipment-Details-label">Service</label>
-                    @Html.DropDownListFor(model => model.ShipmentServiceId, new SelectList(ViewBag.ShipmentService, "Id", "ServiceName"),"---Select Service---", new { @class = "form-control mb-3",@required="required"})
+                    @Html.DropDownListFor(model => model.AdvertisementId, new SelectList(ViewBag.ShipmentService, "Id", "ServiceName"),"---Select Service---", new { @class = "form-control mb-3",@required="required"})
                     <div class="invalid-feedback">
                         Please Select Service .
                     </div>
                 </div>
                 <div class="col-lg-4">
                     <label class="Shipment-Details-label">Order Amount</label>
-                    <input type="text" asp-for="Total" class="mb-3" placeholder="Enter Order Amount" onchange="GetTotalPrice()" required />
+                    <input type="text" asp-for="Price" class="mb-3" placeholder="Enter Order Amount" onchange="GetTotalPrice()" required />
                     <div class="invalid-feedback">
                         Please enter a Amount.
                     </div>
@@ -54,63 +54,63 @@
                     <div style="" class="Shipment-Details-Section"> 
                         <div class="col-lg-12">
                             <label class="Shipment-Details-label">Name</label>
-                            <input type="text" placeholder="Name" asp-for="CustomerName" required />
+                            <input type="text" placeholder="Name" asp-for="Price " required />
                             <div class="invalid-feedback">
                                 Please enter a valid customer name.
                             </div>
                         </div>
                         <div class="col-lg-12 mt-3">
                             <label class="Shipment-Details-label">Number</label>
-                            <input type="text" placeholder="Number" asp-for="CustomerPhone" pattern="^(?:\s*\d){8,11}(?:\s*)$" required>
+                            <input type="text" placeholder="Number" asp-for="AdvertisementId" pattern="^(?:\s*\d){8,11}(?:\s*)$" required>
                             <div class="invalid-feedback">
                                 Please enter a valid customer Phone (between 8 and 11 digit).
                             </div>
                         </div>
                         <div class="col-lg-12 mt-3">
                             <label class="Shipment-Details-label">Number 2</label>
-                            <input type="text" placeholder="Number 2" asp-for="CustomerPhone2" pattern="^(?:\s*\d){8,11}(?:\s*)$">
+                            <input type="text" placeholder="Number 2" asp-for="AdvertisementPhotos" pattern="^(?:\s*\d){8,11}(?:\s*)$">
                             <div class="invalid-feedback">
                                 Please enter a valid customer Phone (between 8 and 11 digit).
                             </div>
                         </div>
                         <div class="col-lg-12 mt-3">
                             <label class="Shipment-Details-label">Address</label>
-                            <input type="text" placeholder="Address" asp-for="CustomerAddress" pattern="^(?!\s*$).+" required>
+                            <input type="text" placeholder="Address" asp-for="AdvertisementPhotos" pattern="^(?!\s*$).+" required>
                             <div class="invalid-feedback">
                                 Please enter a valid customer address.
                             </div>
                         </div>
                         <div class="col-lg-12 mt-3">
                             <label class="Shipment-Details-label">Area</label>
-                            @Html.DropDownListFor(model => model.AreaId, new SelectList(ViewBag.AreasList, "Id", "CityNameAr"),"--- Select Area ---", new { @class = "form-control" ,@required="required",@onchange="GetTotalPrice()"})
+                            @Html.DropDownListFor(model => model.BuyerId, new SelectList(ViewBag.AreasList, "Id", "CityNameAr"),"--- Select Area ---", new { @class = "form-control" ,@required="required",@onchange="GetTotalPrice()"})
                             <div class="invalid-feedback">
                                 Please  Select Area.
                             </div>
                         </div>
                         <div class="col-lg-12 mt-3">
                             <label class="Shipment-Details-label">vendor</label>
-                            @Html.DropDownListFor(model => model.VendorId, new SelectList(ViewBag.vendors, "Id", "Name"),"--- Select Vendor ---", new { @class = "form-control " ,@required="required"})
+                            @Html.DropDownListFor(model => model.GamerId, new SelectList(ViewBag.vendors, "Id", "Name"),"--- Select Vendor ---", new { @class = "form-control " ,@required="required"})
                             <div class="invalid-feedback">
                                 Please  Select vendor.
                             </div>
                         </div>
                         <div class="col-lg-12 mt-3">
                             <label class="Shipment-Details-label">Weight</label>
-                            <input type="number" min="0" class="input-Number" asp-for="Weight" onchange="GetTotalPrice()" placeholder="Weight" required />
+                            <input type="number" min="0" class="input-Number" asp-for="Description" onchange="GetTotalPrice()" placeholder="Weight" required />
                             <div class="invalid-feedback">
                                 Please enter Weight.
                             </div>
                         </div>
                         <div class="col-lg-12 mt-3">
                             <label class="Shipment-Details-label">No. of items</label>
-                            <input type="number" min="1" asp-for="NoOfItems" class="input-Number" placeholder="No. of items" required />
+                            <input type="number" min="1" asp-for="AdvertisementId" class="input-Number" placeholder="No. of items" required />
                             <div class="invalid-feedback">
                                 Please enter No. of items.
                             </div>
                         </div>
                        <div class="col-lg-12 mt-3">
                         <label class="Shipment-Details-label">Size</label>
-                        <input type="text" asp-for="Size" placeholder="Size" />
+                        <input type="text" asp-for="Description" placeholder="Size" />
                             <div class="invalid-feedback">
                             Please enter No. of Size.
                             </div>

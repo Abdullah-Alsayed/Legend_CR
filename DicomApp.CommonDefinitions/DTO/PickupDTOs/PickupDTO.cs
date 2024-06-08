@@ -1,6 +1,7 @@
-﻿using DicomApp.CommonDefinitions.DTO.ShipmentDTOs;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
+using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
 
 namespace DicomApp.CommonDefinitions.DTO.PickupDTOs
 {
@@ -46,7 +47,7 @@ namespace DicomApp.CommonDefinitions.DTO.PickupDTOs
         public List<int> StatusIDs { get; set; }
         public List<int> PickupIDs { get; set; }
         public List<int> PickupItemsIDs { get; set; }
-        public IEnumerable<ShipDTO> Shipments { get; set; }
+        public IEnumerable<AdsDTO> Shipments { get; set; }
         public DateTime DateTo { get; set; }
         public DateTime DateFrom { get; set; }
 
@@ -54,7 +55,7 @@ namespace DicomApp.CommonDefinitions.DTO.PickupDTOs
         public string ProductIDs { get; set; }
         public string ProductsQuantity { get; set; }
         public string ProductsPrice { get; set; }
-        public string ShipmentIDs { get; set; }
+        public string AdvertisementIds { get; set; }
         public bool IncludeReturns { get; set; }
     }
 }

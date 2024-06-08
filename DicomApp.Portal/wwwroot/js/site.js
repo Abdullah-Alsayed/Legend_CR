@@ -451,9 +451,9 @@ function DashbordFilter(ActionName, ControllerName) {
 
 
 
-function ShipmentDetails(ControllerName, ShipmentID) {
+function ShipmentDetails(ControllerName, AdvertisementId) {
     $.ajax({
-        url: `/Shipment/ShipmentDetails/${ShipmentID}`,
+        url: `/Shipment/ShipmentDetails/${AdvertisementId}`,
         type: "GET",
         success: function (result) {
             $("#ShipmentDetails-Body").html(result);
@@ -885,10 +885,10 @@ function formSerialize(FormID, GetShipments = false) {
             formData.append("File", $(`#${FormID} #ImgFile`)[0].files[0]);
 
     if (GetShipments) {
-        let ShipmentIDs = $("input:checkbox:checked").map(function () {
+        let AdvertisementIds = $("input:checkbox:checked").map(function () {
             return $(this).val();
         }).get()
-        formData.append("ShipmentIDs", ShipmentIDs);
+        formData.append("AdvertisementIds", AdvertisementIds);
     }
     for (let data of form)
         formData.append(data.name, data.value);
@@ -1543,12 +1543,12 @@ function GetAreasByZone(event) {
     });
 }
 
-function StockItems(ControlerName, ShipmentID) {
+function StockItems(ControlerName, AdvertisementId) {
     $(`#ItemsModal-body-bod`).html(`<div class="spinner-border text-danger d-block m-auto" role="status">
                                         <span class="sr-only">Loading...</span>
                                     </div>`);
     $.ajax({
-        url: `/Shipment/StockItems/${ShipmentID}`,
+        url: `/Shipment/StockItems/${AdvertisementId}`,
         type: "GET",
         success: function (result) {
             $("#ItemsModal-body").html(result);
@@ -1558,12 +1558,12 @@ function StockItems(ControlerName, ShipmentID) {
     })
 }
 
-function PartialItems(ControlerName, ShipmentID) {
+function PartialItems(ControlerName, AdvertisementId) {
     $(`#PartialItemsModal-bod`).html(`<div class="spinner-border text-danger d-block m-auto" role="status">
                                           <span class="sr-only">Loading...</span>
                                       </div>`);
     $.ajax({
-        url: `/Shipment/PartialItems/${ShipmentID}`,
+        url: `/Shipment/PartialItems/${AdvertisementId}`,
         type: "GET",
         success: function (result) {
             $("#PartialItemsModal-body").html(result);
@@ -1733,7 +1733,7 @@ function ReceiveReturn() {
                 $.ajax({
                     url: `/Warehouse/ReceiveReturn`,
                     type: "POST",
-                    data: { shipmentIDs: selectedCheckboxes.toString() },
+                    data: { AdvertisementIds: selectedCheckboxes.toString() },
                     success: function (response) {
                         if (response.success == false) {
                             Swal.fire({
@@ -1859,15 +1859,15 @@ function ChangeToReadyMany() {
 }
 
 function PrintMany() {
-    var ShipmentiDs = $("#PendingShipments-Body input:checkbox:checked").map(function () {
+    var AdvertisementIds = $("#PendingShipments-Body input:checkbox:checked").map(function () {
         return $(this).val();
     }).get();
-    var Url = `/Shipment/PrintAll?ShipmentsIds=${ShipmentiDs}`;
+    var Url = `/Shipment/PrintAll?ShipmentsIds=${AdvertisementIds}`;
     window.open(Url, "_blank");
 }
 
-function EditWarehouseGame(ShipmentID) {
-    let DataForm = $(`#VerifyGame-Form_${ShipmentID}`).serialize();
+function EditWarehouseGame(AdvertisementId) {
+    let DataForm = $(`#VerifyGame-Form_${AdvertisementId}`).serialize();
     $.ajax({
         url: "/Warehouse/EditGame",
         type: "GET",
@@ -1944,11 +1944,11 @@ function BackToWarehouse(shipId) {
 }
 
 function PendingShipmentsSelect() {
-    var ShipmentiDs = $("#PendingShipments-Body input:checkbox:checked").map(function () {
+    var AdvertisementIds = $("#PendingShipments-Body input:checkbox:checked").map(function () {
         return $(this).val();
     }).get();
-    $(`#Policy-Count`).text(`(${ShipmentiDs.length})`);
-    $(`#Ready-Count`).text(`(${ShipmentiDs.length})`);
+    $(`#Policy-Count`).text(`(${AdvertisementIds.length})`);
+    $(`#Ready-Count`).text(`(${AdvertisementIds.length})`);
 }
 //////////////////// END : WearHouse Section ////////////////
 
@@ -1975,11 +1975,11 @@ function GetDeliveryPickups(id) {
     });
 }
 
-function ValidateShipmentPickupRequest(ShipmentiDs) {
-    const Vendor = $(`#${ShipmentiDs[0]}`).data('vendor');
+function ValidateShipmentPickupRequest(AdvertisementIds) {
+    const Vendor = $(`#${AdvertisementIds[0]}`).data('vendor');
     let VaildFlag = true;
-    for (var i = 0; i < ShipmentiDs.length; i++) {
-        const VendorLope = $(`#${ShipmentiDs[i]}`).data('vendor');
+    for (var i = 0; i < AdvertisementIds.length; i++) {
+        const VendorLope = $(`#${AdvertisementIds[i]}`).data('vendor');
         if (Vendor != VendorLope) {
             VaildFlag = false;
             break;

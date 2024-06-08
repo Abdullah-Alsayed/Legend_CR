@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using DicomApp.BL.Services;
 using DicomApp.BLL;
 using DicomApp.CommonDefinitions.DTO;
-using DicomApp.CommonDefinitions.DTO.ShipmentDTOs;
+using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
 using DicomApp.CommonDefinitions.Requests;
 using DicomApp.CommonDefinitions.Responses;
 using DicomApp.DAL.DB;
@@ -104,7 +104,7 @@ namespace DicomApp.Portal.Controllers
                 );
                 switch (user.RoleID)
                 {
-                    case (int)EnumRole.Vendor:
+                    case (int)EnumRole.Gamer:
                         return RedirectToAction("AccountDashboard", "Home");
                     case (int)EnumRole.AccountManager:
                         return RedirectToAction("AccountDashboard", "Home");
@@ -224,7 +224,7 @@ namespace DicomApp.Portal.Controllers
                 UserID = AuthHelper.GetClaimValue(User, "UserID"),
                 UserDTO = new UserDTO()
                 {
-                    RoleID = (int)EnumRole.Vendor,
+                    RoleID = (int)EnumRole.Gamer,
                     Search = Search,
                     Id = VendorID
                 },
@@ -281,7 +281,7 @@ namespace DicomApp.Portal.Controllers
 
             PasswordHasher<object> hasher = new PasswordHasher<object>();
             model.HashedPassword = hasher.HashPassword(model, model.Password);
-            model.RoleID = (int)EnumRole.Vendor;
+            model.RoleID = (int)EnumRole.Gamer;
 
             var userRequest = new UserRequest
             {

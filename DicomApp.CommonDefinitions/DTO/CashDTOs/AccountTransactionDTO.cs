@@ -18,7 +18,7 @@ namespace DicomApp.CommonDefinitions.DTO.CashDTOs
         public string VendorName { get; set; }
         public int? StatusId { get; set; }
         public string StatusName { get; set; }
-        public int? ShipmentId { get; set; }
+        public int? AdvertisementId { get; set; }
         public int? PickupRequestId { get; set; }
         public double GameFees { get; set; }
         public double WeightFees { get; set; }

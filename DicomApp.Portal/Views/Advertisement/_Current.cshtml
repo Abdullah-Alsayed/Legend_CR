@@ -1,0 +1,79 @@
+﻿
+@using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs
+@using DicomApp.CommonDefinitions.DTO
+@using DicomApp.Helpers
+@model List<AdsDTO>
+<thead>
+    <tr>
+        <th class="text-center">Code</th>
+        <th class="text-center">Vendor</th>
+        <th class="Sort-Column text-center">Date</th>
+        <th class="text-center">Customer</th>
+        <th class="text-center">Branch</th>
+        <th class="text-center">Service</th>
+        <th class="text-center">RED Fees</th>
+        <th class="Sort-Column text-center">COD</th>
+        <th class="text-center">Status</th>
+        <th class="text-center">Issues</th>
+        <th class="text-center text-wrap">Courier Problems</th>
+        <th class="text-center text-wrap">Vendor Recommendation</th>
+        <th class="text-center text-wrap">Vendor Report</th>
+        <th class="text-center">Action</th>
+    </tr>
+</thead>
+<tbody id="TableBody">
+    @if (Model != null && Model.Count > 0)
+    {
+        foreach (var ship in Model)
+        {
+            double REDFees = 0;
+
+            <tr id="TableRow_@ship.AdvertisementId">
+                <td class="text-center text-nowrap pl-1 pr-1" onclick="ShipmentDetails('Shipment',@ship.AdvertisementId)" data-toggle="modal" data-target="#ShipmentDetails"><b>@ship.RefId</b></td>
+                <td class="text-center pl-1 pr-1" style="min-width:100px;">0</td>
+                <td class="text-center text-nowrap pl-1 pr-1 Date-Table">@ship.CreatedAt.ToString("dd MMM yyyy")</td>
+                <td class="text-center pl-1 pr-1">
+                    0
+                    <br />
+                    <label class="text-nowrap mt-1"><i class="fa fa-map-marker"></i>&nbsp;0</label>
+                </td>
+                <td class="text-center">0</td>
+                <td style=" min-width:80px" class="text-center pl-1 pr-1">0</td>
+                <td class="text-center text-nowrap pl-1 pr-1">@REDFees EGP</td>
+                <td class="text-center text-nowrap pl-1 pr-1">0</td>
+                <partial name="~/Views/Shared/Advertisement/_StatusSwitch.cshtml" model="@ship.Status"></partial>
+                <td class="text-center pl-1 pr-1">
+                    <partial name="~/Views/Shared/Advertisement/_Problems.cshtml" model="@ship"></partial>
+                </td>
+                <td class="text-center pl-1 pr-1">
+                    <partial name="~/Views/Shared/Advertisement/_CourierProblems.cshtml" model="@ship"></partial>
+                </td>
+                <td class="text-center pl-1 pr-1">
+                    
+                </td>
+                <td class="text-center pl-1 pr-1" id="ReportToVendor_@ship.AdvertisementId">
+                   0
+                </td>
+                <td class="text-center pr-0" id="TableTD_@ship.AdvertisementId">
+                    <partial name="~/Views/Shared/Advertisement/_CommonActions.cshtml" model="@ship"></partial>
+                </td>
+            </tr>
+        }
+    }
+    else
+    {
+        <tr>
+            <td colspan="13" class="text-danger text-center"><h3>No data available in table</h3></td>
+        </tr>
+    }
+</tbody>
+<tfoot>
+    <tr>
+        <td colspan="13">
+            @{
+                await Html.RenderPartialAsync("_Pagination", new OptionDTO { Action = "All", Controller = "Shipment", Count = Model.Count, StatusId = (int)EnumStatus.Current });
+            }
+        </td>
+    </tr>
+</tfoot>
+<input type="hidden" value="@Model.Count" id="DataCount" />

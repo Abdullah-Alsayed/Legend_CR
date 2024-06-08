@@ -1,8 +1,8 @@
 ﻿
 @using DicomApp.CommonDefinitions.DTO;
-@using DicomApp.CommonDefinitions.DTO.ShipmentDTOs;
+@using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
 @using DicomApp.Helpers;
-@model List<ShipDTO>
+@model List<AdsDTO>
 @{
     Layout = "~/Views/Shared/_PrintLayout.cshtml";
 }
@@ -25,14 +25,14 @@
         {
             foreach (var item in Model)
             {
-                <tr onclick="ShipmentDetails('Vendor',@item.ShipmentId)" data-toggle="modal" data-target="#ShipmentDetails">
+                <tr onclick="ShipmentDetails('Vendor',@item.AdvertisementId)" data-toggle="modal" data-target="#ShipmentDetails">
                     <td>@item.RefId</td>
                     <td class="text-nowrap Date-Table">@item.CreatedAt.ToString("MMM") @item.CreatedAt.ToString("dd"),@item.CreatedAt.ToString("yyy")</td>
-                    <td>@item.CustomerDetailsDTO.CustomerName</td>
-                    <td>@item.ShipmentServiceName</td>
-                    <td class="text-nowrap ">@item.FeesDetailsDTO.ShippingFees EGP</td>
-                    <td class="text-nowrap ">@item.FeesDetailsDTO.Total EGP</td>
-                    <partial name="/Views/Shared/Shipment/_StatusSwitch.cshtml" model="item.StatusDTO" />
+                    <td>0</td>
+                    <td>0</td>
+                    <td class="text-nowrap ">0 EGP</td>
+                    <td class="text-nowrap ">0 EGP</td>
+                    <partial name="/Views/Shared/Advertisement/_StatusSwitch.cshtml" model="item.Status" />
                     <td><span class="Comments-Table">@item.Description</span></td>
                 </tr>
             }

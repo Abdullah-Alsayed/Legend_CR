@@ -7,11 +7,7 @@ namespace DicomApp.DAL.DB
     {
         public Status()
         {
-            AccountTransaction = new HashSet<AccountTransaction>();
-            PickupRequest = new HashSet<PickupRequest>();
-            PickupRequestItem = new HashSet<PickupRequestItem>();
-            Shipment = new HashSet<Shipment>();
-            ShipmentItem = new HashSet<ShipmentItem>();
+            Advertisements = new HashSet<Advertisement>();
         }
 
         public int Id { get; set; }
@@ -21,10 +17,6 @@ namespace DicomApp.DAL.DB
 
         public int StatusType { get; set; }
 
-        public virtual ICollection<AccountTransaction> AccountTransaction { get; set; }
-        public virtual ICollection<PickupRequest> PickupRequest { get; set; }
-        public virtual ICollection<PickupRequestItem> PickupRequestItem { get; set; }
-        public virtual ICollection<Shipment> Shipment { get; set; }
-        public virtual ICollection<ShipmentItem> ShipmentItem { get; set; }
+        public virtual ICollection<Advertisement> Advertisements { get; set; }
     }
 }

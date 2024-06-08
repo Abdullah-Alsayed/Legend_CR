@@ -209,45 +209,30 @@ function ServiceTypeChange() {
     //    $("#DivWeight,#DivSize,#DivFreight,#DivOrderDescription").removeClass("d-none");
 }
 
-function AddShipment(ActionName, ControllerName, FormName) {
+function AddAdvertisement(ActionName, ControllerName, FormName) {
     $(".invalid-feedback").removeClass("d-none");
-    $(".form-control, .select2-selection").css({ "border-color": "#D6E4EC" });
     if ($(`#${FormName}`).valid()) {
 
-        var VendorID = $(`#VendorDetailsDTO_VendorId :selected`).val();
-        var stockChecked = $(`#SettingDTO_IsStock`).is(':checked');
-        var ProductSelect = $("input.ProductSelect:checkbox:checked").map(function () {
-            return $(this).val();
-        }).get();
-        if (stockChecked && ProductSelect.length == 0) {
-            Swal.fire({
-                position: 'center',
-                icon: 'error',
-                title: 'Please select item(s) from stock',
-                showConfirmButton: false,
-                timer: 4000
-            });
-        }
-        else {
-            var ProductItemCount = $("input.ProductSelect:checkbox:checked").map(function () {
-                return $(this).closest("tr").find('.ProductItemCount').val();
-            }).get();
-            var ProductsPrice = $("input.ProductSelect:checkbox:checked").map(function () {
-                return $(this).closest("tr").find('.ProductPrice').val();
-            }).get();
             $("#BtnSend").prop('disabled', true);
             $('#MainLoder').fadeIn(100);
             $("#MainView").hide();
-            let DataForm = $(`#${FormName}`).serialize();
-            DataForm = DataForm + "&ProductIDs=" + ProductSelect.toString();
-            DataForm = DataForm + "&ProductsQuantity=" + ProductItemCount.toString();
-            DataForm = DataForm + "&ProductsPrice=" + ProductsPrice.toString();
-            let PartialItems = JSON.stringify(PartialItemsList);
+
+            // Create FormData object
+            let formData = new FormData($(`#${FormName}`)[0]);
+
+            // Append files to formData
+            let files = $(`#${FormName} input[type='file']`)[0].files;
+            for (let i = 0; i < files.length; i++) {
+                formData.append('files', files[i]);
+            }
+
             $.ajax({
-                url: `/${ControllerName}/${ActionName}?PartialItems=${PartialItems}`,
+                url: `/${ControllerName}/${ActionName}`,
                 contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
                 type: 'POST',
-                data: DataForm,
+                data: formData,
+                processData: false, 
+                contentType: false, 
                 dataType: 'html',
                 success: function (response) {
                     if (response.includes('successfully')) {
@@ -273,23 +258,8 @@ function AddShipment(ActionName, ControllerName, FormName) {
                     $('#MainLoder').fadeOut(1000);
                     $(".se-pre-con").css("display", "none");
 
-                    PartialItemsList = [];
                     $(`#${FormName}`).trigger("reset");
-                    $(`#VendorDetailsDTO_VendorId`).val(VendorID);
-                    $(`#select2-ShipmentServiceId-container`).text("--- Select Service ---");
-                    $(`#select2-AreaId-container`).text("--- Select Area ---");
-                    $(`#select2-ZoneId-container`).text("--- Select Government ---");
-                    $(`#select2-BranchId-container`).text("--- Select Branch ---");
-                    $("#lblShippingFees").val("0");
-                    $(".COD ,.VendorCash ,#Zone-name").text("");
-                    $(".invalid-feedback").addClass("d-none");
-                    $(".form-control , .select2-selection").css({ "border-color": "#D6E4EC" });
-                    $(`.Edit-Stock-Items`).addClass("d-none");
-                    $("#DivWeight,#DivSize,#DivFreight,#DivOrderDescription").removeClass("d-none");
-                    $("#Partial-Items").empty();
-                    $(`#Order-Summary-tr`).empty();
-                    $(`#Order-Summary-Total`).text(`0 EGP`);
-                    $(`#lblShippingFees`).val('');
+                    deleteAllFiles();
                     $("#BtnSend").prop('disabled', false);
                 },
                 complete: function () { },
@@ -308,10 +278,6 @@ function AddShipment(ActionName, ControllerName, FormName) {
                 }
             })
         }
-    }
-    else {
-        $("label:contains('This field is required.')").fadeOut();
-    }
 }
 
 function Edit(ActionName, ControllerName, FormName) {
@@ -423,10 +389,41 @@ function Edit(ActionName, ControllerName, FormName) {
     }
 }
 
+function updateAdvertisementFiles() {
+    var files = $("#Advertisement-files")[0].files;
+    var filesArray = Array.from(files);
+    var validFiles = [];
+    var imageCount = $('#Advertisement-Imgs img').length;
 
+    filesArray.forEach(function (file) {
+        var fileType = file.type.split('/')[0];
+        if (fileType === 'image' && file.size <= 2 * 1024 * 1024) {
+            if (imageCount < 5) {
+                validFiles.push(file);
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var img = $('<img>', {
+                        src: e.target.result,
+                        class: 'uploaded-img',
+                    });
+                    $('#Advertisement-Imgs').append(img);
+                };
+                reader.readAsDataURL(file);
+                imageCount++;
+            }
+        }
+    });
 
-//*** Shipment Refund */
+    $('#Advertisement-files-Lable').text(imageCount + ' file(s) selected'); // Update count of total images
 
+    if (validFiles.length < filesArray.length) {
+        alert('Some files were not added. Ensure each file is an image, less than 2MB, and you select a maximum of 5 files.');
+    }
+}
+function deleteAllFiles() {
+    $('#Advertisement-Imgs').empty();
+    $('#Advertisement-files-Lable').text('Not selected file');
+}
 function GetFeesSummary() {
     var RefundCash = $("#RefundCash").val();
     $("#lblRefundCash").html(RefundCash + " EGP");

@@ -118,9 +118,9 @@
 //    }
 //}
 
-//function ShipmentDetails(ShipmentID) {
+//function ShipmentDetails(AdvertisementId) {
 //    $.ajax({
-//        url: `/Vendor/ShipmentDetails/${ShipmentID}`,
+//        url: `/Vendor/ShipmentDetails/${AdvertisementId}`,
 //        type: "GET",
 //        success: function (result) {
 //            $("#ShipmentDetails-Body").html(result);
@@ -183,10 +183,10 @@
 
 //function PickupRequestToggel(fadeOut, fadeIn )
 //{
-//    var ShipmentiDs = $("input:checkbox:checked").map(function () {
+//    var AdvertisementIds = $("input:checkbox:checked").map(function () {
 //        return $(this).val();
 //    }).get()
-//    if (ShipmentiDs.length == 0)
+//    if (AdvertisementIds.length == 0)
 //    {
 //        Swal.fire({
 //            position: 'center',
@@ -201,7 +201,7 @@
 //    $(`#${fadeIn}`).fadeIn(700);
 //}
 //function PickupRequest() {
-//    var ShipmentiDs = $("input:checkbox:checked").map(function () {
+//    var AdvertisementIds = $("input:checkbox:checked").map(function () {
 //        return $(this).val();
 //    }).get()
 //    var VendorAddress = $("#VendorAddress").val();
@@ -256,7 +256,7 @@
 //        url: `/Vendor/PickupRequest`,
 //        type: "POST",
 //        data: {
-//            ShipmentIDs: ShipmentiDs,
+//            AdvertisementIds: AdvertisementIds,
 //            VendorAddress: VendorAddress,
 //            OrderDescription: OrderDescription,
 //            AreaId: AreaId,
@@ -274,12 +274,12 @@
 //                    showConfirmButton: false,
 //                    timer: 3000
 //                });
-//                for (var i = 0; i < ShipmentiDs.length; i++) {
-//                    $(`#${ShipmentiDs[i]}`).fadeOut();
+//                for (var i = 0; i < AdvertisementIds.length; i++) {
+//                    $(`#${AdvertisementIds[i]}`).fadeOut();
 //                }
 //                setTimeout(function () {
-//                    for (var i = 0; i < ShipmentiDs.length; i++) {
-//                        $(`#${ShipmentiDs[i]}`).remove();
+//                    for (var i = 0; i < AdvertisementIds.length; i++) {
+//                        $(`#${AdvertisementIds[i]}`).remove();
 //                    }
 //                }, 1000);
 //                $("#PickupRequestBtn").prop('disabled', false);

@@ -1,7 +1,7 @@
-﻿using DicomApp.CommonDefinitions.DTO.ShipmentDTOs;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
 
 namespace DicomApp.CommonDefinitions.DTO.CashDTOs
 {

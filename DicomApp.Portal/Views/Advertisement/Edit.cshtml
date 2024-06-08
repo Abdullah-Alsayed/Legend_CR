@@ -1,0 +1,260 @@
+﻿
+@using DicomApp.CommonDefinitions.DTO
+@using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs
+@using DicomApp.Helpers
+@model AdsDTO
+@{
+    var RoleID = AuthHelper.GetClaimValue(User, "RoleID");
+}
+<main>
+    <div class="container-fluid site-width">
+        <div class="row Red-Row">
+            <div class="col-12 col-lg-12 col-xl-12 col-sm-12">
+                <div class="sub-header">
+                    <div>
+                        <span class="Header-Titel">Edit Shipment</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-12 col-xl-12 col-sm-12">
+                <p class="Shipment-Details-Titel pt-4">Shipment Details</p>
+            </div>
+        </div>
+    </div>
+    <div class="Shipment-container">
+        <form style="width:95%" class="needs-validation" method="post" id="EditForm" action="@Url.Action("Edit","Shipment")" novalidate>
+            <input type="hidden" asp-for="AdvertisementId" value="@Model.AdvertisementId" />
+            <input type="hidden" asp-for="StatusId" value="@Model.StatusId" />
+            <div class="row Red-Row ml-4 Shipment-Details-Section">
+                <div class="col-lg-4">
+                    <label class="Shipment-Details-label">Vendor</label>
+                    @Html.DropDownListFor(model => model.GamerId, new SelectList(ViewBag.vendors, "Id", "Name"), "--- Select Vendor ---", new { @class = "form-control ", @required = "required" })
+                    <div class="invalid-feedback">
+                        Please  Select vendor.
+                    </div>
+@*                     <div class="mt-2">
+                        <label class="Shipment-Details-label">Service</label>
+                        @Html.DropDownListFor(model => model.ShipmentServiceId, new SelectList(ViewBag.ShipmentService, "Id", "ServiceName"),"---Select Service---", new { @class = "form-control mb-3",@required="required"})
+                        <div class="invalid-feedback">
+                            Please Select Service .
+                        </div>
+                    </div> *@
+                </div>
+                @*<div class="col-lg-4">
+                <label class="Shipment-Details-label">Status</label>
+                @Html.DropDownListFor(model => model.StatusId, new SelectList(ViewBag.Status, nameof(StatusDTO.Id), nameof(StatusDTO.Name)), "--- Select Vendor ---", new { @class = "form-control ", @required = "required" })
+                <div class="invalid-feedback">
+                Please  Select vendor.
+                </div>
+                </div>*@
+                <div class="col-lg-4">
+                    <label class="Shipment-Details-label">Cash on delivery</label>
+                    <input type="text" class="mb-3" placeholder="Enter Cash on delivery" onchange="GetTotalPrice()" required />
+                    <div class="invalid-feedback">
+                        Please enter a Cash on delivery.
+                    </div>
+                    <div class="mt-2">
+                        <label class="Shipment-Details-label">Shipping Fees (for Cancellation or Partial Delivery)</label>
+                        <input type="number" class="input-Number" min="0" placeholder="Shipping Fees (for Cancellation or Partial Delivery)" />
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <label class="Lable-Disabled">RED Fees</label>
+                    <input id="ShippingFees" name="ShippingFees" value="0" disabled type="text" class="mb-3" />
+                    <div class="Shipment-Details-COD mt-3">
+                        <p>Vendor Cash:</p>
+                        <p class="ml-2 VendorCash"> 0 EGP</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row Red-Row w-100">
+                <div class="col-lg-4">
+                    <h6 class="my-4 ml-2 font-w-500">Customer Details</h6>
+                    <div style="" class="Shipment-Details-Section">
+                        <div class="col-lg-12">
+                            <label class="Shipment-Details-label">Name</label>
+                            <input type="text" placeholder="Name"  required />
+                            <div class="invalid-feedback">
+                                Please enter a valid customer name.
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-3">
+                            <label class="Shipment-Details-label">Number</label>
+                            <input type="text" placeholder="Number"  pattern="^(?:\s*\d){8,11}(?:\s*)$" required>
+                            <div class="invalid-feedback">
+                                Please enter a valid customer Phone (between 8 and 11 digit).
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-3">
+                            <label class="Shipment-Details-label">Number 2</label>
+                            <input type="text" placeholder="Number 2" pattern="^(?:\s*\d){8,11}(?:\s*)$">
+                            <div class="invalid-feedback">
+                                Please enter a valid customer Phone (between 8 and 11 digit).
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-3">
+                            <label class="Shipment-Details-label">Address</label>
+                            <input type="text" placeholder="Address" pattern="^(?!\s*$).+" required>
+                            <div class="invalid-feedback">
+                                Please enter a valid customer address.
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-3">
+                            <label class="Shipment-Details-label">Location Url</label>
+                            <input placeholder="Location Url" class="Input-Txt" >
+                            <div class="invalid-feedback">
+                                Please enter a valid Location Url.
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-3">
+                            <label class="Shipment-Details-label">Landmark</label>
+                            <input type="text" placeholder="Landmark" >
+                            <div class="invalid-feedback">
+                                Please enter a valid Landmark.
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mt-3">
+                            <label class="Shipment-Details-label">Floor</label>
+                            <input type="number" min="0" class="input-Number" placeholder="Floor" required />
+                            <div class="invalid-feedback">
+                                Please enter Floor.
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mt-3">
+                            <label class="Shipment-Details-label">Apartment</label>
+                            <input type="number" min="0" class="input-Number" placeholder="Apartment" />
+                            <div class="invalid-feedback">
+                                Please enter No. of Apartment.
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-3">
+                            <label class="Shipment-Details-label">Governament</label>
+@*                             @Html.DropDownListFor(model => model.ZoneId, new SelectList(ViewBag.ZoneList, "Id", "NameAr"),"--- Select Governament ---", new { @class = "form-control select" ,@required="required",@onchange="GetAreasByZone(event)"})
+ *@                            <div class="invalid-feedback">
+                                Please Select Governament.
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-3">
+                            <label class="Shipment-Details-label">Area</label>
+@*                             @Html.DropDownListFor(model => model.AreaId, new SelectList(ViewBag.AreasList, "Id", "CityNameAr"),"--- Select Area ---", new { @class = "form-control select" ,@required="required",@onchange="GetTotalPrice()"})
+ *@                            <div class="invalid-feedback">
+                                Please Select Area.
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mt-3">
+                            <label class="Shipment-Details-label">Weight</label>
+                            <input type="number" min="0" max="6" class="input-Number" onchange="GetTotalPrice()" placeholder="Weight" required />
+                            <div class="invalid-feedback">
+                                Please enter weight from 1 to 6
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mt-3">
+                            <label class="Shipment-Details-label">Size</label>
+                            <input type="text"  placeholder="Size" />
+                            <div class="invalid-feedback">
+                                Please enter No. of Size.
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-3">
+                            <label class="Shipment-Details-label">No. of items</label>
+                            <input type="number" min="1" class="input-Number" placeholder="No. of items" required />
+                            <div class="invalid-feedback">
+                                Please enter No. of items.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8 w-100">
+                    <h6 class="my-4 ml-2 font-w-500">Package Details</h6>
+                    <div class="Shipment-Details-Section">
+                        <div class="col-lg-12">
+                            <div class="col-lg-12 col-12 Stock-Modal">
+                                <div class="Switch-cover">
+                                    <a class="cursor-pointer"><p>Choose Items Location</p></a>
+                                    <div class="Switch r" id="Switch-1">
+                                        <input type="checkbox" style="width: 100%;" class="checkbox" onclick="OpenStockPopup('STOCKModel')">
+                                        <div class="knobs"></div>
+                                        <div class="layer"></div>
+                                    </div>
+                                    <div class="Edit-Stock-Items d-none">
+                                        <button data-toggle="modal" data-target="#STOCKModel" type="button">Edit Items</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-5  col-12 Game-Type-Section">
+                                <p>Game Type</p>
+                                <div class="Game-Type Game-List ">
+                                    <ul>
+                                        @foreach (var item in ViewBag.Category)
+                                        {
+                                            <li><input type="radio" id="@(item.Id+"-Game")" onclick="Category(@item.Id)" name="Game" /><label for="@(item.Id +"-Game")">@item.NameEn</label></li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-12 grid-wrapper Hide-Scrol grid-col-auto mt-4 GameList-Section" id="Gamediv">
+                                @foreach (var item in ViewBag.GameBox)
+                                {
+                                    <div>
+                                        <label for="@item.Id" class="radio-card">
+
+                                             <input type="radio" value="@item.Id" onclick="GetTotalPrice()" name="GameId" id="@item.Id" />
+                                            
+                                            <div class="card-content-wrapper" ondblclick="GameUnselect(event)">
+                                                <span class="check-icon"></span>
+                                                <div class="card-content">
+                                                    <img src="/dist/images/@item.ImgUrl" alt="" width="100" />
+                                                    <p class="Game-Price">@item.Price EGP</p>
+                                                    <p class="float-end Game-Name">@item.NameEn</p>
+                                                    <p class="Game-Size">@item.Size<h4 />
+                                                </div>
+                                            </div>
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                            <hr class="pt-5" />
+                            <div class="row Red-Row pt-3 Game-Options">
+                                <div class="col-lg-6">
+                                    <input type="checkbox" asp-for="IsDeleted">
+                                    <label for="IsOpenPackage">
+                                        Open Package
+                                    </label>
+                                </div>
+                                <div class="col-lg-6">
+                                    <input type="checkbox" asp-for="IsDeleted" >
+                                    <label for="IsFragilePackage">
+                                        Fragile Package
+                                    </label>
+                                </div>
+                                <div class="col-lg-6">
+                                    <input type="checkbox"  onchange="GetTotalPrice()">
+                                    <label for="IsPartialDelivery">
+                                        Partial delivery
+                                    </label>
+                                    <button class="ml-2 Edit-Partial-Delivery" type="button" data-target="#Partial-Model" data-toggle="modal">Edit Items</button>
+                                </div>
+                                <div class="row Red-Row pt-5">
+                                    <div class="col-lg-6">
+                                        <p class="additional-comments">Additional Comments</p>
+                                        <textarea class="h-auto" rows="5" asp-for="Description" placeholder="Additional Comments "></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row Red-Row w-100">
+                <div class="col-lg-12 Buttons-Submit-Section">
+                    <button onclick="Edit('Edit','Shipment','EditForm')" type="button" id="BtnSend" class="Red-Btn">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+<script src="~/dist/vendors/select2/js/select2.full.min.js"></script>
+<script src="~/dist/js/select2.script.js"></script>
+<script src="~/dist/js/jquery.validate.min.js"></script>
+<script src="~/dist/js/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/dist/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>

@@ -4,8 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
 using DicomApp.CommonDefinitions.DTO;
+using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
 using DicomApp.CommonDefinitions.DTO.CashDTOs;
-using DicomApp.CommonDefinitions.DTO.ShipmentDTOs;
 using DicomApp.CommonDefinitions.Requests;
 using DicomApp.CommonDefinitions.Responses;
 using DicomApp.DAL.DB;
@@ -36,7 +36,7 @@ namespace DicomApp.BL.Services
                                 Email = c.Email,
                                 RoleID = c.RoleId,
                                 RoleName = c.Role.Name,
-                                //LastLoginDate = c.LastLoginDate,
+                                LastLoginDate = c.LastLoginDate,
                                 PhoneNumber = c.PhoneNumber,
                                 Password = c.Password,
                                 ConfirmPassword = c.Password,
@@ -77,36 +77,6 @@ namespace DicomApp.BL.Services
                                         .context.City.FirstOrDefault(a => a.Id == c.AreaId)
                                         .CityNameAr
                                     : "",
-
-                                CourierShipments = request.HasCourierShipments
-                                    ? c
-                                        .ShipmentDeliveryMan.Where(r =>
-                                            r.StatusId == (int)EnumStatus.Assigned_For_Delivery
-                                            || r.StatusId == (int)EnumStatus.Out_For_Delivery
-                                            || r.StatusId == (int)EnumStatus.Assigned_For_Pickup
-                                            || r.StatusId == (int)EnumStatus.Picked_Up
-                                            || r.StatusId == (int)EnumStatus.Assigned_For_Return
-                                            || r.StatusId == (int)EnumStatus.Out_For_Return
-                                        )
-                                        .Select(s => new ShipDTO
-                                        {
-                                            ShipmentId = s.ShipmentId,
-                                            RefId = s.RefId,
-                                            CustomerDetailsDTO = new CustomerDetailsDTO
-                                            {
-                                                CustomerName = s.CustomerName
-                                            },
-                                            VendorDetailsDTO = new VendorDetailsDTO
-                                            {
-                                                VendorName = s.VendorName
-                                            },
-                                            StatusDTO = new StatusDTO
-                                            {
-                                                Id = s.StatusId,
-                                                Name = s.Status.NameEN
-                                            }
-                                        })
-                                    : null,
                             });
 
                         if (request.applyFilter)
@@ -564,7 +534,7 @@ namespace DicomApp.BL.Services
 
                             // Add User Account for Vendor/Courier
                             if (
-                                User.RoleId == (int)EnumRole.Vendor
+                                User.RoleId == (int)EnumRole.Gamer
                                 || User.RoleId == (int)EnumRole.DeliveryMan
                             )
                             {
@@ -619,26 +589,26 @@ namespace DicomApp.BL.Services
             if (filter.Id > 0)
                 query = query.Where(c => c.Id == filter.Id);
 
-            if (filter.RoleID == (long)EnumRole.Vendor)
+            if (filter.RoleID == (long)EnumRole.Gamer)
                 query = query.Where(c => c.RoleID == filter.RoleID);
 
             if (filter.RoleID == (int)EnumRole.Employee)
                 query = query.Where(u =>
-                    u.RoleID != (int)EnumRole.Vendor
+                    u.RoleID != (int)EnumRole.Gamer
                     && u.RoleID != (int)EnumRole.Customer
                     && !u.IsDeleted
                 );
 
             if (
                 filter.RoleID > 0
-                && filter.RoleID != (int)EnumRole.Vendor
+                && filter.RoleID != (int)EnumRole.Gamer
                 && filter.RoleID != (int)EnumRole.Employee
             )
                 query = query.Where(c => c.RoleID == filter.RoleID);
 
             if (filter.StaffOnly)
                 query = query.Where(c =>
-                    c.RoleID != (int)EnumRole.Vendor && c.RoleID != (int)EnumRole.Customer
+                    c.RoleID != (int)EnumRole.Gamer && c.RoleID != (int)EnumRole.Customer
                 );
 
             //if (filter.IsStaff == true)
@@ -651,11 +621,6 @@ namespace DicomApp.BL.Services
                 query = query.Where(c =>
                     c.PhoneNumber.Trim()
                         .IndexOf(filter.PhoneNumber.Trim(), StringComparison.OrdinalIgnoreCase) >= 0
-                );
-
-            if (filter.HasCourierShipments)
-                query = query.Where(c =>
-                    c.CourierShipments != null && c.CourierShipments.Count() > 0
                 );
 
             return query;

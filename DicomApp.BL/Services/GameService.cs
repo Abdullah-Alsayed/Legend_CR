@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using DicomApp.CommonDefinitions.DTO;
-using DicomApp.CommonDefinitions.DTO.ShipmentDTOs;
+using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
+using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
 using DicomApp.CommonDefinitions.Requests;
 using DicomApp.CommonDefinitions.Responses;
 using DicomApp.DAL.DB;
@@ -36,9 +37,9 @@ namespace DicomApp.BL.Services
                                 CategoryId = p.CategoryId,
                                 CategoryName = p.Category.NameEn,
                                 Description = p.Description,
-                                ShipDTOs = p.ShipmentWarehouseGame.Select(s => new ShipDTO
+                                ShipDTOs = p.ShipmentWarehouseGame.Select(s => new AdsDTO
                                 {
-                                    ShipmentId = s.ShipmentId
+                                    AdvertisementId = s.AdvertisementId
                                 })
                             });
 

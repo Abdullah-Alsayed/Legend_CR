@@ -1,6 +1,6 @@
 ﻿
-@using DicomApp.CommonDefinitions.DTO.ShipmentDTOs
-@model ShipDTO
+@using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs
+@model AdsDTO
 
 <main>
     <div class="container-fluid site-width">
@@ -21,8 +21,8 @@
             <div class="row Red-Row ml-4 Shipment-Details-Section">
                 <div class="col-lg-5">
                     <label class="Shipment-Details-label">Courier</label>
-                    @Html.DropDownListFor(model => model.DeliveryManId, new SelectList(ViewBag.Couriers, "Id", "Name"), "--- Select Courier ---", new { @class = "form-control ", @id = "CourierChangeVal", @onChange = "ReceiveReturnsChange()" })
-                    <div class="invalid-feedback">
+@*                     @Html.DropDownListFor(model => model.DeliveryManId, new SelectList(ViewBag.Couriers, "Id", "Name"), "--- Select Courier ---", new { @class = "form-control ", @id = "CourierChangeVal", @onChange = "ReceiveReturnsChange()" })
+ *@                    <div class="invalid-feedback">
                         Please Select Courier.
                     </div>
                 </div>

@@ -5,7 +5,7 @@
 @model ViewModel<VendorProductDTO>
 @{
     ViewData["Title"] = "ProductList";
-    if (AuthHelper.GetClaimValue(User, "RoleID") == (int)EnumRole.Vendor)
+    if (AuthHelper.GetClaimValue(User, "RoleID") == (int)EnumRole.Gamer)
     {
         Layout = "~/Views/Shared/_VendorLayout.cshtml";
     }

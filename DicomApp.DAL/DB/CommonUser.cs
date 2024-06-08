@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DicomApp.DAL.DB
 {
@@ -24,12 +25,8 @@ namespace DicomApp.DAL.DB
             Notification = new HashSet<Notification>();
             PickupRequestDeliveryMan = new HashSet<PickupRequest>();
             PickupRequestVendor = new HashSet<PickupRequest>();
-            ShipmentCustomer = new HashSet<Shipment>();
+            ShipmentCustomer = new HashSet<Advertisement>();
             ShipmentCustomerFollowUp = new HashSet<ShipmentCustomerFollowUp>();
-            ShipmentDeliveryMan = new HashSet<Shipment>();
-            ShipmentLastModifiedByNavigation = new HashSet<Shipment>();
-            ShipmentProblem = new HashSet<ShipmentProblem>();
-            ShipmentVendor = new HashSet<Shipment>();
             UserLocation = new HashSet<UserLocation>();
             VendorProduct = new HashSet<VendorProduct>();
             ZoneCreatedByNavigation = new HashSet<Zone>();
@@ -101,15 +98,17 @@ namespace DicomApp.DAL.DB
         public virtual ICollection<Notification> Notification { get; set; }
         public virtual ICollection<PickupRequest> PickupRequestDeliveryMan { get; set; }
         public virtual ICollection<PickupRequest> PickupRequestVendor { get; set; }
-        public virtual ICollection<Shipment> ShipmentCustomer { get; set; }
+        public virtual ICollection<Advertisement> ShipmentCustomer { get; set; }
         public virtual ICollection<ShipmentCustomerFollowUp> ShipmentCustomerFollowUp { get; set; }
-        public virtual ICollection<Shipment> ShipmentDeliveryMan { get; set; }
-        public virtual ICollection<Shipment> ShipmentLastModifiedByNavigation { get; set; }
-        public virtual ICollection<ShipmentProblem> ShipmentProblem { get; set; }
-        public virtual ICollection<Shipment> ShipmentVendor { get; set; }
         public virtual ICollection<UserLocation> UserLocation { get; set; }
         public virtual ICollection<VendorProduct> VendorProduct { get; set; }
         public virtual ICollection<Zone> ZoneCreatedByNavigation { get; set; }
         public virtual ICollection<Zone> ZoneLastModifiedByNavigation { get; set; }
+
+        [InverseProperty("Gamer")]
+        public virtual ICollection<Advertisement> AdvertisementsGamer { get; set; }
+
+        [InverseProperty("Buyer")]
+        public virtual ICollection<Advertisement> AdvertisementsBuyer { get; set; }
     }
 }

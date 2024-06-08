@@ -1,4 +1,4 @@
-﻿@using DicomApp.CommonDefinitions.DTO.ShipmentDTOs
+﻿@using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs
 @using DicomApp.CommonDefinitions.DTO.CashDTOs
 @using DicomApp.CommonDefinitions.DTO
 @model TreasuryDTO
@@ -26,7 +26,7 @@
                     <input onchange="GetTotalTransferAmount(@trans.AccountTransactionId)" type="checkbox" value="@trans.AccountTransactionId" name="AccountTransactionId" id="cbx_@trans.AccountTransactionId" checked />
                 </td>
                 <td class="text-nowrap"><b>@trans.ShipRefId</b></td>
-                <partial name="~/Views/Shared/Shipment/_StatusSwitch.cshtml" model="@trans.StatusDTO"></partial>
+                <partial name="~/Views/Shared/Advertisement/_StatusSwitch.cshtml" model="@trans.StatusDTO"></partial>
                 <td class="text-nowrap">
                     <label id="lblTotal_@trans.AccountTransactionId" class="font-weight-bold">@trans.Total</label>
                 </td>

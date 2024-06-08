@@ -1,7 +1,7 @@
 ﻿
-@using DicomApp.CommonDefinitions.DTO.ShipmentDTOs
+@using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs
 @using DicomApp.CommonDefinitions.DTO
-@model List<ShipDTO>
+@model List<AdsDTO>
 <ul>
     @if (Model != null && Model.Count > 0)
     {
@@ -10,45 +10,43 @@
             if (item.StatusId == (int)EnumStatus.Out_For_Delivery || item.StatusId == (int)EnumStatus.Postponed)
             {
                 <li class="d-none rdbNotDelivered">
-                    <input type="checkbox" id="@item.ShipmentId" name="@item.ShipmentId" />
-                    <b for="@item.ShipmentId" onclick="ShipmentDetails('Shipment',@item.ShipmentId)" data-toggle="modal" data-target="#ShipmentDetails">@item.RefId</b>
-                    @if (item.ShipItemDTOs.Count() > 0)
-                    {
-                        <button class="Edit-Partial-Delivery" data-target="#PartialItemsModal" data-toggle="modal" onclick="PartialItems('Shipment',@item.ShipmentId)">View Items</button>
-                    }
+                    <input type="checkbox" id="@item.AdvertisementId" name="@item.AdvertisementId" />
+                    <b for="@item.AdvertisementId" onclick="ShipmentDetails('Shipment',@item.AdvertisementId)" data-toggle="modal" data-target="#ShipmentDetails">@item.RefId</b>
+                        <button class="Edit-Partial-Delivery" data-target="#PartialItemsModal" data-toggle="modal" onclick="PartialItems('Shipment',@item.AdvertisementId)">View Items</button>
+
                 </li>
             }
             else if (item.StatusId == (int)EnumStatus.Cancelled)
             {
                 <li class="d-none rdbCancelled">
-                    <input type="checkbox" id="@item.ShipmentId" name="@item.ShipmentId" />
-                    <b for="@item.ShipmentId" onclick="ShipmentDetails('Shipment',@item.ShipmentId)" data-toggle="modal" data-target="#ShipmentDetails">@item.RefId</b>
-                    @if (item.ShipItemDTOs.Count() > 0)
+                    <input type="checkbox" id="@item.AdvertisementId" name="@item.AdvertisementId" />
+                    <b for="@item.AdvertisementId" onclick="ShipmentDetails('Shipment',@item.AdvertisementId)" data-toggle="modal" data-target="#ShipmentDetails">@item.RefId</b>
+                    @if (item.Price > 0)
                     {
-                        <button class="Edit-Partial-Delivery" data-target="#PartialItemsModal" data-toggle="modal" onclick="PartialItems('Shipment',@item.ShipmentId)">View Items</button>
+                        <button class="Edit-Partial-Delivery" data-target="#PartialItemsModal" data-toggle="modal" onclick="PartialItems('Shipment',@item.AdvertisementId)">View Items</button>
                     }
                 </li>
             }
             else if (item.StatusId == (int)EnumStatus.Delivered)
             {
                 <li class="d-none rdbPartialDelivery">
-                    <input type="checkbox" id="@item.ShipmentId" name="@item.ShipmentId" />
-                    <b for="@item.ShipmentId" onclick="ShipmentDetails('Shipment',@item.ShipmentId)" data-toggle="modal" data-target="#ShipmentDetails">@item.RefId</b>
-                    @if (item.ShipItemDTOs.Count() > 0)
+                    <input type="checkbox" id="@item.AdvertisementId" name="@item.AdvertisementId" />
+                    <b for="@item.AdvertisementId" onclick="ShipmentDetails('Shipment',@item.AdvertisementId)" data-toggle="modal" data-target="#ShipmentDetails">@item.RefId</b>
+                    @if (item.Price > 0)
                     {
-                        <button class="Edit-Partial-Delivery" data-target="#PartialItemsModal" data-toggle="modal" onclick="PartialItems('Shipment',@item.ShipmentId)">View Items</button>
+                        <button class="Edit-Partial-Delivery" data-target="#PartialItemsModal" data-toggle="modal" onclick="PartialItems('Shipment',@item.AdvertisementId)">View Items</button>
                     }
                 </li>
             }
             else if (item.StatusId == (int)EnumStatus.Refunded)
             {
                 <li class="d-none rdbRefund">
-                    <input type="checkbox" id="@item.ShipmentId" name="@item.ShipmentId" />
-                    <b for="@item.ShipmentId" onclick="ShipmentDetails('Shipment',@item.ShipmentId)" data-toggle="modal" data-target="#ShipmentDetails">@item.RefId</b>
-                    <b class="Edit-Partial-Delivery" for="@item.ShipToRefundId" onclick="ShipmentDetails('Shipment',@item.ShipToRefundId)" data-toggle="modal" data-target="#ShipmentDetails">@item.ShipToRefundRefId</b>
-                    @if (item.ShipItemDTOs.Count() > 0)
+                    <input type="checkbox" id="@item.AdvertisementId" name="@item.AdvertisementId" />
+                    <b for="@item.AdvertisementId" onclick="ShipmentDetails('Shipment',@item.AdvertisementId)" data-toggle="modal" data-target="#ShipmentDetails">@item.RefId</b>
+                    <b class="Edit-Partial-Delivery" for="@item.AdvertisementId" onclick="ShipmentDetails('Shipment',@item.AdvertisementId)" data-toggle="modal" data-target="#ShipmentDetails">@item.AdvertisementId</b>
+                    @if (item.Price> 0)
                     {
-                        <button class="Edit-Partial-Delivery" data-target="#PartialItemsModal" data-toggle="modal" onclick="PartialItems('Shipment',@item.ShipmentId)">View Items</button>
+                        <button class="Edit-Partial-Delivery" data-target="#PartialItemsModal" data-toggle="modal" onclick="PartialItems('Shipment',@item.AdvertisementId)">View Items</button>
                     }
                 </li>
             }

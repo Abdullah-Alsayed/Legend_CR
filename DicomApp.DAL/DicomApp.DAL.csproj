@@ -3,6 +3,17 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20240602195838_Ads.cs" />
+    <Compile Remove="Migrations\20240602195838_Ads.Designer.cs" />
+    <Compile Remove="Migrations\20240602200132_Ads.cs" />
+    <Compile Remove="Migrations\20240602200132_Ads.Designer.cs" />
+    <Compile Remove="Migrations\20240602200410_Ads.cs" />
+    <Compile Remove="Migrations\20240602200410_Ads.Designer.cs" />
+    <Compile Remove="Migrations\20240602200713_Ads.cs" />
+    <Compile Remove="Migrations\20240602200713_Ads.Designer.cs" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.6" />

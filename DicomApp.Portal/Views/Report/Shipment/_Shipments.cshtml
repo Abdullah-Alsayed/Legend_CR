@@ -1,22 +1,22 @@
 ﻿
 @using DicomApp.CommonDefinitions.DTO;
-@using DicomApp.CommonDefinitions.DTO.ShipmentDTOs;
-@model List<ShipDTO>
+@using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
+@model List<AdsDTO>
 
 @if (Model != null && Model.Count > 0)
 {
     foreach (var item in Model)
     {
-        <tr onclick="ShipmentDetails('Shipment',@item.ShipmentId)" data-toggle="modal" data-target="#ShipmentDetails">
+        <tr onclick="ShipmentDetails('Shipment',@item.AdvertisementId)" data-toggle="modal" data-target="#ShipmentDetails">
             <td class="text-nowrap"><b>@item.RefId</b></td>
-            <td>@item.VendorDetailsDTO.VendorName</td>
+            <td>0</td>
             <td class="text-nowrap Date-Table">@item.CreatedAt.ToString("MMM") @item.CreatedAt.ToString("dd"),@item.CreatedAt.ToString("yyy")</td>
-            <td>@item.CustomerDetailsDTO.CustomerName</td>
-            <td class="text-center">@item.BranchName</td>
-            <td>@(item.ShipmentServiceName ?? "---")</td>
-            <td class="text-nowrap ">@item.FeesDetailsDTO.ShippingFees EGP</td>
-            <td class="text-nowrap ">@item.FeesDetailsDTO.Total EGP</td>
-            <partial name="/Views/Shared/Shipment/_StatusSwitch.cshtml" model="@item.StatusDTO" />
+            <td>0</td>
+            <td class="text-center">0</td>
+            <td>0</td>
+            <td class="text-nowrap ">0 EGP</td>
+            <td class="text-nowrap ">0 EGP</td>
+            <partial name="/Views/Shared/Advertisement/_StatusSwitch.cshtml" model="@item.Status" />
             <td><span class="Comments-Table">@item.Description</span></td>
         </tr>
     }

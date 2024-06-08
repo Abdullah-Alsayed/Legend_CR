@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace DicomApp.DAL.DB
@@ -11,7 +10,7 @@ namespace DicomApp.DAL.DB
             CashTransfer = new HashSet<CashTransfer>();
             City = new HashSet<City>();
             PickupRequest = new HashSet<PickupRequest>();
-            Shipment = new HashSet<Shipment>();
+            Advertisement = new HashSet<Advertisement>();
             ZoneTax = new HashSet<ZoneTax>();
         }
 
@@ -32,7 +31,7 @@ namespace DicomApp.DAL.DB
         public virtual ICollection<CashTransfer> CashTransfer { get; set; }
         public virtual ICollection<City> City { get; set; }
         public virtual ICollection<PickupRequest> PickupRequest { get; set; }
-        public virtual ICollection<Shipment> Shipment { get; set; }
+        public virtual ICollection<Advertisement> Advertisement { get; set; }
         public virtual ICollection<ZoneTax> ZoneTax { get; set; }
     }
 }

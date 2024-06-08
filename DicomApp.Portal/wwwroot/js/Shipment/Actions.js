@@ -224,7 +224,7 @@ function UnassignedShipmnet(shipID) {
         confirmButtonText: "Confirm",
     }).then((result) => {
         if (result.isConfirmed) {
-            url = `/Shipment/Unassigned?ShipmentID=${shipID}`;
+            url = `/Shipment/Unassigned?AdvertisementId=${shipID}`;
             $.ajax({
                 type: 'POST',
                 url: url,

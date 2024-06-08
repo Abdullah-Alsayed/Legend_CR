@@ -1,8 +1,8 @@
 ﻿
-@using DicomApp.CommonDefinitions.DTO.ShipmentDTOs
+@using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs
 @using DicomApp.CommonDefinitions.DTO
 @using DicomApp.Helpers
-@model List<ShipDTO>
+@model List<AdsDTO>
 
 <table class="table">
     <thead>
@@ -21,12 +21,12 @@
             foreach (var order in Model)
             {
                 <tr>
-                    <td class="text-nowrap"><b onclick="ShipmentDetails('Shipment', @order.ShipmentId)" data-toggle="modal" data-target="#ShipmentDetails"> @order.RefId</b></td>
+                    <td class="text-nowrap"><b onclick="ShipmentDetails('Shipment', @order.AdvertisementId)" data-toggle="modal" data-target="#ShipmentDetails"> @order.RefId</b></td>
                     <td class="text-center">@order.CreatedAt.ToString("ddd, d/M/yyyy")</td>
-                    <td class="text-center">@order.CustomerDetailsDTO.CustomerName</td>
-                    <td class="text-nowrap text-center">@order.CustomerDetailsDTO.CustomerPhone</td>
-                    <td class="text-wrap text-center">@order.CustomerDetailsDTO.CustomerAddress</td>
-                    <partial name="~/Views/Shared/Shipment/_StatusSwitch.cshtml" model="@order.StatusDTO"></partial>
+                    <td class="text-center">0</td>
+                    <td class="text-nowrap text-center">0</td>
+                    <td class="text-wrap text-center">0</td>
+                    <partial name="~/Views/Shared/Advertisement/_StatusSwitch.cshtml" model="@order.Status"></partial>
                 </tr>
             }
         }

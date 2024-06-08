@@ -23,6 +23,13 @@ namespace DicomApp.Portal
                 new Role
                 {
                     Editable = false,
+                    Name = SystemConstants.Role.Admin,
+                    CreationDate = System.DateTime.Now,
+                    IsDeleted = false
+                },
+                new Role
+                {
+                    Editable = false,
                     Name = SystemConstants.Role.Gamer,
                     CreationDate = System.DateTime.Now,
                     IsDeleted = false
@@ -38,15 +45,27 @@ namespace DicomApp.Portal
                 },
                 new Status
                 {
+                    NameEN = "Accept",
+                    NameAR = "مقبول",
+                    StatusType = (int)StatusTypeEnum.Accept
+                },
+                new Status
+                {
                     NameEN = "Reject",
-                    NameAR = "ملغي",
+                    NameAR = "مرفوض",
                     StatusType = (int)StatusTypeEnum.Reject
                 },
                 new Status
                 {
-                    NameEN = "Complete",
-                    NameAR = "مكتمل",
-                    StatusType = (int)StatusTypeEnum.Complete
+                    NameEN = "Published",
+                    NameAR = "منشور",
+                    StatusType = (int)StatusTypeEnum.Published
+                },
+                new Status
+                {
+                    NameEN = "Sold",
+                    NameAR = "مباع",
+                    StatusType = (int)StatusTypeEnum.Sold
                 }
             };
 
@@ -69,7 +88,7 @@ namespace DicomApp.Portal
                         Email = "admin@admin.com",
                         Password = "123",
                         RoleId = dBContext
-                            .Role.FirstOrDefault(x => x.Name == SystemConstants.Role.Admin)
+                            .Role.FirstOrDefault(x => x.Name == SystemConstants.Role.SuperAdmin)
                             .Id,
                         PhoneNumber = "01111111111",
                     }

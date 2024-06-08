@@ -6,7 +6,8 @@ using DicomApp.BL.Services;
 using DicomApp.BL.Services.Helpers;
 using DicomApp.BLL;
 using DicomApp.CommonDefinitions.DTO;
-using DicomApp.CommonDefinitions.DTO.ShipmentDTOs;
+using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
+using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
 using DicomApp.CommonDefinitions.Requests;
 using DicomApp.DAL.DB;
 using DicomApp.Helpers;
@@ -50,11 +51,11 @@ namespace DicomApp.Portal.Controllers
         public IActionResult Index(DateTime? From, DateTime? To, string ActionType)
         {
             var roleID = AuthHelper.GetClaimValue(User, "RoleID");
-            if (roleID == (int)EnumRole.Vendor)
+            if (roleID == (int)EnumRole.Gamer)
                 return RedirectToAction(nameof(AccountDashboard));
 
             #region Filter Data
-            var filter = new ShipDTO();
+            var filter = new AdsDTO();
             if (From.HasValue)
                 filter.DateFrom = From.Value;
 
@@ -66,7 +67,7 @@ namespace DicomApp.Portal.Controllers
                 RoleID = roleID,
                 UserID = AuthHelper.GetClaimValue(User, "UserID"),
                 context = _context,
-                ShipDTO = filter,
+                AdsDTO = filter,
                 TopAccount = 15,
                 PackagingStock = 15,
                 TopArea = 20,
@@ -92,11 +93,11 @@ namespace DicomApp.Portal.Controllers
 
             #region Filter Data
             var ViewData = new ViewModel<DashboardDTO>();
-            var filter = new ShipDTO();
+            var filter = new AdsDTO();
             if (VendorID == 0)
-                filter.VendorDetailsDTO = new VendorDetailsDTO { VendorId = UserID };
+                filter.GamerId = UserID;
             else
-                filter.VendorDetailsDTO = new VendorDetailsDTO { VendorId = VendorID };
+                filter.GamerId = VendorID;
 
             if (From.HasValue)
                 filter.DateFrom = From.Value;
@@ -105,7 +106,7 @@ namespace DicomApp.Portal.Controllers
                 filter.DateTo = To.Value;
             #endregion
 
-            if (RolID != (int)EnumRole.Vendor)
+            if (RolID != (int)EnumRole.Gamer)
                 ViewData.Lookup = BaseHelper.GetLookup(
                     new List<byte> { (byte)EnumSelectListType.Vendor, },
                     _context
@@ -116,7 +117,7 @@ namespace DicomApp.Portal.Controllers
                 RoleID = RolID,
                 UserID = UserID,
                 context = _context,
-                ShipDTO = filter,
+                AdsDTO = filter,
                 TopAccount = 15,
                 PackagingStock = 15,
                 TopArea = 20,
@@ -146,7 +147,7 @@ namespace DicomApp.Portal.Controllers
             //    .Where(p => p.StatusId != (int)EnumStatus.Archive)
             //    .Select(p => new ShipmentDTO
             //    {
-            //        ShipmentId = p.ShipmentId,
+            //        AdvertisementId = p.AdvertisementId,
             //        CreatedAt = p.ShipmentDate,
             //        LastStatusAt = p.DeliveryDate,
             //        PaidAt = p.OrderDate,
@@ -270,7 +271,7 @@ namespace DicomApp.Portal.Controllers
             //    .Where(p => p.StatusId != (int)EnumStatus.Archive)
             //    .Select(p => new ShipmentDTO
             //    {
-            //        ShipmentId = p.ShipmentId,
+            //        AdvertisementId = p.AdvertisementId,
             //        CreatedAt = p.ShipmentDate,
             //        LastStatusAt = p.DeliveryDate,
             //        PaidAt = p.OrderDate,
@@ -322,7 +323,7 @@ namespace DicomApp.Portal.Controllers
             //    .Where(p => p.StatusId != (int)EnumStatus.Archive)
             //    .Select(p => new ShipmentDTO
             //    {
-            //        ShipmentId = p.ShipmentId,
+            //        AdvertisementId = p.AdvertisementId,
             //        CreatedAt = p.ShipmentDate,
             //        LastStatusAt = p.DeliveryDate,
             //        PaidAt = p.OrderDate,
@@ -377,7 +378,7 @@ namespace DicomApp.Portal.Controllers
             //    .Where(p => p.StatusId != (int)EnumStatus.Archive)
             //    .Select(p => new ShipmentDTO
             //    {
-            //        ShipmentId = p.ShipmentId,
+            //        AdvertisementId = p.AdvertisementId,
             //        CreatedAt = p.ShipmentDate,
             //        LastStatusAt = p.DeliveryDate,
             //        PaidAt = p.OrderDate,
@@ -427,7 +428,7 @@ namespace DicomApp.Portal.Controllers
         public IActionResult AccountDashboardPartial(DateTime? From, DateTime? To, int VendorID)
         {
             int UserID = AuthHelper.GetClaimValue(User, "UserID");
-            if (AuthHelper.GetClaimValue(User, "RoleID") == (int)EnumRole.Vendor)
+            if (AuthHelper.GetClaimValue(User, "RoleID") == (int)EnumRole.Gamer)
             {
                 ViewBag.Accounts = _context.CommonUser.Where(p => p.RoleId == 4 && p.Id == UserID);
                 VendorID = UserID;
@@ -445,7 +446,7 @@ namespace DicomApp.Portal.Controllers
             //    .Where(p => p.StatusId != (int)EnumStatus.Archive && p.VendorId == VendorID)
             //    .Select(p => new ShipmentDTO
             //    {
-            //        ShipmentId = p.ShipmentId,
+            //        AdvertisementId = p.AdvertisementId,
             //        CreatedAt = p.ShipmentDate,
             //        LastStatusAt = p.DeliveryDate,
             //        PaidAt = p.OrderDate,
@@ -549,7 +550,7 @@ namespace DicomApp.Portal.Controllers
             //    .OrderByDescending(p => p.Value2).Take(10).ToArray();
             //#endregion
 
-            //record.Orders = AllOrders.OrderByDescending(p => p.ShipmentId).Take(10).ToList();
+            //record.Orders = AllOrders.OrderByDescending(p => p.AdvertisementId).Take(10).ToList();
             return PartialView("_AccountDashboard", record);
         }
 
