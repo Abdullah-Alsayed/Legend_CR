@@ -89,7 +89,7 @@
                         </div>
                         <div class="col-lg-12 mt-3">
                             <label class="Shipment-Details-label">vendor</label>
-                            @Html.DropDownListFor(model => model.VendorId, new SelectList(ViewBag.vendors, "Id", "Name"),"--- Select Vendor ---", new { @class = "form-control " ,@required="required"})
+                            @Html.DropDownListFor(model => model.GamerId, new SelectList(ViewBag.vendors, "Id", "Name"),"--- Select Vendor ---", new { @class = "form-control " ,@required="required"})
                             <div class="invalid-feedback">
                                 Please  Select vendor.
                             </div>

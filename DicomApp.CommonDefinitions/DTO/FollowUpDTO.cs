@@ -14,7 +14,6 @@ namespace DicomApp.CommonDefinitions.DTO
         public string CreatedByName { get; set; }
 
         public DateTime CreatedAt { get; set; }
-        public int? FollowUpTypeId { get; set; }
         public string Title { get; set; }
     }
 }

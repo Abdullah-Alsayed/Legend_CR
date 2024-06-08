@@ -302,7 +302,7 @@ namespace DicomApp.BL.Services
 
                         var nonPaidShips = request
                             .context.Advertisement.Where(s =>
-                                s.VendorId == request.AccountDTO.UserId
+                                s.GamerId == request.AccountDTO.UserId
                                 && hasDelvieredShipsIDs.Contains(s.AdvertisementId)
                             )
                             .Select(t => t.AdvertisementId)

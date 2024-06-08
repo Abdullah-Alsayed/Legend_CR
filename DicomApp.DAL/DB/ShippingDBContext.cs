@@ -541,8 +541,6 @@ namespace DicomApp.DAL.DB
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
 
-                entity.Property(e => e.FollowUpTypeId).HasColumnName("FollowUpTypeID");
-
                 entity
                     .Property(e => e.LastModifiedAt)
                     .HasColumnType("datetime")
@@ -562,12 +560,6 @@ namespace DicomApp.DAL.DB
                     .HasForeignKey(d => d.CreatedBy)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Visit_FollowUp_CommonUser");
-
-                entity
-                    .HasOne(d => d.FollowUpType)
-                    .WithMany(p => p.FollowUp)
-                    .HasForeignKey(d => d.FollowUpTypeId)
-                    .HasConstraintName("FK_FollowUp_FollowUpType");
 
                 entity
                     .HasOne(d => d.Advertisement)
@@ -847,13 +839,6 @@ namespace DicomApp.DAL.DB
                     .WithMany(p => p.ShipmentGame)
                     .HasForeignKey(d => d.GameId)
                     .HasConstraintName("FK_Shipment_Game");
-
-                entity
-                    .HasOne(d => d.Vendor)
-                    .WithMany(p => p.ShipmentVendor)
-                    .HasForeignKey(d => d.VendorId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Shipment_CommonUser1");
             });
 
             modelBuilder.Entity<ShipmentCustomerFollowUp>(entity =>

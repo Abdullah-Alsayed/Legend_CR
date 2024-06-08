@@ -154,11 +154,11 @@
                             <ul id="ShippingManagement-Ul" class="d-none Nested-sidebar-menu">
                                 @if (BaseService.CheckRoleAccessability(roleID, SystemConstants.Permission.AddAdvertisement, connectionString: connectionString))
                                 {
-                                    <li><a class="MenuNavigation Navigation" href="/Advertisement/Add">Add New Shipment</a></li>
+                                    <li><a class="MenuNavigation Navigation" href="/Advertisement/Add">Add New Advertisement</a></li>
                                 }
                                 @if (BaseService.CheckRoleAccessability(roleID, SystemConstants.Permission.ListAdvertisement, connectionString: connectionString))
                                 {
-                                    <li><a class="MenuNavigation Navigation" href="/Advertisement/All">Shipments List</a></li>
+                                    <li><a class="MenuNavigation Navigation" href="/Advertisement/All">Advertisement List</a></li>
                                 }
                             </ul>
                         </li>

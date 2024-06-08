@@ -86,7 +86,7 @@
                                 {
                                     <div class="col-lg-@Model.Columns pt-3">
                                         <label class="Label-Model">Status</label>
-                                        @Html.DropDownList("StatusId", new SelectList(Model.Lookup.StatusDTOs, "Id", "Name"),"--- Select Status ---", new {@class="input-Model"})
+                                        @Html.DropDownList("StatusId", new SelectList(Model.Lookup.StatusDTOs, nameof(StatusDTO.Id), nameof(StatusDTO.NameEN)), "--- Select Status ---", new { @class = "input-Model" })
                                     </div>
                                 }
                                 if (Model.SelectListType.Contains((byte)EnumSelectListType.Role))

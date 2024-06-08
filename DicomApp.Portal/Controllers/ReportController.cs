@@ -52,7 +52,7 @@ namespace DicomApp.Portal.Controllers
                 model.StatusId = StatusId;
 
             model.Search = Search;
-            model.VendorId = VendorId;
+            model.GamerId = VendorId;
             if (From.HasValue)
                 model.DateFrom = From.Value;
 
@@ -370,7 +370,7 @@ namespace DicomApp.Portal.Controllers
             ViewModel<AdsDTO> ViewData = new ViewModel<AdsDTO>();
             var filter = new AdsDTO();
             filter.Search = Search;
-            filter.VendorId = VendorId;
+            filter.GamerId = VendorId;
             filter.StatusId = StatusId;
 
             if (From.HasValue)
@@ -620,7 +620,7 @@ namespace DicomApp.Portal.Controllers
                 RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
                 UserID = AuthHelper.GetClaimValue(User, "UserID"),
                 context = _context,
-                AdsDTO = new AdsDTO { VendorId = 0 }
+                AdsDTO = new AdsDTO { GamerId = 0 }
             };
 
             var shipmentResponse = BL.Services.AdvertisementService.GetAllAdvertisements(
@@ -653,7 +653,7 @@ namespace DicomApp.Portal.Controllers
                 RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
                 UserID = AuthHelper.GetClaimValue(User, "UserID"),
                 context = _context,
-                AdsDTO = new AdsDTO { StatusId = s, VendorId = vID }
+                AdsDTO = new AdsDTO { StatusId = s, GamerId = vID }
             };
 
             var shipmentResponse = BL.Services.AdvertisementService.GetAdvertisement(

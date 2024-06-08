@@ -41,12 +41,12 @@
                 <td style=" min-width:80px" class="text-center pl-1 pr-1">0</td>
                 <td class="text-center text-nowrap pl-1 pr-1">@REDFees EGP</td>
                 <td class="text-center text-nowrap pl-1 pr-1">0</td>
-                <partial name="~/Views/Shared/Shipment/_StatusSwitch.cshtml" model="@ship.Status"></partial>
+                <partial name="~/Views/Shared/Advertisement/_StatusSwitch.cshtml" model="@ship.Status"></partial>
                 <td class="text-center pl-1 pr-1">
-                    <partial name="~/Views/Shared/Shipment/_Problems.cshtml" model="@ship"></partial>
+                    <partial name="~/Views/Shared/Advertisement/_Problems.cshtml" model="@ship"></partial>
                 </td>
                 <td class="text-center pl-1 pr-1">
-                    <partial name="~/Views/Shared/Shipment/_CourierProblems.cshtml" model="@ship"></partial>
+                    <partial name="~/Views/Shared/Advertisement/_CourierProblems.cshtml" model="@ship"></partial>
                 </td>
                 <td class="text-center pl-1 pr-1">
                     
@@ -55,7 +55,7 @@
                    0
                 </td>
                 <td class="text-center pr-0" id="TableTD_@ship.AdvertisementId">
-                    <partial name="~/Views/Shared/Shipment/_CommonActions.cshtml" model="@ship"></partial>
+                    <partial name="~/Views/Shared/Advertisement/_CommonActions.cshtml" model="@ship"></partial>
                 </td>
             </tr>
         }

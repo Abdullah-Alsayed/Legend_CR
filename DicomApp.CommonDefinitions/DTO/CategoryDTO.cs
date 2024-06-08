@@ -13,7 +13,7 @@ namespace DicomApp.CommonDefinitions.DTO
         public int? CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; }
         public int? LastModifiedBy { get; set; }
-        public DateTime LastModifiedAt { get; set; }
+        public DateTime? LastModifiedAt { get; set; }
 
         public string Search { get; set; }
     }

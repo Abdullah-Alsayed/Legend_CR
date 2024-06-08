@@ -16,10 +16,10 @@ namespace DicomApp.DAL.DB
         public int? CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; }
         public int? LastModifiedBy { get; set; }
-        public DateTime LastModifiedAt { get; set; }
+        public DateTime? LastModifiedAt { get; set; }
         public bool IsDeleted { get; set; }
-        public DateTime DeletedOn { get; set; }
-        public int DeleteBy { get; set; }
+        public DateTime? DeletedOn { get; set; }
+        public int? DeleteBy { get; set; }
 
         public virtual ICollection<Game> Game { get; set; }
     }

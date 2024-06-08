@@ -1,19 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using DicomApp.CommonDefinitions.DTO;
 using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
-using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
-using DicomApp.CommonDefinitions.DTO.CashDTOs;
 using DicomApp.CommonDefinitions.Requests;
 using DicomApp.CommonDefinitions.Responses;
 using DicomApp.DAL.DB;
 using DicomApp.Helpers;
 using Microsoft.CodeAnalysis;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 
 namespace DicomApp.BL.Services
 {
@@ -37,7 +32,7 @@ namespace DicomApp.BL.Services
                         var ship = new Advertisement()
                         {
                             StatusId = status.Id,
-                            VendorId = request.AdsDTO.VendorId,
+                            GamerId = request.AdsDTO.GamerId,
                             GameId = request.AdsDTO.GameId,
                             Description = request.AdsDTO.Description,
                             UserName = request.AdsDTO.UserName,
@@ -56,8 +51,9 @@ namespace DicomApp.BL.Services
                         );
 
                         // Add Photos
-                        foreach (var url in request.AdsDTO.FilesUrls)
+                        foreach (var file in request.AdsDTO.Files)
                         {
+                            var url = BaseHelper.UploadImg(file, request.RoutPath);
                             req.context.AdvertisementPhotos.Add(
                                 new AdvertisementPhotos
                                 {
@@ -69,7 +65,6 @@ namespace DicomApp.BL.Services
                         //Add follow up
                         var follow = new FollowUpDTO
                         {
-                            FollowUpTypeId = (int)EnumFollowupType.Ads_Added,
                             Title = "Advertisement Added",
                             CreatedBy = request.UserID,
                             AdvertisementId = ship.AdvertisementId,
@@ -86,7 +81,11 @@ namespace DicomApp.BL.Services
                                 Icon = ship.RefId,
                                 SenderId = request.UserID,
                                 Title = "New Advertisement",
-                                RecipientRoleId = (int)EnumRole.SuperAdmin,
+                                RecipientRoleId = request
+                                    .context.Role.FirstOrDefault(x =>
+                                        x.Name == SystemConstants.Role.Admin
+                                    )
+                                    .Id,
                                 IsDeleted = false,
                                 IsSeen = false,
                                 RecipientId = 0,
@@ -94,7 +93,6 @@ namespace DicomApp.BL.Services
                         );
 
                         request.context.SaveChanges();
-
                         response.Message =
                             "New Advertisement " + ship.RefId + " successfully added";
                         response.Success = true;
@@ -128,7 +126,7 @@ namespace DicomApp.BL.Services
                         if (ship.Price != request.AdsDTO.Price && ship.Status.StatusType > 3)
                         {
                             ship.StatusId = request.AdsDTO.StatusId;
-                            ship.VendorId = request.AdsDTO.VendorId;
+                            ship.GamerId = request.AdsDTO.GamerId;
                             ship.GameId = request.AdsDTO.GameId;
                             ship.Description = request.AdsDTO.Description;
                             ship.UserName = request.AdsDTO.UserName;
@@ -142,7 +140,6 @@ namespace DicomApp.BL.Services
                             //Add follow up
                             var follow = new FollowUpDTO
                             {
-                                FollowUpTypeId = (int)EnumFollowupType.Advertisement_Updated,
                                 Title = "Advertisement Updated",
                                 CreatedBy = request.UserID,
                                 AdvertisementId = ship.AdvertisementId,
@@ -1342,7 +1339,7 @@ namespace DicomApp.BL.Services
                             GameId = s.GameId,
                             BuyerId = s.BuyerId,
                             StatusId = s.StatusId,
-                            VendorId = s.VendorId,
+                            GamerId = s.GamerId,
                             LastModifiedAt = s.LastModifiedAt,
                             LastModifiedBy = s.LastModifiedBy,
                             Status = new StatusDTO
@@ -1357,7 +1354,6 @@ namespace DicomApp.BL.Services
                                 {
                                     Comment = f.Comment,
                                     CreatedAt = f.CreatedAt,
-                                    FollowUpTypeId = f.FollowUpTypeId,
                                     Title = f.Title,
                                     CreatedBy = f.CreatedBy,
                                     CreatedByName = f.CreatedByNavigation.Name,
@@ -1380,11 +1376,11 @@ namespace DicomApp.BL.Services
                                         Name = s.Buyer.Name,
                                     }
                                     : null,
-                            Vendor = new UserDTO
+                            Gamer = new UserDTO
                             {
-                                Id = s.Vendor.Id,
-                                ImgUrl = s.Vendor.ImgUrl,
-                                Name = s.Vendor.Name,
+                                Id = s.Gamer.Id,
+                                ImgUrl = s.Gamer.ImgUrl,
+                                Name = s.Gamer.Name,
                             },
                         });
                         response.AdsDTO = query.FirstOrDefault();
@@ -1423,7 +1419,7 @@ namespace DicomApp.BL.Services
                                 request.AdsDTO.AdvertisementIds.Contains(s.AdvertisementId)
                                 && !s.IsDeleted
                             );
-                        else if (string.IsNullOrEmpty(request.AdsDTO.RefId))
+                        else if (!string.IsNullOrEmpty(request.AdsDTO.RefId))
                             ship = request.context.Advertisement.Where(s =>
                                 s.AdvertisementId == request.AdsDTO.AdvertisementId && !s.IsDeleted
                             );
@@ -1448,7 +1444,7 @@ namespace DicomApp.BL.Services
                             GameId = s.GameId,
                             BuyerId = s.BuyerId,
                             StatusId = s.StatusId,
-                            VendorId = s.VendorId,
+                            GamerId = s.GamerId,
                             LastModifiedAt = s.LastModifiedAt,
                             LastModifiedBy = s.LastModifiedBy,
                             Status = new StatusDTO
@@ -1463,7 +1459,6 @@ namespace DicomApp.BL.Services
                                 {
                                     Comment = f.Comment,
                                     CreatedAt = f.CreatedAt,
-                                    FollowUpTypeId = f.FollowUpTypeId,
                                     Title = f.Title,
                                     CreatedBy = f.CreatedBy,
                                     CreatedByName = f.CreatedByNavigation.Name,
@@ -1486,11 +1481,11 @@ namespace DicomApp.BL.Services
                                         Name = s.Buyer.Name,
                                     }
                                     : null,
-                            Vendor = new UserDTO
+                            Gamer = new UserDTO
                             {
-                                Id = s.Vendor.Id,
-                                ImgUrl = s.Vendor.ImgUrl,
-                                Name = s.Vendor.Name,
+                                Id = s.Gamer.Id,
+                                ImgUrl = s.Gamer.ImgUrl,
+                                Name = s.Gamer.Name,
                             },
                         });
                         response.AdsDTOs = query.ToList();
@@ -1543,8 +1538,8 @@ namespace DicomApp.BL.Services
             if (filter.StatusId != 0)
                 query = query.Where(p => p.StatusId == filter.StatusId);
 
-            if (filter.VendorId != 0)
-                query = query.Where(c => c.VendorId == filter.VendorId);
+            if (filter.GamerId != 0)
+                query = query.Where(c => c.GamerId == filter.GamerId);
 
             if (filter.GameId != 0)
                 query = query.Where(c => c.GameId == filter.GameId);

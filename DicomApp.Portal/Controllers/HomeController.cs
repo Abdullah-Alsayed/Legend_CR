@@ -95,9 +95,9 @@ namespace DicomApp.Portal.Controllers
             var ViewData = new ViewModel<DashboardDTO>();
             var filter = new AdsDTO();
             if (VendorID == 0)
-                filter.VendorId = UserID;
+                filter.GamerId = UserID;
             else
-                filter.VendorId = VendorID;
+                filter.GamerId = VendorID;
 
             if (From.HasValue)
                 filter.DateFrom = From.Value;

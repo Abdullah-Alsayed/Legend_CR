@@ -177,17 +177,11 @@ namespace DicomApp.DAL.Migrations
 
                     b.Property<int?>("BuyerId");
 
-                    b.Property<int>("CashTransferId");
+                    b.Property<int?>("CashTransferId");
 
                     b.Property<int?>("CityId");
 
                     b.Property<int?>("CommonUserId");
-
-                    b.Property<int?>("CommonUserId1");
-
-                    b.Property<int?>("CommonUserId2");
-
-                    b.Property<int?>("CommonUserId3");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -203,6 +197,8 @@ namespace DicomApp.DAL.Migrations
 
                     b.Property<int?>("GameId1");
 
+                    b.Property<int>("GamerId");
+
                     b.Property<bool>("IsDeleted");
 
                     b.Property<bool>("IsRefund");
@@ -213,6 +209,8 @@ namespace DicomApp.DAL.Migrations
                         .HasDefaultValueSql("(getdate())");
 
                     b.Property<int?>("LastModifiedBy");
+
+                    b.Property<string>("Level");
 
                     b.Property<string>("Password")
                         .HasMaxLength(250);
@@ -231,8 +229,6 @@ namespace DicomApp.DAL.Migrations
                     b.Property<string>("UserName")
                         .HasMaxLength(500);
 
-                    b.Property<int>("VendorId");
-
                     b.Property<int?>("ZoneId");
 
                     b.HasKey("AdvertisementId");
@@ -247,23 +243,17 @@ namespace DicomApp.DAL.Migrations
 
                     b.HasIndex("CommonUserId");
 
-                    b.HasIndex("CommonUserId1");
-
-                    b.HasIndex("CommonUserId2");
-
-                    b.HasIndex("CommonUserId3");
-
                     b.HasIndex("GameId");
 
                     b.HasIndex("GameId1");
+
+                    b.HasIndex("GamerId");
 
                     b.HasIndex("PickupRequestId");
 
                     b.HasIndex("ShipmentTypeId");
 
                     b.HasIndex("StatusId");
-
-                    b.HasIndex("VendorId");
 
                     b.HasIndex("ZoneId");
 
@@ -466,13 +456,13 @@ namespace DicomApp.DAL.Migrations
 
                     b.Property<int?>("CreatedBy");
 
-                    b.Property<int>("DeleteBy");
+                    b.Property<int?>("DeleteBy");
 
-                    b.Property<DateTime>("DeletedOn");
+                    b.Property<DateTime?>("DeletedOn");
 
                     b.Property<bool>("IsDeleted");
 
-                    b.Property<DateTime>("LastModifiedAt")
+                    b.Property<DateTime?>("LastModifiedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("(getdate())");
@@ -943,8 +933,7 @@ namespace DicomApp.DAL.Migrations
 
                     b.Property<int>("CreatedBy");
 
-                    b.Property<int?>("FollowUpTypeId")
-                        .HasColumnName("FollowUpTypeID");
+                    b.Property<int?>("FollowUpTypeId");
 
                     b.Property<bool>("IsDeleted");
 
@@ -1010,9 +999,9 @@ namespace DicomApp.DAL.Migrations
 
                     b.Property<int?>("CreatedBy");
 
-                    b.Property<int>("DeleteBy");
+                    b.Property<int?>("DeleteBy");
 
-                    b.Property<DateTime>("DeletedOn");
+                    b.Property<DateTime?>("DeletedOn");
 
                     b.Property<string>("Description")
                         .HasMaxLength(250);
@@ -1022,7 +1011,7 @@ namespace DicomApp.DAL.Migrations
 
                     b.Property<bool>("IsDeleted");
 
-                    b.Property<DateTime>("LastModifiedAt")
+                    b.Property<DateTime?>("LastModifiedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("(getdate())");
@@ -1711,28 +1700,15 @@ namespace DicomApp.DAL.Migrations
 
                     b.HasOne("DicomApp.DAL.DB.CashTransfer", "CashTransfer")
                         .WithMany("Shipment")
-                        .HasForeignKey("CashTransferId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("CashTransferId");
 
                     b.HasOne("DicomApp.DAL.DB.City")
                         .WithMany("Shipment")
                         .HasForeignKey("CityId");
 
                     b.HasOne("DicomApp.DAL.DB.CommonUser")
-                        .WithMany("AdvertisementsVendor")
-                        .HasForeignKey("CommonUserId");
-
-                    b.HasOne("DicomApp.DAL.DB.CommonUser")
                         .WithMany("ShipmentCustomer")
-                        .HasForeignKey("CommonUserId1");
-
-                    b.HasOne("DicomApp.DAL.DB.CommonUser")
-                        .WithMany("ShipmentDeliveryMan")
-                        .HasForeignKey("CommonUserId2");
-
-                    b.HasOne("DicomApp.DAL.DB.CommonUser")
-                        .WithMany("ShipmentLastModifiedByNavigation")
-                        .HasForeignKey("CommonUserId3");
+                        .HasForeignKey("CommonUserId");
 
                     b.HasOne("DicomApp.DAL.DB.Game", "Game")
                         .WithMany("ShipmentGame")
@@ -1743,6 +1719,11 @@ namespace DicomApp.DAL.Migrations
                     b.HasOne("DicomApp.DAL.DB.Game")
                         .WithMany("ShipmentWarehouseGame")
                         .HasForeignKey("GameId1");
+
+                    b.HasOne("DicomApp.DAL.DB.CommonUser", "Gamer")
+                        .WithMany("AdvertisementsGamer")
+                        .HasForeignKey("GamerId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DicomApp.DAL.DB.PickupRequest")
                         .WithMany("Shipment")
@@ -1756,11 +1737,6 @@ namespace DicomApp.DAL.Migrations
                         .WithMany("Advertisements")
                         .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("DicomApp.DAL.DB.CommonUser", "Vendor")
-                        .WithMany("ShipmentVendor")
-                        .HasForeignKey("VendorId")
-                        .HasConstraintName("FK_Shipment_CommonUser1");
 
                     b.HasOne("DicomApp.DAL.DB.Zone")
                         .WithMany("Advertisement")
@@ -1875,10 +1851,9 @@ namespace DicomApp.DAL.Migrations
                         .HasForeignKey("CreatedBy")
                         .HasConstraintName("FK_Visit_FollowUp_CommonUser");
 
-                    b.HasOne("DicomApp.DAL.DB.FollowUpType", "FollowUpType")
+                    b.HasOne("DicomApp.DAL.DB.FollowUpType")
                         .WithMany("FollowUp")
-                        .HasForeignKey("FollowUpTypeId")
-                        .HasConstraintName("FK_FollowUp_FollowUpType");
+                        .HasForeignKey("FollowUpTypeId");
                 });
 
             modelBuilder.Entity("DicomApp.DAL.DB.Game", b =>

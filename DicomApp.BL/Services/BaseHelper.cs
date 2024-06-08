@@ -155,7 +155,7 @@ namespace DicomApp.BL.Services
             return lookup;
         }
 
-        public static string UploadImg(IFormFile File, string WebRootPath, string ImgUrl)
+        public static string UploadImg(IFormFile File, string WebRootPath, string ImgUrl = null)
         {
             string Img = String.Empty;
             if (File != null)

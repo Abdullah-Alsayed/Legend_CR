@@ -28,7 +28,7 @@
             <div class="row Red-Row ml-4 Shipment-Details-Section">
                 <div class="col-lg-4">
                     <label class="Shipment-Details-label">Vendor</label>
-                    @Html.DropDownListFor(model => model.VendorId, new SelectList(ViewBag.vendors, "Id", "Name"), "--- Select Vendor ---", new { @class = "form-control ", @required = "required" })
+                    @Html.DropDownListFor(model => model.GamerId, new SelectList(ViewBag.vendors, "Id", "Name"), "--- Select Vendor ---", new { @class = "form-control ", @required = "required" })
                     <div class="invalid-feedback">
                         Please  Select vendor.
                     </div>

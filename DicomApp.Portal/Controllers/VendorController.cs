@@ -52,7 +52,7 @@ namespace DicomApp.Portal.Controllers
                 model.StatusId = StatusId;
 
             model.Search = Search;
-            model.VendorId = AuthHelper.GetClaimValue(User, "UserID");
+            model.GamerId = AuthHelper.GetClaimValue(User, "UserID");
             if (From.HasValue)
                 model.DateFrom = From.Value;
 
@@ -233,7 +233,7 @@ namespace DicomApp.Portal.Controllers
             var userID = AuthHelper.GetClaimValue(User, "UserID");
             var filter = new AdsDTO();
             filter.Search = Search;
-            filter.VendorId = userID;
+            filter.GamerId = userID;
             filter.StatusId = StatusId;
             if (From.HasValue)
                 filter.DateFrom = From.Value;
@@ -295,7 +295,7 @@ namespace DicomApp.Portal.Controllers
         {
             var userID = AuthHelper.GetClaimValue(User, "UserID");
             var model = new AdsDTO();
-            model.VendorId = userID;
+            model.GamerId = userID;
             model.Search = Search;
             if (From.HasValue)
                 model.DateFrom = From.Value;
@@ -338,10 +338,10 @@ namespace DicomApp.Portal.Controllers
             ViewBag.Category = _context.Category.ToList();
 
             ViewBag.ZoneList = _context.Zone.ToList();
-            ViewBag.Vendors = GeneralHelper.GetUsers((int)EnumRole.Gamer, _context);
+            ViewBag.Vendors = GeneralHelper.GetUsers(SystemConstants.Role.Gamer, _context);
 
             if (ActionType == SystemConstants.ActionType.PartialView)
-                return PartialView("/Views/Shared/Shipment/_AddOrder.cshtml");
+                return PartialView("/Views/Shared/Advertisement/_AddOrder.cshtml");
             else
                 return View();
         }
@@ -360,7 +360,7 @@ namespace DicomApp.Portal.Controllers
             var filter = new AdsDTO();
             filter.Search = Search;
             filter.StatusId = (int)EnumStatus.Ready_For_Pickup;
-            filter.VendorId = AuthHelper.GetClaimValue(User, "UserID");
+            filter.GamerId = AuthHelper.GetClaimValue(User, "UserID");
 
             if (From.HasValue)
                 filter.DateFrom = From.Value;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DicomApp.CommonDefinitions.DTO.CashDTOs;
 using DicomApp.DAL.DB;
+using Microsoft.AspNetCore.Http;
 
 namespace DicomApp.CommonDefinitions.DTO.AdvertisementDTOs
 {
@@ -11,7 +12,7 @@ namespace DicomApp.CommonDefinitions.DTO.AdvertisementDTOs
         public string RefId { get; set; }
         public int GameId { get; set; }
         public int StatusId { get; set; }
-        public int VendorId { get; set; }
+        public int GamerId { get; set; }
         public int? BuyerId { get; set; }
         public int? AdvertisementRequestId { get; set; }
 
@@ -19,6 +20,7 @@ namespace DicomApp.CommonDefinitions.DTO.AdvertisementDTOs
         public string UserName { get; set; }
         public string Password { get; set; }
 
+        public string Level { get; set; }
         public int Price { get; set; }
 
         public DateTime CreatedAt { get; set; }
@@ -29,9 +31,10 @@ namespace DicomApp.CommonDefinitions.DTO.AdvertisementDTOs
 
         public GameDTO Game { get; set; }
         public StatusDTO Status { get; set; }
-        public UserDTO Vendor { get; set; }
+        public UserDTO Gamer { get; set; }
         public UserDTO Buyer { get; set; }
 
+        public List<IFormFile> Files { get; set; }
         public CashTransferDTO CashTransfer { get; set; }
         public List<string> AdvertisementPhotos { get; set; }
         public List<AccountTransactionDTO> AccountTransaction { get; set; }

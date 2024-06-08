@@ -10,6 +10,7 @@ using DicomApp.DAL.DB;
 using DicomApp.Helpers;
 using DicomApp.Portal.Helpers;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Rotativa.AspNetCore;
@@ -20,10 +21,12 @@ namespace DicomApp.Portal.Controllers
     public class AdvertisementController : Controller
     {
         private readonly ShippingDBContext _context;
+        private readonly IHostingEnvironment _hosting;
 
-        public AdvertisementController(ShippingDBContext context)
+        public AdvertisementController(ShippingDBContext context, IHostingEnvironment hosting)
         {
             _context = context;
+            _hosting = hosting;
         }
 
         #region Advertisement details popup
@@ -37,7 +40,7 @@ namespace DicomApp.Portal.Controllers
             var model = new AdsDTO();
             model.RefId = TrackAdvertisement;
             if (RoleID == (int)EnumRole.Gamer)
-                model.VendorId = UserID;
+                model.GamerId = UserID;
 
             var request = new AdvertisementRequest
             {
@@ -72,21 +75,21 @@ namespace DicomApp.Portal.Controllers
 
         [AuthorizePerRole(SystemConstants.Permission.AddAdvertisement)]
         [HttpPost]
-        public IActionResult Add(AdsDTO model, string PartialItems)
+        public IActionResult Add(AdsDTO model)
         {
             var request = new AdvertisementRequest();
             request.context = _context;
             request.RoleID = AuthHelper.GetClaimValue(User, "RoleID");
             request.UserID = AuthHelper.GetClaimValue(User, "UserID");
             request.AdsDTO = model;
+            request.RoutPath = _hosting.WebRootPath;
 
             if (request.RoleID == (int)EnumRole.Gamer)
-                model.VendorId = request.UserID;
+                model.GamerId = request.UserID;
 
             var response = BL.Services.AdvertisementService.AddAdvertisement(request);
 
-            ViewBag.Vendors = GeneralHelper.GetUsers((int)EnumRole.Gamer, _context);
-            ViewBag.delivery = GeneralHelper.GetUsers((int)EnumRole.DeliveryMan, _context);
+            ViewBag.Vendors = GeneralHelper.GetUsers(SystemConstants.Role.Gamer, _context);
             ViewBag.branch = _context.Branch.ToList();
             ViewBag.areas = _context.City.ToList();
 
@@ -96,18 +99,11 @@ namespace DicomApp.Portal.Controllers
         [AuthorizePerRole(SystemConstants.Permission.AddAdvertisement)]
         public IActionResult Add(string ActionType = null)
         {
-            ViewBag.Category = CategoryService
-                .GetCategorys(new CategoryRequest { context = _context })
-                .CategoryDTOs;
+            ViewBag.GameList = GameService
+                .GetGames(new GameRequest { context = _context })
+                .GameDTOs;
 
-            ViewBag.ZoneList = ZoneService
-                .GetZones(new ZoneRequest { context = _context })
-                .ZoneDTOs;
-            ViewBag.BarnchList = BranchService
-                .GetBranchs(new BranchRequest { context = _context })
-                .BranchDTOs.ToList();
-
-            ViewBag.Vendors = GeneralHelper.GetUsers((int)EnumRole.Gamer, _context);
+            ViewBag.Gamers = GeneralHelper.GetUsers(SystemConstants.Role.Gamer, _context);
 
             if (ActionType == SystemConstants.ActionType.PartialView)
                 return PartialView("/Views/Shared/Advertisement/_AddOrder.cshtml");
@@ -179,7 +175,7 @@ namespace DicomApp.Portal.Controllers
             ViewBag.Category = _context.Category.ToList();
             ViewBag.GameBox = _context.Game.Where(p => p.CategoryId == 1).ToList();
             ViewBag.AreasList = _context.City.ToList();
-            ViewBag.vendors = GeneralHelper.GetUsers((int)EnumRole.Gamer, _context);
+            ViewBag.vendors = GeneralHelper.GetUsers(SystemConstants.Role.Gamer, _context);
             ViewBag.ZoneList = _context.Zone.Where(z => !z.IsDeleted).ToList();
 
             var model = new AdsDTO();
@@ -205,9 +201,7 @@ namespace DicomApp.Portal.Controllers
             request.RoleID = AuthHelper.GetClaimValue(User, "RoleID");
             request.UserID = AuthHelper.GetClaimValue(User, "UserID");
             var response = BL.Services.AdvertisementService.EditAdvertisement(request);
-
-            ViewBag.Vendors = GeneralHelper.GetUsers((int)EnumRole.Gamer, _context);
-            ViewBag.delivery = GeneralHelper.GetUsers((int)EnumRole.DeliveryMan, _context);
+            ViewBag.Vendors = GeneralHelper.GetUsers(SystemConstants.Role.Gamer, _context);
             ViewBag.branch = _context.Branch.ToList();
             ViewBag.areas = _context.City.ToList();
 
@@ -284,13 +278,13 @@ namespace DicomApp.Portal.Controllers
             DateTime? To,
             int ZoneId,
             int StatusId,
-            int VendorId,
+            int GamerId,
             int AreaId,
             string ActionType = null
         )
         {
             ViewModel<AdsDTO> ViewData = new ViewModel<AdsDTO>();
-            var filter = new AdsDTO() { StatusId = StatusId, VendorId = VendorId };
+            var filter = new AdsDTO() { StatusId = StatusId, GamerId = GamerId };
             if (ActionType != SystemConstants.ActionType.Table)
             {
                 ViewData.Lookup = BaseHelper.GetLookup(

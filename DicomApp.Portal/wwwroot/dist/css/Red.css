@@ -62,9 +62,89 @@
     background: #e8f9ee;
 }*/
 
+/* Files Style*/
+.files-container {
+    height: 300px;
+    width: 300px;
+    border-radius: 10px;
+    box-shadow: 4px 4px 30px rgba(0, 0, 0, .2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    gap: 5px;
+    background-color: rgba(0, 110, 255, 0.041);
+}
 
+.files-header {
+    flex: 1;
+    width: 100%;
+    border: 2px dashed royalblue;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: #EEF0F4;
+}
+
+.files-header svg {
+    height: 100px;
+}
+
+.files-hfiles-eader label {
+    text-align: center;
+    color: #EEF0F4;
+}
+
+.files-header label {
+    text-align: center;
+    color: #EEF0F4;
+}
+.files-footer {
+    background-color: rgba(0, 110, 255, 0.075);
+    width: 100%;
+    height: 40px;
+    padding: 8px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    color: #EEF0F4;
+    border: none;
+}
+
+.files-footer svg {
+    height: 130%;
+    fill: royalblue;
+    background-color: rgba(70, 66, 66, 0.103);
+    border-radius: 50%;
+    padding: 2px;
+    cursor: pointer;
+    box-shadow: 0 2px 30px rgba(0, 0, 0, 0.205);
+}
+
+.files-footer p {
+    flex: 1;
+    text-align: center;
+    color: #EEF0F4;
+}
+    
+#Advertisement-files {
+    display: none;
+}
+.uploaded-img{
+    width:150px;
+    height:150px;
+}
+#Advertisement-Imgs {
+    display: flex;
+    justify-content: space-evenly;
+    gap:25px;
+}
 /*Context munue*/
-
 .list-container {
     position: relative;
 }
@@ -1240,7 +1320,7 @@ color: #4D4D4D;
 .Shipment-Filter {
     width: auto;
     height: 44px;
-    background: #EFEFEF;
+    background: #1d232c;
     border-radius: 15px;
     margin: auto;
     white-space: nowrap;
@@ -1265,9 +1345,12 @@ color: #4D4D4D;
         margin-right: 28px;
         margin-left: 0px;
         margin-bottom: 0px;
-        background: #FFFFFF;
+        background: #0077e4;
         box-shadow: 0px 4px 13px rgb(0 0 0 / 15%);
         border-radius: 10px;
+    }
+    .Shipment-Filter a {
+        color: #EEF0F4;
     }
 
 .Search-Section {
@@ -1617,7 +1700,7 @@ color: #4D4D4D;
     font-weight: 200;
     font-size: 14px;
     line-height: 150%;
-    color: rgba(34, 33, 51, 0.73);
+    color: #EEF0F4;
 }
 
 .status-td {
@@ -1656,36 +1739,61 @@ color: #4D4D4D;
     background: #1D232C;
     border-radius: 10px;
     width: 100%;
-    padding: 10px 20px 10px 20px;
+    padding: 20px 20px 20px 20px;
     height: auto;
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
 }
 
-    .Shipment-Details-Section select {
-        box-sizing: border-box;
-        align-items: center;
-        padding: 8px 16px;
-        gap: 12px;
-        width: 100%;
-        height: 40px;
-        background: #1D232C;
-        border-radius: 6px;
-        outline: none;
-        font-family: 'Poppins';
-        font-style: normal;
-        font-weight: 300;
-        font-size: 12px;
-        line-height: 120%;
-        display: flex;
-        align-items: center;
-        letter-spacing: 0.25px;
-        color: #EEF0F4;
-    }
-        .Shipment-Details-Section select:active {
-            color: #EEF0F4;
-        }
+.Shipment-Details-Section select {
+    box-sizing: border-box;
+    align-items: center;
+    padding: 8px 16px;
+    gap: 12px;
+    width: 100%;
+    height: 40px;
+    background: #1D232C;
+    border: 2px solid #3B4758;
+    border-radius: 20px;
+    outline: none;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 120%;
+    display: flex;
+    align-items: center;
+    letter-spacing: 0.25px;
+    color: #EEF0F4;
+}
+
+.Shipment-Details-Section select:active {
+    color: #EEF0F4 !important;
+}
+
+.Shipment-Details-Section select option {
+    box-sizing: border-box;
+    align-items: center;
+    padding: 8px 16px;
+    margin:15px;
+    width: 100%;
+    height: 40px;
+    background: #1D232C;
+    border: 2px solid #3B4758;
+    border-radius: 20px;
+    outline: none;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 120%;
+    display: flex;
+    align-items: center;
+    letter-spacing: 0.25px;
+    color: #EEF0F4;
+}
+
 
 
 .Shipment-Details-label, .Label-Model, .Red-Label {
@@ -1696,6 +1804,7 @@ color: #4D4D4D;
     line-height: 18px;
     letter-spacing: 0.5px;
     color: #EEF0F4;
+
 }
 
 .Label-Model {
@@ -1775,7 +1884,7 @@ color: #4D4D4D;
     line-height: 120%;
     align-items: center;
     letter-spacing: 0.25px;
-    color: #AABBC6;
+    color: #EEF0F4;
 }
 /*.input-Number::placeholder{
     font-family: 'Poppins';
@@ -1924,13 +2033,11 @@ color: #4D4D4D;
 .Game-Type-Section p {
     font-family: 'Poppins';
     font-style: normal;
-    font-weight: 500;
+    font-weight: 600;
     font-size: 12px;
     line-height: 18px;
-    display: flex;
-    align-items: center;
     letter-spacing: 0.5px;
-    color: #343C44;
+    color: #EEF0F4;
 }
 
 .Game-Price {
@@ -2304,7 +2411,8 @@ input[type=checkbox], input[type=radio] {
     font-size: 17px;
     line-height: 27px;
     text-transform: capitalize;
-    color: #000000;
+    cursor:pointer;
+    color: #EEF0F4;
     margin-left: 10px;
 }
 
@@ -2315,6 +2423,7 @@ input[type=checkbox], input[type=radio] {
     font-size: 12px;
     line-height: 18px;
     display: flex;
+    color: #EEF0F4;
     letter-spacing: 0.5px;
     margin-bottom: 5px;
 }

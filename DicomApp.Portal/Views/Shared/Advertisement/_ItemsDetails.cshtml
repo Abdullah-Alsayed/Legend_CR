@@ -27,7 +27,7 @@
                     <td class="font-weight-bold">@item.Quantity</td>
                     <td class="font-weight-bold">@item.CourierQuantityDelivered</td>
                     <td class="font-weight-bold">@item.CourierQuantityReturned</td>
-                    <partial name="~/Views/Shared/Shipment/_StatusSwitch.cshtml" model="@item.StatusDTO"></partial>
+                    <partial name="~/Views/Shared/Advertisement/_StatusSwitch.cshtml" model="@item.StatusDTO"></partial>
                     <td><img src="/dist/images/@item.ImageUrl" width="50" /></td>
                 </tr>
             }

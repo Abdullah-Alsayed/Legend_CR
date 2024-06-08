@@ -27,9 +27,6 @@ namespace DicomApp.DAL.DB
             PickupRequestVendor = new HashSet<PickupRequest>();
             ShipmentCustomer = new HashSet<Advertisement>();
             ShipmentCustomerFollowUp = new HashSet<ShipmentCustomerFollowUp>();
-            ShipmentDeliveryMan = new HashSet<Advertisement>();
-            ShipmentLastModifiedByNavigation = new HashSet<Advertisement>();
-            ShipmentVendor = new HashSet<Advertisement>();
             UserLocation = new HashSet<UserLocation>();
             VendorProduct = new HashSet<VendorProduct>();
             ZoneCreatedByNavigation = new HashSet<Zone>();
@@ -103,16 +100,13 @@ namespace DicomApp.DAL.DB
         public virtual ICollection<PickupRequest> PickupRequestVendor { get; set; }
         public virtual ICollection<Advertisement> ShipmentCustomer { get; set; }
         public virtual ICollection<ShipmentCustomerFollowUp> ShipmentCustomerFollowUp { get; set; }
-        public virtual ICollection<Advertisement> ShipmentDeliveryMan { get; set; }
-        public virtual ICollection<Advertisement> ShipmentLastModifiedByNavigation { get; set; }
-        public virtual ICollection<Advertisement> ShipmentVendor { get; set; }
         public virtual ICollection<UserLocation> UserLocation { get; set; }
         public virtual ICollection<VendorProduct> VendorProduct { get; set; }
         public virtual ICollection<Zone> ZoneCreatedByNavigation { get; set; }
         public virtual ICollection<Zone> ZoneLastModifiedByNavigation { get; set; }
 
-        [InverseProperty("Vendor")]
-        public virtual ICollection<Advertisement> AdvertisementsVendor { get; set; }
+        [InverseProperty("Gamer")]
+        public virtual ICollection<Advertisement> AdvertisementsGamer { get; set; }
 
         [InverseProperty("Buyer")]
         public virtual ICollection<Advertisement> AdvertisementsBuyer { get; set; }

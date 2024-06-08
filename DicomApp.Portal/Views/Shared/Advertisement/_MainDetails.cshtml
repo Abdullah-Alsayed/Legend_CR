@@ -23,12 +23,6 @@
                 @foreach (var follow in Model.FollowUp)
                 {
                     <li class="timeline-item" style="margin-bottom: 20px;">
-                        @if (follow.FollowUpTypeId == 1)
-                        {
-                            <div class="timeline-dot bg-info"><i class="fas fa-check"></i></div>
-                        }
-                        else
-                        {
                             @switch (follow.StatusId)
                             {
                                 case (int)EnumStatus.Delivered:
@@ -68,7 +62,6 @@
                                     <div class="timeline-dot bg-primary"><i class="fas fa-exclamation"></i></div>
                                     break;
                             }
-                        }
                         <div class="w-100">
                             <span>
                                 <p>@follow.Title</p>

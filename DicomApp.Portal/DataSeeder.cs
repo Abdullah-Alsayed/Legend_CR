@@ -23,6 +23,13 @@ namespace DicomApp.Portal
                 new Role
                 {
                     Editable = false,
+                    Name = SystemConstants.Role.Admin,
+                    CreationDate = System.DateTime.Now,
+                    IsDeleted = false
+                },
+                new Role
+                {
+                    Editable = false,
                     Name = SystemConstants.Role.Gamer,
                     CreationDate = System.DateTime.Now,
                     IsDeleted = false

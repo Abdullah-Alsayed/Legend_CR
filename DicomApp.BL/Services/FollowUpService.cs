@@ -13,7 +13,6 @@ namespace DicomApp.BL.Services
                 {
                     AdvertisementId = followUpDTO.AdvertisementId,
                     StatusId = followUpDTO.StatusId,
-                    FollowUpTypeId = followUpDTO.FollowUpTypeId,
                     Title = followUpDTO.Title,
                     Comment = followUpDTO.Comment,
                     CreatedBy = followUpDTO.CreatedBy,

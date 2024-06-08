@@ -90,7 +90,6 @@ namespace DicomApp.BL.Services
                                 //Add follow up
                                 var follow = new FollowUpDTO
                                 {
-                                    FollowUpTypeId = (int)EnumFollowupType.Advertisement_Updated,
                                     Title = request
                                         .context.Status.FirstOrDefault(s => s.Id == ship.StatusId)
                                         .NameEN,
