@@ -24,19 +24,19 @@ namespace DicomApp.BL.Services
         )
         {
             var QType = typeof(Q);
+            orderByColumn = char.ToUpper(orderByColumn[0]) + orderByColumn.Substring(1);
             // Dynamically creates a call like this: query.OrderBy(p => p.SortColumn)
             var parameter = Expression.Parameter(QType, "p");
             Expression resultExpression = null;
-            var property = QType.GetProperty(orderByColumn ?? IDColumn);
+            var property = QType.GetProperty(orderByColumn ?? "ID");
             // this is the part p.SortColumn
             var propertyAccess = Expression.MakeMemberAccess(parameter, property);
             // this is the part p => p.SortColumn
             var orderByExpression = Expression.Lambda(propertyAccess, parameter);
 
-            // finally, call the "OrderBy" / "OrderByDescending" method with the order by lamba expression
             resultExpression = Expression.Call(
                 typeof(Queryable),
-                isDesc ? OrderByDescCommand : OrderByCommand,
+                isDesc ? "OrderByDescending" : "OrderBy",
                 new Type[] { QType, property.PropertyType },
                 query.Expression,
                 Expression.Quote(orderByExpression)

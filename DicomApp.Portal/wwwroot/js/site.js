@@ -2,7 +2,7 @@
 
 //Sort Clint-Side
 function ResetTdSort() {
-    $(`.Sort-Column`).css("color", "#000");
+    $(`.Sort-Column`).css("color", "#EEF0F4");
 }
 
 function SortClintSide() {
@@ -56,10 +56,9 @@ function NextPage(ControllerName, ActionName, Filter) {
         url: `/${ControllerName}/${ActionName}?ActionType=Table&StatusId=${Filter}&PageIndex=${Page}`,
         type: "GET",
         success: function (result) {
-            if ((ControllerName == "Warehouse" && ActionName == "Shipments")
-                || (ControllerName == "Warehouse" && ActionName == "Courier")
-                || (ControllerName == "PickUpRequest" && ActionName == "All")
-                || (ControllerName == "Shipment" && ActionName == "All")) {
+            if (
+                (ControllerName == "PickUpRequest" && ActionName == "All")
+                || (ControllerName == "Advertisement" && ActionName == "All")) {
                 $("#Table").html(result);
             }
             else {
@@ -95,10 +94,9 @@ function PreviousPage(ControllerName, ActionName, Filter) {
         url: `/${ControllerName}/${ActionName}?ActionType=Table&StatusId=${Filter}&PageIndex=${Page}`,
         type: "GET",
         success: function (result) {
-            if ((ControllerName == "Warehouse" && ActionName == "Shipments")
-                || (ControllerName == "Warehouse" && ActionName == "Courier")
-                || (ControllerName == "PickUpRequest" && ActionName == "All")
-                || (ControllerName == "Shipment" && ActionName == "All")) {
+            if (
+                (ControllerName == "PickUpRequest" && ActionName == "All")
+                || (ControllerName == "Advertisement" && ActionName == "All")) {
                 $("#Table").html(result);
             }
             else {
@@ -123,10 +121,9 @@ function Filter(ActionName, ControllerName) {
         type: "GET",
         contentType: "application/json; charset=utf-8",
         success: function (result) {
-            if ((ControllerName == "Warehouse" && ActionName == "Shipments")
-                || (ControllerName == "Warehouse" && ActionName == "Courier")
-                || (ControllerName == "PickUpRequest" && ActionName == "All")
-                || (ControllerName == "Shipment" && ActionName == "All")) {
+            if (
+                 (ControllerName == "PickUpRequest" && ActionName == "All")
+                || (ControllerName == "Advertisement" && ActionName == "All")) {
                 $("#Table").html(result);
             }
             else {
@@ -153,10 +150,9 @@ function FilterByStatus(ActionName, ControllerName, ID, Filter) {
         url: `/${ControllerName}/${ActionName}?ActionType=Table&Search=${Search}&StatusId=${Filter}`,
         type: "GET",
         success: function (result) {
-            if ((ControllerName == "Warehouse" && ActionName == "Shipments")
-                || (ControllerName == "Warehouse" && ActionName == "Courier")
-                || (ControllerName == "PickUpRequest" && ActionName == "All")
-                || (ControllerName == "Shipment" && ActionName == "All")) {
+            if (
+                (ControllerName == "PickUpRequest" && ActionName == "All")
+                || (ControllerName == "Advertisement" && ActionName == "All")) {
                 $("#Table").html(result);
             }
             else {
@@ -227,7 +223,7 @@ function SortColumn(Td, SortByCoulmn, ControllerName, ActionName) {
             if ((ControllerName == "Warehouse" && ActionName == "Shipments")
                 || (ControllerName == "Warehouse" && ActionName == "Courier")
                 || (ControllerName == "PickUpRequest" && ActionName == "All")
-                || (ControllerName == "Shipment" && ActionName == "All")) {
+                || (ControllerName == "Advertisement" && ActionName == "All")) {
                 $("#Table").html(result);
             }
             else {
@@ -258,7 +254,7 @@ function Search(ControllerName, ActionName) {
                 if ((ControllerName == "Warehouse" && ActionName == "Shipments")
                     || (ControllerName == "Warehouse" && ActionName == "Courier")
                     || (ControllerName == "PickUpRequest" && ActionName == "All")
-                    || (ControllerName == "Shipment" && ActionName == "All")) {
+                    || (ControllerName == "Advertisement" && ActionName == "All")) {
                     $("#Table").html(result);
                 }
                 else {
@@ -423,12 +419,6 @@ function GetPramter(ControllerName, ActionName, ActionType) {
     return url;
 };
 
-
-
-
-
-
-
 function DashbordFilter(ActionName, ControllerName) {
     var Url = GetPramter(ControllerName, ActionName, 'PartialView');
     $('#MainLoder').fadeIn(100);
@@ -449,11 +439,9 @@ function DashbordFilter(ActionName, ControllerName) {
     });
 }
 
-
-
-function ShipmentDetails(ControllerName, AdvertisementId) {
+function AdvertisementDetails(ControllerName, AdvertisementId) {
     $.ajax({
-        url: `/Shipment/ShipmentDetails/${AdvertisementId}`,
+        url: `/${ControllerName}/AdvertisementDetails/${AdvertisementId}`,
         type: "GET",
         success: function (result) {
             $("#ShipmentDetails-Body").html(result);

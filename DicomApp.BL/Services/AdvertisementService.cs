@@ -38,6 +38,7 @@ namespace DicomApp.BL.Services
                             UserName = request.AdsDTO.UserName,
                             Password = request.AdsDTO.Password,
                             Price = request.AdsDTO.Price,
+                            Level = req.AdsDTO.Level,
                             IsRefund = false,
                             CreatedAt = DateTime.Now,
                             CreatedBy = request.UserID,
@@ -1424,10 +1425,16 @@ namespace DicomApp.BL.Services
                                 s.AdvertisementId == request.AdsDTO.AdvertisementId && !s.IsDeleted
                             );
                         else
-                            ship = request.context.Advertisement.Where(s =>
-                                s.RefId == request.AdsDTO.RefId && !s.IsDeleted
-                            );
-                        ship = ApplyFilter(ship, request.AdsDTO, req.RoleID, req.UserID);
+                            ship = request.context.Advertisement.Where(s => !s.IsDeleted);
+
+                        if (request.PageSize > 0)
+                            ship = ApplyPaging(ship, request.PageSize, request.PageIndex);
+
+                        if (request.applyFilter)
+                            ship = ApplyFilter(ship, request.AdsDTO, req.RoleID, req.UserID);
+
+                        if (!string.IsNullOrEmpty(request.OrderByColumn))
+                            ship = OrderByDynamic(ship, request.OrderByColumn, request.IsDesc);
 
                         var query = ship.Select(s => new AdsDTO
                         {
@@ -1439,6 +1446,7 @@ namespace DicomApp.BL.Services
                             IsDeleted = s.IsDeleted,
                             CreatedAt = s.CreatedAt,
                             CreatedBy = s.CreatedBy,
+                            Level = s.Level,
                             Price = s.Price,
                             RefId = s.RefId,
                             GameId = s.GameId,
@@ -1452,7 +1460,7 @@ namespace DicomApp.BL.Services
                                 Id = s.Status.Id,
                                 StatusType = s.Status.StatusType,
                                 NameAR = s.Status.NameAR,
-                                NameEN = s.Game.NameEn
+                                NameEN = s.Status.NameEN
                             },
                             FollowUp = s
                                 .FollowUp.Select(f => new FollowUpDTO

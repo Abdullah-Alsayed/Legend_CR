@@ -228,6 +228,7 @@
 
     public enum StatusTypeEnum : int
     {
+        All = 0,
         InProgress = 1,
         Accept,
         Published,

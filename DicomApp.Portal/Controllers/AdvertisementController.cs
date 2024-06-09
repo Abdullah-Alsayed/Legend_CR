@@ -284,7 +284,12 @@ namespace DicomApp.Portal.Controllers
         )
         {
             ViewModel<AdsDTO> ViewData = new ViewModel<AdsDTO>();
-            var filter = new AdsDTO() { StatusId = StatusId, GamerId = GamerId };
+            var filter = new AdsDTO()
+            {
+                StatusId = StatusId,
+                GamerId = GamerId,
+                Search = Search
+            };
             if (ActionType != SystemConstants.ActionType.Table)
             {
                 ViewData.Lookup = BaseHelper.GetLookup(

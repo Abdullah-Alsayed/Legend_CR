@@ -187,7 +187,7 @@ namespace DicomApp.BL.Services
             switch (RefIdType)
             {
                 case EnumRefIdType.Advertisement:
-                    return "SH" + ID;
+                    return "AD" + ID;
                 case EnumRefIdType.Delivery_Pickup:
                     return "DP" + ID;
                 case EnumRefIdType.Stock_Pickup:
