@@ -4,7 +4,6 @@ using System.Linq;
 using DicomApp.BL.Services;
 using DicomApp.CommonDefinitions.DTO;
 using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
-using DicomApp.CommonDefinitions.DTO.VendorProductDTOs;
 using DicomApp.CommonDefinitions.Requests;
 using DicomApp.DAL.DB;
 using DicomApp.Helpers;
@@ -12,7 +11,6 @@ using DicomApp.Portal.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis;
 using Rotativa.AspNetCore;
 using Rotativa.AspNetCore.Options;
 
@@ -165,31 +163,27 @@ namespace DicomApp.Portal.Controllers
         }
 
         [AuthorizePerRole(SystemConstants.Permission.EditAdvertisement)]
-        public IActionResult Edit(int shipID)
+        public IActionResult Edit(int adsID)
         {
-            //var AdvertisementID = int.Parse(EncryptionHelper.Decrypt(OrderID));
+            ViewBag.GameList = GameService
+                .GetGames(new GameRequest { context = _context })
+                .GameDTOs;
 
-            ViewBag.areas = _context.City.ToList();
-            ViewBag.Status = _context.Status.ToList();
-            ViewBag.Game = _context.Category.ToList();
-            ViewBag.Category = _context.Category.ToList();
-            ViewBag.GameBox = _context.Game.Where(p => p.CategoryId == 1).ToList();
-            ViewBag.AreasList = _context.City.ToList();
-            ViewBag.vendors = GeneralHelper.GetUsers(SystemConstants.Role.Gamer, _context);
-            ViewBag.ZoneList = _context.Zone.Where(z => !z.IsDeleted).ToList();
+            ViewBag.Gamers = GeneralHelper.GetUsers(SystemConstants.Role.Gamer, _context);
 
             var model = new AdsDTO();
-            model.AdvertisementId = shipID;
+            model.AdvertisementId = adsID;
             var request = new AdvertisementRequest
             {
                 RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
                 UserID = AuthHelper.GetClaimValue(User, "UserID"),
                 context = _context,
+                AdsDTO = model
             };
 
             var response = DicomApp.BL.Services.AdvertisementService.GetAdvertisement(request);
 
-            return View(response.AdsDTO);
+            return PartialView("_Edit", response.AdsDTO);
         }
 
         [AuthorizePerRole(SystemConstants.Permission.EditAdvertisement)]
@@ -206,6 +200,36 @@ namespace DicomApp.Portal.Controllers
             ViewBag.areas = _context.City.ToList();
 
             return Json(response.Message);
+        }
+
+        [AuthorizePerRole(SystemConstants.Permission.EditBasicAdvertisement)]
+        [HttpPost]
+        public IActionResult EditBasicAdvertisement(
+            int adsID,
+            string Description,
+            string UserName,
+            string Password,
+            string Level
+        )
+        {
+            var request = new AdvertisementRequest
+            {
+                context = _context,
+                RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
+                UserID = AuthHelper.GetClaimValue(User, "UserID"),
+                AdsDTO = new AdsDTO
+                {
+                    AdvertisementId = adsID,
+                    Description = Description,
+                    UserName = UserName,
+                    Password = Password,
+                    Level = Level
+                }
+            };
+
+            var response = BL.Services.AdvertisementService.EditBasicAdvertisement(request);
+
+            return Json(new { success = response.Success, message = response.Message });
         }
 
         [AuthorizePerRole(SystemConstants.Permission.PrintAdvertisement)]
@@ -277,7 +301,7 @@ namespace DicomApp.Portal.Controllers
             DateTime? From,
             DateTime? To,
             int ZoneId,
-            int StatusId,
+            int StatusType,
             int GamerId,
             int AreaId,
             string ActionType = null
@@ -286,7 +310,7 @@ namespace DicomApp.Portal.Controllers
             ViewModel<AdsDTO> ViewData = new ViewModel<AdsDTO>();
             var filter = new AdsDTO()
             {
-                StatusId = StatusId,
+                StatusType = StatusType,
                 GamerId = GamerId,
                 Search = Search
             };
@@ -330,15 +354,17 @@ namespace DicomApp.Portal.Controllers
                 return PartialView(ViewData);
             else if (ActionType == SystemConstants.ActionType.Table)
             {
-                if (StatusId == (int)EnumStatus.All)
+                if (StatusType == (int)StatusTypeEnum.All)
                     return PartialView("_All", response.AdsDTOs);
-                else if (StatusId == (int)EnumStatus.Current)
+                else if (StatusType == (int)StatusTypeEnum.InProgress)
                     return PartialView("_Current", response.AdsDTOs);
-                else if (StatusId == (int)EnumStatus.CourierReturn)
-                    return PartialView("_Returned", response.AdsDTOs);
-                else if (StatusId == (int)EnumStatus.Cancelled)
+                else if (StatusType == (int)StatusTypeEnum.Accept)
+                    return PartialView("_Current", response.AdsDTOs);
+                else if (StatusType == (int)StatusTypeEnum.Published)
+                    return PartialView("_Current", response.AdsDTOs);
+                else if (StatusType == (int)StatusTypeEnum.Reject)
                     return PartialView("_Cancelled", response.AdsDTOs);
-                else if (StatusId == (int)EnumStatus.Done)
+                else if (StatusType == (int)StatusTypeEnum.Sold)
                     return PartialView("_Done", response.AdsDTOs);
                 else
                     return PartialView("_All", response.AdsDTOs);

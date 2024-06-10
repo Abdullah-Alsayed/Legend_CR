@@ -33,6 +33,7 @@ namespace DicomApp.Helpers
             public const string EditAdvertisement = "EditAdvertisement";
             public const string PrintAdvertisement = "PrintAdvertisement";
             public const string ListAdvertisement = "ListAdvertisement";
+            public const string EditBasicAdvertisement = "EditBasicAdvertisement";
         }
 
         public static class ActionType

@@ -19,5 +19,6 @@ namespace DicomApp.CommonDefinitions.DTO
         public int Count { get; set; }
         public LookupDTO Lookup { get; set; }
         public int StatusId { get; set; }
+        public int StatusType { get; set; }
     }
 }

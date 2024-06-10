@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using DicomApp.CommonDefinitions.DTO;
@@ -8,6 +9,7 @@ using DicomApp.CommonDefinitions.Requests;
 using DicomApp.CommonDefinitions.Responses;
 using DicomApp.DAL.DB;
 using DicomApp.Helpers;
+using log4net.Core;
 using Microsoft.CodeAnalysis;
 
 namespace DicomApp.BL.Services
@@ -133,7 +135,7 @@ namespace DicomApp.BL.Services
                             ship.UserName = request.AdsDTO.UserName;
                             ship.Password = request.AdsDTO.Password;
                             ship.Price = request.AdsDTO.Price;
-                            ship.IsRefund = false;
+                            ship.Level = request.AdsDTO.Level;
                             ship.LastModifiedAt = DateTime.Now;
                             ship.LastModifiedBy = request.UserID;
                             request.context.SaveChanges();
@@ -175,6 +177,74 @@ namespace DicomApp.BL.Services
                             response.Message = "you Cant Update Price";
                             response.Success = false;
                         }
+                    }
+                    catch (Exception ex)
+                    {
+                        response.Message = ex.Message;
+                        response.Success = false;
+                        LogHelper.LogException(ex.Message, ex.StackTrace);
+                    }
+                    return response;
+                }
+            );
+            return response;
+        }
+
+        public static AdvertisementResponse EditBasicAdvertisement(AdvertisementRequest request)
+        {
+            var response = new AdvertisementResponse();
+            RunBase(
+                request,
+                response,
+                (AdvertisementRequest req) =>
+                {
+                    try
+                    {
+                        var ship = request.context.Advertisement.FirstOrDefault(s =>
+                            s.AdvertisementId == request.AdsDTO.AdvertisementId
+                        );
+
+                        ship.Description = request.AdsDTO.Description;
+                        ship.UserName = request.AdsDTO.UserName;
+                        ship.Password = request.AdsDTO.Password;
+                        ship.Level = request.AdsDTO.Level;
+
+                        ship.LastModifiedAt = DateTime.Now;
+                        ship.LastModifiedBy = request.UserID;
+
+                        request.context.SaveChanges();
+
+                        //Add follow up
+                        var follow = new FollowUpDTO
+                        {
+                            Title = "Advertisement Data Update",
+                            CreatedBy = request.UserID,
+                            AdvertisementId = ship.AdvertisementId,
+                            StatusId = ship.StatusId
+                        };
+                        FollowUpService.Add(follow, request.context);
+
+                        //Add notification
+                        request.context.Notification.Add(
+                            new Notification
+                            {
+                                Body = "Advertisement " + ship.RefId + " updated",
+                                CreationDate = DateTime.Now,
+                                Icon = ship.RefId,
+                                SenderId = request.UserID,
+                                Title = "Advertisement updated",
+                                RecipientRoleId = (int)EnumRole.SuperAdmin,
+                                IsDeleted = false,
+                                IsSeen = false,
+                                RecipientId = 0,
+                            }
+                        );
+
+                        request.context.SaveChanges();
+
+                        response.Message = "Shipment " + ship.RefId + " successfully updated";
+                        response.Success = true;
+                        response.StatusCode = HttpStatusCode.OK;
                     }
                     catch (Exception ex)
                     {
@@ -1336,6 +1406,7 @@ namespace DicomApp.BL.Services
                             CreatedAt = s.CreatedAt,
                             CreatedBy = s.CreatedBy,
                             Price = s.Price,
+                            Level = s.Level,
                             RefId = s.RefId,
                             GameId = s.GameId,
                             BuyerId = s.BuyerId,
@@ -1531,6 +1602,7 @@ namespace DicomApp.BL.Services
                     c.RefId.ToLower().Contains(filter.Search)
                     || c.UserName.ToLower().Contains(filter.Search)
                     || c.Description.Contains(filter.Search)
+                    || c.Password.Contains(filter.Search)
                 );
             }
 
@@ -1543,8 +1615,8 @@ namespace DicomApp.BL.Services
             if (filter.AdvertisementId != 0)
                 query = query.Where(s => filter.AdvertisementId == s.AdvertisementId);
 
-            if (filter.StatusId != 0)
-                query = query.Where(p => p.StatusId == filter.StatusId);
+            if (filter.StatusType != 0)
+                query = query.Where(p => p.Status.StatusType == filter.StatusType);
 
             if (filter.GamerId != 0)
                 query = query.Where(c => c.GamerId == filter.GamerId);

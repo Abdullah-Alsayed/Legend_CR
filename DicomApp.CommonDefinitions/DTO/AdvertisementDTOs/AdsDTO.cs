@@ -48,5 +48,6 @@ namespace DicomApp.CommonDefinitions.DTO.AdvertisementDTOs
         public DateTime? DateTo { get; set; }
         public List<int> AdvertisementIds { get; set; }
         public List<string> FilesUrls { get; set; }
+        public int StatusType { get; set; }
     }
 }

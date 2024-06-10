@@ -147,7 +147,7 @@ function FilterByStatus(ActionName, ControllerName, ID, Filter) {
     $("#Ajaxloader").removeClass("d-none");
 
     $.ajax({
-        url: `/${ControllerName}/${ActionName}?ActionType=Table&Search=${Search}&StatusId=${Filter}`,
+        url: `/${ControllerName}/${ActionName}?ActionType=Table&Search=${Search}&StatusType=${Filter}`,
         type: "GET",
         success: function (result) {
             if (
