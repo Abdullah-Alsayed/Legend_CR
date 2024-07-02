@@ -29,12 +29,16 @@ namespace DicomApp.BL.Services
                             {
                                 Id = c.Id,
                                 Name = c.Name,
-                                Editable = c.Editable
+                                Editable = c.Editable,
+                                CreationDate = c.CreationDate,
+                                IsDeleted = c.IsDeleted
                             });
 
                         if (request.RoleDTO != null)
                             query = ApplyFilter(query, request.RoleDTO);
 
+                        if (request.OrderByColumn == null)
+                            request.OrderByColumn = nameof(Role.CreationDate);
                         query = OrderByDynamic(query, request.OrderByColumn, request.IsDesc);
 
                         if (request.PageSize > 0)

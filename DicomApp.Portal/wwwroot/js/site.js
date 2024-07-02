@@ -19,13 +19,13 @@ function SortClintSide() {
             } else {
                 $(this).addClass('asc selected');
                 $(this).removeClass('desc');
-                $(this).css("color", "#000");
+                $(this).css("color", "#EEF0F4");
 
                 sortOrder = 1;
             }
             $(this).siblings().removeClass('asc selected');
             $(this).siblings().removeClass('desc selected');
-            $(this).siblings().css("color", "#000");
+            $(this).siblings().css("color", "#EEF0F4");
 
             var arrData = $('table').find('tbody >tr:has(td)').get();
             arrData.sort(function (a, b) {
@@ -58,7 +58,7 @@ function NextPage(ControllerName, ActionName, Filter) {
         success: function (result) {
             if (
                 (ControllerName == "PickUpRequest" && ActionName == "All")
-                || (ControllerName == "Advertisement" && ActionName == "All")) {
+                || (ControllerName == "Advertisement" && ActionName == "All") || (ControllerName == "GamerService" && ActionName == "All")) {
                 $("#Table").html(result);
             }
             else {
@@ -96,7 +96,7 @@ function PreviousPage(ControllerName, ActionName, Filter) {
         success: function (result) {
             if (
                 (ControllerName == "PickUpRequest" && ActionName == "All")
-                || (ControllerName == "Advertisement" && ActionName == "All")) {
+                || (ControllerName == "Advertisement" && ActionName == "All") || (ControllerName == "GamerService" && ActionName == "All")) {
                 $("#Table").html(result);
             }
             else {
@@ -123,7 +123,7 @@ function Filter(ActionName, ControllerName) {
         success: function (result) {
             if (
                  (ControllerName == "PickUpRequest" && ActionName == "All")
-                || (ControllerName == "Advertisement" && ActionName == "All")) {
+                || (ControllerName == "Advertisement" && ActionName == "All") || (ControllerName == "GamerService" && ActionName == "All")) {
                 $("#Table").html(result);
             }
             else {
@@ -152,7 +152,7 @@ function FilterByStatus(ActionName, ControllerName, ID, Filter) {
         success: function (result) {
             if (
                 (ControllerName == "PickUpRequest" && ActionName == "All")
-                || (ControllerName == "Advertisement" && ActionName == "All")) {
+                || (ControllerName == "Advertisement" && ActionName == "All") || (ControllerName == "GamerService" && ActionName == "All")) {
                 $("#Table").html(result);
             }
             else {
@@ -174,7 +174,7 @@ function Sort(ControllerName, ActionName) {
     Url += `&IsDesc=${SortBy}`;
     $("#Ajaxloader").css("display", "inline-block").fadeIn(20000)
     $("#Ajaxloader").removeClass("d-none");
-    $("td").css("color", "#000000");
+    $("td").css("color", "##EEF0F4");
     if (SortBy) {
         $("#Sort-Btn").data('isdesc', false);
         $("#Sort-Btn").css("background", "#FFFFFF");
@@ -206,7 +206,7 @@ function SortColumn(Td, SortByCoulmn, ControllerName, ActionName) {
     console.log(Url)
     $("#Ajaxloader").css("display", "inline-block").fadeIn(20000)
     $("#Ajaxloader").removeClass("d-none");
-    $("td").css("color", "#000000");
+    $("td").css("color", "##EEF0F4");
     $("#Sort-Btn").css("background", "#FFFFFF");
     if (SortBy) {
         $(`#${Td}`).data('isdesc', false);
@@ -214,7 +214,7 @@ function SortColumn(Td, SortByCoulmn, ControllerName, ActionName) {
     }
     else {
         $(`#${Td}`).data('isdesc', true);
-        $(`#${Td}`).css("color", "#000000");
+        $(`#${Td}`).css("color", "##EEF0F4");
     }
     $.ajax({
         url: Url,
@@ -223,7 +223,7 @@ function SortColumn(Td, SortByCoulmn, ControllerName, ActionName) {
             if ((ControllerName == "Warehouse" && ActionName == "Shipments")
                 || (ControllerName == "Warehouse" && ActionName == "Courier")
                 || (ControllerName == "PickUpRequest" && ActionName == "All")
-                || (ControllerName == "Advertisement" && ActionName == "All")) {
+                || (ControllerName == "Advertisement" && ActionName == "All") || (ControllerName == "GamerService" && ActionName == "All")) {
                 $("#Table").html(result);
             }
             else {
@@ -254,7 +254,7 @@ function Search(ControllerName, ActionName) {
                 if ((ControllerName == "Warehouse" && ActionName == "Shipments")
                     || (ControllerName == "Warehouse" && ActionName == "Courier")
                     || (ControllerName == "PickUpRequest" && ActionName == "All")
-                    || (ControllerName == "Advertisement" && ActionName == "All")) {
+                    || (ControllerName == "Advertisement" && ActionName == "All") || (ControllerName == "GamerService" && ActionName == "All")) {
                     $("#Table").html(result);
                 }
                 else {
@@ -295,7 +295,11 @@ function MenuNavigation(event, ActionName, ControllerName, paramters = "") {
         ControllerName = event.target.baseURI.split('/')[3];
         ActionName = event.target.baseURI.split('/')[4];
     }
-    window.history.pushState(null, null, `/${ControllerName}/${ActionName}`);
+    if (paramters != "")
+        window.history.pushState(null, null, `/${ControllerName}/${ActionName}?${paramters}`);
+     else
+        window.history.pushState(null, null, `/${ControllerName}/${ActionName}`);
+
     $('#MainLoder').fadeIn(100);
     $('#Footer').hide();
     $("#MainView").hide();
@@ -396,28 +400,37 @@ $("form , main").keyup(function (e) {
 });
 
 function GetPramter(ControllerName, ActionName, ActionType) {
-    var Search = $("#Search-Input").val();
-    var From = $("#From").val();
-    var To = $("#To").val();
-    var AreaId = $("#AreaId").val();
-    var areadIDs = $("#areadIDs").val();
-    var ZoneId = $("#ZoneId").val();
-    var VendorID = $("#VendorID").val();
-    var StatusId = $("#StatusId").val();
-    var CategoryId = $("#CategoryId").val();
-    var Quantity = $("#Quantity").val();
-    var Status = $(".Active").data('status');
-    var DeliveryManId = $(`#DeliveryManId`).val();
-    var RoleId = $(`#RoleId`).val();
-    var Department = $(`#FilterForm [name="Department"]`).val();
-    var EmployeeId = $(`#EmployeeId`).val();
-    var Solved = $(`#Solved`).val();
-    var url = `/${ControllerName}/${ActionName}?ActionType=${ActionType}&Search=${Search}&From=${From}
-                &To=${To}&AreaId=${AreaId}&ZoneId=${ZoneId}&VendorID=${VendorID}&areadIDs=${areadIDs}
-                &StatusId=${StatusId}&Status=${Status}&DeliveryManId=${DeliveryManId}&CategoryId=${CategoryId}   
-                &Quantity=${Quantity}&RoleId=${RoleId}&Department=${Department}&EmployeeId=${EmployeeId}&Solved=${Solved}`;
+    // Collect all input values
+    var params = {
+        Search: $("#Search-Input").val(),
+        From: $("#From").val(),
+        To: $("#To").val(),
+        AreaId: $("#AreaId").val(),
+        areadIDs: $("#areadIDs").val(),
+        ZoneId: $("#ZoneId").val(),
+        VendorID: $("#VendorID").val(),
+        StatusId: $("#StatusId").val(),
+        CategoryId: $("#CategoryId").val(),
+        Quantity: $("#Quantity").val(),
+        Status: $(".Active").data('status'),
+        DeliveryManId: $("#DeliveryManId").val(),
+        RoleId: $("#RoleId").val(),
+        Department: $("#FilterForm [name='Department']").val(),
+        EmployeeId: $("#EmployeeId").val(),
+        Solved: $("#Solved").val(),
+        GameId: $("#GameId").val(),
+        GamerId: $("#GamerId").val(),
+        LessLevel: $("#LessLevel").val(),
+        GreeterLevel: $("#GreeterLevel").val(),
+        LessPrice: $("#LessPrice").val(),
+        GreeterPrice: $("#GreeterPrice").val(),
+        GameServiceType: $("#GameServiceType").val()
+    };
+
+    var queryString = $.param(params);
+    var url = `/${ControllerName}/${ActionName}?ActionType=${ActionType}&${queryString}`;
     return url;
-};
+}
 
 function DashbordFilter(ActionName, ControllerName) {
     var Url = GetPramter(ControllerName, ActionName, 'PartialView');
@@ -747,8 +760,30 @@ function DeleteEntity(ControllerName, ActionName, Tr, id = 0) {
         id = $("#EntityId").val();
 
     $.ajax({
-        type: "GET",
+        type: "PUT",
         url: `/${ControllerName}/${ActionName}/?ID=${id}`,
+        success: function (result) {
+            if (result.success == false) {
+                alertError(result.message);
+            }
+            else {
+                let Count = $(`#DataCount`).val();
+                $(`#DataCount-Span`).text(`Showing : ${+(--Count)}`);
+                $(`#${Tr}${id}`).fadeOut(800);
+                alertSuccess(result.message);
+            }
+
+        }
+    })
+}
+
+function UpdateStatus(ControllerName, ActionName, Tr, id = 0, status =0) {
+    if (id == 0)
+        id = $("#EntityId").val();
+
+    $.ajax({
+        type: "PUT",
+        url: `/${ControllerName}/${ActionName}/?ID=${id}&&status=${status}`,
         success: function (result) {
             if (result.success == false) {
                 alertError(result.message);

@@ -31,6 +31,7 @@ namespace DicomApp.DAL.DB
             VendorProduct = new HashSet<VendorProduct>();
             ZoneCreatedByNavigation = new HashSet<Zone>();
             ZoneLastModifiedByNavigation = new HashSet<Zone>();
+            GamerServices = new HashSet<GamerService>();
         }
 
         public int Id { get; set; }
@@ -104,6 +105,7 @@ namespace DicomApp.DAL.DB
         public virtual ICollection<VendorProduct> VendorProduct { get; set; }
         public virtual ICollection<Zone> ZoneCreatedByNavigation { get; set; }
         public virtual ICollection<Zone> ZoneLastModifiedByNavigation { get; set; }
+        public virtual ICollection<GamerService> GamerServices { get; set; }
 
         [InverseProperty("Gamer")]
         public virtual ICollection<Advertisement> AdvertisementsGamer { get; set; }

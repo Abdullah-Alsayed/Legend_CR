@@ -127,10 +127,26 @@ namespace DicomApp.BL.Services
                         {
                             context = Context,
                             applyFilter = true,
-                            UserDTO = new UserDTO { RoleID = (int)EnumRole.Employee }
+                            UserDTO = new UserDTO { StaffOnly = true }
                         }
                     )
                     .UserDTOs;
+
+            if (LookType.Contains((byte)EnumSelectListType.Gamer))
+                lookup.UserDTOs = UserService
+                    .GetAllUsers(
+                        new UserRequest
+                        {
+                            context = Context,
+                            applyFilter = true,
+                            UserDTO = new UserDTO { RoleName = SystemConstants.Role.Gamer }
+                        }
+                    )
+                    .UserDTOs;
+            if (LookType.Contains((byte)EnumSelectListType.Game))
+                lookup.GameDTOs = GameService
+                    .GetGames(new GameRequest { context = Context })
+                    .GameDTOs;
 
             if (LookType.Contains((byte)EnumSelectListType.Status))
                 lookup.StatusDTOs = StatusService
@@ -200,6 +216,8 @@ namespace DicomApp.BL.Services
                     return "SR" + ID;
                 case EnumRefIdType.Shipment_Refund:
                     return "RF" + ID;
+                case EnumRefIdType.GamerService:
+                    return "GS" + ID;
                 case EnumRefIdType.Account_Transaction:
                     return "TR"
                         + ID

@@ -100,5 +100,8 @@ namespace DicomApp.CommonDefinitions.DTO
         public string HashedPassword { get; set; }
 
         public IEnumerable<AdsDTO> Advertisement { get; set; }
+
+        //Filter
+        public bool IsEmployee { get; set; }
     }
 }

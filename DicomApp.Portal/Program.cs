@@ -25,20 +25,20 @@ namespace DicomApp.Portal
 
             var host = BuildWebHost(args);
 
-            using (var scope = host.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                var context = services.GetRequiredService<ShippingDBContext>();
-                if (context != null)
-                    DataSeeder.Seed(context);
-                else
-                {
-                    var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(
-                        "ShippingDBContext could not be resolved from the service provider."
-                    );
-                }
-            }
+            //using (var scope = host.Services.CreateScope())
+            //{
+            //    var services = scope.ServiceProvider;
+            //    var context = services.GetRequiredService<ShippingDBContext>();
+            //    if (context != null)
+            //        DataSeeder.Seed(context);
+            //    else
+            //    {
+            //        var logger = services.GetRequiredService<ILogger<Program>>();
+            //        logger.LogError(
+            //            "ShippingDBContext could not be resolved from the service provider."
+            //        );
+            //    }
+            //}
 
             host.Run();
         }

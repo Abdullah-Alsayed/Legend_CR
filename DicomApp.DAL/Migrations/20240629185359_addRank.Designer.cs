@@ -4,14 +4,16 @@ using DicomApp.DAL.DB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DicomApp.DAL.Migrations
 {
     [DbContext(typeof(ShippingDBContext))]
-    partial class ShippingDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240629185359_addRank")]
+    partial class addRank
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -937,8 +939,6 @@ namespace DicomApp.DAL.Migrations
 
                     b.Property<int?>("FollowUpTypeId");
 
-                    b.Property<int?>("GameServiceGamerServiceId");
-
                     b.Property<bool>("IsDeleted");
 
                     b.Property<DateTime>("LastModifiedAt")
@@ -967,8 +967,6 @@ namespace DicomApp.DAL.Migrations
                     b.HasIndex("CreatedBy");
 
                     b.HasIndex("FollowUpTypeId");
-
-                    b.HasIndex("GameServiceGamerServiceId");
 
                     b.ToTable("FollowUp");
                 });
@@ -1039,55 +1037,6 @@ namespace DicomApp.DAL.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Game");
-                });
-
-            modelBuilder.Entity("DicomApp.DAL.DB.GamerService", b =>
-                {
-                    b.Property<int>("GamerServiceId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreatedAt");
-
-                    b.Property<int>("CreatedBy");
-
-                    b.Property<string>("Description");
-
-                    b.Property<int>("GameId");
-
-                    b.Property<int>("GameServiceType");
-
-                    b.Property<int>("GamerId");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<DateTime?>("LastModifiedAt");
-
-                    b.Property<int?>("LastModifiedBy");
-
-                    b.Property<int>("Level");
-
-                    b.Property<string>("Password");
-
-                    b.Property<int>("Price");
-
-                    b.Property<string>("Rank");
-
-                    b.Property<string>("RefId");
-
-                    b.Property<int>("StatusId");
-
-                    b.Property<string>("UserName");
-
-                    b.HasKey("GamerServiceId");
-
-                    b.HasIndex("GameId");
-
-                    b.HasIndex("GamerId");
-
-                    b.HasIndex("StatusId");
-
-                    b.ToTable("GamerService");
                 });
 
             modelBuilder.Entity("DicomApp.DAL.DB.Notification", b =>
@@ -1766,7 +1715,7 @@ namespace DicomApp.DAL.Migrations
                         .HasForeignKey("CommonUserId");
 
                     b.HasOne("DicomApp.DAL.DB.Game", "Game")
-                        .WithMany("Advertisements")
+                        .WithMany("ShipmentGame")
                         .HasForeignKey("GameId")
                         .HasConstraintName("FK_Shipment_Game")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -1909,10 +1858,6 @@ namespace DicomApp.DAL.Migrations
                     b.HasOne("DicomApp.DAL.DB.FollowUpType")
                         .WithMany("FollowUp")
                         .HasForeignKey("FollowUpTypeId");
-
-                    b.HasOne("DicomApp.DAL.DB.GamerService", "GameService")
-                        .WithMany("FollowUp")
-                        .HasForeignKey("GameServiceGamerServiceId");
                 });
 
             modelBuilder.Entity("DicomApp.DAL.DB.Game", b =>
@@ -1921,24 +1866,6 @@ namespace DicomApp.DAL.Migrations
                         .WithMany("Game")
                         .HasForeignKey("CategoryId")
                         .HasConstraintName("FK_Game_Category");
-                });
-
-            modelBuilder.Entity("DicomApp.DAL.DB.GamerService", b =>
-                {
-                    b.HasOne("DicomApp.DAL.DB.Game", "Game")
-                        .WithMany("GamerServices")
-                        .HasForeignKey("GameId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("DicomApp.DAL.DB.CommonUser", "Gamer")
-                        .WithMany("GamerServices")
-                        .HasForeignKey("GamerId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("DicomApp.DAL.DB.Status", "Status")
-                        .WithMany("GamerServices")
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("DicomApp.DAL.DB.Notification", b =>

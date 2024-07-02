@@ -586,6 +586,9 @@ namespace DicomApp.BL.Services
                     || (c.RoleName.Contains(filter.Search))
                 );
 
+            if (!string.IsNullOrEmpty(filter.RoleName))
+                query = query.Where(c => c.RoleName == filter.RoleName);
+
             if (filter.Id > 0)
                 query = query.Where(c => c.Id == filter.Id);
 
@@ -607,12 +610,7 @@ namespace DicomApp.BL.Services
                 query = query.Where(c => c.RoleID == filter.RoleID);
 
             if (filter.StaffOnly)
-                query = query.Where(c =>
-                    c.RoleID != (int)EnumRole.Gamer && c.RoleID != (int)EnumRole.Customer
-                );
-
-            //if (filter.IsStaff == true)
-            //    query = query.Where(c => c.RoleID != 4 && c.RoleID != 3);
+                query = query.Where(c => c.RoleID != (int)EnumRole.Gamer);
 
             if (!string.IsNullOrWhiteSpace(filter.Email))
                 query = query.Where(c => c.Email.Contains(filter.Email));

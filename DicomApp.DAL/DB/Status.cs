@@ -8,6 +8,7 @@ namespace DicomApp.DAL.DB
         public Status()
         {
             Advertisements = new HashSet<Advertisement>();
+            GamerServices = new HashSet<GamerService>();
         }
 
         public int Id { get; set; }
@@ -17,6 +18,7 @@ namespace DicomApp.DAL.DB
 
         public int StatusType { get; set; }
 
+        public virtual ICollection<GamerService> GamerServices { get; set; }
         public virtual ICollection<Advertisement> Advertisements { get; set; }
     }
 }

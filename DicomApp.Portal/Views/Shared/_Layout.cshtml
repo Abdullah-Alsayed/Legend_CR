@@ -163,6 +163,15 @@
                             </ul>
                         </li>
 
+                        @if (BaseService.CheckRoleAccessability(roleID, "Menu_Products", connectionString: connectionString))
+                        {
+                            <li class="cursor-pointer">
+                                <a href="/GamerService/All" class="Navigation">
+                                    <img class="Img-Ul" src="~/dist/images/Icons/Product.png" />
+                                    Services Management
+                                </a>
+                            </li>
+                        }
 
                         <li class="cursor-pointer" onclick="OpenSection('PickupManagement-Ul')">
                             <a><img class="Img-Ul" src="~/dist/images/Icons/Pickup.png" /> Pickup Management</a>

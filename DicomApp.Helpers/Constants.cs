@@ -34,6 +34,17 @@ namespace DicomApp.Helpers
             public const string PrintAdvertisement = "PrintAdvertisement";
             public const string ListAdvertisement = "ListAdvertisement";
             public const string EditBasicAdvertisement = "EditBasicAdvertisement";
+            public const string RejectAdvertisement = "RejectAdvertisement";
+            public const string ChangStatusAdvertisement = "ChangStatusAdvertisement";
+
+            //GamerService
+            public const string AddGamerService = "AddGamerService";
+            public const string EditGamerService = "EditGamerService";
+            public const string ChangStatusGamerService = "ChangStatusGamerService";
+            public const string RejectGamerService = "RejectGamerService";
+            public const string EditBasicGamerService = "EditBasicGameService";
+            public const string PrintGamerService = "PrintGamerService";
+            public const string ListGamerService = "ListGamerService";
         }
 
         public static class ActionType

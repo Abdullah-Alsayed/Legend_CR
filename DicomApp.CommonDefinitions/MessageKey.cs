@@ -114,7 +114,13 @@
         Solved,
         Department,
         Employee,
-        UserData,
+        Users,
+        Game,
+        Gamer,
+        Level,
+        Price,
+        ServiceType,
+        GameServiceType
     }
 
     public enum EnumVendorActionName : byte
@@ -217,7 +223,8 @@
         Shipment_Return,
         Shipment_Refund,
         Account_Transaction,
-        Cash_Transfer
+        Cash_Transfer,
+        GamerService
     }
 
     public enum EnumProblemType : int

@@ -424,7 +424,7 @@ namespace DicomApp.Portal.Controllers
                     {
                         (byte)EnumSelectListType.Zone,
                         (byte)EnumSelectListType.Area,
-                        (byte)EnumSelectListType.UserData,
+                        (byte)EnumSelectListType.Users,
                     },
                     _context
                 );

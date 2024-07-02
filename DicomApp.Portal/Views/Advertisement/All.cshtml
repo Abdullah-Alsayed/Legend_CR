@@ -15,11 +15,11 @@
                     <div class="Shipment-Filter">
                         <ul id="Shipment-Filter-Ul">
                             <li id="All" class="Active" data-status="@((int)StatusTypeEnum.All)"> <a onclick="FilterByStatus('All','Advertisement','All',@((int)StatusTypeEnum.All))" href="javascript:;">All</a></li>
-                            <li id="InProgress-Advertisement" data-status="@((int)StatusTypeEnum.InProgress)"> <a onclick="FilterByStatus('All','Advertisement','InProgress-Advertisement', @((int)StatusTypeEnum.InProgress))" href="javascript:;">InProgress Advertisement</a></li>
-                            <li id="Accept-Advertisement" data-status="@((int)StatusTypeEnum.Accept)"> <a onclick="FilterByStatus('All','Advertisement','Accept-Advertisement', @((int)StatusTypeEnum.Accept))" href="javascript:;">Cancelled Advertisement</a></li>
-                            <li id="Published-Advertisement" data-status="@((int)StatusTypeEnum.Published)"><a onclick="FilterByStatus('All','Advertisement','Published-Advertisement',@((int)StatusTypeEnum.Published))" href="javascript:;">Published Advertisement</a></li>
-                            <li id="Reject-Advertisement" data-status="@((int)StatusTypeEnum.Reject)"> <a onclick="FilterByStatus('All','Advertisement','Reject-Advertisement', @((int)StatusTypeEnum.Reject))" href="javascript:;">Reject Advertisement</a></li>
-                            <li id="Sold-Advertisement" data-status="@((int)StatusTypeEnum.Sold)"> <a onclick="FilterByStatus('All','Advertisement','Sold-Advertisement', @((int)StatusTypeEnum.Sold))" href="javascript:;">Sold Advertisement</a></li>
+                            <li id="InProgress-Advertisement" data-status="@((int)StatusTypeEnum.InProgress)"> <a onclick="FilterByStatus('All','Advertisement','InProgress-Advertisement', @((int)StatusTypeEnum.InProgress))" href="javascript:;">InProgress</a></li>
+                            <li id="Accept-Advertisement" data-status="@((int)StatusTypeEnum.Accept)"> <a onclick="FilterByStatus('All','Advertisement','Accept-Advertisement', @((int)StatusTypeEnum.Accept))" href="javascript:;">Accept</a></li>
+                            <li id="Published-Advertisement" data-status="@((int)StatusTypeEnum.Published)"><a onclick="FilterByStatus('All','Advertisement','Published-Advertisement',@((int)StatusTypeEnum.Published))" href="javascript:;">Published</a></li>
+                            <li id="Reject-Advertisement" data-status="@((int)StatusTypeEnum.Reject)"> <a onclick="FilterByStatus('All','Advertisement','Reject-Advertisement', @((int)StatusTypeEnum.Reject))" href="javascript:;">Reject</a></li>
+                            <li id="Sold-Advertisement" data-status="@((int)StatusTypeEnum.Sold)"> <a onclick="FilterByStatus('All','Advertisement','Sold-Advertisement', @((int)StatusTypeEnum.Sold))" href="javascript:;">Sold</a></li>
                         </ul>
                     </div>
                 </div>
@@ -37,10 +37,10 @@
                 Lookup = Model.Lookup,
                 SelectListType = new byte[]
             {
-            (byte)EnumSelectListType.Vendor,
-            (byte)EnumSelectListType.Zone,
-            (byte)EnumSelectListType.Area,
-            (byte)EnumSelectListType.Status
+                (byte)EnumSelectListType.Level,
+                (byte)EnumSelectListType.Price,
+                (byte)EnumSelectListType.Game,
+                (byte)EnumSelectListType.Gamer,
             },
             });
             }

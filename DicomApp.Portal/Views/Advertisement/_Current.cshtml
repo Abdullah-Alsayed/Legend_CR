@@ -15,6 +15,7 @@
         <th class="text-center">Description</th>
         <th class="Sort-Column text-center">Price</th>
         <th class="Sort-Column text-center">Level</th>
+        <th class="Sort-Column text-center">Rank</th>
         <th class="text-center">Status</th>
         <th class="text-center">Action</th>
     </tr>
@@ -35,6 +36,7 @@
                 <td class="td-small text-center pl-1 pr-1">@ads.Description</td>
                 <td class="td-small text-center text-nowrap pl-1 pr-1">@ads.Price EGP</td>
                 <td class="td-small text-center text-nowrap pl-1 pr-1">@ads.Level</td>
+                <td class="td-small text-center text-nowrap pl-1 pr-1">@ads.Rank</td>
                 <partial name="~/Views/Shared/Advertisement/_StatusSwitch.cshtml" model="@ads.Status"></partial>
                 <td class="text-center pr-0" id="TableTD_@ads.AdvertisementId">
                     <partial name="~/Views/Shared/Advertisement/_CommonActions.cshtml" model="@ads"></partial>

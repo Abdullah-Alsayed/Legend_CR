@@ -46,6 +46,13 @@
                             </div>
                         </div>
                         <div class="col-lg-12 mt-3">
+                            <label class="Shipment-Details-label">Rank</label>
+                            <input type="text" asp-for="Rank" placeholder="Rank" />
+                            <div class="invalid-feedback">
+                                Please enter Rank.
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-3">
                             <label class="Shipment-Details-label">Gamer</label>
                             @Html.DropDownListFor(model => model.GamerId, new SelectList(ViewBag.Gamers, nameof(CommonUser.Id), nameof(CommonUser.Name)), "--- Select Gamer ---", new { @class = "form-control", @required = "required" })
                             <div class="invalid-feedback">

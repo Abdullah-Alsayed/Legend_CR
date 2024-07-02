@@ -41,6 +41,7 @@ namespace DicomApp.BL.Services
                             Password = request.AdsDTO.Password,
                             Price = request.AdsDTO.Price,
                             Level = req.AdsDTO.Level,
+                            Rank = req.AdsDTO.Rank,
                             IsRefund = false,
                             CreatedAt = DateTime.Now,
                             CreatedBy = request.UserID,
@@ -54,16 +55,19 @@ namespace DicomApp.BL.Services
                         );
 
                         // Add Photos
-                        foreach (var file in request.AdsDTO.Files)
+                        if (request.AdsDTO.Files != null && request.AdsDTO.Files.Any())
                         {
-                            var url = BaseHelper.UploadImg(file, request.RoutPath);
-                            req.context.AdvertisementPhotos.Add(
-                                new AdvertisementPhotos
-                                {
-                                    AdvertisementId = ship.AdvertisementId,
-                                    Url = url
-                                }
-                            );
+                            foreach (var file in request.AdsDTO.Files)
+                            {
+                                var url = BaseHelper.UploadImg(file, request.RoutPath);
+                                req.context.AdvertisementPhotos.Add(
+                                    new AdvertisementPhotos
+                                    {
+                                        AdvertisementId = ship.AdvertisementId,
+                                        Url = url
+                                    }
+                                );
+                            }
                         }
                         //Add follow up
                         var follow = new FollowUpDTO
@@ -88,7 +92,7 @@ namespace DicomApp.BL.Services
                                     .context.Role.FirstOrDefault(x =>
                                         x.Name == SystemConstants.Role.Admin
                                     )
-                                    .Id,
+                                    ?.Id,
                                 IsDeleted = false,
                                 IsSeen = false,
                                 RecipientId = 0,
@@ -105,6 +109,7 @@ namespace DicomApp.BL.Services
                     {
                         response.Message = ex.Message;
                         response.Success = false;
+                        response.AdsDTO = request.AdsDTO;
                         LogHelper.LogException(ex.Message, ex.StackTrace);
                     }
                     return response;
@@ -126,57 +131,74 @@ namespace DicomApp.BL.Services
                         var ship = request.context.Advertisement.FirstOrDefault(s =>
                             s.AdvertisementId == request.AdsDTO.AdvertisementId
                         );
-                        if (ship.Price != request.AdsDTO.Price && ship.Status.StatusType > 3)
-                        {
-                            ship.StatusId = request.AdsDTO.StatusId;
-                            ship.GamerId = request.AdsDTO.GamerId;
-                            ship.GameId = request.AdsDTO.GameId;
-                            ship.Description = request.AdsDTO.Description;
-                            ship.UserName = request.AdsDTO.UserName;
-                            ship.Password = request.AdsDTO.Password;
-                            ship.Price = request.AdsDTO.Price;
-                            ship.Level = request.AdsDTO.Level;
-                            ship.LastModifiedAt = DateTime.Now;
-                            ship.LastModifiedBy = request.UserID;
-                            request.context.SaveChanges();
-
-                            //Add follow up
-                            var follow = new FollowUpDTO
-                            {
-                                Title = "Advertisement Updated",
-                                CreatedBy = request.UserID,
-                                AdvertisementId = ship.AdvertisementId,
-                                StatusId = ship.StatusId
-                            };
-                            FollowUpService.Add(follow, request.context);
-
-                            //Add notification
-                            request.context.Notification.Add(
-                                new Notification
-                                {
-                                    Body = "Advertisement " + ship.RefId + " updated",
-                                    CreationDate = DateTime.Now,
-                                    Icon = ship.RefId,
-                                    SenderId = request.UserID,
-                                    Title = "Advertisement updated",
-                                    RecipientRoleId = (int)EnumRole.SuperAdmin,
-                                    IsDeleted = false,
-                                    IsSeen = false,
-                                    RecipientId = 0,
-                                }
-                            );
-
-                            request.context.SaveChanges();
-                            response.Message =
-                                "Advertisement " + ship.RefId + " successfully updated";
-                            response.Success = true;
-                            response.StatusCode = HttpStatusCode.OK;
-                        }
-                        else
+                        var status = request.context.Status.FirstOrDefault(x =>
+                            x.Id == ship.StatusId
+                        );
+                        if (
+                            ship != null
+                            && ship.Price != request.AdsDTO.Price
+                            && status != null
+                            && status.StatusType >= 2
+                        )
                         {
                             response.Message = "you Cant Update Price";
                             response.Success = false;
+                            response.AdsDTO = request.AdsDTO;
+                            return response;
                         }
+
+                        ship.GamerId = request.AdsDTO.GamerId;
+                        ship.GameId = request.AdsDTO.GameId;
+                        ship.Description = request.AdsDTO.Description;
+                        ship.UserName = request.AdsDTO.UserName;
+                        ship.Password = request.AdsDTO.Password;
+                        ship.Price = request.AdsDTO.Price;
+                        ship.Level = request.AdsDTO.Level;
+                        ship.Rank = request.AdsDTO.Rank;
+                        ship.StatusId =
+                            request.AdsDTO.Publish.HasValue && request.AdsDTO.Publish.Value
+                                ? request.context.Status.FirstOrDefault(x => x.StatusType == 3)?.Id
+                                    ?? ship.StatusId
+                                : ship.StatusId;
+                        ship.LastModifiedAt = DateTime.Now;
+                        ship.LastModifiedBy = request.UserID;
+                        request.context.SaveChanges();
+
+                        //Add follow up
+                        var follow = new FollowUpDTO
+                        {
+                            Title = "Advertisement Updated",
+                            CreatedBy = request.UserID,
+                            AdvertisementId = ship.AdvertisementId,
+                            StatusId = ship.StatusId
+                        };
+                        FollowUpService.Add(follow, request.context);
+
+                        //Add notification
+                        request.context.Notification.Add(
+                            new Notification
+                            {
+                                Body = "Advertisement " + ship.RefId + " updated",
+                                CreationDate = DateTime.Now,
+                                Icon = ship.RefId,
+                                SenderId = request.UserID,
+                                Title = "Advertisement updated",
+                                RecipientRoleId = request
+                                    .context.Role.FirstOrDefault(x =>
+                                        x.Name == SystemConstants.Role.SuperAdmin
+                                    )
+                                    ?.Id,
+                                IsDeleted = false,
+                                IsSeen = false,
+                                RecipientId = 0,
+                            }
+                        );
+
+                        request.context.SaveChanges();
+                        response.Message = "Advertisement " + ship.RefId + " successfully updated";
+                        response.Success = true;
+                        response.AdsDTO = request.AdsDTO;
+                        response.StatusCode = HttpStatusCode.OK;
                     }
                     catch (Exception ex)
                     {
@@ -203,48 +225,212 @@ namespace DicomApp.BL.Services
                         var ship = request.context.Advertisement.FirstOrDefault(s =>
                             s.AdvertisementId == request.AdsDTO.AdvertisementId
                         );
-
-                        ship.Description = request.AdsDTO.Description;
-                        ship.UserName = request.AdsDTO.UserName;
-                        ship.Password = request.AdsDTO.Password;
-                        ship.Level = request.AdsDTO.Level;
-
-                        ship.LastModifiedAt = DateTime.Now;
-                        ship.LastModifiedBy = request.UserID;
-
-                        request.context.SaveChanges();
-
-                        //Add follow up
-                        var follow = new FollowUpDTO
+                        if (ship != null)
                         {
-                            Title = "Advertisement Data Update",
-                            CreatedBy = request.UserID,
-                            AdvertisementId = ship.AdvertisementId,
-                            StatusId = ship.StatusId
-                        };
-                        FollowUpService.Add(follow, request.context);
+                            ship.Description = request.AdsDTO.Description;
+                            ship.UserName = request.AdsDTO.UserName;
+                            ship.Password = request.AdsDTO.Password;
+                            ship.Level = request.AdsDTO.Level;
+                            ship.Rank = request.AdsDTO.Rank;
 
-                        //Add notification
-                        request.context.Notification.Add(
-                            new Notification
+                            ship.LastModifiedAt = DateTime.Now;
+                            ship.LastModifiedBy = request.UserID;
+
+                            request.context.SaveChanges();
+
+                            //Add follow up
+                            var follow = new FollowUpDTO
                             {
-                                Body = "Advertisement " + ship.RefId + " updated",
-                                CreationDate = DateTime.Now,
-                                Icon = ship.RefId,
-                                SenderId = request.UserID,
-                                Title = "Advertisement updated",
-                                RecipientRoleId = (int)EnumRole.SuperAdmin,
-                                IsDeleted = false,
-                                IsSeen = false,
-                                RecipientId = 0,
-                            }
+                                Title = "Advertisement Data Update",
+                                CreatedBy = request.UserID,
+                                AdvertisementId = ship.AdvertisementId,
+                                StatusId = ship.StatusId
+                            };
+                            FollowUpService.Add(follow, request.context);
+
+                            //Add notification
+                            request.context.Notification.Add(
+                                new Notification
+                                {
+                                    Body = "Advertisement " + ship.RefId + " updated",
+                                    CreationDate = DateTime.Now,
+                                    Icon = ship.RefId,
+                                    SenderId = request.UserID,
+                                    Title = "Advertisement updated",
+                                    RecipientRoleId = (int)EnumRole.SuperAdmin,
+                                    IsDeleted = false,
+                                    IsSeen = false,
+                                    RecipientId = 0,
+                                }
+                            );
+
+                            request.context.SaveChanges();
+
+                            response.Message =
+                                "Advertisement " + ship.RefId + " successfully updated";
+                            response.Success = true;
+                            response.StatusCode = HttpStatusCode.OK;
+                        }
+                        else
+                        {
+                            response.Message = "Advertisement Not Found";
+                            response.Success = false;
+                            response.StatusCode = HttpStatusCode.OK;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        response.Message = ex.Message;
+                        response.Success = false;
+                        LogHelper.LogException(ex.Message, ex.StackTrace);
+                    }
+                    return response;
+                }
+            );
+            return response;
+        }
+
+        public static AdvertisementResponse RejectAdvertisement(AdvertisementRequest request)
+        {
+            var response = new AdvertisementResponse();
+            RunBase(
+                request,
+                response,
+                (AdvertisementRequest req) =>
+                {
+                    try
+                    {
+                        var ship = request.context.Advertisement.FirstOrDefault(s =>
+                            s.AdvertisementId == request.AdsDTO.AdvertisementId
                         );
+                        var status = request.context.Status.FirstOrDefault(x =>
+                            x.StatusType == (int)StatusTypeEnum.Reject
+                        );
+                        if (status != null && ship != null)
+                        {
+                            ship.StatusId = status.Id;
+                            ship.LastModifiedAt = DateTime.Now;
+                            ship.LastModifiedBy = request.UserID;
+                            request.context.SaveChanges();
 
-                        request.context.SaveChanges();
+                            //Add follow up
+                            var follow = new FollowUpDTO
+                            {
+                                Title = "Advertisement Data Update",
+                                CreatedBy = request.UserID,
+                                AdvertisementId = ship.AdvertisementId,
+                                StatusId = ship.StatusId
+                            };
+                            FollowUpService.Add(follow, request.context);
 
-                        response.Message = "Shipment " + ship.RefId + " successfully updated";
-                        response.Success = true;
-                        response.StatusCode = HttpStatusCode.OK;
+                            //Add notification
+                            request.context.Notification.Add(
+                                new Notification
+                                {
+                                    Body = "Advertisement " + ship.RefId + " updated",
+                                    CreationDate = DateTime.Now,
+                                    Icon = ship.RefId,
+                                    SenderId = request.UserID,
+                                    Title = "Advertisement updated",
+                                    RecipientRoleId = (int)EnumRole.SuperAdmin,
+                                    IsDeleted = false,
+                                    IsSeen = false,
+                                    RecipientId = 0,
+                                }
+                            );
+
+                            request.context.SaveChanges();
+
+                            response.Message =
+                                "Advertisement " + ship.RefId + " successfully updated";
+                            response.Success = true;
+                            response.StatusCode = HttpStatusCode.OK;
+                        }
+                        else
+                        {
+                            response.Message = "Advertisement Not Found";
+                            response.Success = false;
+                            response.StatusCode = HttpStatusCode.OK;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        response.Message = ex.Message;
+                        response.Success = false;
+                        LogHelper.LogException(ex.Message, ex.StackTrace);
+                    }
+                    return response;
+                }
+            );
+            return response;
+        }
+
+        public static AdvertisementResponse ChangStatusAdvertisement(AdvertisementRequest request)
+        {
+            var response = new AdvertisementResponse();
+            RunBase(
+                request,
+                response,
+                (AdvertisementRequest req) =>
+                {
+                    try
+                    {
+                        var ship = request.context.Advertisement.FirstOrDefault(s =>
+                            s.AdvertisementId == request.AdsDTO.AdvertisementId
+                        );
+                        var status = request.context.Status.FirstOrDefault(x =>
+                            x.StatusType == request.AdsDTO.StatusType
+                        );
+                        if (status != null && ship != null)
+                        {
+                            ship.StatusId = status.Id;
+                            ship.LastModifiedAt = DateTime.Now;
+                            ship.LastModifiedBy = request.UserID;
+                            request.context.SaveChanges();
+
+                            //Add follow up
+                            var follow = new FollowUpDTO
+                            {
+                                Title = "Advertisement Data Update",
+                                CreatedBy = request.UserID,
+                                AdvertisementId = ship.AdvertisementId,
+                                StatusId = ship.StatusId
+                            };
+                            FollowUpService.Add(follow, request.context);
+
+                            //Add notification
+                            request.context.Notification.Add(
+                                new Notification
+                                {
+                                    Body = "Advertisement " + ship.RefId + " updated",
+                                    CreationDate = DateTime.Now,
+                                    Icon = ship.RefId,
+                                    SenderId = request.UserID,
+                                    Title = "Advertisement updated",
+                                    RecipientRoleId = request
+                                        .context.Role.FirstOrDefault(x =>
+                                            x.Name == SystemConstants.Role.SuperAdmin
+                                        )
+                                        ?.Id,
+                                    IsDeleted = false,
+                                    IsSeen = false,
+                                    RecipientId = 0,
+                                }
+                            );
+
+                            request.context.SaveChanges();
+
+                            response.Message =
+                                "Advertisement " + ship.RefId + " successfully updated";
+                            response.Success = true;
+                            response.StatusCode = HttpStatusCode.OK;
+                        }
+                        else
+                        {
+                            response.Message = "Advertisement Not Found";
+                            response.Success = false;
+                            response.StatusCode = HttpStatusCode.OK;
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -1407,6 +1593,7 @@ namespace DicomApp.BL.Services
                             CreatedBy = s.CreatedBy,
                             Price = s.Price,
                             Level = s.Level,
+                            Rank = s.Rank,
                             RefId = s.RefId,
                             GameId = s.GameId,
                             BuyerId = s.BuyerId,
@@ -1518,6 +1705,7 @@ namespace DicomApp.BL.Services
                             CreatedAt = s.CreatedAt,
                             CreatedBy = s.CreatedBy,
                             Level = s.Level,
+                            Rank = s.Rank,
                             Price = s.Price,
                             RefId = s.RefId,
                             GameId = s.GameId,
@@ -1603,6 +1791,7 @@ namespace DicomApp.BL.Services
                     || c.UserName.ToLower().Contains(filter.Search)
                     || c.Description.Contains(filter.Search)
                     || c.Password.Contains(filter.Search)
+                    || c.Rank.Contains(filter.Search)
                 );
             }
 
@@ -1629,6 +1818,18 @@ namespace DicomApp.BL.Services
 
             if (filter.Price != 0)
                 query = query.Where(c => c.Price > filter.Price);
+
+            if (filter.LessLevel != 0)
+                query = query.Where(c => c.Level < filter.LessLevel);
+
+            if (filter.GreeterLevel != 0)
+                query = query.Where(c => c.Level > filter.GreeterLevel);
+
+            if (filter.LessPrice != 0)
+                query = query.Where(c => c.Price < filter.LessPrice);
+
+            if (filter.GreeterPrice != 0)
+                query = query.Where(c => c.Price > filter.GreeterPrice);
 
             if (filter.DateFrom.HasValue)
                 query = query.Where(p => p.CreatedAt.Date >= filter.DateFrom);

@@ -13,6 +13,8 @@
     <Compile Remove="Migrations\20240602200410_Ads.Designer.cs" />
     <Compile Remove="Migrations\20240602200713_Ads.cs" />
     <Compile Remove="Migrations\20240602200713_Ads.Designer.cs" />
+    <Compile Remove="Migrations\20240629185217_addRank.cs" />
+    <Compile Remove="Migrations\20240629185217_addRank.Designer.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.6" />

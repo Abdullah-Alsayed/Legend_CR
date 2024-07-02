@@ -1,0 +1,61 @@
+﻿
+@using DicomApp.CommonDefinitions.DTO
+@using DicomApp.Helpers
+@model List<ServiceDTO>
+<thead>
+    <tr>
+        <th class="Sort-Column text-center">Code</th>
+        <th class="Sort-Column text-center">UserName</th>
+        <th class="Sort-Column text-center">Password</th>
+        <th class="Sort-Column text-center">Date</th>
+        <th class="text-center">Game</th>
+        <th class="text-center">Gamer</th>
+        <th class="text-center">Description</th>
+        <th class="Sort-Column text-center">Price</th>
+        <th class="Sort-Column text-center">Level</th>
+        <th class="Sort-Column text-center">Rank</th>
+        <th class="text-center">Status</th>
+        <th class="text-center">Action</th>
+    </tr>
+</thead>
+<tbody id="TableBody">
+    @if (Model != null && Model.Count > 0)
+    {
+        foreach (var serv in Model)
+        {
+            <tr id="TableRow_@serv.GamerServiceId">
+                <td class="td-small text-center text-nowrap pl-1 pr-1" onclick="GamerServiceDetails('GamerService',@serv.GamerServiceId)" data-toggle="modal" data-target="#GamerServiceDetails"><b>@serv.RefId</b></td>
+                <td class="td-small text-center pl-1 pr-1" style="min-width:100px;">@serv.UserName</td>
+                <td class="td-small text-center pl-1 pr-1" style="min-width:100px;">@serv.Password</td>
+                <td class="td-small text-center text-nowrap pl-1 pr-1 Date-Table">@serv.CreatedAt.ToString("dd MMM yyyy")</td>
+                <td class="td-small text-center pl-1 pr-1">@serv.Game?.NameEn</td>
+                <td class="td-small text-center pl-1 pr-1">@serv.Gamer?.Name</td>
+                <td class="td-small text-center pl-1 pr-1">@serv.Description</td>
+                <td class="td-small text-center text-nowrap pl-1 pr-1">@serv.Price EGP</td>
+                <td class="td-small text-center text-nowrap pl-1 pr-1">@serv.Level</td>
+                <td class="td-small text-center text-nowrap pl-1 pr-1">@serv.Rank</td>
+                <partial name="~/Views/Shared/GamerService/_StatusSwitch.cshtml" model="@serv.Status"></partial>
+                <td class="text-center pr-0" id="TableTD_@serv.GamerServiceId">
+                    <partial name="~/Views/GamerService/_CommonActions.cshtml" model="@serv"></partial>
+                </td>
+            </tr>
+        }
+    }
+    else
+    {
+        <tr>
+            <td colspan="13" class="text-danger text-center"><h3>No data available in table</h3></td>
+        </tr>
+    }
+</tbody>
+<tfoot>
+    <tr>
+        <td colspan="13">
+            @{
+                await Html.RenderPartialAsync("_Pagination", new OptionDTO { Action = "All", Controller = "GamerService", Count = Model.Count, StatusType = (int)StatusTypeEnum.InProgress });
+            }
+        </td>
+    </tr>
+</tfoot>
+<input type="hidden" value="@Model.Count" id="DataCount" />
+

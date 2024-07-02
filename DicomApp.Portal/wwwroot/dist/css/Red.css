@@ -1220,7 +1220,7 @@ color: #4D4D4D;
     font-weight: 600;
     font-size: 56px;
     line-height: 84px;
-    color: #222133;
+    color: #EEF0F4;
 }
 
 .Delivery-Section {
@@ -1238,7 +1238,9 @@ color: #4D4D4D;
 }
 
 .Form-Section {
-    background: linear-gradient(180deg, #FFFFFF 31.21%, rgba(255, 255, 255, 0) 55.66%);
+/*    background: linear-gradient(180deg, #FFFFFF 31.21%, rgba(255, 255, 255, 0) 55.66%);
+*/
+
 }
 
 .login-form label {
@@ -1246,7 +1248,7 @@ color: #4D4D4D;
     font-weight: 500;
     font-size: 12px;
     line-height: 24px;
-    color: #222133;
+    color: #EEF0F4;
 }
 
 .Forgot-Password {
@@ -1256,7 +1258,7 @@ color: #4D4D4D;
     font-size: 10px;
     line-height: 25px;
     text-align: right;
-    color: #222133;
+    color: #EEF0F4;
 }
 
 .login-form .validation-message {

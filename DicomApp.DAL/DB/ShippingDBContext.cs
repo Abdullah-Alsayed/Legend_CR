@@ -26,6 +26,7 @@ namespace DicomApp.DAL.DB
         public virtual DbSet<FollowUpType> FollowUpType { get; set; }
         public virtual DbSet<Notification> Notification { get; set; }
         public virtual DbSet<Game> Game { get; set; }
+        public virtual DbSet<GamerService> GamerService { get; set; }
         public virtual DbSet<Category> Category { get; set; }
         public virtual DbSet<PickupRequest> PickupRequest { get; set; }
         public virtual DbSet<PickupRequestType> PickupRequestType { get; set; }
@@ -836,7 +837,7 @@ namespace DicomApp.DAL.DB
 
                 entity
                     .HasOne(d => d.Game)
-                    .WithMany(p => p.ShipmentGame)
+                    .WithMany(p => p.Advertisements)
                     .HasForeignKey(d => d.GameId)
                     .HasConstraintName("FK_Shipment_Game");
             });

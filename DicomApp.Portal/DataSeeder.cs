@@ -51,15 +51,15 @@ namespace DicomApp.Portal
                 },
                 new Status
                 {
-                    NameEN = "Reject",
-                    NameAR = "مرفوض",
-                    StatusType = (int)StatusTypeEnum.Reject
-                },
-                new Status
-                {
                     NameEN = "Published",
                     NameAR = "منشور",
                     StatusType = (int)StatusTypeEnum.Published
+                },
+                new Status
+                {
+                    NameEN = "Reject",
+                    NameAR = "مرفوض",
+                    StatusType = (int)StatusTypeEnum.Reject
                 },
                 new Status
                 {

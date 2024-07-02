@@ -280,109 +280,86 @@ function AddAdvertisement(ActionName, ControllerName, FormName) {
         }
 }
 
-function Edit(ActionName, ControllerName, FormName) {
-    if ($(`#${FormName}`).valid()) {
-        var stockChecked = $(`#SettingDTO_IsStock`).is(':checked');
-        var ProductSelect = $("input.ProductSelect:checkbox:checked").map(function () {
-            return $(this).val();
-        }).get();
-
-        if (stockChecked && ProductSelect.length == 0) {
-            Swal.fire({
-                position: 'center',
-                icon: 'error',
-                title: 'Please select item(s) from stock',
-                showConfirmButton: false,
-                timer: 4000
-            });
-        }
-        else {
-            var ProductItemCount = $("input.ProductSelect:checkbox:checked").map(function () {
-                return $(this).closest("tr").find('.ProductItemCount').val();
-            }).get();
-            var ProductsPrice = $("input.ProductSelect:checkbox:checked").map(function () {
-                return $(this).closest("tr").find('.ProductPrice').val();
-            }).get();
-            $("#BtnSend").prop('disabled', true);
-            $('#MainLoder').fadeIn(100);
-            $("#MainView").hide();
-            let DataForm = $(`#${FormName}`).serialize();
-            DataForm = DataForm + "&ProductIDs=" + ProductSelect.toString();
-            DataForm = DataForm + "&ProductsQuantity=" + ProductItemCount.toString();
-            DataForm = DataForm + "&ProductsPrice=" + ProductsPrice.toString();
-            let PartialItems = JSON.stringify(PartialItemsList);
-            let VendorId = $('#VendorId').val();
-            let Area = $('#AreaId').val();
-            $.ajax({
-                url: `/${ControllerName}/${ActionName}?PartialItems=${PartialItems}`,
-                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-                type: 'POST',
-                data: DataForm,
-                dataType: 'html',
-                success: function (result) {
-                    $("#MainView").fadeIn(1000);
-                    $('#MainLoder').fadeOut(1000);
-                    $(".se-pre-con").css("display", "none");
-                    if (result == "false") {
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'error',
-                            title: 'SubTotal Is Negative',
-                            showConfirmButton: false,
-                            timer: 4000
-                        });
-                    }
-                    else {
-                        $(`#${FormName}`).trigger("reset");
-                        $(`#VendorId option[selected=selected]`).attr('selected', false);
-                        $(`#VendorId option[value=${VendorId}]`).attr('selected', 'selected');
-                        $(`#AreaId option[value=0]`).attr('selected', 'selected');
-                        $(`#select2-AreaId-container`).text("--- Select Area ---");
-                        $(`#select2-ZoneId-container`).text("--- Select Government ---");
-                        $(`#select2-ShipmentServiceId-container`).text("--- Select Service ---");
-                        $("#lblShippingFees").val("0");
-                        $(".COD ,.VendorCash ,#Zone-name").text("");
-                        $(".invalid-feedback").addClass("d-none");
-                        $(".form-control , .select2-selection").css({ "border-color": "#D6E4EC" });
-                        $(`.Edit-Stock-Items`).addClass("d-none");
-                        $("#DivWeight,#DivSize,#DivFreight,#DivOrderDescription").removeClass("d-none");
-                        $("#Partial-Items").empty();
-                        //$("#Total").removeAttr("readonly");
-                        PartialItemsList = [];
-                        var StatusSelect = $('#select2-StatusId-container').text();
-                        $('.StatusName').text(StatusSelect);
-                        if (result != "false") {
-                            Swal.fire({
-                                position: 'center',
-                                icon: 'success',
-                                title: result,
-                                showConfirmButton: false,
-                                timer: 5000
-                            });
-                        }
-                    }
-                    $(`#Order-Summary-tr`).empty();
-                    $(`#Order-Summary-Total`).text(`0 EGP`);
-                    $(`#lblShippingFees`).val('');
-                    $("#BtnSend").prop('disabled', false);
-                },
-                complete: function () {
-                },
-                error: function (error) {
+function EditAdvertisement(ActionName, ControllerName, FormName) {
+    if ($(`#${FormName}`).valid())
+    {
+        $("#BtnSend").prop('disabled', true);
+        $('#MainLoder').fadeIn(100);
+        $("#MainView").hide();
+        let DataForm = $(`#${FormName}`).serialize();
+        let PartialItems = JSON.stringify(PartialItemsList);
+        let VendorId = $('#VendorId').val();
+        let Area = $('#AreaId').val();
+        $.ajax({
+            url: `/${ControllerName}/${ActionName}?PartialItems=${PartialItems}`,
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            type: 'POST',
+            data: DataForm,
+            dataType: 'html',
+            success: function (result) {
+                $("#MainView").fadeIn(1000);
+                $('#MainLoder').fadeOut(1000);
+                $(".se-pre-con").css("display", "none");
+                if (result == "false") {
                     Swal.fire({
                         position: 'center',
                         icon: 'error',
-                        title: 'Failed Edit Order , try again',
+                        title: 'SubTotal Is Negative',
                         showConfirmButton: false,
-                        timer: 3000
+                        timer: 4000
                     });
-                    $('#MainLoder').fadeOut(1000);
-                    $(".se-pre-con").css("display", "none");
-                    $("#MainView").show();
-                    $("#BtnSend").prop('disabled', false);
                 }
-            })
-        }
+                else {
+                    $(`#${FormName}`).trigger("reset");
+                    $(`#VendorId option[selected=selected]`).attr('selected', false);
+                    $(`#VendorId option[value=${VendorId}]`).attr('selected', 'selected');
+                    $(`#AreaId option[value=0]`).attr('selected', 'selected');
+                    $(`#select2-AreaId-container`).text("--- Select Area ---");
+                    $(`#select2-ZoneId-container`).text("--- Select Government ---");
+                    $(`#select2-ShipmentServiceId-container`).text("--- Select Service ---");
+                    $("#lblShippingFees").val("0");
+                    $(".COD ,.VendorCash ,#Zone-name").text("");
+                    $(".invalid-feedback").addClass("d-none");
+                    $(".form-control , .select2-selection").css({ "border-color": "#D6E4EC" });
+                    $(`.Edit-Stock-Items`).addClass("d-none");
+                    $("#DivWeight,#DivSize,#DivFreight,#DivOrderDescription").removeClass("d-none");
+                    $("#Partial-Items").empty();
+                    //$("#Total").removeAttr("readonly");
+                    PartialItemsList = [];
+                    var StatusSelect = $('#select2-StatusId-container').text();
+                    $('.StatusName').text(StatusSelect);
+                    if (result != "false") {
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: result,
+                            showConfirmButton: false,
+                            timer: 5000
+                        });
+                    }
+                }
+                $(`#Order-Summary-tr`).empty();
+                $(`#Order-Summary-Total`).text(`0 EGP`);
+                $(`#lblShippingFees`).val('');
+                $("#BtnSend").prop('disabled', false);
+            },
+            complete: function () {
+            },
+            error: function (error) {
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'Failed Edit Order , try again',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+                $('#MainLoder').fadeOut(1000);
+                $(".se-pre-con").css("display", "none");
+                $("#MainView").show();
+                $("#BtnSend").prop('disabled', false);
+            }
+        })
+        
     }
     else {
         $("label:contains('This field is required.')").fadeOut();
