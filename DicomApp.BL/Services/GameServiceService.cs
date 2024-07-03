@@ -81,6 +81,10 @@ namespace DicomApp.BL.Services
                         );
 
                         request.context.SaveChanges();
+                        response.ServiceDTO = new ServiceDTO
+                        {
+                            GamerServiceId = serv.GamerServiceId
+                        };
                         response.Message = "New GamerService " + serv.RefId + " successfully added";
                         response.Success = true;
                         response.StatusCode = HttpStatusCode.OK;
@@ -526,16 +530,11 @@ namespace DicomApp.BL.Services
                     {
                         IQueryable<GamerService> serv;
                         if (
-                            request.ServiceDTO.GamerServiceId != 0
+                            request.ServiceDTO.GamerServiceIds != null
                             && request.ServiceDTO.GamerServiceIds.Any()
                         )
                             serv = request.context.GamerService.Where(s =>
                                 request.ServiceDTO.GamerServiceIds.Contains(s.GamerServiceId)
-                                && !s.IsDeleted
-                            );
-                        else if (!string.IsNullOrEmpty(request.ServiceDTO.RefId))
-                            serv = request.context.GamerService.Where(s =>
-                                s.GamerServiceId == request.ServiceDTO.GamerServiceId
                                 && !s.IsDeleted
                             );
                         else

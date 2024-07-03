@@ -644,6 +644,7 @@ function ComparePassword() {
 
 function AddEntity(ControllerName, ActionName, FormID) {
     if ($(`#${FormID}`).valid()) {
+        let Count = $(`tbody tr`).length;
         $("#BtnSend").prop('disabled', true);
         $(".Spinner").removeClass("d-none");
         let formData = formSerialize(FormID);
@@ -661,8 +662,18 @@ function AddEntity(ControllerName, ActionName, FormID) {
                 }
                 else {
                     ResetForm(FormID);
-                    $(`tbody`).prepend(result);
-                    $(`#${FormID} img`).attr('src','');
+                    if (ControllerName == "GamerService" && ActionName == "Add")
+                    {
+                        $(`#Table`).html(result);
+                        $("#Shipment-Filter-Ul li").removeClass("Active");
+                        $(`#All`).addClass(("Active"));
+                    }
+                     else
+                        $(`tbody`).prepend(result);
+
+                    $(`#${FormID} img`).attr('src', '');
+                    $(`#DataCount-Span`).text(`Showing : ${+(++Count)}`);
+
                     alertSuccess()
                 }
             },

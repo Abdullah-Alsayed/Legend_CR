@@ -5,7 +5,7 @@
 @model ServiceDTO
 @{
     var roleid = AuthHelper.GetClaimValue(User, "RoleID");
-    var accept = StatusTypeEnum.Accept;
+    var accept =(int)StatusTypeEnum.Accept;
     var checkStatusIDsForCancel = new List<int>
     {
         (int)StatusTypeEnum.Sold, 

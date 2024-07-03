@@ -26,29 +26,6 @@ namespace DicomApp.Portal.Controllers
             _hosting = hosting;
         }
 
-        #region GamerService details popup
-
-        [AllowAnonymous]
-        public IActionResult GamerServiceDetails(int id)
-        {
-            var model = new ServiceDTO();
-            model.GamerServiceId = id;
-            var request = new GamerServiceRequest
-            {
-                RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
-                UserID = AuthHelper.GetClaimValue(User, "UserID"),
-                context = _context,
-            };
-
-            var response = DicomApp.BL.Services.GamerServiceService.GetGamerService(request);
-
-            return PartialView(
-                "~/Views/Shared/GamerService/_MainDetails.cshtml",
-                response.ServiceDTO
-            );
-        }
-        #endregion
-
         #region GamerService actions
 
         [AuthorizePerRole(SystemConstants.Permission.AddGamerService)]
@@ -66,12 +43,12 @@ namespace DicomApp.Portal.Controllers
                 model.GamerId = request.UserID;
 
             var response = BL.Services.GamerServiceService.AddGamerService(request);
-
-            ViewBag.Vendors = GeneralHelper.GetUsers(SystemConstants.Role.Gamer, _context);
-            ViewBag.branch = _context.Branch.ToList();
-            ViewBag.areas = _context.City.ToList();
-
-            return Json(response.Message);
+            request.PageIndex = 0;
+            request.PageSize = BaseHelper.Constants.PageSize;
+            request.IsDesc = true;
+            request.OrderByColumn = nameof(GamerService.CreatedAt);
+            var Getresponse = BL.Services.GamerServiceService.GetAllGamerServices(request);
+            return PartialView("_All", Getresponse.ServiceDTOs);
         }
 
         [AuthorizePerRole(SystemConstants.Permission.AddGamerService)]
@@ -84,7 +61,7 @@ namespace DicomApp.Portal.Controllers
             ViewBag.Gamers = GeneralHelper.GetUsers(SystemConstants.Role.Gamer, _context);
 
             if (ActionType == SystemConstants.ActionType.PartialView)
-                return PartialView("/Views/Shared/GamerService/_AddOrder.cshtml");
+                return PartialView("/Views/GamerService/_AddOrder.cshtml");
             else
                 return View();
         }

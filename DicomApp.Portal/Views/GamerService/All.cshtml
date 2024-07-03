@@ -1,4 +1,5 @@
 ﻿@using DicomApp.CommonDefinitions.DTO
+@using DicomApp.DAL.DB
 @using DicomApp.Helpers
 @model ViewModel<ServiceDTO>
 
@@ -42,6 +43,11 @@
             },
             });
             }
+            <div class="row Red-Row w-100">
+                <div class="col-lg-12 RedBtn-Section">
+                    <a href="#" data-toggle="modal" data-target="#AddService-Model" class="Red-Btn"><img class="mr-2 w-20" src="~/dist/images/Icons/Location.png" />Add Service</a>
+                </div>
+            </div>
         </div>
     </div>
     <div class="col-12">
@@ -52,4 +58,105 @@
             <partial name="_All" model="@Model.ObjDTOs" />
         </table>
     </div>
+
+    <!-- Add New Service Model -->
+    <div class="modal fade" id="AddService-Model" tabindex="-1" role="dialog" aria-labelledby="AddServiceLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div>
+                    <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h2 class="Model-Titel">Add New Service</h2>
+                    <form asp-action="Add" asp-controller="GamerService" class="needs-validation" enctype="multipart/form-data" id="AddService-Form">
+                        <div class="container-fluid">
+                            <div class="row pt-1">
+                                <div class="col-lg-6 pt-3">
+                                    <label class="Label-Model">User Name</label>
+                                    <input class="input-Model" required id="UserName" name="UserName" placeholder="User Name" />
+                                    <div class="invalid-feedback">
+                                        Please enter User Name
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6 pt-3">
+                                    <label class="Label-Model"> Password</label>
+                                    <input class="input-Model" required id="Password" name="Password" placeholder="Password" />
+                                    <div class="invalid-feedback">
+                                        Please enter Password
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6 pt-3">
+                                    <label class="Label-Model">Level</label>
+                                    <input class="input-Model" required id="Level" name="Level" placeholder="Level" />
+                                    <div class="invalid-feedback">
+                                        Please enter Level
+                                    </div>
+                                </div>
+
+                                 <div class="col-lg-6 pt-3">
+                                    <label class="Label-Model">Rank</label>
+                                    <input class="input-Model" required id="Rank" name="Rank" placeholder="Rank" />
+                                    <div class="invalid-feedback">
+                                        Please enter Rank
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6 pt-3">
+                                    <label class="Label-Model">Price</label>
+                                    <input class="input-Model" required id="Price" name="Price" placeholder="Price" />
+                                    <div class="invalid-feedback">
+                                        Please enter Price
+                                    </div>
+                                </div>
+
+                                 <div class="col-lg-6 pt-3">
+                                    <label class="Label-Model">Service Type</label>
+                                    <select class="form-control" required id="GameServiceType" name="GameServiceType">
+                                        <option value="">--- Service Type ---</option>
+                                        <option value="@GameServiceType.Push">Push</option>
+                                        <option value="@GameServiceType.Charge">Charge</option>
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        Please enter Service Type
+                                    </div>                          
+                                </div>
+
+                                 <div class="col-lg-6 pt-3">
+                                    <label class="Label-Model">Games</label>
+                                    @Html.DropDownList("GameId", new SelectList(Model.Lookup.GameDTOs, nameof(GameDTO.Id), nameof(GameDTO.NameEn)), "---  Game ---", new { @class = "form-control ", @required = "required" })
+                                    <div class="invalid-feedback">
+                                        Please enter Games
+                                    </div>
+                                </div>
+
+
+                                <div class="col-lg-6 pt-3">
+                                    <label class="Label-Model">Gamers</label>
+                                    @Html.DropDownList("GamerId", new SelectList(Model.Lookup.UserDTOs, nameof(UserDTO.Id), nameof(UserDTO.Name)), "---  Gamer ---", new { @class = "form-control ", @required = "required" })
+                                    <div class="invalid-feedback">
+                                        Please enter Gamers
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 pt-3">
+                                    <label class="Label-Model">Description</label>
+                                    <textarea class="input-Model" id="Description" name="Description" placeholder="Description"></textarea>
+                                </div>
+                                <div class="col-lg-12">
+                                    <button class="Red-Btn-OutLine OutLine-Red Btn-Model" onclick="AddEntity('GamerService','Add','AddService-Form')" type="button" id="BtnSend">
+                                        Add Services
+                                        <span class="Spinner spinner-border spinner-border-sm ml-2 mb-1 d-none" role="status" aria-hidden="true"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- START: Card Data--> 
 </main>

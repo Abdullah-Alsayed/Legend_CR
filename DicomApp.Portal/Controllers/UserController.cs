@@ -529,5 +529,11 @@ namespace DicomApp.Portal.Controllers
 
             return RedirectToAction("ListUser");
         }
+
+        [AllowAnonymous]
+        public IActionResult Authorization()
+        {
+            return View();
+        }
     }
 }
