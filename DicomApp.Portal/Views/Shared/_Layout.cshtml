@@ -61,52 +61,11 @@
                                 <li class="cursor-pointer">
                                     <a href="/Home/AccountDashboard" class="Navigation">
                                         <img class="Img-Ul" src="~/dist/images/Icons/Dashboard.png" />
-                                        Account Dashboard
+                                        Gamer Dashboard
                                     </a>
                                 </li>
                             }
                         }
-                        <li class="cursor-pointer" onclick="OpenSection('Reports-Ul')">
-                            <a><img class="Img-Ul" src="~/dist/images/Icons/Reports.png" /> Reports</a>
-                            <ul id="Reports-Ul" class="d-none Nested-sidebar-menu">
-                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_VendorReport", connectionString: connectionString))
-                                {
-                                    <li><a href="/Report/Vendor" class="MenuNavigation Navigation">Vendor Report</a></li>
-                                }
-                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_ReportsShipments", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/Report/Shipments">Shipments Report</a></li>
-                                }
-                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_ReportsPickups", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/Report/Pickups">Pickup Report</a></li>
-                                }
-                                @*@if (BaseService.CheckRoleAccessability(roleID, "Menu_ReportsInvoices", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/Cash/InvoiceReport">Invoice Report</a></li>
-                                }*@
-                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_ReportsStock", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/Report/Stock">Stock Report</a></li>
-                                }
-                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_ReportsCouriers", connectionString: connectionString))
-                                {
-                                    <li><a href="/Report/Couriers" class="MenuNavigation Navigation">Couriers Report</a></li>
-                                }
-                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_ReportsGame", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/Report/Games">Packaging Report</a></li>
-                                }
-                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_ReportsCustomerFollowup", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/Report/CustomerFollowup">Followup Report</a></li>
-                                }
-                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_ReportsComplains", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/Report/Complains">Complains Report</a></li>
-                                }
-                            </ul>
-                        </li>
                         <li class="cursor-pointer" onclick="OpenSection('REDManagement-Ul')">
                             <a><img class="Img-Ul" src="~/dist/images/Icons/REDManagement.png" />Management</a>
                             <ul id="REDManagement-Ul" class="d-none Nested-sidebar-menu">
@@ -116,7 +75,7 @@
                                 }
                                 @if (BaseService.CheckRoleAccessability(roleID, "Menu_Vendors", connectionString: connectionString))
                                 {
-                                    <li><a class="MenuNavigation Navigation" href="/User/ListAccount">Vendors</a></li>
+                                    <li><a class="MenuNavigation Navigation" href="/User/ListAccount">Gamers</a></li>
                                 }
                                 @if (BaseService.CheckRoleAccessability(roleID, SystemConstants.Permission.ListRole, connectionString: connectionString))
                                 {
@@ -129,22 +88,6 @@
                                 @if (BaseService.CheckRoleAccessability(roleID, SystemConstants.Permission.CategoryList, connectionString: connectionString))
                                 {
                                     <li><a class="MenuNavigation Navigation" href="/Category/CategoryList">Category</a></li>
-                                }
-                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_Areas", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/Admin/AreaList">Areas</a></li>
-                                }
-                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_Zones", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/Admin/ZoneList">Routes</a></li>
-                                }
-                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_Branches", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/Branch/BranchList">Branches</a></li>
-                                }                          
-                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_ProblemType", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/ProblemType/ProblemTypeList">Problem Types</a></li>
                                 }
 
                             </ul>
@@ -162,7 +105,6 @@
                                 }
                             </ul>
                         </li>
-
                         @if (BaseService.CheckRoleAccessability(roleID, "Menu_Products", connectionString: connectionString))
                         {
                             <li class="cursor-pointer">
@@ -172,94 +114,16 @@
                                 </a>
                             </li>
                         }
-
-                        <li class="cursor-pointer" onclick="OpenSection('PickupManagement-Ul')">
-                            <a><img class="Img-Ul" src="~/dist/images/Icons/Pickup.png" /> Pickup Management</a>
-                            <ul id="PickupManagement-Ul" class="d-none Nested-sidebar-menu">
-                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_PickupDelivery", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/PickupRequest/Delivery">Add New Items Pickup</a></li>
-                                }
-                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_PickupStock", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/PickupRequest/Stock">Add New Stock Pickup</a></li>
-                                }
-                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_PickupList", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/PickupRequest/All">Pickup List</a></li>
-                                }
-                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_PickupAssign", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/PickupRequest/Assign">Assign Pickups</a></li>
-                                }
-                            </ul>
-                        </li>
-
-                        <li class="cursor-pointer" onclick="OpenSection('Warehouse-Packaging-Ul')">
-                            <a><img class="Img-Ul" src="~/dist/images/Icons/Warehouse-Packaging.png" /> Warehouse & Packaging</a>
-                            <ul id="Warehouse-Packaging-Ul" class="d-none Nested-sidebar-menu">
-                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_ReceiveDeliveryPickups", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/Warehouse/ReceivePickups">Receive Delivery Pickups</a></li>
-                                }
-                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_ReceiveStockPickups", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/Warehouse/ReceiveStock">Receive Stock Pickups</a></li>
-                                }
-                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_ReceiveReturns", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/Warehouse/ReceiveReturns">Receive Returns</a></li>
-                                }
-                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_WarehouseShipments", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/Warehouse/Shipments">Shipments</a></li>
-                                }
-                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_WarehouseStock", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/Warehouse/StockReport">Stock</a></li>
-                                }
-                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_CouriersShipments", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/Warehouse/Courier">Courier's Orders</a></li>
-                                }
-                            </ul>
-                        </li>
-                        <li class="cursor-pointer" onclick="OpenSection('Invoicing-CashManagement-Ul')">
-                            <a><img class="Img-Ul" src="~/dist/images/Icons/Invoicing-Cash.png" /> Invoicing & Cash</a>
-                            <ul id="Invoicing-CashManagement-Ul" class="d-none Nested-sidebar-menu">
-                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_ReceiveCash", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/Cash/Receive">Receive Cash</a></li>
-                                }
-                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_Treasury", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/Cash/Treasury">Treasury</a></li>
-                                }
-                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_TransferCash", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/Cash/Transfer">Transfer Cash</a></li>
-                                }
-                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_Invoices", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/Cash/Invoices">Invoicing</a></li>
-                                }
-                            </ul>
-                        </li>
                         @if (BaseService.CheckRoleAccessability(roleID, "Menu_Products", connectionString: connectionString))
                         {
                             <li class="cursor-pointer">
-                                <a href="/Product/ProductList" class="Navigation">
-                                    <img class="Img-Ul" src="~/dist/images/Icons/Product.png" />
-                                    Products Management
+                                <a href="/Invoice/All" class="Navigation">
+                                    <img class="Img-Ul" src="~/dist/images/Icons/Invoicing-Cash.png" />
+                                    Invoicing & Cash
                                 </a>
                             </li>
                         }
-                        @if (BaseService.CheckRoleAccessability(roleID, "Menu_Complains", connectionString: connectionString))
-                        {
-                            <li id="Complains-li" class="cursor-pointer" onclick="NavActive('Complains-li')">
-                                <a href="/Complains/ComplainsManagement" class="Navigation"><img class="Img-Ul" src="~/dist/images/Icons/ComplainsManagement.png" /> Complains Management</a>
-                            </li>
-                        }
+                       
                         <li style="padding-top: 100%;"><a href="~/User/Logout"><img class="Img-Ul" src="~/dist/images/Icons/Logout.png" /> Logout</a></li>
                     </ul>
                 </li>

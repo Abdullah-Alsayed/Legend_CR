@@ -617,6 +617,53 @@ namespace DicomApp.BL.Services
             return response;
         }
 
+        public static GamerServiceResponse GetGamerServicesIds(GamerServiceRequest request)
+        {
+            var response = new GamerServiceResponse();
+            RunBase(
+                request,
+                response,
+                (GamerServiceRequest req) =>
+                {
+                    {
+                        try
+                        {
+                            IQueryable<GamerService> ship;
+                            ship = request.context.GamerService.Where(s => !s.IsDeleted);
+
+                            if (request.applyFilter)
+                                ship = ApplyFilter(
+                                    ship,
+                                    request.ServiceDTO,
+                                    req.RoleID,
+                                    req.UserID
+                                );
+
+                            ship = OrderByDynamic(ship, nameof(GamerService.RefId), request.IsDesc);
+
+                            var query = ship.Select(s => new SelectOptionDTO
+                            {
+                                Key = s.RefId,
+                                Value = s.GamerServiceId,
+                            });
+                            response.SelectOption = query.ToList();
+                            response.Message = HttpStatusCode.OK.ToString();
+                            response.Success = true;
+                            response.StatusCode = HttpStatusCode.OK;
+                        }
+                        catch (Exception ex)
+                        {
+                            response.Message = ex.Message;
+                            response.Success = false;
+                            LogHelper.LogException(ex.Message, ex.StackTrace);
+                        }
+                        return response;
+                    }
+                }
+            );
+            return response;
+        }
+
         #endregion
 
         #region Filters

@@ -43,12 +43,12 @@ namespace DicomApp.Portal.Controllers
                 model.GamerId = request.UserID;
 
             var response = BL.Services.GamerServiceService.AddGamerService(request);
-            request.PageIndex = 0;
-            request.PageSize = BaseHelper.Constants.PageSize;
-            request.IsDesc = true;
-            request.OrderByColumn = nameof(GamerService.CreatedAt);
-            var Getresponse = BL.Services.GamerServiceService.GetAllGamerServices(request);
-            return PartialView("_All", Getresponse.ServiceDTOs);
+            //request.PageIndex = 0;
+            //request.PageSize = BaseHelper.Constants.PageSize;
+            //request.IsDesc = true;
+            //request.OrderByColumn = nameof(GamerService.CreatedAt);
+            //var Getresponse = BL.Services.GamerServiceService.GetAllGamerServices(request);
+            return Json(response);
         }
 
         [AuthorizePerRole(SystemConstants.Permission.AddGamerService)]

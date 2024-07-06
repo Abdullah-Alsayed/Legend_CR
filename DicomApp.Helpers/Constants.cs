@@ -45,6 +45,9 @@ namespace DicomApp.Helpers
             public const string EditBasicGamerService = "EditBasicGameService";
             public const string PrintGamerService = "PrintGamerService";
             public const string ListGamerService = "ListGamerService";
+
+            //Invoice
+            public const string ListInvoice = "ListInvoice";
         }
 
         public static class ActionType

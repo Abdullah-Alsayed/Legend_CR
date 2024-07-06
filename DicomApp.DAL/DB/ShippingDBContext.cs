@@ -44,6 +44,7 @@ namespace DicomApp.DAL.DB
         public virtual DbSet<Zone> Zone { get; set; }
         public virtual DbSet<ZoneTax> ZoneTax { get; set; }
         public virtual DbSet<AdvertisementPhotos> AdvertisementPhotos { get; set; }
+        public virtual DbSet<Invoice> Invoices { get; set; }
 
         //        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //        {

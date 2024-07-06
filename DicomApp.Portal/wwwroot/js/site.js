@@ -1,4 +1,6 @@
-﻿let PageIndex = 0;
+﻿//const { event } = require("jquery");
+
+let PageIndex = 0;
 
 //Sort Clint-Side
 function ResetTdSort() {
@@ -664,9 +666,13 @@ function AddEntity(ControllerName, ActionName, FormID) {
                     ResetForm(FormID);
                     if (ControllerName == "GamerService" && ActionName == "Add")
                     {
-                        $(`#Table`).html(result);
-                        $("#Shipment-Filter-Ul li").removeClass("Active");
-                        $(`#All`).addClass(("Active"));
+                        //$(`#Table`).html(result);
+                        //$("#Shipment-Filter-Ul li").removeClass("Active");
+                        //$(`#All`).addClass(("Active"));
+
+                        $('#AddService-Model').modal('hide');
+                        $(".modal-backdrop").remove();
+                        MenuNavigation(event, "All", ControllerName);
                     }
                      else
                         $(`tbody`).prepend(result);
@@ -2318,6 +2324,36 @@ function GetAreasList(id) {
     $(`#AssignZone-Input`).val(id);
 }
 
+function ChangeInvoiceType(event) {
+    $.ajax({
+        url: `/invoice/GetItemIds`,
+        type: "GET",
+        data: { invoiceType: event.target.value },
+        success: function (result) {
+            $(`#ItemList`).removeAttr("disabled");
+            if (result) {
+                // Clear the existing options
+                result.forEach(function (item) {
+                    const option = `<option value="${item.value}">${item.key}</option>`;
+                    $(`#ItemList`).append(option);
+                });
+            }
+            else {
+                $(`#ItemList`).html('<option value="">--- Invoice Type ---</option>');
+            }
+        },
+        error: function () {
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'error',
+                showConfirmButton: false,
+                timer: 5000
+            });
+        }
+    });
+}
+
 function AssignArea() {
     var Description = "";
     let AreaList = $("#Areas-Modal input:checkbox:checked").map(function () {
@@ -2395,5 +2431,6 @@ function alertError(title = 'Failed, try again', timer = 3000) {
         timer: timer
     });
 }
+
 
 function showConfirmationDialog(n, t, i) { $("#modal-dialog-confirmation-messageTitle").text(n); $("#modal-dialog-confirmation-messageText").html(t); $("#modal-dialog-confirmation-aConfirm").unbind("click"); $("#modal-dialog-confirmation-aConfirm").click(function () { $("#modal-dialog-confirmation").modal("hide"); i() }); $("#modal-dialog-confirmation").modal("show") } $(document).ready(function () { $(".date-popup").datepicker({ keyboardNavigation: !1, forceParse: !1, todayHighlight: !0 }) });

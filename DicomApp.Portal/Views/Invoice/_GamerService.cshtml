@@ -1,0 +1,47 @@
+﻿@using DicomApp.CommonDefinitions.DTO
+@using DicomApp.DAL.DB
+@using DicomApp.Helpers
+@model List<InvoiceDTO>
+<thead>
+    <tr>
+        <th class="Sort-Column text-center">Code</th>
+        <th class="Sort-Column text-center">Price</th>
+        <th class="Sort-Column text-center">Refund</th>
+        <th class="Sort-Column text-center">Invoice Type</th>
+        <th class="Sort-Column text-center">Service Type</th>
+        <th class="Sort-Column text-center">Date</th>
+    </tr>
+</thead>
+<tbody id="TableBody">
+    @if (Model != null && Model.Count > 0)
+    {
+        foreach (var inv in Model)
+        {
+            <tr id="TableRow_@inv.InvoiceId">
+                <td class="td-small text-center text-nowrap pl-1 pr-1"><b>@inv.RefId</b></td>
+                <td class="td-small text-center text-nowrap pl-1 pr-1">@inv.Price EGP</td>
+                <td class="td-small text-center pl-1 pr-1">@inv.IsRefund</td>
+                <td class="td-small text-center pl-1 pr-1">@inv.InvoiceType</td>
+                <td class="td-small text-center pl-1 pr-1">@inv.GamerService.GameServiceType</td>
+                <td class="td-small text-center text-nowrap pl-1 pr-1 Date-Table">@inv.CreatedAt.ToString("dd MMM yyyy")</td>
+            </tr>
+        }
+    }
+    else
+    {
+        <tr>
+            <td colspan="13" class="text-danger text-center"><h3>No data available in table</h3></td>
+        </tr>
+    }
+</tbody>
+<tfoot>
+    <tr>
+        <td colspan="13">
+            @{
+                await Html.RenderPartialAsync("_Pagination", new OptionDTO { Action = "All", Controller = "Invoice", Count = Model.Count, StatusType = (int)InvoiceTypeEnum.GamerService });
+            }
+        </td>
+    </tr>
+</tfoot>
+<input type="hidden" value="@Model.Count" id="DataCount" />
+

@@ -6,10 +6,9 @@ using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
 
 namespace DicomApp.CommonDefinitions.Responses
 {
-    public class GamerServiceResponse : BaseResponse
+    public class InvoiceResponse : BaseResponse
     {
-        public ServiceDTO ServiceDTO { get; set; }
-        public List<ServiceDTO> ServiceDTOs { get; set; }
-        public List<SelectOptionDTO> SelectOption { get; set; }
+        public InvoiceDTO InvoiceDTO { get; set; }
+        public List<InvoiceDTO> InvoiceDTOs { get; set; }
     }
 }

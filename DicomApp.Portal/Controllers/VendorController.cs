@@ -101,69 +101,69 @@ namespace DicomApp.Portal.Controllers
                 );
         }
 
-        [AuthorizePerRole("Vendor_ReportsInvoices")]
-        public ActionResult InvoiceReport(
-            DateTime? From,
-            DateTime? To,
-            int VendorId,
-            string Search,
-            int PageIndex,
-            string ActionType
-        )
-        {
-            ViewModel<InvoiceDTO> ViewData = new ViewModel<InvoiceDTO>();
+        //[AuthorizePerRole("Vendor_ReportsInvoices")]
+        //public ActionResult InvoiceReport(
+        //    DateTime? From,
+        //    DateTime? To,
+        //    int VendorId,
+        //    string Search,
+        //    int PageIndex,
+        //    string ActionType
+        //)
+        //{
+        //    ViewModel<InvoiceDTO> ViewData = new ViewModel<InvoiceDTO>();
 
-            CashTransferDTO filter = new CashTransferDTO();
-            filter.Search = Search;
-            filter.IsDeleted = false;
-            filter.VendorId = VendorId;
+        //    CashTransferDTO filter = new CashTransferDTO();
+        //    filter.Search = Search;
+        //    filter.IsDeleted = false;
+        //    filter.VendorId = VendorId;
 
-            if (From.HasValue)
-                filter.DateFrom = From.Value;
+        //    if (From.HasValue)
+        //        filter.DateFrom = From.Value;
 
-            if (To.HasValue)
-                filter.DateTo = To.Value;
+        //    if (To.HasValue)
+        //        filter.DateTo = To.Value;
 
-            var request = new CashTransferRequest
-            {
-                context = _context,
-                RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
-                UserID = AuthHelper.GetClaimValue(User, "UserID"),
-                PageIndex = PageIndex,
-                PageSize = BaseHelper.Constants.PageSize,
-                CashTransferDTO = filter
-            };
+        //    var request = new CashTransferRequest
+        //    {
+        //        context = _context,
+        //        RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
+        //        UserID = AuthHelper.GetClaimValue(User, "UserID"),
+        //        PageIndex = PageIndex,
+        //        PageSize = BaseHelper.Constants.PageSize,
+        //        CashTransferDTO = filter
+        //    };
 
-            var response = CashTransferService.GetAllCashTransfers(request);
+        //    var response = CashTransferService.GetAllCashTransfers(request);
 
-            ViewData.ObjDTO = response.InvoiceDTO;
+        //    ViewData.ObjDTO = response.InvoiceDTO;
 
-            if (
-                ActionType != SystemConstants.ActionType.Table
-                && ActionType != SystemConstants.ActionType.Print
-            )
-            {
-                ViewData.Lookup = BaseHelper.GetLookup(
-                    new List<byte> { (byte)EnumSelectListType.Vendor, },
-                    _context
-                );
-            }
+        //    if (
+        //        ActionType != SystemConstants.ActionType.Table
+        //        && ActionType != SystemConstants.ActionType.Print
+        //    )
+        //    {
+        //        ViewData.Lookup = BaseHelper.GetLookup(
+        //            new List<byte> { (byte)EnumSelectListType.Vendor, },
+        //            _context
+        //        );
+        //    }
 
-            if (ActionType == SystemConstants.ActionType.PartialView)
-                return PartialView("/Views/Vendor/Reports/Invoice/_InvoiceReport.cshtml", ViewData);
-            else if (ActionType == SystemConstants.ActionType.Table)
-                return PartialView(
-                    "/Views/Vendor/Reports/Invoice/_InvoiceReportTable.cshtml",
-                    ViewData.ObjDTO
-                );
-            else if (ActionType == SystemConstants.ActionType.Print)
-                return BaseHelper.GeneratePDF<InvoiceDTO>(
-                    "/Views/Vendor/Reports/Invoice/InvoiceReportPDF.cshtml",
-                    ViewData.ObjDTO
-                );
-            else
-                return View("/Views/Vendor/Reports/Invoice/InvoiceReport.cshtml", ViewData);
-        }
+        //    if (ActionType == SystemConstants.ActionType.PartialView)
+        //        return PartialView("/Views/Vendor/Reports/Invoice/_InvoiceReport.cshtml", ViewData);
+        //    else if (ActionType == SystemConstants.ActionType.Table)
+        //        return PartialView(
+        //            "/Views/Vendor/Reports/Invoice/_InvoiceReportTable.cshtml",
+        //            ViewData.ObjDTO
+        //        );
+        //    else if (ActionType == SystemConstants.ActionType.Print)
+        //        return BaseHelper.GeneratePDF<InvoiceDTO>(
+        //            "/Views/Vendor/Reports/Invoice/InvoiceReportPDF.cshtml",
+        //            ViewData.ObjDTO
+        //        );
+        //    else
+        //        return View("/Views/Vendor/Reports/Invoice/InvoiceReport.cshtml", ViewData);
+        //}
 
         [AuthorizePerRole("Vendor_ReportsStock")]
         public IActionResult StockReport(

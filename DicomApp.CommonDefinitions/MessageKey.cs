@@ -120,7 +120,9 @@
         Level,
         Price,
         ServiceType,
-        GameServiceType
+        GameServiceType,
+        AcceptAdvertisement,
+        AcceptGamerService
     }
 
     public enum EnumVendorActionName : byte

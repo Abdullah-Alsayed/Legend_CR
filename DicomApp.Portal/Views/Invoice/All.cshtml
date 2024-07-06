@@ -1,0 +1,104 @@
+﻿@using DicomApp.CommonDefinitions.DTO
+@using DicomApp.DAL.DB
+@model ViewModel<InvoiceDTO>
+
+<main>
+    <div class="container-fluid site-width">
+        <div class="row Red-Row">
+            <div class="col-12 col-lg-12 col-xl-12 col-sm-12">
+                <div class="sub-header py-5 d-flex">
+                    <div>
+                        <span class="Header-Titel">Invoice List</span>
+                    </div>
+                    <div class="Shipment-Filter">
+                        <ul id="Shipment-Filter-Ul">
+                            <li id="Advertisement-InvoiceType" class="Active" data-status="@((int)InvoiceTypeEnum.Advertisement)"> <a onclick="FilterByStatus('All','Invoice','Advertisement-InvoiceType',@((int)InvoiceTypeEnum.Advertisement))" href="javascript:;">Advertisement</a></li>
+                            <li id="GamerService-InvoiceType" data-status="@((int)InvoiceTypeEnum.GamerService)"> <a onclick="FilterByStatus('All','Invoice','GamerService-InvoiceType', @((int)InvoiceTypeEnum.GamerService))" href="javascript:;">Service</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="Shipment-container">
+        <div class="row Red-Row">
+            @{
+                await Html.RenderPartialAsync("_ToolsRow", new OptionDTO
+            {
+                Action = "All",
+                Controller = "Invoice",
+                Columns = 6,
+                Lookup = Model.Lookup,
+                SelectListType = new byte[]
+            {
+            (byte)EnumSelectListType.Price,
+            },
+            });
+            }
+            <div class="row Red-Row w-100">
+                <div class="col-lg-12 RedBtn-Section">
+                    <a href="#" data-toggle="modal" data-target="#AddInvoice-Model" class="Red-Btn"><img class="mr-2 w-20" src="~/dist/images/Icons/Invoicing-Cash.png" />Receive Cash</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <span id="Ajaxloader" class="Ajaxloader d-none"></span>
+    </div>
+    <div class="Table-container">
+        <table class="table" id="Table">
+            <partial name="_Advertisement" model="@Model.ObjDTOs" />
+        </table>
+    </div>
+
+    <!-- Add New Invoice Model -->
+    <div class="modal fade" id="AddInvoice-Model" tabindex="-1" role="dialog" aria-labelledby="AddInvoiceLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div>
+                    <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h2 class="Model-Titel">Add New Invoice</h2>
+                    <form asp-action="Add" asp-controller="Invoice" class="needs-validation" enctype="multipart/form-data" id="AddInvoice-Form">
+                        <div class="container-fluid">
+                            <div class="row pt-1">
+                                <div class="col-lg-6 pt-3">
+                                    <label class="Label-Model">Invoice Type</label>
+                                    <select class="form-control" required id="InvoiceType" name="InvoiceType" onchange="ChangeInvoiceType(event)">
+                                        <option value="">--- Invoice Type ---</option>
+                                        <option value="@((int)InvoiceTypeEnum.Advertisement)">Advertisement</option>
+                                        <option value="@((int)InvoiceTypeEnum.GamerService)">Service</option>
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        Please enter Invoice Type
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6 pt-3">
+                                    <label class="Label-Model"> Item</label>
+                                    <select class="form-control" disabled required id="ItemList" name="ItemList">
+                                        <option value="">--- Select ---</option>
+                                    </select>                               
+                                    <div class="invalid-feedback">
+                                        Please Select Item
+                                    </div>
+                                </div>
+                              
+                                <div class="col-lg-12">
+                                    <button class="Red-Btn-OutLine OutLine-Red Btn-Model" onclick="AddEntity('Invoice','Add','AddInvoice-Form')" type="button" id="BtnSend">
+                                        Add Invoice
+                                        <span class="Spinner spinner-border spinner-border-sm ml-2 mb-1 d-none" role="status" aria-hidden="true"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- START: Card Data-->
+</main>

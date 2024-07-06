@@ -343,7 +343,6 @@ namespace DicomApp.Portal.Controllers
             int PageIndex,
             DateTime? From,
             DateTime? To,
-            int ZoneId,
             int StatusType,
             int GamerId,
             int GameId,
