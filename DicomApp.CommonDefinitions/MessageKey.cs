@@ -226,7 +226,8 @@
         Shipment_Refund,
         Account_Transaction,
         Cash_Transfer,
-        GamerService
+        GamerService,
+        Invoice
     }
 
     public enum EnumProblemType : int

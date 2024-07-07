@@ -58,9 +58,7 @@ function NextPage(ControllerName, ActionName, Filter) {
         url: `/${ControllerName}/${ActionName}?ActionType=Table&StatusId=${Filter}&PageIndex=${Page}`,
         type: "GET",
         success: function (result) {
-            if (
-                (ControllerName == "PickUpRequest" && ActionName == "All")
-                || (ControllerName == "Advertisement" && ActionName == "All") || (ControllerName == "GamerService" && ActionName == "All")) {
+            if (ActionName == "All") {
                 $("#Table").html(result);
             }
             else {
@@ -96,9 +94,7 @@ function PreviousPage(ControllerName, ActionName, Filter) {
         url: `/${ControllerName}/${ActionName}?ActionType=Table&StatusId=${Filter}&PageIndex=${Page}`,
         type: "GET",
         success: function (result) {
-            if (
-                (ControllerName == "PickUpRequest" && ActionName == "All")
-                || (ControllerName == "Advertisement" && ActionName == "All") || (ControllerName == "GamerService" && ActionName == "All")) {
+            if (ActionName == "All") {
                 $("#Table").html(result);
             }
             else {
@@ -123,9 +119,7 @@ function Filter(ActionName, ControllerName) {
         type: "GET",
         contentType: "application/json; charset=utf-8",
         success: function (result) {
-            if (
-                 (ControllerName == "PickUpRequest" && ActionName == "All")
-                || (ControllerName == "Advertisement" && ActionName == "All") || (ControllerName == "GamerService" && ActionName == "All")) {
+            if  (ActionName == "All") {
                 $("#Table").html(result);
             }
             else {
@@ -152,9 +146,7 @@ function FilterByStatus(ActionName, ControllerName, ID, Filter) {
         url: `/${ControllerName}/${ActionName}?ActionType=Table&Search=${Search}&StatusType=${Filter}`,
         type: "GET",
         success: function (result) {
-            if (
-                (ControllerName == "PickUpRequest" && ActionName == "All")
-                || (ControllerName == "Advertisement" && ActionName == "All") || (ControllerName == "GamerService" && ActionName == "All")) {
+            if  (ActionName == "All") {
                 $("#Table").html(result);
             }
             else {
@@ -222,10 +214,7 @@ function SortColumn(Td, SortByCoulmn, ControllerName, ActionName) {
         url: Url,
         type: "GET",
         success: function (result) {
-            if ((ControllerName == "Warehouse" && ActionName == "Shipments")
-                || (ControllerName == "Warehouse" && ActionName == "Courier")
-                || (ControllerName == "PickUpRequest" && ActionName == "All")
-                || (ControllerName == "Advertisement" && ActionName == "All") || (ControllerName == "GamerService" && ActionName == "All")) {
+            if (ActionName == "All") {
                 $("#Table").html(result);
             }
             else {
@@ -253,10 +242,7 @@ function Search(ControllerName, ActionName) {
             url: `/${ControllerName}/${ActionName}?ActionType=Table&StatusId=${Status}&Search=${Value}`,
             type: "GET",
             success: function (result) {
-                if ((ControllerName == "Warehouse" && ActionName == "Shipments")
-                    || (ControllerName == "Warehouse" && ActionName == "Courier")
-                    || (ControllerName == "PickUpRequest" && ActionName == "All")
-                    || (ControllerName == "Advertisement" && ActionName == "All") || (ControllerName == "GamerService" && ActionName == "All")) {
+                if (ActionName == "All") {
                     $("#Table").html(result);
                 }
                 else {
@@ -513,40 +499,7 @@ function ChangeUserPassword(Id) {
     }
 }
 
-//function Changepassword() {
-//    if ($("#ChangePassword-Form").valid()) {
-//        var Password = $("#ChangePassword-Form #Password").val();
-//        var NewPassword = $("#NewPassword").val();
-//        var ConfirmNewPassword = $("#ConfirmNewPassword").val();
-//        let id = $(`#EntityId`).val();
-//        $.ajax({
-//            url: `/Vendor/ChangePassword?ConfirmNewPassword=${ConfirmNewPassword}&NewPassword=${NewPassword}&Password=${Password}&UserID=${id}`,
-//            type: "POST",
-//            success: function (result) {
-//                switch (result) {
-//                    case "Password has been changed successfully":
-//                        alertSuccess(result);
-//                        $("#Password").val("");
-//                        $("#NewPassword").val("");
-//                        $("#ConfirmNewPassword").val("");
-//                        break;
-//                    case "New password does not match":
-//                        alertError(result);
-//                        break;
-//                    case "Old password is incorrect":
-//                        alertError(result);
-//                        break;
-//                    default:
-//                }
-//            },
-//            error: function () {
-//                alert("Error")
-//            }
-//        })
-//    } else {
-//        $('#ChangePassword-Form').submit();
-//    }
-//}
+
 
 function EditInfo() {
     let Data = $("#EditUser-Form").serialize();
@@ -664,13 +617,14 @@ function AddEntity(ControllerName, ActionName, FormID) {
                 }
                 else {
                     ResetForm(FormID);
-                    if (ControllerName == "GamerService" && ActionName == "Add")
+                    if ((ControllerName == "GamerService" || ControllerName=="Invoice") && ActionName == "Add")
                     {
-                        //$(`#Table`).html(result);
-                        //$("#Shipment-Filter-Ul li").removeClass("Active");
-                        //$(`#All`).addClass(("Active"));
+                        if (ControllerName == "GamerService") 
+                          $('#AddService-Model').modal('hide');
+                       else
+                        $('#AddInvoice-Model').modal('hide');
 
-                        $('#AddService-Model').modal('hide');
+
                         $(".modal-backdrop").remove();
                         MenuNavigation(event, "All", ControllerName);
                     }
@@ -776,6 +730,8 @@ function DeleteEntity(ControllerName, ActionName, Tr, id = 0) {
     if (id == 0)
         id = $("#EntityId").val();
 
+    $(".Spinner").removeClass("d-none");
+
     $.ajax({
         type: "PUT",
         url: `/${ControllerName}/${ActionName}/?ID=${id}`,
@@ -785,8 +741,11 @@ function DeleteEntity(ControllerName, ActionName, Tr, id = 0) {
             }
             else {
                 let Count = $(`#DataCount`).val();
+                $(".Spinner").addClass("d-none");
                 $(`#DataCount-Span`).text(`Showing : ${+(--Count)}`);
                 $(`#${Tr}${id}`).fadeOut(800);
+                $(`.modal`).hide();
+                $('.modal-backdrop').remove();
                 alertSuccess(result.message);
             }
 
@@ -2330,16 +2289,17 @@ function ChangeInvoiceType(event) {
         type: "GET",
         data: { invoiceType: event.target.value },
         success: function (result) {
-            $(`#ItemList`).removeAttr("disabled");
+            $(`#ItemId`).removeAttr("disabled");
             if (result) {
                 // Clear the existing options
+                $(`#ItemId`).html('<option value="">--- Select ---</option>');
                 result.forEach(function (item) {
                     const option = `<option value="${item.value}">${item.key}</option>`;
-                    $(`#ItemList`).append(option);
+                    $(`#ItemId`).append(option);
                 });
             }
             else {
-                $(`#ItemList`).html('<option value="">--- Invoice Type ---</option>');
+                $(`#ItemId`).html('<option value="">--- Select ---</option>');
             }
         },
         error: function () {

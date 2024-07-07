@@ -57,6 +57,32 @@ namespace DicomApp.Portal.Controllers
             return Json(response);
         }
 
+        [AuthorizePerRole(SystemConstants.Permission.AddInvoice)]
+        [HttpPost]
+        public IActionResult Add(int ItemId, int InvoiceType)
+        {
+            var request = new InvoiceRequest();
+            request.context = _context;
+            request.RoleID = AuthHelper.GetClaimValue(User, "RoleID");
+            request.UserID = AuthHelper.GetClaimValue(User, "UserID");
+            request.InvoiceDTO = new InvoiceDTO { InvoiceType = InvoiceType, ItemId = ItemId };
+            var response = BL.Services.InvoiceService.AddInvoice(request);
+            return Json(response);
+        }
+
+        [AuthorizePerRole(SystemConstants.Permission.RefundInvoice)]
+        [HttpPut]
+        public IActionResult Refund(int ID)
+        {
+            var request = new InvoiceRequest();
+            request.context = _context;
+            request.RoleID = AuthHelper.GetClaimValue(User, "RoleID");
+            request.UserID = AuthHelper.GetClaimValue(User, "UserID");
+            request.InvoiceDTO = new InvoiceDTO { InvoiceId = ID };
+            var response = BL.Services.InvoiceService.RefundInvoice(request);
+            return Json(response);
+        }
+
         [AuthorizePerRole(SystemConstants.Permission.ListInvoice)]
         public IActionResult All(
             string Search,
@@ -65,7 +91,7 @@ namespace DicomApp.Portal.Controllers
             int PageIndex,
             DateTime? From,
             DateTime? To,
-            int InvoiceType,
+            int StatusType,
             int LessPrice,
             int GreeterPrice,
             string ActionType = null
@@ -74,10 +100,11 @@ namespace DicomApp.Portal.Controllers
             ViewModel<InvoiceDTO> ViewData = new ViewModel<InvoiceDTO>();
             var filter = new InvoiceDTO()
             {
-                InvoiceType = InvoiceType,
+                InvoiceType = StatusType == 0 ? (int)InvoiceTypeEnum.Advertisement : StatusType,
                 Search = Search,
                 LessPrice = LessPrice,
                 GreeterPrice = GreeterPrice,
+                IsRefund = false
             };
             if (ActionType != SystemConstants.ActionType.Table)
             {
@@ -115,7 +142,7 @@ namespace DicomApp.Portal.Controllers
                 return PartialView(ViewData);
             else if (ActionType == SystemConstants.ActionType.Table)
             {
-                switch (InvoiceType)
+                switch (StatusType)
                 {
                     case (int)InvoiceTypeEnum.Advertisement:
                         return PartialView("_Advertisement", response.InvoiceDTOs);

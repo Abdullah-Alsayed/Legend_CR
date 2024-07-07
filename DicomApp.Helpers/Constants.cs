@@ -48,6 +48,8 @@ namespace DicomApp.Helpers
 
             //Invoice
             public const string ListInvoice = "ListInvoice";
+            public const string AddInvoice = "AddInvoice";
+            public const string RefundInvoice = "RefundInvoice";
         }
 
         public static class ActionType

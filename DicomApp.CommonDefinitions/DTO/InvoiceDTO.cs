@@ -29,5 +29,6 @@ namespace DicomApp.CommonDefinitions.DTO
 
         public AdsDTO Advertisement { get; set; }
         public ServiceDTO GamerService { get; set; }
+        public int ItemId { get; set; }
     }
 }

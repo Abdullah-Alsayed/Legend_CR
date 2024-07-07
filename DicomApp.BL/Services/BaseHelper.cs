@@ -218,6 +218,8 @@ namespace DicomApp.BL.Services
                     return "RF" + ID;
                 case EnumRefIdType.GamerService:
                     return "GS" + ID;
+                case EnumRefIdType.Invoice:
+                    return "IN" + ID;
                 case EnumRefIdType.Account_Transaction:
                     return "TR"
                         + ID
