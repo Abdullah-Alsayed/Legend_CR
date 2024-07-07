@@ -246,6 +246,7 @@ namespace DicomApp.BL.Services
                                         Success = false
                                     };
                             }
+                            request.context.Invoices.Remove(invoice);
                             request.context.SaveChanges();
 
                             //Add notification
