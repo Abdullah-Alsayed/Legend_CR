@@ -445,6 +445,13 @@ namespace DicomApp.BL.Services
                 {
                     try
                     {
+                        if (request.UserDTO.NewPassword != request.UserDTO.ConfirmPassword)
+                            return new UserResponse
+                            {
+                                Message = "Password didn't match",
+                                Success = false
+                            };
+
                         var user = request.context.CommonUser.Find(request.UserDTO.Id);
                         if (user != null)
                         {

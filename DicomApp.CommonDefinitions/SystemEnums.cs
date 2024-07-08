@@ -1,6 +1,6 @@
 ﻿namespace DicomApp.CommonDefinitions.DTO
 {
-    public enum MessageKey : int
+    public enum SystemEnums : int
     {
         UserNotActive,
         InvalidUsernameOrPassword,

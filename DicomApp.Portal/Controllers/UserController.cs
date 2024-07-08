@@ -136,7 +136,7 @@ namespace DicomApp.Portal.Controllers
             return PartialView();
         }
 
-        [AuthorizePerRole("StaffList")]
+        [AuthorizePerRole(SystemConstants.Permission.ListStaff)]
         public ActionResult ListUser(
             int RoleId,
             string Search,
@@ -195,7 +195,7 @@ namespace DicomApp.Portal.Controllers
                 return View(ViewData);
         }
 
-        [AuthorizePerRole("VendorsList")]
+        [AuthorizePerRole(SystemConstants.Permission.ListGamer)]
         public ActionResult ListAccount(
             string Search,
             bool IsDesc,
@@ -248,14 +248,10 @@ namespace DicomApp.Portal.Controllers
                 return View(ViewData);
         }
 
-        [AuthorizePerRole("VendorsAdd")]
+        [AuthorizePerRole(SystemConstants.Permission.AddGamer)]
         [HttpGet]
-        public IActionResult VendorDetails(int ID = 0)
+        public IActionResult GamerDetails(int ID = 0, string ActionType = null)
         {
-            ViewBag.ZoneList = ZoneService
-                .GetZones(new ZoneRequest { context = _context })
-                .ZoneDTOs;
-
             if (ID > 0)
             {
                 var userRequest = new UserRequest
@@ -266,16 +262,23 @@ namespace DicomApp.Portal.Controllers
                     UserDTO = new UserDTO { Id = ID },
                 };
                 var userResponse = UserService.GetUser(userRequest);
-
-                return View(userResponse.UserDTO);
+                if (ActionType == SystemConstants.ActionType.PartialView)
+                    return PartialView(userResponse.UserDTO);
+                else
+                    return View();
             }
             else
-                return View();
+            {
+                if (ActionType == SystemConstants.ActionType.PartialView)
+                    return PartialView();
+                else
+                    return View();
+            }
         }
 
-        [AuthorizePerRole("VendorsAdd")]
+        [AuthorizePerRole(SystemConstants.Permission.ListStaff)]
         [HttpPost]
-        public ActionResult SaveVendor(UserDTO model)
+        public ActionResult SaveGamer(UserDTO model)
         {
             model.ImgUrl = BaseHelper.UploadImg(model.File, hosting.WebRootPath, model.ImgUrl);
 
@@ -309,7 +312,7 @@ namespace DicomApp.Portal.Controllers
             }
         }
 
-        [AuthorizePerRole("Staff")]
+        [AuthorizePerRole(SystemConstants.Permission.ListStaff)]
         public ActionResult LoadUser(
             string orderByColumn = null,
             string searchVal = null,
@@ -333,7 +336,7 @@ namespace DicomApp.Portal.Controllers
             );
         }
 
-        [AuthorizePerRole("StaffDelete")]
+        [AuthorizePerRole(SystemConstants.Permission.DeleteStaff)]
         public IActionResult DeleteUser(int ID)
         {
             var userRequest = new UserRequest
@@ -354,7 +357,7 @@ namespace DicomApp.Portal.Controllers
             return RedirectToAction("ListUser");
         }
 
-        [AuthorizePerRole("StaffAdd")]
+        [AuthorizePerRole(SystemConstants.Permission.AddStaff)]
         public ActionResult AddUser(long roleid)
         {
             GetViewBags();
@@ -362,7 +365,7 @@ namespace DicomApp.Portal.Controllers
             return View();
         }
 
-        [AuthorizePerRole("StaffAdd")]
+        [AuthorizePerRole(SystemConstants.Permission.AddStaff)]
         [HttpPost]
         public ActionResult AddUser(UserDTO model)
         {
@@ -389,7 +392,7 @@ namespace DicomApp.Portal.Controllers
             return RedirectToAction("ListUser");
         }
 
-        [AuthorizePerRole("GetUserData")]
+        [AuthorizePerRole(SystemConstants.Permission.GetUserData)]
         public IActionResult GetUserData(int Id)
         {
             var userRequest = new UserRequest
@@ -408,7 +411,7 @@ namespace DicomApp.Portal.Controllers
                 return Json(false);
         }
 
-        [AuthorizePerRole("StaffEdit")]
+        [AuthorizePerRole(SystemConstants.Permission.EditStaff)]
         public ActionResult EditUser(string ActionType = null)
         {
             var userRequest = new UserRequest
@@ -435,7 +438,7 @@ namespace DicomApp.Portal.Controllers
                 return View();
         }
 
-        [AuthorizePerRole("StaffEdit")]
+        [AuthorizePerRole(SystemConstants.Permission.EditStaff)]
         [HttpPost]
         public ActionResult EditUser(UserDTO model)
         {
@@ -504,30 +507,24 @@ namespace DicomApp.Portal.Controllers
         }
 
         [HttpPost]
-        public IActionResult ChangePassword(UserDTO model)
+        public IActionResult ChangePassword(string confirmPass, string newPass, int id)
         {
-            if (model.NewPassword != model.ConfirmPassword)
-            {
-                TempData["ErrorMsg"] = "Password didn't match";
-                return RedirectToAction("ListUser");
-            }
-
             var userRequest = new UserRequest
             {
                 RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
                 UserID = AuthHelper.GetClaimValue(User, "UserID"),
                 context = _context,
-                UserDTO = model,
+                UserDTO = new UserDTO
+                {
+                    Id = id,
+                    ConfirmPassword = confirmPass,
+                    NewPassword = newPass
+                },
             };
 
             var userResponse = UserService.ChangePassword(userRequest);
 
-            if (userResponse.Success)
-                TempData["SuccessMsg"] = userResponse.Message;
-            else
-                TempData["ErrorMsg"] = userResponse.Message;
-
-            return RedirectToAction("ListUser");
+            return Json(userResponse);
         }
 
         [AllowAnonymous]

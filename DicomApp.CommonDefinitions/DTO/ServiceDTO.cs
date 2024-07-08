@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using DicomApp.DAL.DB;
 
 namespace DicomApp.CommonDefinitions.DTO

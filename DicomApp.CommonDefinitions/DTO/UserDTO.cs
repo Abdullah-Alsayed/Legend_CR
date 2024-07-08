@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
+using DicomApp.DAL.DB;
 using Microsoft.AspNetCore.Http;
 
 namespace DicomApp.CommonDefinitions.DTO
@@ -47,6 +48,10 @@ namespace DicomApp.CommonDefinitions.DTO
         [RegularExpression(@"\d{10,15}$", ErrorMessage = "Not a valid phone number 10-15 digits")]
         public string PhoneNumber { get; set; }
 
+        public string TelegramUserName { get; set; }
+        public int? CountryId { get; set; }
+        public int Age { get; set; }
+        public GenderEnum Gender { get; set; }
         public bool IsLoggedIn { get; set; }
 
         [Required(ErrorMessage = "Required")]

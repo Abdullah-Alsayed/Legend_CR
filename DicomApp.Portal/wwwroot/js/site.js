@@ -1,8 +1,5 @@
-﻿//const { event } = require("jquery");
-
+﻿
 let PageIndex = 0;
-
-//Sort Clint-Side
 function ResetTdSort() {
     $(`.Sort-Column`).css("color", "#EEF0F4");
 }
@@ -480,6 +477,7 @@ function Category(ID) {
 
 
 function ChangeUserPassword(Id) {
+    $(".Spinner").removeClass("d-none");
     var NewPassword = $(`#NewPassword_${Id}`).val();
     var ConfirmNewPassword = $(`#ConfirmPassword_${Id}`).val();
     if (NewPassword != ConfirmNewPassword) {
@@ -487,10 +485,17 @@ function ChangeUserPassword(Id) {
     }
     else {
         $.ajax({
-            url: `/User/ChangePassword?u=${Id}&newPass=${NewPassword}&confirmPass=${ConfirmNewPassword}`,
+            url: `/User/ChangePassword?id=${Id}&newPass=${NewPassword}&confirmPass=${ConfirmNewPassword}`,
             type: "POST",
             success: function (result) {
-                
+                $(".Spinner").addClass("d-none");
+                $(".modal").hide();
+                $(".modal-backdrop").remove();
+                if (result.success) 
+                alertSuccess(result.message);
+                else
+                    alertError(result.message);
+
             },
             error: function () {
                 alert("Error")
@@ -686,45 +691,6 @@ function EditEntity(ControllerName, ActionName, FormID, Tr) {
         $(`#${FormID}`).submit();
     }
 }
-
-//function EditEntity(ControllerName, ActionName, FormID, Tr) {
-//    if ($(`#${FormID}`).valid()) {
-//        $(`${FormID} #BtnSend`).prop('disabled', true);
-//        $(".Spinner").removeClass("d-none");
-//        let formData = $(`#${FormID}`).serializeArray();
-//        $.ajax({
-//            url: `/${ControllerName}/${ActionName}`,
-//            type: 'POST',
-//            data: formData,
-//            success: function (result) {
-//                if (result.success == false) {
-//                    alertError();
-//                    $(`${FormID} #BtnSend`).prop('disabled', false);
-//                    $(".Spinner").addClass("d-none");
-//                }
-//                else {
-//                    alertSuccess(result.message);
-//                    for (let ProblemType of formData)
-//                        if (ProblemType.name == "Type")
-//                            $(`#${Tr} #${ProblemType.name}`).text(ProblemType.value == 0 ? 'Problem' : 'Reason');
-//                        else
-//                            $(`#${Tr} #${ProblemType.name}`).text(ProblemType.value);
-
-//                    $(`${FormID} #BtnSend`).prop('disabled', false);
-//                    $(".Spinner").addClass("d-none");
-//                }
-
-//            },
-//            error: function (error) {
-//                alertError();
-//                $("#BtnSend").prop('disabled', false);
-//            }
-//        })
-//    }
-//    else {
-//        $(`#${FormID}`).submit();
-//    }
-//}
 
 function DeleteEntity(ControllerName, ActionName, Tr, id = 0) {
     if (id == 0)

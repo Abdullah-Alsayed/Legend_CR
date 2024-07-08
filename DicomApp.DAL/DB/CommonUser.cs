@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Reflection;
 
 namespace DicomApp.DAL.DB
 {
@@ -47,6 +48,10 @@ namespace DicomApp.DAL.DB
         public int RoleId { get; set; }
         public string PhoneNumber { get; set; }
         public bool IsLoggedIn { get; set; }
+        public string TelegramUserName { get; set; }
+        public int? CountryId { get; set; }
+        public int Age { get; set; }
+        public GenderEnum Gender { get; set; }
 
         [Required(AllowEmptyStrings = true)]
         public string NationalId { get; set; }

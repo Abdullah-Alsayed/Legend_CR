@@ -50,6 +50,15 @@ namespace DicomApp.Helpers
             public const string ListInvoice = "ListInvoice";
             public const string AddInvoice = "AddInvoice";
             public const string RefundInvoice = "RefundInvoice";
+
+            //User
+            public const string ListStaff = "ListStaff";
+            public const string ListGamer = "ListGamer";
+            public const string AddGamer = "AddGamer";
+            public const string DeleteStaff = "DeleteStaff";
+            public const string AddStaff = "AddStaff";
+            public const string GetUserData = "GetUserData";
+            public const string EditStaff = "EditStaff";
         }
 
         public static class ActionType

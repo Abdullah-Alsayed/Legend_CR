@@ -114,11 +114,11 @@ File: Main Style
     --headerbackground: #fff;
     --headercolor: #292b3a;
     --searchcolor: #292b3a;
-    --primarycolor: #1e3d73;
+    --primarycolor: #0077e4;
     --bodycolor: #fff;
     --bodybackground: #161B21;
     --bordercolor: rgba(72, 94, 144, 0.16);
-    --mainbackground: #fff;
+    --mainbackground: #161b21;
     --secondary: #6c757d;
     --success: #1ee0ac;
     --info: #17a2b8;
@@ -219,11 +219,14 @@ File: Main Style
     --bodycolor: #fff;
     --bodybackground: #19606F;
     --bordercolor: rgba(255, 255, 255, 0.2);
-    --mainbackground: rgba(0,0,0,0.2);
+    --mainbackground: #161b21;
     --secondary: #fff;
     --dark: #fff;
 }
 
+body{
+    overflow : hidden;
+}
 /* Top Header */
 .hide-sidebar #header-fix {
     left: 0px;

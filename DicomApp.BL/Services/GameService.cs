@@ -303,13 +303,13 @@ namespace DicomApp.BL.Services
                                     CreatedBy = game.CreatedBy,
                                 }
                             };
-                            res.Message = MessageKey.DeletedSuccessfully.ToString();
+                            res.Message = SystemEnums.DeletedSuccessfully.ToString();
                             res.Success = true;
                             res.StatusCode = HttpStatusCode.OK;
                         }
                         else
                         {
-                            res.Message = MessageKey.InvalidData.ToString();
+                            res.Message = SystemEnums.InvalidData.ToString();
                             res.Success = false;
                         }
                     }
