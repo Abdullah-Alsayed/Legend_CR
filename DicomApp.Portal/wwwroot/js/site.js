@@ -505,6 +505,44 @@ function ChangeUserPassword(Id) {
 }
 
 
+function GamerForm()
+{
+    $(".Spinner").removeClass("d-none");
+    var id = $('#Id').val();
+    let formData = new FormData($(`#Gamer-Form`)[0]);
+  
+    let files = $(`#Gamer-Form input[type='file']`)[0].files;
+    for (let i = 0; i < files.length; i++) {
+        formData.append('files', files[i]);
+    }
+
+        $.ajax({
+            url: `/User/SaveGamer`,
+            type: "POST",
+            data: formData,
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            processData: false, 
+            contentType: false, 
+            dataType: 'json',
+            success: function (result) {
+                $(".Spinner").addClass("d-none");
+                if (result.success)
+                {
+                    alertSuccess(result.message);
+                    MenuNavigation(event, 'ListGamer', 'User');
+                }
+                else
+                    alertError(result.message);
+
+            },
+            error: function () {
+                $(".Spinner").addClass("d-none");
+                alert("Error")
+            }
+        });   
+}
+
+
 
 function EditInfo() {
     let Data = $("#EditUser-Form").serialize();

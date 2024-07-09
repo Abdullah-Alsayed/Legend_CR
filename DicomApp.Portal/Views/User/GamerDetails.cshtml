@@ -6,17 +6,16 @@
 
 <main>
     <form id="Gamer-Form" asp-action="SaveGamer" asp-controller="User" method="post" class="needs-validation" novalidate>
-        <input type="hidden" asp-for="Id">
+        <input type="hidden" asp-for="Id" value="@(Model != null ? Model.Id : 0)">
         <div class="container-fluid site-width">
             <div class="Shipment-container">
                 <div class="row Red-Row">
                     <div class="col-lg-4">
                         <h6 class="my-4 ml-2 font-w-500">Gamers Details</h6>
                         <div class="Shipment-Details-Section">
-
                             <div class="col-lg-12 mt-2 mb-2">
                                 <label class="Shipment-Details-label mb-2">Name</label>
-                                <input class="form-control" type="text" asp-for="Name" placeholder="Gamer Name" required>
+                                <input class="form-control" type="text" asp-for="Name" placeholder="Name" required>
                                 <div class="invalid-feedback">
                                     Please enter Gamer Name
                                 </div>
@@ -44,6 +43,10 @@
                                 </div>
                             </div>
                             <div class="col-lg-12 mt-2 mb-2">
+                                <label class="Shipment-Details-label mb-2">Country</label>
+                                <input class="form-control" type="number" asp-for="CountryId" placeholder="Country">
+                            </div>
+                            <div class="col-lg-6 mt-2 mb-2">
                                 <label class="Shipment-Details-label mb-2">Age</label>
                                 <input class="form-control" type="text" asp-for="Age" placeholder="Age">
                             </div>
@@ -51,10 +54,7 @@
                                 <label class="Shipment-Details-label mb-2">Gender</label>
                                 <input class="form-control" type="number" asp-for="Gender" placeholder="Gender">
                             </div>
-                            <div class="col-lg-6 mt-2 mb-2">
-                                <label class="Shipment-Details-label mb-2">Country</label>
-                                <input class="form-control" type="number" asp-for="CountryId" placeholder="Country">
-                            </div>
+
 
                         </div>
                     </div>
@@ -106,7 +106,7 @@
                 </div>
                 <div class="row Red-Row">
                     <div class="col-lg-12 col-12 ml-3 Buttons-Submit-Section">
-                        <button type="submit" id="BtnSend" class="Red-Btn">
+                        <button type="button" onclick="GamerForm()" id="BtnSend" class="Red-Btn">
                             <img class="mr-2" src="~/dist/images/Icons/Shipped.png" />Confirm
                             <span class="Spinner spinner-border spinner-border-sm ml-2 mb-1 d-none" role="status" aria-hidden="true"></span>
                         </button>

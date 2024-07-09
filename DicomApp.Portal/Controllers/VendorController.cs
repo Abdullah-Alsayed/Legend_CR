@@ -580,7 +580,7 @@ namespace DicomApp.Portal.Controllers
         //    {
         //        TempData["SuccessMsg"] = userResponse.Message;
         //        if (model.RoleID == (long)RoleType.Vendor)
-        //            return RedirectToAction("ListAccount");
+        //            return RedirectToAction("ListGamer");
         //        else
         //            return RedirectToAction("ListUser");
         //    }

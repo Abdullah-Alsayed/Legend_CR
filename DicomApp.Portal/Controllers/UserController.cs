@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
@@ -26,12 +28,18 @@ namespace DicomApp.Portal.Controllers
     public class UserController : Controller
     {
         private readonly ShippingDBContext _context;
+        private readonly AvatarService _avatarService;
         private readonly IHostingEnvironment hosting;
 
-        public UserController(ShippingDBContext context, IHostingEnvironment hosting)
+        public UserController(
+            ShippingDBContext context,
+            IHostingEnvironment hosting,
+            AvatarService avatarService
+        )
         {
             _context = context;
             this.hosting = hosting;
+            _avatarService = avatarService;
         }
 
         private void GetViewBags()
@@ -196,10 +204,10 @@ namespace DicomApp.Portal.Controllers
         }
 
         [AuthorizePerRole(SystemConstants.Permission.ListGamer)]
-        public ActionResult ListAccount(
+        public ActionResult ListGamer(
             string Search,
             bool IsDesc,
-            int VendorID,
+            int GamerID,
             int PageIndex,
             string ActionType = null
         )
@@ -209,7 +217,7 @@ namespace DicomApp.Portal.Controllers
             ViewData.Lookup = BaseHelper.GetLookup(
                 new List<byte>
                 {
-                    (byte)EnumSelectListType.Vendor,
+                    (byte)EnumSelectListType.Gamer,
                     (byte)EnumSelectListType.Zone,
                     (byte)EnumSelectListType.Area
                 },
@@ -224,9 +232,9 @@ namespace DicomApp.Portal.Controllers
                 UserID = AuthHelper.GetClaimValue(User, "UserID"),
                 UserDTO = new UserDTO()
                 {
-                    RoleID = (int)EnumRole.Gamer,
+                    RoleName = SystemConstants.Role.Gamer,
                     Search = Search,
-                    Id = VendorID
+                    Id = GamerID
                 },
                 PageIndex = PageIndex,
                 IsDesc = IsDesc,
@@ -238,7 +246,7 @@ namespace DicomApp.Portal.Controllers
             if (ActionType == SystemConstants.ActionType.PartialView)
                 return PartialView(ViewData);
             else if (ActionType == SystemConstants.ActionType.Table)
-                return PartialView("_ListAccount", userResponse.UserDTOs);
+                return PartialView("_ListGamer", userResponse.UserDTOs);
             else if (ActionType == SystemConstants.ActionType.Print)
                 return BaseHelper.GeneratePDF<List<UserDTO>>(
                     "AccountReportPDF",
@@ -278,14 +286,30 @@ namespace DicomApp.Portal.Controllers
 
         [AuthorizePerRole(SystemConstants.Permission.ListStaff)]
         [HttpPost]
-        public ActionResult SaveGamer(UserDTO model)
+        public async Task<ActionResult> SaveGamer(UserDTO model)
         {
-            model.ImgUrl = BaseHelper.UploadImg(model.File, hosting.WebRootPath, model.ImgUrl);
+            UserResponse response;
+            if (model.File == null)
+            {
+                var file = await _avatarService.GetAvatarAsFormFileAsync(model.Name);
+                model.ImgUrl = BaseHelper.UploadImg(file, hosting.WebRootPath, model.ImgUrl);
+            }
+            else
+                model.ImgUrl = BaseHelper.UploadImg(model.File, hosting.WebRootPath, model.ImgUrl);
 
             PasswordHasher<object> hasher = new PasswordHasher<object>();
             model.HashedPassword = hasher.HashPassword(model, model.Password);
-            model.RoleID = (int)EnumRole.Gamer;
-
+            var roleId = RoleService
+                .GetRole(
+                    new RoleRequest
+                    {
+                        context = _context,
+                        applyFilter = true,
+                        RoleDTO = new RoleDTO { Name = SystemConstants.Role.Gamer }
+                    }
+                )
+                .RoleDTO.Id;
+            model.RoleID = roleId;
             var userRequest = new UserRequest
             {
                 RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
@@ -293,23 +317,18 @@ namespace DicomApp.Portal.Controllers
                 context = _context,
                 UserDTO = model
             };
-
-            UserResponse response;
             if (model.Id > 0)
                 response = UserService.EditUser(userRequest);
             else
                 response = UserService.AddUser(userRequest);
 
-            if (response.Success)
+            if (!response.Success)
             {
-                TempData["SuccessMsg"] = "Saved";
-                return RedirectToAction("ListAccount");
+                var UploadFile = Path.Combine(hosting.WebRootPath, "dist", "images", model.ImgUrl);
+                System.IO.File.Delete(UploadFile);
             }
-            else
-            {
-                TempData["ErrorMsg"] = response.Message;
-                return RedirectToAction("VendorDetails", new { ID = 0 });
-            }
+
+            return Json(response);
         }
 
         [AuthorizePerRole(SystemConstants.Permission.ListStaff)]

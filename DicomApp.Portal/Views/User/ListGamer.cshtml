@@ -32,10 +32,10 @@
             <div class="row Red-Row">
                 @{
                     await Html.RenderPartialAsync("_ToolsRow",
-                    new OptionDTO { Action = "ListAccount",
+                    new OptionDTO { Action = "ListGamer",
                 Controller = "User",
                 Lookup = Model.Lookup,
-                SelectListType = new byte[] { (byte)EnumSelectListType.Vendor }
+                SelectListType = new byte[] { (byte)EnumSelectListType.Gamer }
             });
                 }
                 <div class="row Red-Row w-100">
@@ -62,13 +62,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <partial name="_ListAccount" model="Model.ObjDTOs" />
+                    <partial name="_ListGamer" model="Model.ObjDTOs" />
                 </tbody>
                 <tfoot>
                     <tr>
                         <td colspan="10">
                             @{
-                                await Html.RenderPartialAsync("_Pagination", new OptionDTO { Action = "ListAccount", Controller = "User" });
+                                await Html.RenderPartialAsync("_Pagination", new OptionDTO { Action = "ListGamer", Controller = "User" });
                             }
                         </td>
                     </tr>

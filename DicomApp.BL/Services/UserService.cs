@@ -493,83 +493,92 @@ namespace DicomApp.BL.Services
                 {
                     try
                     {
-                        var UserExist = request.context.CommonUser.Any(m =>
-                            m.Email == request.UserDTO.Email && m.IsDeleted == false
+                        var emailExist = request.context.CommonUser.Any(m =>
+                            m.Email == request.UserDTO.Email && !m.IsDeleted
                         );
-                        if (!UserExist)
-                        {
-                            var User = new CommonUser();
-
-                            User.CreationDate = DateTime.Now;
-                            User.CreatedBy = request.UserID;
-                            User.Code = Guid.NewGuid().ToString();
-                            User.LastLoginDate = DateTime.Now;
-                            User.IsDeleted = false;
-                            User.IsLoggedIn = false;
-
-                            User.Password = request.UserDTO.Password;
-                            User.HashedPassword = request.UserDTO.HashedPassword;
-
-                            User.RoleId = request.UserDTO.RoleID;
-                            User.Name = request.UserDTO.Name;
-                            User.Email = request.UserDTO.Email;
-                            User.PhoneNumber = request.UserDTO.PhoneNumber;
-                            User.Name = request.UserDTO.Name;
-                            User.ProductType = request.UserDTO.ProductType; // Business Type
-                            User.NationalId = "EGY";
-                            User.Address = request.UserDTO.Address;
-                            User.FullName = request.UserDTO.FullName;
-                            User.AddressDetails = request.UserDTO.AddressDetails;
-                            User.Landmark = request.UserDTO.Landmark;
-                            User.LocationUrl = request.UserDTO.LocationUrl;
-                            User.Floor = request.UserDTO.Floor;
-                            User.Apartment = request.UserDTO.Apartment;
-                            User.AreaId = request.UserDTO.AreaId;
-                            User.ZoneId = request.UserDTO.ZoneId;
-
-                            User.Bank = request.UserDTO.Bank;
-                            User.IbanNumber = request.UserDTO.IBANNumber;
-                            User.AccountName = request.UserDTO.AccountName;
-                            User.AccountNumber = request.UserDTO.AccountNumber;
-                            User.VodafoneCashNumber = request.UserDTO.VodafoneCashNumber;
-                            User.InstaPayAccountName = request.UserDTO.InstaPayAccountName;
-
-                            User.ImgUrl = request.UserDTO.ImgUrl;
-
-                            request.context.CommonUser.Add(User);
-                            request.context.SaveChanges();
-
-                            // Add User Account for Vendor/Courier
-                            if (
-                                User.RoleId == (int)EnumRole.Gamer
-                                || User.RoleId == (int)EnumRole.DeliveryMan
-                            )
-                            {
-                                var AccountRequest = new AccountRequest();
-                                AccountRequest.AccountDTO = new AccountDTO()
-                                {
-                                    Name = request.UserDTO.Name,
-                                    UserId = User.Id,
-                                    RoleId = User.RoleId,
-                                };
-                                AccountRequest.RoleID = request.RoleID;
-                                AccountRequest.UserID = request.UserID;
-                                AccountRequest.context = request.context;
-                                AccountService.AddAccount(AccountRequest);
-                            }
-
-                            request.context.SaveChanges();
-
-                            res.Message = "New user added successfully";
-                            res.Success = true;
-                            res.StatusCode = HttpStatusCode.OK;
-                        }
-                        else
+                        if (emailExist)
                         {
                             res.Message = "Email already exist";
                             res.Success = false;
                             res.StatusCode = HttpStatusCode.OK;
+                            return res;
                         }
+                        var phoneExist = request.context.CommonUser.Any(m =>
+                            m.Email == request.UserDTO.PhoneNumber && !m.IsDeleted
+                        );
+                        if (phoneExist)
+                        {
+                            res.Message = "phone already exist";
+                            res.Success = false;
+                            res.StatusCode = HttpStatusCode.OK;
+                            return res;
+                        }
+
+                        var User = new CommonUser();
+                        User.CreationDate = DateTime.Now;
+                        User.CreatedBy = request.UserID;
+                        User.Code = Guid.NewGuid().ToString();
+                        User.LastLoginDate = DateTime.Now;
+                        User.IsDeleted = false;
+                        User.IsLoggedIn = false;
+                        User.Age = request.UserDTO.Age;
+                        User.TelegramUserName = request.UserDTO.TelegramUserName;
+                        User.CountryId = request.UserDTO.CountryId;
+                        User.Password = request.UserDTO.Password;
+                        User.HashedPassword = request.UserDTO.HashedPassword;
+                        User.RoleId = request.UserDTO.RoleID;
+                        User.Name = request.UserDTO.Name;
+                        User.Email = request.UserDTO.Email;
+                        User.PhoneNumber = request.UserDTO.PhoneNumber;
+                        User.Name = request.UserDTO.Name;
+                        User.ProductType = request.UserDTO.ProductType; // Business Type
+                        User.NationalId = "EGY";
+                        User.Address = request.UserDTO.Address;
+                        User.FullName = request.UserDTO.FullName;
+                        User.AddressDetails = request.UserDTO.AddressDetails;
+                        User.Landmark = request.UserDTO.Landmark;
+                        User.LocationUrl = request.UserDTO.LocationUrl;
+                        User.Floor = request.UserDTO.Floor;
+                        User.Apartment = request.UserDTO.Apartment;
+                        User.AreaId = request.UserDTO.AreaId;
+                        User.ZoneId = request.UserDTO.ZoneId;
+
+                        User.Bank = request.UserDTO.Bank;
+                        User.IbanNumber = request.UserDTO.IBANNumber;
+                        User.AccountName = request.UserDTO.AccountName;
+                        User.AccountNumber = request.UserDTO.AccountNumber;
+                        User.VodafoneCashNumber = request.UserDTO.VodafoneCashNumber;
+                        User.InstaPayAccountName = request.UserDTO.InstaPayAccountName;
+
+                        User.ImgUrl = request.UserDTO.ImgUrl;
+
+                        request.context.CommonUser.Add(User);
+                        request.context.SaveChanges();
+
+                        // Add User Account for Vendor/Courier
+                        if (
+                            User.RoleId == (int)EnumRole.Gamer
+                            || User.RoleId == (int)EnumRole.DeliveryMan
+                        )
+                        {
+                            var AccountRequest = new AccountRequest();
+                            AccountRequest.AccountDTO = new AccountDTO()
+                            {
+                                Name = request.UserDTO.Name,
+                                UserId = User.Id,
+                                RoleId = User.RoleId,
+                            };
+                            AccountRequest.RoleID = request.RoleID;
+                            AccountRequest.UserID = request.UserID;
+                            AccountRequest.context = request.context;
+                            AccountService.AddAccount(AccountRequest);
+                        }
+
+                        request.context.SaveChanges();
+
+                        res.Message = "New user added successfully";
+                        res.Success = true;
+                        res.StatusCode = HttpStatusCode.OK;
                     }
                     catch (Exception ex)
                     {

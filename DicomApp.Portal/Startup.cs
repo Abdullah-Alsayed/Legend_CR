@@ -1,10 +1,7 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
-using System.Text;
+﻿using System.Text;
 using DicomApp.DAL.DB;
+using DicomApp.Helpers;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Features;
@@ -83,6 +80,7 @@ namespace DicomApp.Portal
                 x.MultipartBodyLengthLimit = 20971520000;
             });
             services.AddSession();
+            services.AddHttpClient<AvatarService>();
             // Add ASPNETCoreDemoDBContext services.
             services.AddDbContext<ShippingDBContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DicomAppDBEntities"))
