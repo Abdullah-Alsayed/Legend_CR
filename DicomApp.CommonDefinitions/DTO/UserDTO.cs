@@ -104,6 +104,7 @@ namespace DicomApp.CommonDefinitions.DTO
 
         public string HashedPassword { get; set; }
 
+        public CountryDTO Country { get; set; }
         public IEnumerable<AdsDTO> Advertisement { get; set; }
 
         //Filter

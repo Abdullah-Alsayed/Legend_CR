@@ -43,12 +43,15 @@ namespace DicomApp.DAL.DB
         public int? ModifiedBy { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
+        public bool ConfirmEmail { get; set; } = false;
         public DateTime? LastLoginDate { get; set; }
         public string Password { get; set; }
         public int RoleId { get; set; }
         public string PhoneNumber { get; set; }
         public bool IsLoggedIn { get; set; }
         public string TelegramUserName { get; set; }
+
+        [ForeignKey(nameof(Country))]
         public int? CountryId { get; set; }
         public int Age { get; set; }
         public GenderEnum Gender { get; set; }
@@ -88,6 +91,8 @@ namespace DicomApp.DAL.DB
 
         public virtual Branch Branch { get; set; }
         public virtual Role Role { get; set; }
+
+        public virtual Country Country { get; set; }
         public virtual ICollection<Account> AccountCreatedByNavigation { get; set; }
         public virtual ICollection<Account> AccountLastModifiedByNavigation { get; set; }
         public virtual ICollection<AccountTransaction> AccountTransactionCreatedByNavigation { get; set; }

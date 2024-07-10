@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using DicomApp.DAL.DB;
-using DicomApp.Helpers;
+using DicomApp.Helpers.Services.GenrateAvatar;
+using DicomApp.Helpers.Services.GetCounter;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -81,19 +82,9 @@ namespace DicomApp.Portal
             });
             services.AddSession();
             services.AddHttpClient<AvatarService>();
-            // Add ASPNETCoreDemoDBContext services.
             services.AddDbContext<ShippingDBContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DicomAppDBEntities"))
             );
-
-            //services.AddSwaggerGen(c =>
-            //{
-            //    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
-            //    {
-            //        Title = "Red Express",
-            //        Version = "v1"
-            //    });
-            //});
 
             services.AddSwaggerGen(c =>
             {
@@ -128,19 +119,20 @@ namespace DicomApp.Portal
                     }
                 );
             });
+
+            //Servicess
+            services.AddScoped<IApiCountryService, ApiCountryService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            // UseSession must appear before UseMvc
             app.UseSession();
             app.UseAuthentication();
 
             if (env.IsDevelopment())
             {
                 app.UseBrowserLink();
-                //app.UseExceptionHandler("/Home/Error");
                 app.UseDeveloperExceptionPage();
             }
             else

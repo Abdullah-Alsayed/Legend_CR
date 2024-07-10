@@ -15,6 +15,14 @@
     <Compile Remove="Migrations\20240602200713_Ads.Designer.cs" />
     <Compile Remove="Migrations\20240629185217_addRank.cs" />
     <Compile Remove="Migrations\20240629185217_addRank.Designer.cs" />
+    <Compile Remove="Migrations\20240710212444_countris.cs" />
+    <Compile Remove="Migrations\20240710212444_countris.Designer.cs" />
+    <Compile Remove="Migrations\20240710213549_countris.cs" />
+    <Compile Remove="Migrations\20240710213549_countris.Designer.cs" />
+    <Compile Remove="Migrations\20240710222003_sfdfds.cs" />
+    <Compile Remove="Migrations\20240710222003_sfdfds.Designer.cs" />
+    <Compile Remove="Migrations\20240710223149_userandCountrus.cs" />
+    <Compile Remove="Migrations\20240710223149_userandCountrus.Designer.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.6" />

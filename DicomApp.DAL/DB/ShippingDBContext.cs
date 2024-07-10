@@ -45,6 +45,7 @@ namespace DicomApp.DAL.DB
         public virtual DbSet<ZoneTax> ZoneTax { get; set; }
         public virtual DbSet<AdvertisementPhotos> AdvertisementPhotos { get; set; }
         public virtual DbSet<Invoice> Invoices { get; set; }
+        public virtual DbSet<Country> Countries { get; set; }
 
         //        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //        {
@@ -1037,6 +1038,13 @@ namespace DicomApp.DAL.DB
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ZoneTax_Zone");
             });
+
+            //modelBuilder
+            //    .Entity<CommonUser>()
+            //    .HasOne(cu => cu.Country)
+            //    .WithMany(c => c.Users)
+            //    .HasForeignKey(cu => cu.CountryId)
+            //    .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

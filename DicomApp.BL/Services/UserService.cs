@@ -77,6 +77,17 @@ namespace DicomApp.BL.Services
                                         .context.City.FirstOrDefault(a => a.Id == c.AreaId)
                                         .CityNameAr
                                     : "",
+                                Country =
+                                    c.Country != null
+                                        ? new CountryDTO
+                                        {
+                                            CountryCode = c.Country.CountryCode,
+                                            CountryId = c.Country.CountryId,
+                                            FlagUrl = c.Country.FlagUrl,
+                                            NameAr = c.Country.NameAr,
+                                            NameEn = c.Country.NameEn
+                                        }
+                                        : null
                             });
 
                         if (request.applyFilter)

@@ -1,12 +1,13 @@
 ﻿
 @using DicomApp.CommonDefinitions.DTO;
+@using DicomApp.DAL.DB
 @using DicomApp.Helpers;
 @using DicomApp.BL.Services;
-@model UserDTO
+@model ViewModel<UserDTO>
 
 <main>
     <form id="Gamer-Form" asp-action="SaveGamer" asp-controller="User" method="post" class="needs-validation" novalidate>
-        <input type="hidden" asp-for="Id" value="@(Model != null ? Model.Id : 0)">
+        <input type="hidden" asp-for="@Model.ObjDTO.Id" value="@(Model.ObjDTO != null ? Model.ObjDTO.Id : 0)">
         <div class="container-fluid site-width">
             <div class="Shipment-container">
                 <div class="row Red-Row">
@@ -15,44 +16,60 @@
                         <div class="Shipment-Details-Section">
                             <div class="col-lg-12 mt-2 mb-2">
                                 <label class="Shipment-Details-label mb-2">Name</label>
-                                <input class="form-control" type="text" asp-for="Name" placeholder="Name" required>
+                                <input class="form-control" type="text" asp-for="@Model.ObjDTO.Name" placeholder="Name" required>
                                 <div class="invalid-feedback">
                                     Please enter Gamer Name
                                 </div>
                             </div>
                             <div class="col-lg-12 mt-2 mb-2">
                                 <label class="Shipment-Details-label mb-2">Email</label>
-                                <input class="form-control" type="text" asp-for="Email" placeholder="Email">
+                                <input class="form-control" type="text" asp-for="@Model.ObjDTO.Email" required placeholder="Email">
+                                <div class="invalid-feedback">
+                                    Please enter your Email
+                                </div>
                              </div>
                             <div class="col-lg-12 mt-2 mb-2">
                                 <label class="Shipment-Details-label mb-2">Password</label>
-                                <input class="form-control" type="password" asp-for="Password" placeholder="Password" required>
+                                <input class="form-control" min="6" type="password" asp-for="@Model.ObjDTO.Password" placeholder="Password" required>
                                 <div class="invalid-feedback">
                                     Please enter your Password
                                 </div>
                             </div>
                             <div class="col-lg-12 mt-2 mb-2">
                                 <label class="Shipment-Details-label mb-2">Telegram UserName</label>
-                                <input class="form-control" type="text" asp-for="TelegramUserName" placeholder="Telegram UserName">
+                                <input class="form-control" type="text" asp-for="@Model.ObjDTO.TelegramUserName" placeholder="Telegram UserName">
                             </div>
                             <div class="col-lg-12 mt-2 mb-2">
                                 <label class="Shipment-Details-label mb-2">Phone Number</label>
-                                <input class="form-control" type="number" asp-for="PhoneNumber" placeholder="Phone Number" required>
+                                <input class="form-control" type="number" asp-for="@Model.ObjDTO.PhoneNumber" max="15" placeholder="Phone Number" required>
                                 <div class="invalid-feedback">
                                     Please enter Phone Number
                                 </div>
                             </div>
                             <div class="col-lg-12 mt-2 mb-2">
                                 <label class="Shipment-Details-label mb-2">Country</label>
-                                <input class="form-control" type="number" asp-for="CountryId" placeholder="Country">
+                                @Html.DropDownList("CountryId", new SelectList(@Model.Lookup.CountryDTOs, nameof(Country.CountryId), nameof(Country.NameEn)), "---  Countries ---", new { @class = "input-Model" })
+                                <div class="invalid-feedback">
+                                    Please enter Country
+                                </div>
                             </div>
                             <div class="col-lg-6 mt-2 mb-2">
                                 <label class="Shipment-Details-label mb-2">Age</label>
-                                <input class="form-control" type="text" asp-for="Age" placeholder="Age">
+                                <input class="form-control" type="number" min="7" max="100" required asp-for="@Model.ObjDTO.Age" placeholder="Age">
+                                <div class="invalid-feedback">
+                                    Please enter Age
+                                </div>
                             </div>
                             <div class="col-lg-6 mt-2 mb-2">
                                 <label class="Shipment-Details-label mb-2">Gender</label>
-                                <input class="form-control" type="number" asp-for="Gender" placeholder="Gender">
+                                <select class="form-control" required asp-for="@Model.ObjDTO.Gender" placeholder="Gender">
+                                    <option value="">--- Service Gender ---</option>
+                                    <option value="@GenderEnum.Male">Male</option>
+                                    <option value="@GenderEnum.Female">Female</option>
+                                </select>
+                                <div class="invalid-feedback">
+                                    Please enter Gender
+                                </div>
                             </div>
 
 
@@ -64,19 +81,19 @@
                             <div class="row Red-Row">
                                 <div class="col-lg-6 mt-2 mb-2">
                                     <label class="Shipment-Details-label mb-2">Bank Name</label>
-                                    <input class="form-control" type="text" asp-for="Bank" placeholder="Bank Name">
+                                    <input class="form-control" type="text" asp-for="@Model.ObjDTO.Bank" placeholder="Bank Name">
                                 </div>
                                 <div class="col-lg-6 mt-2 mb-2">
                                     <label class="Shipment-Details-label mb-2">Account Name</label>
-                                    <input class="form-control" type="text" asp-for="AccountName" placeholder="Account Name">
+                                    <input class="form-control" type="text" asp-for="@Model.ObjDTO.AccountName" placeholder="Account Name">
                                 </div>
                                 <div class="col-lg-6 mt-2 mb-2">
                                     <label class="Shipment-Details-label mb-2">Account Number</label>
-                                    <input class="form-control" type="number" asp-for="AccountNumber" placeholder="Account Number">
+                                    <input class="form-control" type="number" asp-for="@Model.ObjDTO.AccountNumber" placeholder="Account Number">
                                 </div>
                                 <div class="col-lg-6 mt-2 mb-2">
                                     <label class="Shipment-Details-label mb-2">IBAN Number</label>
-                                    <input class="form-control" type="number" asp-for="IBANNumber" placeholder="IBAN Number">
+                                    <input class="form-control" type="number" asp-for="@Model.ObjDTO.IBANNumber" placeholder="IBAN Number">
                                 </div>
                             </div>
                         </div>
@@ -85,17 +102,17 @@
                             <div class="row Red-Row">
                                 <div class="col-lg-6 mt-2 mb-2">
                                     <label class="Shipment-Details-label mb-2">Vodafone Cash Number</label>
-                                    <input class="form-control" type="number" asp-for="VodafoneCashNumber" placeholder="Vodafone Cash Number">
+                                    <input class="form-control" type="number" asp-for="@Model.ObjDTO.VodafoneCashNumber" placeholder="Vodafone Cash Number">
                                 </div>
                                 <div class="col-lg-6 mt-2 mb-2">
                                     <label class="Shipment-Details-label mb-2">InstaPay Account Name</label>
-                                    <input class="form-control" type="text" asp-for="InstaPayAccountName" placeholder="InstaPay Account Name">
+                                    <input class="form-control" type="text" asp-for="@Model.ObjDTO.InstaPayAccountName" placeholder="InstaPay Account Name">
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-lg-12 pt-3">
-                            <button class="Red-Btn-OutLine OutLine-white Btn-Model" onclick="OpenFileInput('Gamer-Form')" type="button">
+                            <button class="Red-Btn-OutLine OutLine-white Btn-Model.ObjDTO" onclick="OpenFileInput('Gamer-Form')" type="button">
                                 Update logo
                             </button>
 

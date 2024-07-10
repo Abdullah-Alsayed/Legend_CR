@@ -57,6 +57,13 @@
                                         @Html.DropDownList("AreaId", new SelectList(Model.Lookup.AreaDTOs, "Id", "CityNameAr"),"---  Area ---", new {@class="input-Model"})
                                     </div>
                                 }
+                                if (Model.SelectListType.Contains((byte)EnumSelectListType.Countries))
+                                {
+                                    <div class="col-lg-@Model.Columns pt-3">
+                                        <label class="Label-Model">Area</label>
+                                        @Html.DropDownList("CountryId", new SelectList(Model.Lookup.CountryDTOs, nameof(Country.CountryId), nameof(Country.NameEn)), "---  Countries ---", new { @class = "input-Model" })
+                                    </div>
+                                }
                                 if (Model.SelectListType.Contains((byte)EnumSelectListType.AreaMultiple))
                                 {
                                     <div class="col-lg-@Model.Columns pt-3">

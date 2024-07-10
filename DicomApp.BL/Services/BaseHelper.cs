@@ -167,7 +167,10 @@ namespace DicomApp.BL.Services
                 lookup.AreaDTOs = CityService
                     .GetCity(new CityRequest { context = Context })
                     .CityDTOs;
-
+            if (LookType.Contains((byte)EnumSelectListType.Countries))
+                lookup.CountryDTOs = CountryService
+                    .GetCountry(new CountryRequest { context = Context })
+                    .CountryDTOs;
             return lookup;
         }
 

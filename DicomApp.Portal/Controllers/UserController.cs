@@ -12,6 +12,7 @@ using DicomApp.CommonDefinitions.Requests;
 using DicomApp.CommonDefinitions.Responses;
 using DicomApp.DAL.DB;
 using DicomApp.Helpers;
+using DicomApp.Helpers.Services.GenrateAvatar;
 using DicomApp.Portal.Helpers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -215,12 +216,7 @@ namespace DicomApp.Portal.Controllers
             var ViewData = new ViewModel<UserDTO>();
 
             ViewData.Lookup = BaseHelper.GetLookup(
-                new List<byte>
-                {
-                    (byte)EnumSelectListType.Gamer,
-                    (byte)EnumSelectListType.Zone,
-                    (byte)EnumSelectListType.Area
-                },
+                new List<byte> { (byte)EnumSelectListType.Countries, },
                 _context
             );
 
@@ -260,6 +256,13 @@ namespace DicomApp.Portal.Controllers
         [HttpGet]
         public IActionResult GamerDetails(int ID = 0, string ActionType = null)
         {
+            var ViewData = new ViewModel<UserDTO>();
+            ViewData.ObjDTO = new UserDTO();
+            ViewData.Lookup = BaseHelper.GetLookup(
+                new List<byte> { (byte)EnumSelectListType.Countries, },
+                _context
+            );
+
             if (ID > 0)
             {
                 var userRequest = new UserRequest
@@ -270,17 +273,18 @@ namespace DicomApp.Portal.Controllers
                     UserDTO = new UserDTO { Id = ID },
                 };
                 var userResponse = UserService.GetUser(userRequest);
+                ViewData.ObjDTO = userResponse.UserDTO;
                 if (ActionType == SystemConstants.ActionType.PartialView)
-                    return PartialView(userResponse.UserDTO);
+                    return PartialView(ViewData);
                 else
-                    return View();
+                    return View(ViewData);
             }
             else
             {
                 if (ActionType == SystemConstants.ActionType.PartialView)
-                    return PartialView();
+                    return PartialView(ViewData);
                 else
-                    return View();
+                    return View(ViewData);
             }
         }
 

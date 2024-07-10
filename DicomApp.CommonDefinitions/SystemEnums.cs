@@ -122,7 +122,8 @@
         ServiceType,
         GameServiceType,
         AcceptAdvertisement,
-        AcceptGamerService
+        AcceptGamerService,
+        Countries
     }
 
     public enum EnumVendorActionName : byte
@@ -240,6 +241,7 @@
     {
         All = 0,
         InProgress = 1,
+        Pending,
         Accept,
         Published,
         Reject,

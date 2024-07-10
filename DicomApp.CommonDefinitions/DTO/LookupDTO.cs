@@ -17,5 +17,6 @@ namespace DicomApp.CommonDefinitions.DTO
         public List<CategoryDTO> CategoryDTOs { get; set; } = new List<CategoryDTO>();
         public UserDTO UserDTO { get; set; } = new UserDTO();
         public List<GameDTO> GameDTOs { get; set; } = new List<GameDTO>();
+        public List<CountryDTO> CountryDTOs { get; set; } = new List<CountryDTO>();
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 
-namespace DicomApp.Helpers
+namespace DicomApp.Helpers.Services.GenrateAvatar
 {
     public class AvatarService
     {

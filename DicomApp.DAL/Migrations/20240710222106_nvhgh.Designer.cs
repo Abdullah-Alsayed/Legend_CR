@@ -4,14 +4,16 @@ using DicomApp.DAL.DB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DicomApp.DAL.Migrations
 {
     [DbContext(typeof(ShippingDBContext))]
-    partial class ShippingDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240710222106_nvhgh")]
+    partial class nvhgh
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -742,8 +744,6 @@ namespace DicomApp.DAL.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("BranchId");
-
-                    b.HasIndex("CountryId");
 
                     b.HasIndex("RoleId");
 
@@ -1925,10 +1925,6 @@ namespace DicomApp.DAL.Migrations
                         .WithMany("CommonUser")
                         .HasForeignKey("BranchId")
                         .HasConstraintName("FK_Branch_CommonUser");
-
-                    b.HasOne("DicomApp.DAL.DB.Country", "Country")
-                        .WithMany("Users")
-                        .HasForeignKey("CountryId");
 
                     b.HasOne("DicomApp.DAL.DB.Role", "Role")
                         .WithMany("CommonUser")
