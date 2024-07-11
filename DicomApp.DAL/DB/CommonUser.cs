@@ -83,7 +83,7 @@ namespace DicomApp.DAL.DB
         public string AccountName { get; set; }
         public int? AccountNumber { get; set; }
         public int? IbanNumber { get; set; }
-        public int? VodafoneCashNumber { get; set; }
+        public int? WalletNumber { get; set; }
         public string InstaPayAccountName { get; set; }
         public int? ZoneId { get; set; }
         public string ImgUrl { get; set; }

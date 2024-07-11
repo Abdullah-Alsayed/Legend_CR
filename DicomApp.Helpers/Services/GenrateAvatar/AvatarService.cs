@@ -24,11 +24,10 @@ namespace DicomApp.Helpers.Services.GenrateAvatar
                 var random = new Random();
                 var backgrounds = new List<string>
                 {
-                    "#FBA834",
-                    "#333A73",
-                    "#387ADF",
-                    "#50C4ED",
-                    "41B06E",
+                    "FBA834",
+                    "333A73",
+                    "387ADF",
+                    "50C4ED",
                     "41B06E"
                 };
                 var background = backgrounds[random.Next(0, backgrounds.Count - 1)];

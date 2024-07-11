@@ -1,6 +1,7 @@
 ﻿
 @using DicomApp.CommonDefinitions.DTO;
 @using DicomApp.CommonDefinitions.DTO;
+@using DicomApp.DAL.DB
 @using DicomApp.Helpers;
 @using DicomApp.BL.Services;
 @model List<UserDTO>
@@ -11,16 +12,20 @@
     {
         <tr id="User_@item.Id">
             <td id="Td-VendorInfo">
-                <b>@item.Name</b> <br>
-                @item.Address <br>
+                <b>@item.Name</b><br>
                 @item.PhoneNumber<br>
-                @item.Email
             </td>
             <td class="text-nowrap Date-Table">@item.CreationDate.ToString("MMM") @item.CreationDate.ToString("dd"),@item.CreationDate.ToString("yyy")</td>
-            <td id="Td-ProductType">@item.ProductType</td>
+            <td id="Td-ProductType">
+                @item.Country.NameEn <img src="@item.Country.FlagUrl" width="25" />
+            </td>
+            <td class="text-center"><img src="/dist/images/Icons/@(item.Gender == GenderEnum.Male?"Male.png":"Female.png")"></td>
+            <td class="text-center">@item.PhoneNumber</td>
             <td class="text-center">@item.Email</td>
-            <td id="Td-Password">@item.Password</td>
-            <td class="text-center"><img id="Td-Img" src="@(!string.IsNullOrEmpty(item.ImgUrl) ? "/dist/images/" + @item.ImgUrl:"/dist/images/Fake-Img2.png")" width="75" /></td>
+            <td class="text-center">@item.TelegramUserName</td>
+            <td class="text-center">@item.InstaPayAccountName</td>
+            <td class="text-center">@item.WalletNumber</td>
+            <td class="text-center"><img id="Td-Img" width="50" src="@(!string.IsNullOrEmpty(item.ImgUrl) ? "/dist/images/" + @item.ImgUrl:"/dist/images/Icons/User.png")" /></td>
             <td>
                 <div class="Actions-Buttons">
                     <ul>

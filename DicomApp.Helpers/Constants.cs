@@ -6,6 +6,8 @@ namespace DicomApp.Helpers
 {
     public static class SystemConstants
     {
+        public static readonly int? System;
+
         public static class Permission
         {
             //Category

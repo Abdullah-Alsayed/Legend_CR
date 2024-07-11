@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -22,9 +23,44 @@ namespace DicomApp.Portal
 
             await SeedUser(dBContext);
 
+            await SeedCategorys(dBContext);
+
             await SeedCountries(dBContext);
 
             await dBContext.SaveChangesAsync();
+        }
+
+        private static async Task SeedCategorys(ShippingDBContext dBContext)
+        {
+            if (!await dBContext.Category.AnyAsync())
+            {
+                var category = new Category()
+                {
+                    NameAr = "اكشن",
+                    NameEn = "Action",
+                    CreatedAt = DateTime.Now,
+                    Game = new List<Game>
+                    {
+                        new Game
+                        {
+                            NameAr = "ببجي",
+                            NameEn = "Pubg",
+                            ImgUrl = "pubg.png",
+                            CreatedAt = DateTime.Now,
+                        },
+                        new Game
+                        {
+                            NameAr = "كلاش رويال",
+                            NameEn = "Clash Royal",
+                            ImgUrl = "ClashRoyal.png",
+                            CreatedAt = DateTime.Now,
+                        }
+                    }
+                };
+
+                if (!await dBContext.Category.AnyAsync())
+                    await dBContext.Category.AddAsync(category);
+            }
         }
 
         private static async Task SeedUser(ShippingDBContext dBContext)

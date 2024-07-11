@@ -51,7 +51,7 @@ namespace DicomApp.CommonDefinitions.DTO
         public string TelegramUserName { get; set; }
         public int? CountryId { get; set; }
         public int Age { get; set; }
-        public GenderEnum Gender { get; set; }
+        public GenderEnum Gender { get; set; } = GenderEnum.Male;
         public bool IsLoggedIn { get; set; }
 
         [Required(ErrorMessage = "Required")]
@@ -93,7 +93,7 @@ namespace DicomApp.CommonDefinitions.DTO
         public string AccountName { get; set; }
         public int? AccountNumber { get; set; }
         public int? IBANNumber { get; set; }
-        public int? VodafoneCashNumber { get; set; }
+        public int? WalletNumber { get; set; }
         public string InstaPayAccountName { get; set; }
         public string ImgUrl { get; set; }
         public int? ZoneId { get; set; }

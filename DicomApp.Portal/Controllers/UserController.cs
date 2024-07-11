@@ -76,6 +76,12 @@ namespace DicomApp.Portal.Controllers
         }
 
         [AllowAnonymous]
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
         public IActionResult LoginPatient()
         {
             return View();
@@ -219,7 +225,6 @@ namespace DicomApp.Portal.Controllers
                 new List<byte> { (byte)EnumSelectListType.Countries, },
                 _context
             );
-
             var userRequest = new UserRequest
             {
                 context = _context,
@@ -292,47 +297,43 @@ namespace DicomApp.Portal.Controllers
         [HttpPost]
         public async Task<ActionResult> SaveGamer(UserDTO model)
         {
-            UserResponse response;
-            if (model.File == null)
+            try
             {
-                var file = await _avatarService.GetAvatarAsFormFileAsync(model.Name);
-                model.ImgUrl = BaseHelper.UploadImg(file, hosting.WebRootPath, model.ImgUrl);
+                UserResponse response;
+                PasswordHasher<object> hasher = new PasswordHasher<object>();
+                model.HashedPassword = hasher.HashPassword(model, model.Password);
+
+                var roleId = RoleService
+                    .GetRole(
+                        new RoleRequest
+                        {
+                            context = _context,
+                            applyFilter = true,
+                            RoleDTO = new RoleDTO { Name = SystemConstants.Role.Gamer }
+                        }
+                    )
+                    .RoleDTO.Id;
+                model.RoleID = roleId;
+                var userRequest = new UserRequest
+                {
+                    RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
+                    UserID = AuthHelper.GetClaimValue(User, "UserID"),
+                    context = _context,
+                    UserDTO = model,
+                    WebRootPath = hosting.WebRootPath,
+                    avatarService = _avatarService
+                };
+                if (model.Id > 0)
+                    response = UserService.EditUser(userRequest);
+                else
+                    response = await UserService.AddUser(userRequest);
+
+                return Json(response);
             }
-            else
-                model.ImgUrl = BaseHelper.UploadImg(model.File, hosting.WebRootPath, model.ImgUrl);
-
-            PasswordHasher<object> hasher = new PasswordHasher<object>();
-            model.HashedPassword = hasher.HashPassword(model, model.Password);
-            var roleId = RoleService
-                .GetRole(
-                    new RoleRequest
-                    {
-                        context = _context,
-                        applyFilter = true,
-                        RoleDTO = new RoleDTO { Name = SystemConstants.Role.Gamer }
-                    }
-                )
-                .RoleDTO.Id;
-            model.RoleID = roleId;
-            var userRequest = new UserRequest
+            catch (Exception ex)
             {
-                RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
-                UserID = AuthHelper.GetClaimValue(User, "UserID"),
-                context = _context,
-                UserDTO = model
-            };
-            if (model.Id > 0)
-                response = UserService.EditUser(userRequest);
-            else
-                response = UserService.AddUser(userRequest);
-
-            if (!response.Success)
-            {
-                var UploadFile = Path.Combine(hosting.WebRootPath, "dist", "images", model.ImgUrl);
-                System.IO.File.Delete(UploadFile);
+                return Json(new UserResponse { Success = false, Message = ex.Message });
             }
-
-            return Json(response);
         }
 
         [AuthorizePerRole(SystemConstants.Permission.ListStaff)]
@@ -390,7 +391,7 @@ namespace DicomApp.Portal.Controllers
 
         [AuthorizePerRole(SystemConstants.Permission.AddStaff)]
         [HttpPost]
-        public ActionResult AddUser(UserDTO model)
+        public async Task<ActionResult> AddUser(UserDTO model)
         {
             model.ImgUrl = BaseHelper.UploadImg(model.File, hosting.WebRootPath, model.ImgUrl);
 
@@ -405,7 +406,7 @@ namespace DicomApp.Portal.Controllers
                 UserDTO = model
             };
 
-            var userResponse = UserService.AddUser(userRequest);
+            var userResponse = await UserService.AddUser(userRequest);
 
             if (userResponse.Success)
                 TempData["SuccessMsg"] = userResponse.Message;

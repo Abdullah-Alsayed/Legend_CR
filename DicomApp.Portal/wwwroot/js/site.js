@@ -507,6 +507,8 @@ function ChangeUserPassword(Id) {
 
 function GamerForm()
 {
+    if ($('#Gamer-Form').valid()) {
+
     $(".Spinner").removeClass("d-none");
     var id = $('#Id').val();
     let formData = new FormData($(`#Gamer-Form`)[0]);
@@ -535,11 +537,13 @@ function GamerForm()
                     alertError(result.message);
 
             },
-            error: function () {
+            error: function (err) {
                 $(".Spinner").addClass("d-none");
-                alert("Error")
+                alert("try again!")
+                console.log(err);
             }
         });   
+    }
 }
 
 

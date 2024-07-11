@@ -1,5 +1,4 @@
-﻿
-@using DicomApp.CommonDefinitions.DTO;
+﻿@using DicomApp.CommonDefinitions.DTO;
 @model UserDTO
 @{
     Layout = null;
@@ -36,27 +35,51 @@
     <!-- START: Main Content-->
     <div class="Form-Container">
       <div class="Form-Section">
-        <form method="post" asp-action="@Url.Action("Login")" class="row lockscreen">
+            <form method="post" action="@Url.Action("Register")" class="row lockscreen">
             <div class="login-form col-12 col-sm-12 ">
                 <div class="mb-3">
                     <center><img src="~/dist/images/cub.png" /></center>
-                    <h1 class="text-center">Login</h1>
+                    <h1 class="text-center">Register</h1>
                 </div>
-                <div class="form-group mb-3">
+                <div class="Register-Section">
+                    <div class="form-group mb-3">
                     <label for="emailaddress">Email</label>
                     @Html.TextBoxFor(model => model.Email, new { @type = "email", @placeholder = "Enter your email", @id = "emailaddress", @class = "form-control"})
                     @Html.ValidationMessageFor(model => model.Email, "", new { @class = "validation-message" })
                 </div>
 
-                <div class="form-group mb-3">
+                    <div class="form-group mb-3">
                     <label for="password">Password</label>
-                    <span class="Forgot-Password">Forgot Password ?</span>
                     @Html.PasswordFor(model => model.Password, new { @placeholder = "Enter your password", @class = "form-control", @id = "password" })
                     @Html.ValidationMessageFor(model => model.Password, "", new { @class = "validation-message" })
                 </div>
-                    <a class="Regester" href="@Url.Action("Register")"> Create new user </a>
-                 <div class="form-group mb-0">
-                    <button class="login-button w-100" type="submit"> Log In </button>
+
+                    <div class="form-group mb-3">
+                    <label for="password">Password</label>
+                    @Html.PasswordFor(model => model.Password, new { @placeholder = "Enter your password", @class = "form-control", @id = "password" })
+                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "validation-message" })
+                </div>
+
+                    <div class="form-group mb-3">
+                    <label for="password">Password</label>
+                    @Html.PasswordFor(model => model.Password, new { @placeholder = "Enter your password", @class = "form-control", @id = "password" })
+                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "validation-message" })
+                </div>
+
+                    <div class="form-group mb-3">
+                    <label for="password">Password</label>
+                    @Html.PasswordFor(model => model.Password, new { @placeholder = "Enter your password", @class = "form-control", @id = "password" })
+                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "validation-message" })
+                </div>
+                        <div class="form-group mb-3">
+                            <label for="password">Password</label>
+                            @Html.PasswordFor(model => model.Password, new { @placeholder = "Enter your password", @class = "form-control", @id = "password" })
+                            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "validation-message" })
+                        </div>
+                </div>
+                    <a class="Regester" href="@Url.Action("Login")"> you have a account</a>
+                    <div class="form-group mb-0">
+                    <button class="login-button w-100" type="submit"> Create </button>
                 </div>
                 <div class="mt-2 mt-4 text-center text-danger">@ViewBag.error</div>
             </div>

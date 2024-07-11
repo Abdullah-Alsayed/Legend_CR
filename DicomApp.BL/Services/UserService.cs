@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using DicomApp.CommonDefinitions.DTO;
 using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
 using DicomApp.CommonDefinitions.DTO.CashDTOs;
@@ -10,6 +11,7 @@ using DicomApp.CommonDefinitions.Requests;
 using DicomApp.CommonDefinitions.Responses;
 using DicomApp.DAL.DB;
 using DicomApp.Helpers;
+using DicomApp.Helpers.Services.GenrateAvatar;
 using Microsoft.EntityFrameworkCore;
 
 namespace DicomApp.BL.Services
@@ -35,6 +37,8 @@ namespace DicomApp.BL.Services
                                 NationalId = c.NationalId,
                                 Email = c.Email,
                                 RoleID = c.RoleId,
+                                Gender = c.Gender,
+                                Age = c.Age,
                                 RoleName = c.Role.Name,
                                 LastLoginDate = c.LastLoginDate,
                                 PhoneNumber = c.PhoneNumber,
@@ -58,7 +62,7 @@ namespace DicomApp.BL.Services
                                 Floor = c.Floor,
                                 Landmark = c.Landmark,
                                 LocationUrl = c.LocationUrl,
-                                VodafoneCashNumber = c.VodafoneCashNumber,
+                                WalletNumber = c.WalletNumber,
                                 AccountName = c.AccountName,
                                 AccountNumber = c.AccountNumber,
                                 Bank = c.Bank,
@@ -133,7 +137,9 @@ namespace DicomApp.BL.Services
                                 Email = c.Email,
                                 RoleID = c.RoleId,
                                 RoleName = c.Role.Name,
-                                //LastLoginDate = c.LastLoginDate,
+                                Gender = c.Gender,
+                                Age = c.Age,
+                                LastLoginDate = c.LastLoginDate,
                                 PhoneNumber = c.PhoneNumber,
                                 Password = c.Password,
                                 ConfirmPassword = c.Password,
@@ -155,7 +161,7 @@ namespace DicomApp.BL.Services
                                 Floor = c.Floor,
                                 Landmark = c.Landmark,
                                 LocationUrl = c.LocationUrl,
-                                VodafoneCashNumber = c.VodafoneCashNumber,
+                                WalletNumber = c.WalletNumber,
                                 AccountName = c.AccountName,
                                 AccountNumber = c.AccountNumber,
                                 Bank = c.Bank,
@@ -207,7 +213,10 @@ namespace DicomApp.BL.Services
                                 Email = c.Email,
                                 RoleID = c.RoleId,
                                 RoleName = c.Role.Name,
-                                //LastLoginDate = c.LastLoginDate,
+                                Gender = c.Gender,
+                                Age = c.Age,
+                                CountryId = c.CountryId,
+                                LastLoginDate = c.LastLoginDate,
                                 PhoneNumber = c.PhoneNumber,
                                 Password = c.Password,
                                 ConfirmPassword = c.Password,
@@ -229,7 +238,7 @@ namespace DicomApp.BL.Services
                                 Floor = c.Floor,
                                 Landmark = c.Landmark,
                                 LocationUrl = c.LocationUrl,
-                                VodafoneCashNumber = c.VodafoneCashNumber,
+                                WalletNumber = c.WalletNumber,
                                 AccountName = c.AccountName,
                                 AccountNumber = c.AccountNumber,
                                 Bank = c.Bank,
@@ -410,7 +419,7 @@ namespace DicomApp.BL.Services
                                 user.InstaPayAccountName = request.UserDTO.InstaPayAccountName;
                                 user.IbanNumber = request.UserDTO.IBANNumber;
                                 user.Bank = request.UserDTO.Bank;
-                                user.VodafoneCashNumber = request.UserDTO.VodafoneCashNumber;
+                                user.WalletNumber = request.UserDTO.WalletNumber;
                                 user.AccountName = request.UserDTO.AccountName;
                                 user.AccountNumber = request.UserDTO.AccountNumber;
                                 user.ImgUrl = request.UserDTO.ImgUrl;
@@ -494,17 +503,17 @@ namespace DicomApp.BL.Services
             return res;
         }
 
-        public static UserResponse AddUser(UserRequest request)
+        public static async Task<UserResponse> AddUser(UserRequest request)
         {
             var res = new UserResponse();
-            RunBase(
+            await RunBaseAsync<UserRequest, UserResponse>(
                 request,
                 res,
-                (UserRequest req) =>
+                async (UserRequest req) =>
                 {
                     try
                     {
-                        var emailExist = request.context.CommonUser.Any(m =>
+                        var emailExist = await request.context.CommonUser.AnyAsync(m =>
                             m.Email == request.UserDTO.Email && !m.IsDeleted
                         );
                         if (emailExist)
@@ -514,8 +523,8 @@ namespace DicomApp.BL.Services
                             res.StatusCode = HttpStatusCode.OK;
                             return res;
                         }
-                        var phoneExist = request.context.CommonUser.Any(m =>
-                            m.Email == request.UserDTO.PhoneNumber && !m.IsDeleted
+                        var phoneExist = await request.context.CommonUser.AnyAsync(m =>
+                            m.PhoneNumber == request.UserDTO.PhoneNumber && !m.IsDeleted
                         );
                         if (phoneExist)
                         {
@@ -542,7 +551,6 @@ namespace DicomApp.BL.Services
                         User.Email = request.UserDTO.Email;
                         User.PhoneNumber = request.UserDTO.PhoneNumber;
                         User.Name = request.UserDTO.Name;
-                        User.ProductType = request.UserDTO.ProductType; // Business Type
                         User.NationalId = "EGY";
                         User.Address = request.UserDTO.Address;
                         User.FullName = request.UserDTO.FullName;
@@ -553,39 +561,38 @@ namespace DicomApp.BL.Services
                         User.Apartment = request.UserDTO.Apartment;
                         User.AreaId = request.UserDTO.AreaId;
                         User.ZoneId = request.UserDTO.ZoneId;
-
+                        User.Gender = request.UserDTO.Gender;
                         User.Bank = request.UserDTO.Bank;
                         User.IbanNumber = request.UserDTO.IBANNumber;
                         User.AccountName = request.UserDTO.AccountName;
                         User.AccountNumber = request.UserDTO.AccountNumber;
-                        User.VodafoneCashNumber = request.UserDTO.VodafoneCashNumber;
+                        User.WalletNumber = request.UserDTO.WalletNumber;
                         User.InstaPayAccountName = request.UserDTO.InstaPayAccountName;
 
                         User.ImgUrl = request.UserDTO.ImgUrl;
 
-                        request.context.CommonUser.Add(User);
-                        request.context.SaveChanges();
+                        await request.context.CommonUser.AddAsync(User);
+                        await request.context.SaveChangesAsync();
 
-                        // Add User Account for Vendor/Courier
-                        if (
-                            User.RoleId == (int)EnumRole.Gamer
-                            || User.RoleId == (int)EnumRole.DeliveryMan
-                        )
+                        if (request.UserDTO.File == null)
                         {
-                            var AccountRequest = new AccountRequest();
-                            AccountRequest.AccountDTO = new AccountDTO()
-                            {
-                                Name = request.UserDTO.Name,
-                                UserId = User.Id,
-                                RoleId = User.RoleId,
-                            };
-                            AccountRequest.RoleID = request.RoleID;
-                            AccountRequest.UserID = request.UserID;
-                            AccountRequest.context = request.context;
-                            AccountService.AddAccount(AccountRequest);
-                        }
+                            var file = await request.avatarService.GetAvatarAsFormFileAsync(
+                                request.UserDTO.Name
+                            );
 
-                        request.context.SaveChanges();
+                            User.ImgUrl = BaseHelper.UploadImg(
+                                file,
+                                request.WebRootPath,
+                                request.UserDTO.ImgUrl
+                            );
+                        }
+                        else
+                            User.ImgUrl = BaseHelper.UploadImg(
+                                request.UserDTO.File,
+                                request.WebRootPath,
+                                request.UserDTO.ImgUrl
+                            );
+                        await request.context.SaveChangesAsync();
 
                         res.Message = "New user added successfully";
                         res.Success = true;

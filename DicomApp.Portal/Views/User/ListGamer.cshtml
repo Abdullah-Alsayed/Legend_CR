@@ -52,13 +52,16 @@
             <table class="table" id="Red-Table">
                 <thead>
                     <tr>
-                        <td>Vendor</td>
+                        <td>Name</td>
                         <td class="Sort-Column">Join Date </td>
-                        <td>Business Type</td>
-                        <td class="text-center">Username</td>
                         <td class="text-center">Country</td>
-                        <td>Password</td>
-                        <td class="text-center">Logo</td>
+                        <td class="text-center">Gender</td>
+                        <td class="text-center">Phone Number</td>
+                        <td class="text-center">Email</td>
+                        <td class="text-center">Telegram</td>
+                        <td class="text-center">Insta Pay</td>
+                        <td class="text-center">Wallet</td>
+                        <td class="text-center">Img</td>
                         <td class="text-center">Actions</td>
                     </tr>
                 </thead>
@@ -67,7 +70,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="10">
+                        <td colspan="11">
                             @{
                                 await Html.RenderPartialAsync("_Pagination", new OptionDTO { Action = "ListGamer", Controller = "User" });
                             }

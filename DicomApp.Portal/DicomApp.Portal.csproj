@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="Views\User\Register.cshtml" />
     <Content Remove="Views\Vendor\OrderReportsPrint.cshtml" />
     <Content Remove="Views\Warehouse\_CashOrderListPartial.cshtml" />
   </ItemGroup>
@@ -83,6 +84,7 @@
     <None Include="Views\Shared\_OrderListScript.cshtml" />
     <None Include="Views\Shared\_PrintLayout.cshtml" />
     <None Include="Views\Shared\_ValidationScriptsPartial.cshtml" />
+    <None Include="Views\User\Register.cshtml" />
     <None Include="Views\Vendor\AddOrder.cshtml" />
     <None Include="Views\User\AddUser.cshtml" />
     <None Include="Views\User\ChangePassword.cshtml" />
