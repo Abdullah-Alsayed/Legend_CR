@@ -2241,14 +2241,18 @@ h5 {
     color: #EEF0F4;
 }
 
-.login-form input {
+.login-form input, .login-form select {
     background: #fff;
     border-color: #fff;
     margin-bottom: 8px;
-    color:#000
+    color: #000
 }
 
-    .login-form input:active {
+    .login-form input, .login-form select:active {
+        border-radius: 20px;
+        border-color: "#0077E4";
+    }
+    .login-form input, .login-form select:focus {
         border-radius: 20px;
         border-color: "#0077E4";
     }

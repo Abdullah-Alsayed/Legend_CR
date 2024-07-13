@@ -734,6 +734,9 @@ namespace DicomApp.BL.Services
             if (filter.StatusType != 0)
                 query = query.Where(p => p.Status.StatusType == filter.StatusType);
 
+            if (filter.StatusTypes != null && filter.StatusTypes.Any())
+                query = query.Where(p => filter.StatusTypes.Contains(p.Status.StatusType));
+
             if (filter.GamerId != 0)
                 query = query.Where(c => c.GamerId == filter.GamerId);
 

@@ -56,5 +56,6 @@ namespace DicomApp.CommonDefinitions.DTO.AdvertisementDTOs
         public int GreeterPrice { get; set; }
         public int LessLevel { get; set; }
         public int GreeterLevel { get; set; }
+        public List<int> StatusTypes { get; set; }
     }
 }

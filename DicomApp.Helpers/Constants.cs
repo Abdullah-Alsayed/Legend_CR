@@ -61,6 +61,9 @@ namespace DicomApp.Helpers
             public const string AddStaff = "AddStaff";
             public const string GetUserData = "GetUserData";
             public const string EditStaff = "EditStaff";
+
+            // Gamer
+            public const string Main = "Main";
         }
 
         public static class ActionType

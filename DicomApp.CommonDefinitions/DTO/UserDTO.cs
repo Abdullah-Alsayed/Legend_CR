@@ -50,7 +50,11 @@ namespace DicomApp.CommonDefinitions.DTO
 
         public string TelegramUserName { get; set; }
         public int? CountryId { get; set; }
+
+        [Required(ErrorMessage = "Please enter a Age.")]
+        [Range(6, 100)]
         public int Age { get; set; }
+
         public GenderEnum Gender { get; set; } = GenderEnum.Male;
         public bool IsLoggedIn { get; set; }
 

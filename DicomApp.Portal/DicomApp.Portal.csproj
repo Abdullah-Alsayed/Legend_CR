@@ -101,6 +101,14 @@
     <None Include="Views\Vendor\ShipmentList.cshtml" />
     <None Include="Views\_ViewImports.cshtml" />
     <None Include="Views\_ViewStart.cshtml" />
+    <None Include="wwwroot\GamerLayout\assets\fonts\icofont7858.svg" />
+    <None Include="wwwroot\GamerLayout\assets\js\bootstrap.min.js" />
+    <None Include="wwwroot\GamerLayout\assets\js\isotope.pkgd.min.js" />
+    <None Include="wwwroot\GamerLayout\assets\js\jquery.magnific-popup.min.js" />
+    <None Include="wwwroot\GamerLayout\assets\js\jquery.min.js" />
+    <None Include="wwwroot\GamerLayout\assets\js\jquery.slicknav.min.js" />
+    <None Include="wwwroot\GamerLayout\assets\js\main.js" />
+    <None Include="wwwroot\GamerLayout\assets\js\owl.carousel.min.js" />
     <None Include="wwwroot\js\User\Index.js" />
   </ItemGroup>
 

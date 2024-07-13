@@ -548,6 +548,7 @@ function GamerForm()
 
 
 
+
 function EditInfo() {
     let Data = $("#EditUser-Form").serialize();
     $.ajax({

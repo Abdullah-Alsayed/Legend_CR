@@ -30,12 +30,7 @@ namespace DicomApp.Helpers.Services.GetCounter
                 else
                 {
                     Console.WriteLine("ipAddress Not Valid");
-                    return new CountryResponse
-                    {
-                        CountryCode2 = "",
-                        CountryName = "",
-                        Ip = ""
-                    };
+                    return new CountryResponse { };
                 }
             }
         }

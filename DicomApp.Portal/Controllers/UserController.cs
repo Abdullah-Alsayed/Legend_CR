@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using DicomApp.BL.Services;
@@ -13,6 +14,7 @@ using DicomApp.CommonDefinitions.Responses;
 using DicomApp.DAL.DB;
 using DicomApp.Helpers;
 using DicomApp.Helpers.Services.GenrateAvatar;
+using DicomApp.Helpers.Services.GetCounter;
 using DicomApp.Portal.Helpers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -30,17 +32,30 @@ namespace DicomApp.Portal.Controllers
     {
         private readonly ShippingDBContext _context;
         private readonly AvatarService _avatarService;
+        private readonly IApiCountryService _countryService;
         private readonly IHostingEnvironment hosting;
 
         public UserController(
             ShippingDBContext context,
             IHostingEnvironment hosting,
-            AvatarService avatarService
+            AvatarService avatarService,
+            IApiCountryService countryService
         )
         {
             _context = context;
             this.hosting = hosting;
             _avatarService = avatarService;
+            _countryService = countryService;
+        }
+
+        private string GetUserIp()
+        {
+            var ipAddress = HttpContext.Connection.RemoteIpAddress;
+
+            if (Request.Headers.ContainsKey("X-Forwarded-For"))
+                ipAddress = IPAddress.Parse(Request.Headers["X-Forwarded-For"]);
+
+            return ipAddress?.ToString();
         }
 
         private void GetViewBags()
@@ -138,6 +153,69 @@ namespace DicomApp.Portal.Controllers
             ViewBag.error = loginResponse.Message;
             //IndicatorAutoFill();
             return View();
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<ActionResult> Register(UserDTO model)
+        {
+            try
+            {
+                UserResponse response;
+                PasswordHasher<object> hasher = new PasswordHasher<object>();
+                model.HashedPassword = hasher.HashPassword(model, model.Password);
+                var role = RoleService
+                    .GetRole(
+                        new RoleRequest
+                        {
+                            context = _context,
+                            applyFilter = true,
+                            RoleDTO = new RoleDTO { Name = SystemConstants.Role.Gamer }
+                        }
+                    )
+                    .RoleDTO;
+                model.RoleID = role.Id;
+                var userRequest = new UserRequest
+                {
+                    RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
+                    UserID = AuthHelper.GetClaimValue(User, "UserID"),
+                    context = _context,
+                    UserDTO = model,
+                    WebRootPath = hosting.WebRootPath,
+                    avatarService = _avatarService,
+                    CountryService = _countryService,
+                    UserIP = GetUserIp()
+                };
+
+                response = await UserService.AddUser(userRequest);
+                if (response.Success)
+                {
+                    var claims = new List<Claim>
+                    {
+                        new Claim("UserID", response.UserDTO.Id.ToString()),
+                        new Claim("Name", response.UserDTO.Name ?? ""),
+                        new Claim("Email", response.UserDTO.Email ?? ""),
+                        new Claim("RoleID", response.UserDTO.RoleID.ToString()),
+                        new Claim("RoleName", role.Name)
+                    };
+
+                    var claimsIdentity = new ClaimsIdentity(
+                        claims,
+                        CookieAuthenticationDefaults.AuthenticationScheme
+                    );
+                    var authProperties = new AuthenticationProperties { AllowRefresh = true, };
+                    await HttpContext.SignInAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        new ClaimsPrincipal(claimsIdentity),
+                        authProperties
+                    );
+                }
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                return Json(new UserResponse { Success = false, Message = ex.Message });
+            }
         }
 
         public async Task<IActionResult> Logout()

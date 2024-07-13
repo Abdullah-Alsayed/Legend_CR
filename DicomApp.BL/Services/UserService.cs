@@ -568,11 +568,7 @@ namespace DicomApp.BL.Services
                         User.AccountNumber = request.UserDTO.AccountNumber;
                         User.WalletNumber = request.UserDTO.WalletNumber;
                         User.InstaPayAccountName = request.UserDTO.InstaPayAccountName;
-
                         User.ImgUrl = request.UserDTO.ImgUrl;
-
-                        await request.context.CommonUser.AddAsync(User);
-                        await request.context.SaveChangesAsync();
 
                         if (request.UserDTO.File == null)
                         {
@@ -592,8 +588,37 @@ namespace DicomApp.BL.Services
                                 request.WebRootPath,
                                 request.UserDTO.ImgUrl
                             );
+                        if (request.CountryService != null)
+                        {
+                            var countryCode = await request.CountryService.GetCountryInfoAsync(
+                                request.UserIP
+                            );
+
+                            var countries = await request
+                                .context.Countries.Where(x =>
+                                    x.CountryCode == countryCode.country_code2
+                                    || x.CountryCode == "EG"
+                                )
+                                .ToListAsync();
+                            if (string.IsNullOrEmpty(countryCode.country_code2))
+                                User.CountryId = countries
+                                    .FirstOrDefault(x => x.CountryCode == "EG")
+                                    .CountryId;
+                            else
+                                User.CountryId = countries
+                                    .FirstOrDefault(x => x.CountryCode == countryCode.country_code2)
+                                    .CountryId;
+                        }
+                        await request.context.CommonUser.AddAsync(User);
                         await request.context.SaveChangesAsync();
 
+                        res.UserDTO = new UserDTO
+                        {
+                            Id = User.Id,
+                            Name = User.Name,
+                            Email = User.Email,
+                            RoleID = User.RoleId,
+                        };
                         res.Message = "New user added successfully";
                         res.Success = true;
                         res.StatusCode = HttpStatusCode.OK;

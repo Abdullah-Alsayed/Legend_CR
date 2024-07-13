@@ -6,8 +6,8 @@ namespace DicomApp.Helpers.Services.GetCounter
 {
     public class CountryResponse
     {
-        public string Ip { get; set; }
-        public string CountryCode2 { get; set; }
-        public string CountryName { get; set; }
+        public string ip { get; set; } = string.Empty;
+        public string country_code2 { get; set; } = string.Empty;
+        public string country_name { get; set; } = string.Empty;
     }
 }

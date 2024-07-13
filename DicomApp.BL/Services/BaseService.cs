@@ -113,13 +113,13 @@ namespace DicomApp.BL.Services
                     .Trim();
 
                 bool canAccess = true;
-                canAccess = CheckRoleAccessability(
-                    request.RoleID,
-                    serviceName,
-                    request.context,
-                    created: request.UserID,
-                    message: request.Message
-                );
+                //canAccess = CheckRoleAccessability(
+                //    request.RoleID,
+                //    serviceName,
+                //    request.context,
+                //    created: request.UserID,
+                //    message: request.Message
+                //);
                 if (!canAccess)
                 {
                     response.Message = "Not allowed";
