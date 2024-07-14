@@ -132,27 +132,13 @@ namespace DicomApp.Portal.Controllers
                     new ClaimsPrincipal(claimsIdentity),
                     authProperties
                 );
-                switch (user.RoleID)
-                {
-                    case (int)EnumRole.Gamer:
-                        return RedirectToAction("AccountDashboard", "Home");
-                    case (int)EnumRole.AccountManager:
-                        return RedirectToAction("AccountDashboard", "Home");
-                    case (int)EnumRole.Accounting:
-                        return RedirectToAction("Invoices", "Invoice");
-                    case (int)EnumRole.BranchManger:
-                        return RedirectToAction("shipmentsReport", "User");
-                    case (int)EnumRole.WarehouseManager:
-                        return RedirectToAction("Shipments", "Warehouse");
-                    case (int)EnumRole.DataEntry:
-                        return RedirectToAction("CustomerFollowup", "User");
-                    default:
-                        return RedirectToAction("Index", "Home");
-                }
+                if (user.RoleName == SystemConstants.Role.Gamer)
+                    return RedirectToAction("Main", "Gamer");
+                else
+                    return RedirectToAction("Index", "Home");
             }
             ViewBag.error = loginResponse.Message;
-            //IndicatorAutoFill();
-            return View();
+            return View(model);
         }
 
         [AllowAnonymous]

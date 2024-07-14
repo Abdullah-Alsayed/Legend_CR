@@ -581,6 +581,9 @@ namespace DicomApp.BL.Services
                         if (!string.IsNullOrEmpty(request.OrderByColumn))
                             ship = OrderByDynamic(ship, request.OrderByColumn, request.IsDesc);
 
+                        if (req.Top != 0)
+                            ship = ship.Take(req.Top);
+
                         var query = ship.Select(s => new AdsDTO
                         {
                             AdvertisementId = s.AdvertisementId,

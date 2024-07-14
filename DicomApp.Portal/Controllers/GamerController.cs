@@ -38,6 +38,7 @@ namespace DicomApp.Portal.Controllers
             string ActionType = null
         )
         {
+            var mainResponse = new MainResponse();
             var userID = AuthHelper.GetClaimValue(User, "UserID");
             var model = new AdsDTO();
             //model.Search = Search;
@@ -64,23 +65,29 @@ namespace DicomApp.Portal.Controllers
                 AdsDTO = model,
                 applyFilter = true,
                 PageIndex = PageIndex,
-                PageSize = PageSize
+                PageSize = PageSize,
+                OrderByColumn = nameof(Advertisement.Price),
+                Top = 10
             };
-            var advertisementResponse =
-                DicomApp.BL.Services.AdvertisementService.GetAllAdvertisements(
-                    advertisementRequest
-                );
+            mainResponse.TopAdvertisements = DicomApp
+                .BL.Services.AdvertisementService.GetAllAdvertisements(advertisementRequest)
+                .AdsDTOs;
+
+            mainResponse.Games = GameService
+                .GetGames(new GameRequest { context = _context })
+                .GameDTOs;
+
+            advertisementRequest.Top = 0;
+            mainResponse.AllAdvertisements = DicomApp
+                .BL.Services.AdvertisementService.GetAllAdvertisements(advertisementRequest)
+                .AdsDTOs;
+
             if (ActionType == SystemConstants.ActionType.PartialView)
-                return PartialView("_advertisementList", advertisementResponse.AdsDTOs);
-            else if (ActionType == SystemConstants.ActionType.Print)
-                return BaseHelper.GeneratePDF<List<AdsDTO>>(
-                    "advertisementListPDF",
-                    advertisementResponse.AdsDTOs
-                );
+                return PartialView("_advertisementList", mainResponse);
             else if (ActionType == SystemConstants.ActionType.Table)
-                return PartialView("_advertisementListTable", advertisementResponse.AdsDTOs);
+                return PartialView("_advertisementListTable", mainResponse);
             else
-                return View(advertisementResponse.AdsDTOs);
+                return View(mainResponse);
         }
 
         #region Reports

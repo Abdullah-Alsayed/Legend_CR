@@ -28,12 +28,18 @@ Description: Online Movie,Vedio and TV Show HTML Template
 ----------------------------------*/
 @import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,900');
 body {
+    backdrop-filter:blur(3px);
     line-height: 24px;
     font-size: 14px;
     color: #b6b7b9;
-	background: #13151f;
-	font-family: 'Poppins', sans-serif;
+    background: url(/dist/images/BG/7.jpg);
+    font-family: 'Poppins', sans-serif;
     font-weight: 400;
+    height: 100%;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
     position: relative;
 }
 
@@ -223,15 +229,15 @@ textarea:focus {
     vertical-align: middle;
 }
 .theme-btn {
-	background: #eb315a;
-    border: 1px solid #eb315a;
+    background: #0077e4;
+    border: 1px solid #0077e4;
     color: #fff;
-	border-radius: 35px;
+    border-radius: 35px;
     padding: 5px 25px;
     display: inline-block;
     font-size: 16px;
-	cursor: pointer;
-	font-weight: 500;
+    cursor: pointer;
+    font-weight: 500;
 }
 .theme-btn:hover {
     border: 1px solid #eb315a;
@@ -413,6 +419,14 @@ option {
     box-shadow: 0 0 20px #000000;
 }
 
+.hero-area-content {
+    display: flex;
+    min-height: 591px;
+    min-width: 430px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
 .hero-area-content > img {
     position: relative;
     margin-top: -120px;
@@ -442,14 +456,9 @@ option {
 
 .single-slide-cast {
     width: 11.5%;
-	margin-right: 1%;
-	float: left;
-    margin-top: 15px;
 }
 
-.single-slide-cast img {
-    border-radius: 100%;
-}
+
 
 .single-slide-cast.text-center {
     height: 45px;
@@ -464,13 +473,27 @@ option {
 	margin-left: -15px;
 }
 .slide-trailor {
+    display: flex;
     overflow: hidden;
     margin-top: 40px;
+    margin-bottom: 10px;
+    align-items: center;
+    flex-direction: row;
 }
+ .slide-trailor img{
+     width:50px !important;
+
+ }
 
 .slide-cast {
-    overflow: hidden;
+    display: flex;
+    align-content: space-between;
+    justify-content: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 15px;
 }
+
 
 .slide-trailor h3 {
     float: left;
@@ -551,6 +574,12 @@ hr {
 
 .portfolio-menu li.active::before,.portfolio-menu li:hover::before {
     background: #eb315a;
+}
+.portfolio-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
 }
 .portfolio-content h2 {
     margin-top: 20px;
@@ -1295,3 +1324,81 @@ hr {
 /*--------------------------------------
 --------- Pre Loader Style END ---------
 ---------------------------------------*/
+.card {
+    width: 195px;
+    height: 285px;
+    background: #313131;
+    border-radius: 20px;
+    ;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    transition: 0.2s ease-in-out;
+}
+
+.img {
+    height: 30%;
+    position: absolute;
+    transition: 0.2s ease-in-out;
+    z-index: 1;
+}
+
+.textBox {
+    opacity: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    transition: 0.2s ease-in-out;
+    z-index: 2;
+}
+
+    .textBox > .text {
+        font-weight: bold;
+    }
+
+    .textBox > .head {
+        font-size: 20px;
+    }
+
+    .textBox > .price {
+        font-size: 17px;
+    }
+
+    .textBox > span {
+        font-size: 12px;
+        color: lightgrey;
+    }
+
+.card:hover > .textBox {
+    opacity: 1;
+}
+
+.card:hover > .img {
+    height: 65%;
+    filter: blur(7px);
+    animation: anim 3s infinite;
+}
+
+@keyframes anim {
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.card:hover {
+    transform: scale(1.04) rotate(-1deg);
+}
+
+

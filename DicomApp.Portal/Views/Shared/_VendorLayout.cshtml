@@ -61,10 +61,17 @@
 						<button><i class="icofont icofont-search"></i></button>
 					</form>
 					<ul>
-						<li><a href="#">Welcome @AuthHelper.GetUserName(User)</a></li>
 						@if (User.Identity.IsAuthenticated)
 						{
-						<li><a class="login-popup" href="#">Login</a></li>
+							<li><a href="#">Welcome @AuthHelper.GetUserName(User)</a></li>
+						}
+						@if (!User.Identity.IsAuthenticated)
+						{
+							<li><a class="login-popup" href="#">Login</a></li>
+						}
+						else
+						{
+							<li><a href="~/User/Logout" >LogOf</a></li>
 						}
 					</ul>
 				</div>
@@ -359,7 +366,7 @@
 			<div class="row">
 				<div class="col-lg-3 col-sm-6">
 					<div class="widget">
-						<img src="/GamerLayout/assets/img/logo.png" alt="about" />
+						<img src="/dist/images/pngwing.com (3)" alt="about" />
 						<p>7th Harley Place, London W1G 8LZ United Kingdom</p>
 						<h6><span>Call us: </span>(+880) 111 222 3456</h6>
 					</div>
