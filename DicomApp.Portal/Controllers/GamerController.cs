@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing.Printing;
 using System.Linq;
-using System.Threading.Tasks;
 using DicomApp.BL.Services;
 using DicomApp.CommonDefinitions.DTO;
 using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
-using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
-using DicomApp.CommonDefinitions.DTO.CashDTOs;
-using DicomApp.CommonDefinitions.DTO.PickupDTOs;
 using DicomApp.CommonDefinitions.DTO.VendorProductDTOs;
 using DicomApp.CommonDefinitions.Requests;
 using DicomApp.CommonDefinitions.Responses;
@@ -16,7 +11,6 @@ using DicomApp.DAL.DB;
 using DicomApp.Helpers;
 using DicomApp.Portal.Helpers;
 using Microsoft.AspNetCore.Mvc;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Logical;
 
 namespace DicomApp.Portal.Controllers
 {

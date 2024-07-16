@@ -109,6 +109,8 @@
     <None Include="wwwroot\GamerLayout\assets\js\jquery.slicknav.min.js" />
     <None Include="wwwroot\GamerLayout\assets\js\main.js" />
     <None Include="wwwroot\GamerLayout\assets\js\owl.carousel.min.js" />
+    <None Include="wwwroot\GamerLayout\assets\js\wow\wow.js" />
+    <None Include="wwwroot\GamerLayout\assets\js\wow\wow.min.js" />
     <None Include="wwwroot\js\User\Index.js" />
   </ItemGroup>
 
