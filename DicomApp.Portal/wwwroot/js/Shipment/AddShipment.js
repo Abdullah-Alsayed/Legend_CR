@@ -268,6 +268,7 @@ function AddAdvertisement(ActionName, ControllerName, FormName) {
                 contentType: false, 
                 dataType: 'html',
                 success: function (response) {
+                    $(".buy-ticket").css("display","none");
                     if (response.includes('successfully')) {
                         Swal.fire({
                             position: 'center',

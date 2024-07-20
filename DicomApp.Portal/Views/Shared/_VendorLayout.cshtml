@@ -35,9 +35,11 @@
 	<!-- Main style CSS -->
 	<link rel="stylesheet" type="text/css" href="/GamerLayout/assets/css/style.css" media="all" />
 
-	<link rel="stylesheet" type="text/css" href="/GamerLayout/assets/css/Payment.css media="all" />
+	<link rel="stylesheet" type="text/css" href="/GamerLayout/assets/css/Payment.css" media="all" />
 
 	<link rel="stylesheet" type="text/css" href="/dist/css/Red.css" media="all" />
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.12/sweetalert2.min.css" />
 
 	<!-- Responsive CSS -->
 	<link rel="stylesheet" type="text/css" href="/GamerLayout/assets/css/responsive.css" media="all" />
@@ -57,8 +59,8 @@
 					<div class="responsive-menu"></div>
 					<div class="mainmenu">
 						<ul id="primary-menu">
-@* 							<li><a class="active" href="index-2.html">Home</a></li>
-							<li><a href="movies.html">Movies</a></li>
+ 							<li><a class="active" href="@Url.Action("Main","Gamer")">Home</a></li>
+							@*	<li><a href="movies.html">Movies</a></li>
 							<li><a href="celebrities.html">CelebritiesList</a></li>
 							<li><a href="top-movies.html">Top Movies</a></li>
 							<li><a href="blog.html">News</a></li>
@@ -254,32 +256,11 @@
 					</div>
 				</div>
 				<div class="col-lg-3 col-sm-6">
-					<div class="widget">
-						<img src="/dist/images/pngwing.com (3)" alt="about" />
-						<p>7th Harley Place, London W1G 8LZ United Kingdom</p>
-						<h6><span>Call us: </span>(+880) 111 222 3456</h6>
-					</div>
+
 				</div>
 				<div class="col-lg-3 col-sm-6">
-					<div class="widget">
-						<h4>Legal</h4>
-						<ul>
-							<li><a href="#">Terms of Use</a></li>
-							<li><a href="#">Privacy Policy</a></li>
-							<li><a href="#">Security</a></li>
-						</ul>
-					</div>
 				</div>
 				<div class="col-lg-3 col-sm-6">
-					<div class="widget">
-						<h4>Account</h4>
-						<ul>
-							<li><a href="#">My Account</a></li>
-							<li><a href="#">Watchlist</a></li>
-							<li><a href="#">Collections</a></li>
-							<li><a href="#">User Guide</a></li>
-						</ul>
-					</div>
 				</div>
 			</div>
 		</div>
@@ -306,10 +287,10 @@
 	<!-- Isotope JS -->
 	<script src="/GamerLayout/assets/js/isotope.pkgd.min.js"></script>
 	<!-- main JS -->
-	<script src="/GamerLayout/assets/js/main.js"></script>
-	<script src="/js/Shipment/AddShipment.js"></script>
-	<script src="/dist/js/app.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.12/sweetalert2.min.js"></script>
+	<script src="/js/Shipment/AddShipment.js"></script>
+	<script src="/GamerLayout/assets/js/main.js"></script>
+	<script src="/dist/js/app.js"></script>
 	<script src="~/dist/js/jquery.validate.min.js"></script>
 	<script src="~/dist/js/jquery.validate.unobtrusive.min.js"></script>
 </body>

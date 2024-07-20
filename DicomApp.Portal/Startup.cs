@@ -3,6 +3,7 @@ using DicomApp.DAL.DB;
 using DicomApp.Helpers.Services.GenrateAvatar;
 using DicomApp.Helpers.Services.GetCounter;
 using DicomApp.Helpers.Services.PayPal;
+using ECommerce.Core.Services.MailServices;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -120,10 +121,13 @@ namespace DicomApp.Portal
                     }
                 );
             });
+            //****************** Email Settings ******************************
+            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
 
             //Services
             services.AddScoped<IApiCountryService, ApiCountryService>();
             services.AddScoped<IPayPalService, PayPalService>();
+            services.AddScoped<IMailServices, MailServices>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

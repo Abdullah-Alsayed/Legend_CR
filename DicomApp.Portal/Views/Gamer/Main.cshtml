@@ -38,9 +38,12 @@
  *@							<div class="slide-cast">
 								@foreach (var photo in adv.AdvertisementPhotos)
 									{
-									<div class="single-slide-cast">
-											<img src="/dist/images/@photo" alt="about" />
-									</div>
+										if (adv.AdvertisementPhotos.FirstOrDefault() != photo)
+										{
+											<div class="single-slide-cast">
+												<img src="/dist/images/@photo" alt="about" />
+											</div>
+										}
 									}
 							</div>
 							<div class="slide-trailor">

@@ -13,8 +13,10 @@ using DicomApp.DAL.DB;
 using DicomApp.Helpers;
 using DicomApp.Helpers.Services.PayPal;
 using DicomApp.Portal.Helpers;
+using ECommerce.Core.Services.MailServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using PayPal;
 
 namespace DicomApp.Portal.Controllers
 {
@@ -23,16 +25,19 @@ namespace DicomApp.Portal.Controllers
         private readonly ShippingDBContext _context;
         readonly IPayPalService _payPalService;
         readonly IConfiguration _configuration;
+        readonly IMailServices _mailServices;
 
         public GamerController(
             ShippingDBContext context,
             IPayPalService payPalService,
-            IConfiguration configuration
+            IConfiguration configuration,
+            IMailServices mailServices
         )
         {
             _context = context;
             _payPalService = payPalService;
             _configuration = configuration;
+            _mailServices = mailServices;
         }
 
         [AuthorizePerRole(SystemConstants.Permission.Main)]
@@ -120,7 +125,8 @@ namespace DicomApp.Portal.Controllers
                 if (accountResponse.Success && accountResponse.AdsDTO != null)
                 {
                     var account = accountResponse.AdsDTO;
-                    var returnUrl = $"{_configuration["AppDomain"]}/Gamer/SuccessPay";
+                    var returnUrl =
+                        $"{_configuration["AppDomain"]}/Gamer/SuccessPay?AccountId={accountId}";
                     var cancelUrl = $"{_configuration["AppDomain"]}/Gamer/CancelPay";
                     var createPayment = await _payPalService.PurchaseAccountAsync(
                         account.Price,
@@ -143,11 +149,42 @@ namespace DicomApp.Portal.Controllers
             return Json(new { success = false, message = "field" });
         }
 
-        public async Task<IActionResult> SuccessPay(string payerID, string paymentID)
+        public async Task<IActionResult> SuccessPay(string payerID, string paymentID, int accountId)
         {
             var result = await _payPalService.ExecutePaymentAsync(payerID, paymentID);
-            if (result.state == "created")
+            if (result.state != "failed")
+            {
+                var advertisementRequest = new AdvertisementRequest
+                {
+                    RoleID = AuthHelper.GetClaimValue(User, SystemConstants.Claims.RoleID),
+                    UserID = AuthHelper.GetClaimValue(User, SystemConstants.Claims.UserID),
+                    context = _context,
+                    AdsDTO = new AdsDTO
+                    {
+                        AdvertisementId = accountId,
+                        StatusType = (int)StatusTypeEnum.Sold
+                    },
+                    applyFilter = true,
+                };
+                var accountResponse =
+                    DicomApp.BL.Services.AdvertisementService.ChangStatusAdvertisement(
+                        advertisementRequest
+                    );
+                if (accountResponse.Success)
+                {
+                    var body =
+                        $"userName : {accountResponse.AdsDTO.UserName} ,  password : {accountResponse.AdsDTO.Password}";
+                    var emailResult = await _mailServices.SendAsync(
+                        new EmailDto
+                        {
+                            Email = accountResponse.AdsDTO.Gamer.Email,
+                            Subject = "congratulations",
+                            Body = body
+                        }
+                    );
+                }
                 return View();
+            }
             else
                 return RedirectToAction("CancelPay");
         }

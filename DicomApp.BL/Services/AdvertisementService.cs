@@ -11,6 +11,8 @@ using DicomApp.DAL.DB;
 using DicomApp.Helpers;
 using log4net.Core;
 using Microsoft.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace DicomApp.BL.Services
 {
@@ -57,16 +59,21 @@ namespace DicomApp.BL.Services
                         // Add Photos
                         if (request.AdsDTO.Files != null && request.AdsDTO.Files.Any())
                         {
+                            var files = new List<string>();
                             foreach (var file in request.AdsDTO.Files)
                             {
-                                var url = BaseHelper.UploadImg(file, request.RoutPath);
-                                req.context.AdvertisementPhotos.Add(
-                                    new AdvertisementPhotos
-                                    {
-                                        AdvertisementId = ship.AdvertisementId,
-                                        Url = url
-                                    }
-                                );
+                                if (!files.Contains(file.FileName))
+                                {
+                                    files.Add(file.FileName);
+                                    var url = BaseHelper.UploadImg(file, request.RoutPath);
+                                    req.context.AdvertisementPhotos.Add(
+                                        new AdvertisementPhotos
+                                        {
+                                            AdvertisementId = ship.AdvertisementId,
+                                            Url = url
+                                        }
+                                    );
+                                }
                             }
                         }
                         //Add follow up
@@ -375,9 +382,12 @@ namespace DicomApp.BL.Services
                 {
                     try
                     {
-                        var ship = request.context.Advertisement.FirstOrDefault(s =>
-                            s.AdvertisementId == request.AdsDTO.AdvertisementId
-                        );
+                        var ship = request
+                            .context.Advertisement.Include(x => x.Gamer)
+                            .FirstOrDefault(s =>
+                                s.AdvertisementId == request.AdsDTO.AdvertisementId
+                            );
+
                         var status = request.context.Status.FirstOrDefault(x =>
                             x.StatusType == request.AdsDTO.StatusType
                         );
@@ -419,7 +429,13 @@ namespace DicomApp.BL.Services
                             );
 
                             request.context.SaveChanges();
-
+                            response.AdsDTO = new AdsDTO
+                            {
+                                AdvertisementId = ship.AdvertisementId,
+                                UserName = ship.UserName,
+                                Password = ship.Password,
+                                Gamer = new UserDTO { Email = ship.Gamer.Email }
+                            };
                             response.Message =
                                 "Advertisement " + ship.RefId + " successfully updated";
                             response.Success = true;

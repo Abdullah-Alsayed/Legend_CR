@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using DicomApp.CommonDefinitions.DTO;
 using DicomApp.CommonDefinitions.Requests;
 using DicomApp.DAL.DB;
@@ -174,27 +175,34 @@ namespace DicomApp.BL.Services
             return lookup;
         }
 
-        public static string UploadImg(IFormFile File, string WebRootPath, string ImgUrl = null)
+        public static string UploadImg(IFormFile file, string WebRootPath, string PhotoName = null)
         {
-            string Img = String.Empty;
-            if (File != null)
+            string Photo = string.Empty;
+            string path = string.Empty;
+            string fullPath = string.Empty;
+            if (file != null)
             {
-                var extension = Path.GetExtension(File.FileName);
+                var extansion = Path.GetExtension(file.FileName);
                 var GuId = Guid.NewGuid().ToString();
-                Img = GuId + extension;
-                var UploadFile = Path.Combine(WebRootPath, "dist", "images", Img);
-                File.CopyTo(new FileStream(UploadFile, FileMode.Create));
+                Photo = GuId + extansion;
+                path = Path.Combine(WebRootPath, "dist", "images");
+
+                if (!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
+
+                fullPath = Path.Combine(path, Photo);
+                file.CopyTo(new FileStream(fullPath, FileMode.Create));
             }
-            if (ImgUrl != null && File != null)
+            //Update Photo
+            if (PhotoName != null && file != null)
             {
-                var UploadFile = Path.Combine(WebRootPath, "dist", "images", ImgUrl);
-                System.IO.File.Delete(UploadFile);
+                fullPath = Path.Combine(WebRootPath, "dist", "images", PhotoName);
+                System.IO.File.Delete(fullPath);
             }
-            if (ImgUrl != null && File == null)
-            {
-                Img = ImgUrl;
-            }
-            return string.IsNullOrEmpty(Img) ? SystemConstants.Imges.Default : Img;
+            if (PhotoName != null && file == null)
+                return PhotoName;
+
+            return string.IsNullOrEmpty(Photo) ? SystemConstants.Imges.Default : Photo;
         }
 
         public static string GenerateRefId(
