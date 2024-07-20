@@ -1,8 +1,7 @@
-﻿let PageIndex = 0;
-
-//Sort Clint-Side
+﻿
+let PageIndex = 0;
 function ResetTdSort() {
-    $(`.Sort-Column`).css("color", "#000");
+    $(`.Sort-Column`).css("color", "#EEF0F4");
 }
 
 function SortClintSide() {
@@ -19,13 +18,13 @@ function SortClintSide() {
             } else {
                 $(this).addClass('asc selected');
                 $(this).removeClass('desc');
-                $(this).css("color", "#000");
+                $(this).css("color", "#EEF0F4");
 
                 sortOrder = 1;
             }
             $(this).siblings().removeClass('asc selected');
             $(this).siblings().removeClass('desc selected');
-            $(this).siblings().css("color", "#000");
+            $(this).siblings().css("color", "#EEF0F4");
 
             var arrData = $('table').find('tbody >tr:has(td)').get();
             arrData.sort(function (a, b) {
@@ -56,10 +55,7 @@ function NextPage(ControllerName, ActionName, Filter) {
         url: `/${ControllerName}/${ActionName}?ActionType=Table&StatusId=${Filter}&PageIndex=${Page}`,
         type: "GET",
         success: function (result) {
-            if ((ControllerName == "Warehouse" && ActionName == "Shipments")
-                || (ControllerName == "Warehouse" && ActionName == "Courier")
-                || (ControllerName == "PickUpRequest" && ActionName == "All")
-                || (ControllerName == "Shipment" && ActionName == "All")) {
+            if (ActionName == "All") {
                 $("#Table").html(result);
             }
             else {
@@ -95,10 +91,7 @@ function PreviousPage(ControllerName, ActionName, Filter) {
         url: `/${ControllerName}/${ActionName}?ActionType=Table&StatusId=${Filter}&PageIndex=${Page}`,
         type: "GET",
         success: function (result) {
-            if ((ControllerName == "Warehouse" && ActionName == "Shipments")
-                || (ControllerName == "Warehouse" && ActionName == "Courier")
-                || (ControllerName == "PickUpRequest" && ActionName == "All")
-                || (ControllerName == "Shipment" && ActionName == "All")) {
+            if (ActionName == "All") {
                 $("#Table").html(result);
             }
             else {
@@ -123,10 +116,7 @@ function Filter(ActionName, ControllerName) {
         type: "GET",
         contentType: "application/json; charset=utf-8",
         success: function (result) {
-            if ((ControllerName == "Warehouse" && ActionName == "Shipments")
-                || (ControllerName == "Warehouse" && ActionName == "Courier")
-                || (ControllerName == "PickUpRequest" && ActionName == "All")
-                || (ControllerName == "Shipment" && ActionName == "All")) {
+            if  (ActionName == "All") {
                 $("#Table").html(result);
             }
             else {
@@ -150,13 +140,10 @@ function FilterByStatus(ActionName, ControllerName, ID, Filter) {
     $("#Ajaxloader").removeClass("d-none");
 
     $.ajax({
-        url: `/${ControllerName}/${ActionName}?ActionType=Table&Search=${Search}&StatusId=${Filter}`,
+        url: `/${ControllerName}/${ActionName}?ActionType=Table&Search=${Search}&StatusType=${Filter}`,
         type: "GET",
         success: function (result) {
-            if ((ControllerName == "Warehouse" && ActionName == "Shipments")
-                || (ControllerName == "Warehouse" && ActionName == "Courier")
-                || (ControllerName == "PickUpRequest" && ActionName == "All")
-                || (ControllerName == "Shipment" && ActionName == "All")) {
+            if  (ActionName == "All") {
                 $("#Table").html(result);
             }
             else {
@@ -178,7 +165,7 @@ function Sort(ControllerName, ActionName) {
     Url += `&IsDesc=${SortBy}`;
     $("#Ajaxloader").css("display", "inline-block").fadeIn(20000)
     $("#Ajaxloader").removeClass("d-none");
-    $("td").css("color", "#000000");
+    $("td").css("color", "##EEF0F4");
     if (SortBy) {
         $("#Sort-Btn").data('isdesc', false);
         $("#Sort-Btn").css("background", "#FFFFFF");
@@ -210,7 +197,7 @@ function SortColumn(Td, SortByCoulmn, ControllerName, ActionName) {
     console.log(Url)
     $("#Ajaxloader").css("display", "inline-block").fadeIn(20000)
     $("#Ajaxloader").removeClass("d-none");
-    $("td").css("color", "#000000");
+    $("td").css("color", "##EEF0F4");
     $("#Sort-Btn").css("background", "#FFFFFF");
     if (SortBy) {
         $(`#${Td}`).data('isdesc', false);
@@ -218,16 +205,13 @@ function SortColumn(Td, SortByCoulmn, ControllerName, ActionName) {
     }
     else {
         $(`#${Td}`).data('isdesc', true);
-        $(`#${Td}`).css("color", "#000000");
+        $(`#${Td}`).css("color", "##EEF0F4");
     }
     $.ajax({
         url: Url,
         type: "GET",
         success: function (result) {
-            if ((ControllerName == "Warehouse" && ActionName == "Shipments")
-                || (ControllerName == "Warehouse" && ActionName == "Courier")
-                || (ControllerName == "PickUpRequest" && ActionName == "All")
-                || (ControllerName == "Shipment" && ActionName == "All")) {
+            if (ActionName == "All") {
                 $("#Table").html(result);
             }
             else {
@@ -255,10 +239,7 @@ function Search(ControllerName, ActionName) {
             url: `/${ControllerName}/${ActionName}?ActionType=Table&StatusId=${Status}&Search=${Value}`,
             type: "GET",
             success: function (result) {
-                if ((ControllerName == "Warehouse" && ActionName == "Shipments")
-                    || (ControllerName == "Warehouse" && ActionName == "Courier")
-                    || (ControllerName == "PickUpRequest" && ActionName == "All")
-                    || (ControllerName == "Shipment" && ActionName == "All")) {
+                if (ActionName == "All") {
                     $("#Table").html(result);
                 }
                 else {
@@ -299,7 +280,11 @@ function MenuNavigation(event, ActionName, ControllerName, paramters = "") {
         ControllerName = event.target.baseURI.split('/')[3];
         ActionName = event.target.baseURI.split('/')[4];
     }
-    window.history.pushState(null, null, `/${ControllerName}/${ActionName}`);
+    if (paramters != "")
+        window.history.pushState(null, null, `/${ControllerName}/${ActionName}?${paramters}`);
+     else
+        window.history.pushState(null, null, `/${ControllerName}/${ActionName}`);
+
     $('#MainLoder').fadeIn(100);
     $('#Footer').hide();
     $("#MainView").hide();
@@ -400,34 +385,37 @@ $("form , main").keyup(function (e) {
 });
 
 function GetPramter(ControllerName, ActionName, ActionType) {
-    var Search = $("#Search-Input").val();
-    var From = $("#From").val();
-    var To = $("#To").val();
-    var AreaId = $("#AreaId").val();
-    var areadIDs = $("#areadIDs").val();
-    var ZoneId = $("#ZoneId").val();
-    var VendorID = $("#VendorID").val();
-    var StatusId = $("#StatusId").val();
-    var CategoryId = $("#CategoryId").val();
-    var Quantity = $("#Quantity").val();
-    var Status = $(".Active").data('status');
-    var DeliveryManId = $(`#DeliveryManId`).val();
-    var RoleId = $(`#RoleId`).val();
-    var Department = $(`#FilterForm [name="Department"]`).val();
-    var EmployeeId = $(`#EmployeeId`).val();
-    var Solved = $(`#Solved`).val();
-    var url = `/${ControllerName}/${ActionName}?ActionType=${ActionType}&Search=${Search}&From=${From}
-                &To=${To}&AreaId=${AreaId}&ZoneId=${ZoneId}&VendorID=${VendorID}&areadIDs=${areadIDs}
-                &StatusId=${StatusId}&Status=${Status}&DeliveryManId=${DeliveryManId}&CategoryId=${CategoryId}   
-                &Quantity=${Quantity}&RoleId=${RoleId}&Department=${Department}&EmployeeId=${EmployeeId}&Solved=${Solved}`;
+    // Collect all input values
+    var params = {
+        Search: $("#Search-Input").val(),
+        From: $("#From").val(),
+        To: $("#To").val(),
+        AreaId: $("#AreaId").val(),
+        areadIDs: $("#areadIDs").val(),
+        ZoneId: $("#ZoneId").val(),
+        VendorID: $("#VendorID").val(),
+        StatusId: $("#StatusId").val(),
+        CategoryId: $("#CategoryId").val(),
+        Quantity: $("#Quantity").val(),
+        Status: $(".Active").data('status'),
+        DeliveryManId: $("#DeliveryManId").val(),
+        RoleId: $("#RoleId").val(),
+        Department: $("#FilterForm [name='Department']").val(),
+        EmployeeId: $("#EmployeeId").val(),
+        Solved: $("#Solved").val(),
+        GameId: $("#GameId").val(),
+        GamerId: $("#GamerId").val(),
+        LessLevel: $("#LessLevel").val(),
+        GreeterLevel: $("#GreeterLevel").val(),
+        LessPrice: $("#LessPrice").val(),
+        GreeterPrice: $("#GreeterPrice").val(),
+        GameServiceType: $("#GameServiceType").val()
+    };
+
+    var queryString = $.param(params);
+    var url = `/${ControllerName}/${ActionName}?ActionType=${ActionType}&${queryString}`;
     return url;
-};
-
-
-
-
-
-
+}
 
 function DashbordFilter(ActionName, ControllerName) {
     var Url = GetPramter(ControllerName, ActionName, 'PartialView');
@@ -449,11 +437,9 @@ function DashbordFilter(ActionName, ControllerName) {
     });
 }
 
-
-
-function ShipmentDetails(ControllerName, AdvertisementId) {
+function AdvertisementDetails(ControllerName, AdvertisementId) {
     $.ajax({
-        url: `/Shipment/ShipmentDetails/${AdvertisementId}`,
+        url: `/${ControllerName}/AdvertisementDetails/${AdvertisementId}`,
         type: "GET",
         success: function (result) {
             $("#ShipmentDetails-Body").html(result);
@@ -491,6 +477,7 @@ function Category(ID) {
 
 
 function ChangeUserPassword(Id) {
+    $(".Spinner").removeClass("d-none");
     var NewPassword = $(`#NewPassword_${Id}`).val();
     var ConfirmNewPassword = $(`#ConfirmPassword_${Id}`).val();
     if (NewPassword != ConfirmNewPassword) {
@@ -498,10 +485,17 @@ function ChangeUserPassword(Id) {
     }
     else {
         $.ajax({
-            url: `/User/ChangePassword?u=${Id}&newPass=${NewPassword}&confirmPass=${ConfirmNewPassword}`,
+            url: `/User/ChangePassword?id=${Id}&newPass=${NewPassword}&confirmPass=${ConfirmNewPassword}`,
             type: "POST",
             success: function (result) {
-                
+                $(".Spinner").addClass("d-none");
+                $(".modal").hide();
+                $(".modal-backdrop").remove();
+                if (result.success) 
+                alertSuccess(result.message);
+                else
+                    alertError(result.message);
+
             },
             error: function () {
                 alert("Error")
@@ -510,40 +504,50 @@ function ChangeUserPassword(Id) {
     }
 }
 
-//function Changepassword() {
-//    if ($("#ChangePassword-Form").valid()) {
-//        var Password = $("#ChangePassword-Form #Password").val();
-//        var NewPassword = $("#NewPassword").val();
-//        var ConfirmNewPassword = $("#ConfirmNewPassword").val();
-//        let id = $(`#EntityId`).val();
-//        $.ajax({
-//            url: `/Vendor/ChangePassword?ConfirmNewPassword=${ConfirmNewPassword}&NewPassword=${NewPassword}&Password=${Password}&UserID=${id}`,
-//            type: "POST",
-//            success: function (result) {
-//                switch (result) {
-//                    case "Password has been changed successfully":
-//                        alertSuccess(result);
-//                        $("#Password").val("");
-//                        $("#NewPassword").val("");
-//                        $("#ConfirmNewPassword").val("");
-//                        break;
-//                    case "New password does not match":
-//                        alertError(result);
-//                        break;
-//                    case "Old password is incorrect":
-//                        alertError(result);
-//                        break;
-//                    default:
-//                }
-//            },
-//            error: function () {
-//                alert("Error")
-//            }
-//        })
-//    } else {
-//        $('#ChangePassword-Form').submit();
-//    }
-//}
+
+function GamerForm()
+{
+    if ($('#Gamer-Form').valid()) {
+
+    $(".Spinner").removeClass("d-none");
+    var id = $('#Id').val();
+    let formData = new FormData($(`#Gamer-Form`)[0]);
+  
+    let files = $(`#Gamer-Form input[type='file']`)[0].files;
+    for (let i = 0; i < files.length; i++) {
+        formData.append('files', files[i]);
+    }
+
+        $.ajax({
+            url: `/User/SaveGamer`,
+            type: "POST",
+            data: formData,
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            processData: false, 
+            contentType: false, 
+            dataType: 'json',
+            success: function (result) {
+                $(".Spinner").addClass("d-none");
+                if (result.success)
+                {
+                    alertSuccess(result.message);
+                    MenuNavigation(event, 'ListGamer', 'User');
+                }
+                else
+                    alertError(result.message);
+
+            },
+            error: function (err) {
+                $(".Spinner").addClass("d-none");
+                alert("try again!")
+                console.log(err);
+            }
+        });   
+    }
+}
+
+
+
 
 function EditInfo() {
     let Data = $("#EditUser-Form").serialize();
@@ -643,6 +647,7 @@ function ComparePassword() {
 
 function AddEntity(ControllerName, ActionName, FormID) {
     if ($(`#${FormID}`).valid()) {
+        let Count = $(`tbody tr`).length;
         $("#BtnSend").prop('disabled', true);
         $(".Spinner").removeClass("d-none");
         let formData = formSerialize(FormID);
@@ -660,8 +665,23 @@ function AddEntity(ControllerName, ActionName, FormID) {
                 }
                 else {
                     ResetForm(FormID);
-                    $(`tbody`).prepend(result);
-                    $(`#${FormID} img`).attr('src','');
+                    if ((ControllerName == "GamerService" || ControllerName=="Invoice") && ActionName == "Add")
+                    {
+                        if (ControllerName == "GamerService") 
+                          $('#AddService-Model').modal('hide');
+                       else
+                        $('#AddInvoice-Model').modal('hide');
+
+
+                        $(".modal-backdrop").remove();
+                        MenuNavigation(event, "All", ControllerName);
+                    }
+                     else
+                        $(`tbody`).prepend(result);
+
+                    $(`#${FormID} img`).attr('src', '');
+                    $(`#DataCount-Span`).text(`Showing : ${+(++Count)}`);
+
                     alertSuccess()
                 }
             },
@@ -715,52 +735,40 @@ function EditEntity(ControllerName, ActionName, FormID, Tr) {
     }
 }
 
-//function EditEntity(ControllerName, ActionName, FormID, Tr) {
-//    if ($(`#${FormID}`).valid()) {
-//        $(`${FormID} #BtnSend`).prop('disabled', true);
-//        $(".Spinner").removeClass("d-none");
-//        let formData = $(`#${FormID}`).serializeArray();
-//        $.ajax({
-//            url: `/${ControllerName}/${ActionName}`,
-//            type: 'POST',
-//            data: formData,
-//            success: function (result) {
-//                if (result.success == false) {
-//                    alertError();
-//                    $(`${FormID} #BtnSend`).prop('disabled', false);
-//                    $(".Spinner").addClass("d-none");
-//                }
-//                else {
-//                    alertSuccess(result.message);
-//                    for (let ProblemType of formData)
-//                        if (ProblemType.name == "Type")
-//                            $(`#${Tr} #${ProblemType.name}`).text(ProblemType.value == 0 ? 'Problem' : 'Reason');
-//                        else
-//                            $(`#${Tr} #${ProblemType.name}`).text(ProblemType.value);
-
-//                    $(`${FormID} #BtnSend`).prop('disabled', false);
-//                    $(".Spinner").addClass("d-none");
-//                }
-
-//            },
-//            error: function (error) {
-//                alertError();
-//                $("#BtnSend").prop('disabled', false);
-//            }
-//        })
-//    }
-//    else {
-//        $(`#${FormID}`).submit();
-//    }
-//}
-
 function DeleteEntity(ControllerName, ActionName, Tr, id = 0) {
     if (id == 0)
         id = $("#EntityId").val();
 
+    $(".Spinner").removeClass("d-none");
+
     $.ajax({
-        type: "GET",
+        type: "PUT",
         url: `/${ControllerName}/${ActionName}/?ID=${id}`,
+        success: function (result) {
+            if (result.success == false) {
+                alertError(result.message);
+            }
+            else {
+                let Count = $(`#DataCount`).val();
+                $(".Spinner").addClass("d-none");
+                $(`#DataCount-Span`).text(`Showing : ${+(--Count)}`);
+                $(`#${Tr}${id}`).fadeOut(800);
+                $(`.modal`).hide();
+                $('.modal-backdrop').remove();
+                alertSuccess(result.message);
+            }
+
+        }
+    })
+}
+
+function UpdateStatus(ControllerName, ActionName, Tr, id = 0, status =0) {
+    if (id == 0)
+        id = $("#EntityId").val();
+
+    $.ajax({
+        type: "PUT",
+        url: `/${ControllerName}/${ActionName}/?ID=${id}&&status=${status}`,
         success: function (result) {
             if (result.success == false) {
                 alertError(result.message);
@@ -2284,6 +2292,37 @@ function GetAreasList(id) {
     $(`#AssignZone-Input`).val(id);
 }
 
+function ChangeInvoiceType(event) {
+    $.ajax({
+        url: `/invoice/GetItemIds`,
+        type: "GET",
+        data: { invoiceType: event.target.value },
+        success: function (result) {
+            $(`#ItemId`).removeAttr("disabled");
+            if (result) {
+                // Clear the existing options
+                $(`#ItemId`).html('<option value="">--- Select ---</option>');
+                result.forEach(function (item) {
+                    const option = `<option value="${item.value}">${item.key}</option>`;
+                    $(`#ItemId`).append(option);
+                });
+            }
+            else {
+                $(`#ItemId`).html('<option value="">--- Select ---</option>');
+            }
+        },
+        error: function () {
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'error',
+                showConfirmButton: false,
+                timer: 5000
+            });
+        }
+    });
+}
+
 function AssignArea() {
     var Description = "";
     let AreaList = $("#Areas-Modal input:checkbox:checked").map(function () {
@@ -2361,5 +2400,6 @@ function alertError(title = 'Failed, try again', timer = 3000) {
         timer: timer
     });
 }
+
 
 function showConfirmationDialog(n, t, i) { $("#modal-dialog-confirmation-messageTitle").text(n); $("#modal-dialog-confirmation-messageText").html(t); $("#modal-dialog-confirmation-aConfirm").unbind("click"); $("#modal-dialog-confirmation-aConfirm").click(function () { $("#modal-dialog-confirmation").modal("hide"); i() }); $("#modal-dialog-confirmation").modal("show") } $(document).ready(function () { $(".date-popup").datepicker({ keyboardNavigation: !1, forceParse: !1, todayHighlight: !0 }) });

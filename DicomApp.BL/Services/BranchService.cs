@@ -1,177 +1,192 @@
-using DicomApp.CommonDefinitions.DTO;
-using DicomApp.CommonDefinitions.Requests;
-using DicomApp.CommonDefinitions.Responses;
-using DicomApp.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using DicomApp.CommonDefinitions.DTO;
+using DicomApp.CommonDefinitions.Requests;
+using DicomApp.CommonDefinitions.Responses;
+using DicomApp.DAL.DB;
+using DicomApp.Helpers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using DicomApp.DAL.DB;
 
 namespace DicomApp.BL.Services
 {
     public class BranchService : BaseService
     {
-
-
         public static BranchResponse GetBranchs(BranchRequest request)
         {
             var res = new BranchResponse();
-            RunBase(request, res, (BranchRequest req) =>
-            {
-                try
+            RunBase(
+                request,
+                res,
+                (BranchRequest req) =>
                 {
-                    var query = request.context.Branch.Where(b => (b.IsDeleted.HasValue ? !b.IsDeleted.Value : true)).Select(p => new BranchDTO
+                    try
                     {
+                        var query = request
+                            .context.Branch.Where(b =>
+                                (b.IsDeleted.HasValue ? !b.IsDeleted.Value : true)
+                            )
+                            .Select(p => new BranchDTO
+                            {
+                                BranchId = p.BranchId,
+                                Address = p.Address,
+                                BranchName = p.BranchName,
+                                //City = p.City,
+                                ContactPerson = p.ContactPerson,
+                                CurrencyId = p.CurrencyId,
+                                Description = p.Description,
+                                Email = p.Email,
+                                Phone = p.Phone,
+                                State = p.State,
+                                ZipCode = p.ZipCode,
+                                IsDeleted = p.IsDeleted ?? false,
+                            });
 
-                        BranchId = p.BranchId,
-                        Address = p.Address,
-                        BranchName = p.BranchName,
-                        //City = p.City,
-                        ContactPerson = p.ContactPerson,
-                        CurrencyId = p.CurrencyId,
-                        Description = p.Description,
-                        Email = p.Email,
-                        Phone = p.Phone,
-                        State = p.State,
-                        ZipCode = p.ZipCode,
-                        IsDeleted = p.IsDeleted ?? false,
+                        if (request.BranchDTO != null)
+                            query = ApplyFilter(query, request.BranchDTO);
 
-                    });
+                        res.TotalCount = query.Count();
 
-                    if (request.BranchDTO != null)
-                        query = ApplyFilter(query, request.BranchDTO);
+                        query = OrderByDynamic(
+                            query,
+                            request.OrderByColumn ?? "BranchId",
+                            request.IsDesc
+                        );
 
-                    res.TotalCount = query.Count();
+                        if (request.PageSize > 0)
+                            query = ApplyPaging(query, request.PageSize, request.PageIndex);
 
-                    query = OrderByDynamic(query, request.OrderByColumn ?? "BranchId", request.IsDesc);
-
-                    if (request.PageSize > 0)
-                        query = ApplyPaging(query, request.PageSize, request.PageIndex);
-
-                    res.BranchDTOs = query.ToList();
-                    res.Message = HttpStatusCode.OK.ToString();
-                    res.Success = true;
-                    res.StatusCode = HttpStatusCode.OK;
-                }
-                catch (Exception ex)
-                {
-                    res.Message = ex.Message;
-                    res.Success = false;
-                    LogHelper.LogException(ex.Message, ex.StackTrace);
-                }
-                return res;
-            });
-            return res;
-        }
-        public static BranchResponse DeleteBranch(BranchRequest request)
-        {
-
-            var res = new BranchResponse();
-            RunBase(request, res, (BranchRequest req) =>
-            {
-                try
-                {
-                    var model = request.BranchDTO;
-                    var Branch = request.context.Branch.FirstOrDefault(c => c.BranchId == model.BranchId);
-                    if (Branch != null)
-                    {
-                        //update Agency IsDeleted
-                        Branch.IsDeleted = true;
-                        request.context.SaveChanges();
-
-                        res.Message = MessageKey.DeletedSuccessfully.ToString();
+                        res.BranchDTOs = query.ToList();
+                        res.Message = HttpStatusCode.OK.ToString();
                         res.Success = true;
                         res.StatusCode = HttpStatusCode.OK;
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        res.Message = MessageKey.InvalidData.ToString();
+                        res.Message = ex.Message;
                         res.Success = false;
+                        LogHelper.LogException(ex.Message, ex.StackTrace);
                     }
-
+                    return res;
                 }
-                catch (Exception ex)
-                {
-                    res.Message = ex.Message;
-                    res.Success = false;
-                    LogHelper.LogException(ex.Message, ex.StackTrace);
-                }
-                return res;
-            });
+            );
             return res;
         }
 
+        public static BranchResponse DeleteBranch(BranchRequest request)
+        {
+            var res = new BranchResponse();
+            RunBase(
+                request,
+                res,
+                (BranchRequest req) =>
+                {
+                    try
+                    {
+                        var model = request.BranchDTO;
+                        var Branch = request.context.Branch.FirstOrDefault(c =>
+                            c.BranchId == model.BranchId
+                        );
+                        if (Branch != null)
+                        {
+                            //update Agency IsDeleted
+                            Branch.IsDeleted = true;
+                            request.context.SaveChanges();
+
+                            res.Message = SystemEnums.DeletedSuccessfully.ToString();
+                            res.Success = true;
+                            res.StatusCode = HttpStatusCode.OK;
+                        }
+                        else
+                        {
+                            res.Message = SystemEnums.InvalidData.ToString();
+                            res.Success = false;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        res.Message = ex.Message;
+                        res.Success = false;
+                        LogHelper.LogException(ex.Message, ex.StackTrace);
+                    }
+                    return res;
+                }
+            );
+            return res;
+        }
 
         public static BranchResponse AddBranch(BranchRequest request)
         {
-
             var res = new BranchResponse();
-            RunBase(request, res, (BranchRequest req) =>
-            {
-                try
+            RunBase(
+                request,
+                res,
+                (BranchRequest req) =>
                 {
-                    var Branch = AddOrEditBranch(request.BranchDTO);
-                    request.context.Branch.Add(Branch);
-                    request.context.SaveChanges();
+                    try
+                    {
+                        var Branch = AddOrEditBranch(request.BranchDTO);
+                        request.context.Branch.Add(Branch);
+                        request.context.SaveChanges();
 
-                    res.Message = "New Branch added successfully";
-                    res.Success = true;
-                    res.StatusCode = HttpStatusCode.OK;
-
-
+                        res.Message = "New Branch added successfully";
+                        res.Success = true;
+                        res.StatusCode = HttpStatusCode.OK;
+                    }
+                    catch (Exception ex)
+                    {
+                        res.Message = ex.Message;
+                        res.Success = false;
+                        LogHelper.LogException(ex.Message, ex.StackTrace);
+                    }
+                    return res;
                 }
-                catch (Exception ex)
-                {
-                    res.Message = ex.Message;
-                    res.Success = false;
-                    LogHelper.LogException(ex.Message, ex.StackTrace);
-                }
-                return res;
-            });
+            );
             return res;
         }
 
         public static BranchResponse EditBranch(BranchRequest request)
         {
-
             var res = new BranchResponse();
-            RunBase(request, res, (BranchRequest req) =>
-            {
-                try
+            RunBase(
+                request,
+                res,
+                (BranchRequest req) =>
                 {
-                    var model = request.BranchDTO;
-                    var Branch = request.context.Branch.Find(model.BranchId);
-                    if (Branch != null)
+                    try
                     {
-                        //update whole Agency
-                        Branch = AddOrEditBranch(request.BranchDTO, Branch);
-                        request.context.SaveChanges();
+                        var model = request.BranchDTO;
+                        var Branch = request.context.Branch.Find(model.BranchId);
+                        if (Branch != null)
+                        {
+                            //update whole Agency
+                            Branch = AddOrEditBranch(request.BranchDTO, Branch);
+                            request.context.SaveChanges();
 
-                        res.Message = "Updated Successfully";
-                        res.Success = true;
-                        res.StatusCode = HttpStatusCode.OK;
+                            res.Message = "Updated Successfully";
+                            res.Success = true;
+                            res.StatusCode = HttpStatusCode.OK;
+                        }
+                        else
+                        {
+                            res.Message = "Invalid";
+                            res.Success = false;
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        res.Message = "Invalid";
+                        res.Message = ex.Message;
                         res.Success = false;
+                        LogHelper.LogException(ex.Message, ex.StackTrace);
                     }
+                    return res;
                 }
-                catch (Exception ex)
-                {
-                    res.Message = ex.Message;
-                    res.Success = false;
-                    LogHelper.LogException(ex.Message, ex.StackTrace);
-                }
-                return res;
-            });
+            );
             return res;
         }
-
 
         public static Branch AddOrEditBranch(BranchDTO branchRecord, Branch branch = null)
         {
@@ -179,7 +194,6 @@ namespace DicomApp.BL.Services
             {
                 branch = new Branch();
             }
-
 
             branch.BranchId = branchRecord.BranchId;
             branch.Address = branchRecord.Address;
@@ -195,13 +209,17 @@ namespace DicomApp.BL.Services
             return branch;
         }
 
-        private static IQueryable<BranchDTO> ApplyFilter(IQueryable<BranchDTO> query, BranchDTO record)
+        private static IQueryable<BranchDTO> ApplyFilter(
+            IQueryable<BranchDTO> query,
+            BranchDTO record
+        )
         {
             if (!string.IsNullOrEmpty(record.Search))
             {
-                query = query.Where
-                    (c => (!string.IsNullOrEmpty(c.BranchName) && c.BranchName.Contains(record.Search))
-                        || (!string.IsNullOrEmpty(c.Phone) && c.Phone.Contains(record.Search)));
+                query = query.Where(c =>
+                    (!string.IsNullOrEmpty(c.BranchName) && c.BranchName.Contains(record.Search))
+                    || (!string.IsNullOrEmpty(c.Phone) && c.Phone.Contains(record.Search))
+                );
             }
 
             if (record.BranchId > 0)
@@ -214,7 +232,9 @@ namespace DicomApp.BL.Services
             }
             if (!string.IsNullOrWhiteSpace(record.BranchName))
             {
-                query = query.Where(p => p.BranchName != null && p.BranchName.Contains(record.BranchName));
+                query = query.Where(p =>
+                    p.BranchName != null && p.BranchName.Contains(record.BranchName)
+                );
             }
             if (!string.IsNullOrWhiteSpace(record.City))
             {
@@ -222,12 +242,16 @@ namespace DicomApp.BL.Services
             }
             if (!string.IsNullOrWhiteSpace(record.ContactPerson))
             {
-                query = query.Where(p => p.ContactPerson != null && p.ContactPerson.Contains(record.ContactPerson));
+                query = query.Where(p =>
+                    p.ContactPerson != null && p.ContactPerson.Contains(record.ContactPerson)
+                );
             }
 
             if (!string.IsNullOrWhiteSpace(record.Description))
             {
-                query = query.Where(p => p.Description != null && p.Description.Contains(record.Description));
+                query = query.Where(p =>
+                    p.Description != null && p.Description.Contains(record.Description)
+                );
             }
             if (!string.IsNullOrWhiteSpace(record.Email))
             {

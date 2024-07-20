@@ -23,5 +23,6 @@ namespace DicomApp.DAL.DB
 
         public virtual CommonUser CreatedByNavigation { get; set; }
         public virtual Advertisement Advertisement { get; set; }
+        public virtual GamerService GameService { get; set; }
     }
 }

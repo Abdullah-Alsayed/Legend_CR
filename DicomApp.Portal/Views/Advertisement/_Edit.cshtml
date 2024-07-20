@@ -1,0 +1,126 @@
+﻿@using DicomApp.CommonDefinitions.DTO
+@using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs
+@using DicomApp.DAL.DB
+@using DicomApp.Helpers
+@model AdsDTO
+@{
+    var RoleID = AuthHelper.GetClaimValue(User, "RoleID");
+}
+<main>
+    <div class="container-fluid site-width">
+        <div class="row Red-Row">
+            <div class="col-12 col-lg-12 col-xl-12 col-sm-12">
+                <div class="sub-header">
+                    <div class="mb-3">
+                        <span class="Header-Titel">Edit New Advertisement</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="Shipment-container">
+        <form style="width:95%" class="needs-validation" method="post" id="EditAdvertisement" action="@Url.Action("Edit","Advertisement")" novalidate>
+            <div class="row Red-Row w-100">
+                <div class="col-lg-4">
+                    <div style="" class="Shipment-Details-Section">
+                        <div class="col-lg-12">
+                            <label class="Shipment-Details-label">UserName</label>
+                            <input type="text" placeholder="Name" asp-for="UserName" required value="@Model.UserName" />
+                            <div class="invalid-feedback">
+                                Please enter customer UserName.
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-3">
+                            <label class="Shipment-Details-label">Password</label>
+                            <input type="text" placeholder="Password" asp-for="Password" required value="@Model.Password">
+                            <div class="invalid-feedback">
+                                Please enter Password.
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-3">
+                            <label class="Shipment-Details-label">Level</label>
+                            <input type="number" min="0" class="input-Number" asp-for="Level" placeholder="Level" required value="@Model.Level" />
+                            <div class="invalid-feedback">
+                                Please enter Level.
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-3">
+                            <label class="Shipment-Details-label">Rank</label>
+                            <input type="text" asp-for="Rank" placeholder="Rank" />
+                            <div class="invalid-feedback">
+                                Please enter Rank.
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-3">
+                            <label class="Shipment-Details-label">Gamer</label>
+                            @Html.DropDownListFor(model => model.GamerId, new SelectList(ViewBag.Gamers, nameof(CommonUser.Id), nameof(CommonUser.Name)), "--- Select Gamer ---", new { @class = "form-control", @required = "required" })
+                            <div class="invalid-feedback">
+                                Please select Gamer.
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mt-3">
+                            <label class="Shipment-Details-label">Price</label>
+                            <input type="number" min="1" max="1000000" class="input-Number" asp-for="Price" placeholder="Price" required value="@Model.Price" />
+                            <div class="invalid-feedback">
+                                Please enter Price
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mt-3">
+                            <label class="Shipment-Details-label">Game</label>
+                            @Html.DropDownListFor(model => model.GameId, new SelectList(ViewBag.GameList, nameof(GameDTO.Id), nameof(GameDTO.NameEn)), "--- Select Game ---", new { @class = "form-control", @required = "required" })
+                            <div class="invalid-feedback">
+                                Please select Game.
+                            </div>
+                        </div>
+                        <input type="hidden" asp-for="AdvertisementId" value="@Model.AdvertisementId"/> 
+                    </div>
+                </div>
+                <div class="col-lg-8 w-100">
+                    <div class="Shipment-Details-Section">
+                        <div class="col-lg-12">
+                            <div class="col-lg-12 col-12 Game-Type-Section">
+                                <div class="row Red-Row" id="DivOrderDescription">
+                                    <p class="additional-comments">Description</p>
+                                    <textarea class="h-auto" rows="10" asp-for="Description" placeholder="Description"></textarea>
+                                </div>
+                            </div>
+                            <hr class="pt-1" />
+                        </div>
+                        <div class="col-lg-12" id="Advertisement-Imgs">
+                            @{
+                                if (Model.AdvertisementPhotos.Any())
+                                {
+                                    foreach (var url in Model.AdvertisementPhotos)
+                                    {
+                                        <img src="/dist/images/@url" class="uploaded-img">
+                                    }
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <div class="col-lg-12 Buttons-Submit-Section">
+                            <button onclick="EditAdvertisement('Edit','Advertisement','EditAdvertisement')" type="button" id="BtnSend" class="Red-Btn">Update Only</button>
+                        </div>
+                        @if (Model.StatusId <= 2)
+                        {
+                            <div class="col-lg-12 Buttons-Submit-Section">
+                                <button onclick="EditAdvertisement('EditAndPublish','Advertisement','EditAdvertisement')" type="button" id="BtnSend" class="Red-Btn Green-Bg text-dark">Update and Publish</button>
+                            </div>
+                        }
+                   
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+
+</main>
+<script src="~/dist/vendors/select2/js/select2.full.min.js"></script>
+<script src="~/dist/js/select2.script.js"></script>
+<script src="~/dist/js/jquery.validate.min.js"></script>
+<script src="~/dist/js/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/dist/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/Shipment/AddShipment.js"></script>

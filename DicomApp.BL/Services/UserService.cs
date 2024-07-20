@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using DicomApp.CommonDefinitions.DTO;
 using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
 using DicomApp.CommonDefinitions.DTO.CashDTOs;
@@ -10,6 +11,7 @@ using DicomApp.CommonDefinitions.Requests;
 using DicomApp.CommonDefinitions.Responses;
 using DicomApp.DAL.DB;
 using DicomApp.Helpers;
+using DicomApp.Helpers.Services.GenrateAvatar;
 using Microsoft.EntityFrameworkCore;
 
 namespace DicomApp.BL.Services
@@ -35,6 +37,8 @@ namespace DicomApp.BL.Services
                                 NationalId = c.NationalId,
                                 Email = c.Email,
                                 RoleID = c.RoleId,
+                                Gender = c.Gender,
+                                Age = c.Age,
                                 RoleName = c.Role.Name,
                                 LastLoginDate = c.LastLoginDate,
                                 PhoneNumber = c.PhoneNumber,
@@ -58,7 +62,7 @@ namespace DicomApp.BL.Services
                                 Floor = c.Floor,
                                 Landmark = c.Landmark,
                                 LocationUrl = c.LocationUrl,
-                                VodafoneCashNumber = c.VodafoneCashNumber,
+                                WalletNumber = c.WalletNumber,
                                 AccountName = c.AccountName,
                                 AccountNumber = c.AccountNumber,
                                 Bank = c.Bank,
@@ -77,6 +81,17 @@ namespace DicomApp.BL.Services
                                         .context.City.FirstOrDefault(a => a.Id == c.AreaId)
                                         .CityNameAr
                                     : "",
+                                Country =
+                                    c.Country != null
+                                        ? new CountryDTO
+                                        {
+                                            CountryCode = c.Country.CountryCode,
+                                            CountryId = c.Country.CountryId,
+                                            FlagUrl = c.Country.FlagUrl,
+                                            NameAr = c.Country.NameAr,
+                                            NameEn = c.Country.NameEn
+                                        }
+                                        : null
                             });
 
                         if (request.applyFilter)
@@ -122,7 +137,9 @@ namespace DicomApp.BL.Services
                                 Email = c.Email,
                                 RoleID = c.RoleId,
                                 RoleName = c.Role.Name,
-                                //LastLoginDate = c.LastLoginDate,
+                                Gender = c.Gender,
+                                Age = c.Age,
+                                LastLoginDate = c.LastLoginDate,
                                 PhoneNumber = c.PhoneNumber,
                                 Password = c.Password,
                                 ConfirmPassword = c.Password,
@@ -144,7 +161,7 @@ namespace DicomApp.BL.Services
                                 Floor = c.Floor,
                                 Landmark = c.Landmark,
                                 LocationUrl = c.LocationUrl,
-                                VodafoneCashNumber = c.VodafoneCashNumber,
+                                WalletNumber = c.WalletNumber,
                                 AccountName = c.AccountName,
                                 AccountNumber = c.AccountNumber,
                                 Bank = c.Bank,
@@ -196,7 +213,10 @@ namespace DicomApp.BL.Services
                                 Email = c.Email,
                                 RoleID = c.RoleId,
                                 RoleName = c.Role.Name,
-                                //LastLoginDate = c.LastLoginDate,
+                                Gender = c.Gender,
+                                Age = c.Age,
+                                CountryId = c.CountryId,
+                                LastLoginDate = c.LastLoginDate,
                                 PhoneNumber = c.PhoneNumber,
                                 Password = c.Password,
                                 ConfirmPassword = c.Password,
@@ -218,7 +238,7 @@ namespace DicomApp.BL.Services
                                 Floor = c.Floor,
                                 Landmark = c.Landmark,
                                 LocationUrl = c.LocationUrl,
-                                VodafoneCashNumber = c.VodafoneCashNumber,
+                                WalletNumber = c.WalletNumber,
                                 AccountName = c.AccountName,
                                 AccountNumber = c.AccountNumber,
                                 Bank = c.Bank,
@@ -399,7 +419,7 @@ namespace DicomApp.BL.Services
                                 user.InstaPayAccountName = request.UserDTO.InstaPayAccountName;
                                 user.IbanNumber = request.UserDTO.IBANNumber;
                                 user.Bank = request.UserDTO.Bank;
-                                user.VodafoneCashNumber = request.UserDTO.VodafoneCashNumber;
+                                user.WalletNumber = request.UserDTO.WalletNumber;
                                 user.AccountName = request.UserDTO.AccountName;
                                 user.AccountNumber = request.UserDTO.AccountNumber;
                                 user.ImgUrl = request.UserDTO.ImgUrl;
@@ -445,6 +465,13 @@ namespace DicomApp.BL.Services
                 {
                     try
                     {
+                        if (request.UserDTO.NewPassword != request.UserDTO.ConfirmPassword)
+                            return new UserResponse
+                            {
+                                Message = "Password didn't match",
+                                Success = false
+                            };
+
                         var user = request.context.CommonUser.Find(request.UserDTO.Id);
                         if (user != null)
                         {
@@ -476,93 +503,125 @@ namespace DicomApp.BL.Services
             return res;
         }
 
-        public static UserResponse AddUser(UserRequest request)
+        public static async Task<UserResponse> AddUser(UserRequest request)
         {
             var res = new UserResponse();
-            RunBase(
+            await RunBaseAsync<UserRequest, UserResponse>(
                 request,
                 res,
-                (UserRequest req) =>
+                async (UserRequest req) =>
                 {
                     try
                     {
-                        var UserExist = request.context.CommonUser.Any(m =>
-                            m.Email == request.UserDTO.Email && m.IsDeleted == false
+                        var emailExist = await request.context.CommonUser.AnyAsync(m =>
+                            m.Email == request.UserDTO.Email && !m.IsDeleted
                         );
-                        if (!UserExist)
-                        {
-                            var User = new CommonUser();
-
-                            User.CreationDate = DateTime.Now;
-                            User.CreatedBy = request.UserID;
-                            User.Code = Guid.NewGuid().ToString();
-                            User.LastLoginDate = DateTime.Now;
-                            User.IsDeleted = false;
-                            User.IsLoggedIn = false;
-
-                            User.Password = request.UserDTO.Password;
-                            User.HashedPassword = request.UserDTO.HashedPassword;
-
-                            User.RoleId = request.UserDTO.RoleID;
-                            User.Name = request.UserDTO.Name;
-                            User.Email = request.UserDTO.Email;
-                            User.PhoneNumber = request.UserDTO.PhoneNumber;
-                            User.Name = request.UserDTO.Name;
-                            User.ProductType = request.UserDTO.ProductType; // Business Type
-                            User.NationalId = "EGY";
-                            User.Address = request.UserDTO.Address;
-                            User.FullName = request.UserDTO.FullName;
-                            User.AddressDetails = request.UserDTO.AddressDetails;
-                            User.Landmark = request.UserDTO.Landmark;
-                            User.LocationUrl = request.UserDTO.LocationUrl;
-                            User.Floor = request.UserDTO.Floor;
-                            User.Apartment = request.UserDTO.Apartment;
-                            User.AreaId = request.UserDTO.AreaId;
-                            User.ZoneId = request.UserDTO.ZoneId;
-
-                            User.Bank = request.UserDTO.Bank;
-                            User.IbanNumber = request.UserDTO.IBANNumber;
-                            User.AccountName = request.UserDTO.AccountName;
-                            User.AccountNumber = request.UserDTO.AccountNumber;
-                            User.VodafoneCashNumber = request.UserDTO.VodafoneCashNumber;
-                            User.InstaPayAccountName = request.UserDTO.InstaPayAccountName;
-
-                            User.ImgUrl = request.UserDTO.ImgUrl;
-
-                            request.context.CommonUser.Add(User);
-                            request.context.SaveChanges();
-
-                            // Add User Account for Vendor/Courier
-                            if (
-                                User.RoleId == (int)EnumRole.Gamer
-                                || User.RoleId == (int)EnumRole.DeliveryMan
-                            )
-                            {
-                                var AccountRequest = new AccountRequest();
-                                AccountRequest.AccountDTO = new AccountDTO()
-                                {
-                                    Name = request.UserDTO.Name,
-                                    UserId = User.Id,
-                                    RoleId = User.RoleId,
-                                };
-                                AccountRequest.RoleID = request.RoleID;
-                                AccountRequest.UserID = request.UserID;
-                                AccountRequest.context = request.context;
-                                AccountService.AddAccount(AccountRequest);
-                            }
-
-                            request.context.SaveChanges();
-
-                            res.Message = "New user added successfully";
-                            res.Success = true;
-                            res.StatusCode = HttpStatusCode.OK;
-                        }
-                        else
+                        if (emailExist)
                         {
                             res.Message = "Email already exist";
                             res.Success = false;
                             res.StatusCode = HttpStatusCode.OK;
+                            return res;
                         }
+                        var phoneExist = await request.context.CommonUser.AnyAsync(m =>
+                            m.PhoneNumber == request.UserDTO.PhoneNumber && !m.IsDeleted
+                        );
+                        if (phoneExist)
+                        {
+                            res.Message = "phone already exist";
+                            res.Success = false;
+                            res.StatusCode = HttpStatusCode.OK;
+                            return res;
+                        }
+
+                        var User = new CommonUser();
+                        User.CreationDate = DateTime.Now;
+                        User.CreatedBy = request.UserID;
+                        User.Code = Guid.NewGuid().ToString();
+                        User.LastLoginDate = DateTime.Now;
+                        User.IsDeleted = false;
+                        User.IsLoggedIn = false;
+                        User.Age = request.UserDTO.Age;
+                        User.TelegramUserName = request.UserDTO.TelegramUserName;
+                        User.CountryId = request.UserDTO.CountryId;
+                        User.Password = request.UserDTO.Password;
+                        User.HashedPassword = request.UserDTO.HashedPassword;
+                        User.RoleId = request.UserDTO.RoleID;
+                        User.Name = request.UserDTO.Name;
+                        User.Email = request.UserDTO.Email;
+                        User.PhoneNumber = request.UserDTO.PhoneNumber;
+                        User.Name = request.UserDTO.Name;
+                        User.NationalId = "EGY";
+                        User.Address = request.UserDTO.Address;
+                        User.FullName = request.UserDTO.FullName;
+                        User.AddressDetails = request.UserDTO.AddressDetails;
+                        User.Landmark = request.UserDTO.Landmark;
+                        User.LocationUrl = request.UserDTO.LocationUrl;
+                        User.Floor = request.UserDTO.Floor;
+                        User.Apartment = request.UserDTO.Apartment;
+                        User.AreaId = request.UserDTO.AreaId;
+                        User.ZoneId = request.UserDTO.ZoneId;
+                        User.Gender = request.UserDTO.Gender;
+                        User.Bank = request.UserDTO.Bank;
+                        User.IbanNumber = request.UserDTO.IBANNumber;
+                        User.AccountName = request.UserDTO.AccountName;
+                        User.AccountNumber = request.UserDTO.AccountNumber;
+                        User.WalletNumber = request.UserDTO.WalletNumber;
+                        User.InstaPayAccountName = request.UserDTO.InstaPayAccountName;
+                        User.ImgUrl = request.UserDTO.ImgUrl;
+
+                        if (request.UserDTO.File == null)
+                        {
+                            var file = await request.avatarService.GetAvatarAsFormFileAsync(
+                                request.UserDTO.Name
+                            );
+
+                            User.ImgUrl = BaseHelper.UploadImg(
+                                file,
+                                request.WebRootPath,
+                                request.UserDTO.ImgUrl
+                            );
+                        }
+                        else
+                            User.ImgUrl = BaseHelper.UploadImg(
+                                request.UserDTO.File,
+                                request.WebRootPath,
+                                request.UserDTO.ImgUrl
+                            );
+                        if (request.CountryService != null)
+                        {
+                            var countryCode = await request.CountryService.GetCountryInfoAsync(
+                                request.UserIP
+                            );
+
+                            var countries = await request
+                                .context.Countries.Where(x =>
+                                    x.CountryCode == countryCode.country_code2
+                                    || x.CountryCode == "EG"
+                                )
+                                .ToListAsync();
+                            if (string.IsNullOrEmpty(countryCode.country_code2))
+                                User.CountryId = countries
+                                    .FirstOrDefault(x => x.CountryCode == "EG")
+                                    .CountryId;
+                            else
+                                User.CountryId = countries
+                                    .FirstOrDefault(x => x.CountryCode == countryCode.country_code2)
+                                    .CountryId;
+                        }
+                        await request.context.CommonUser.AddAsync(User);
+                        await request.context.SaveChangesAsync();
+
+                        res.UserDTO = new UserDTO
+                        {
+                            Id = User.Id,
+                            Name = User.Name,
+                            Email = User.Email,
+                            RoleID = User.RoleId,
+                        };
+                        res.Message = "New user added successfully";
+                        res.Success = true;
+                        res.StatusCode = HttpStatusCode.OK;
                     }
                     catch (Exception ex)
                     {
@@ -586,6 +645,9 @@ namespace DicomApp.BL.Services
                     || (c.RoleName.Contains(filter.Search))
                 );
 
+            if (!string.IsNullOrEmpty(filter.RoleName))
+                query = query.Where(c => c.RoleName == filter.RoleName);
+
             if (filter.Id > 0)
                 query = query.Where(c => c.Id == filter.Id);
 
@@ -607,12 +669,7 @@ namespace DicomApp.BL.Services
                 query = query.Where(c => c.RoleID == filter.RoleID);
 
             if (filter.StaffOnly)
-                query = query.Where(c =>
-                    c.RoleID != (int)EnumRole.Gamer && c.RoleID != (int)EnumRole.Customer
-                );
-
-            //if (filter.IsStaff == true)
-            //    query = query.Where(c => c.RoleID != 4 && c.RoleID != 3);
+                query = query.Where(c => c.RoleID != (int)EnumRole.Gamer);
 
             if (!string.IsNullOrWhiteSpace(filter.Email))
                 query = query.Where(c => c.Email.Contains(filter.Email));

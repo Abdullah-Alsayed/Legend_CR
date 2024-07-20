@@ -20,7 +20,8 @@ namespace DicomApp.CommonDefinitions.DTO.AdvertisementDTOs
         public string UserName { get; set; }
         public string Password { get; set; }
 
-        public string Level { get; set; }
+        public int Level { get; set; }
+        public string Rank { get; set; }
         public int Price { get; set; }
 
         public DateTime CreatedAt { get; set; }
@@ -42,11 +43,19 @@ namespace DicomApp.CommonDefinitions.DTO.AdvertisementDTOs
         public bool SELECTED { get; set; }
 
         // Filter
+
+        public bool? Publish { get; set; }
         public string Search { get; set; }
         public string VendorName { get; set; }
         public DateTime? DateFrom { get; set; }
         public DateTime? DateTo { get; set; }
         public List<int> AdvertisementIds { get; set; }
         public List<string> FilesUrls { get; set; }
+        public int StatusType { get; set; }
+        public int LessPrice { get; set; }
+        public int GreeterPrice { get; set; }
+        public int LessLevel { get; set; }
+        public int GreeterLevel { get; set; }
+        public List<int> StatusTypes { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
+using DicomApp.DAL.DB;
 using Microsoft.AspNetCore.Http;
 
 namespace DicomApp.CommonDefinitions.DTO
@@ -47,6 +48,14 @@ namespace DicomApp.CommonDefinitions.DTO
         [RegularExpression(@"\d{10,15}$", ErrorMessage = "Not a valid phone number 10-15 digits")]
         public string PhoneNumber { get; set; }
 
+        public string TelegramUserName { get; set; }
+        public int? CountryId { get; set; }
+
+        [Required(ErrorMessage = "Please enter a Age.")]
+        [Range(6, 100)]
+        public int Age { get; set; }
+
+        public GenderEnum Gender { get; set; } = GenderEnum.Male;
         public bool IsLoggedIn { get; set; }
 
         [Required(ErrorMessage = "Required")]
@@ -88,7 +97,7 @@ namespace DicomApp.CommonDefinitions.DTO
         public string AccountName { get; set; }
         public int? AccountNumber { get; set; }
         public int? IBANNumber { get; set; }
-        public int? VodafoneCashNumber { get; set; }
+        public int? WalletNumber { get; set; }
         public string InstaPayAccountName { get; set; }
         public string ImgUrl { get; set; }
         public int? ZoneId { get; set; }
@@ -99,6 +108,10 @@ namespace DicomApp.CommonDefinitions.DTO
 
         public string HashedPassword { get; set; }
 
+        public CountryDTO Country { get; set; }
         public IEnumerable<AdsDTO> Advertisement { get; set; }
+
+        //Filter
+        public bool IsEmployee { get; set; }
     }
 }

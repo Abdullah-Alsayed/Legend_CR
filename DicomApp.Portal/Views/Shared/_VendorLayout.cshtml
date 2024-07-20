@@ -1,4 +1,5 @@
 ﻿
+@using DicomApp.DAL.DB
 @using DicomApp.Portal.Helpers;
 @using DicomApp.Helpers;
 @using DicomApp.Portal.Controllers;
@@ -12,260 +13,286 @@
         roleID = AuthHelper.GetClaimValue(User, "RoleID");
     }
 }
-<!DOCTYPE html>
-
-<html>
-<!-- START: Head-->
+<!DOCTYPE HTML>
+<html lang="zxx">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width" />
-    <title>RED Express</title>
-    <link rel="shortcut icon" href="~/dist/images/favicon.ico" />
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <partial name="_MainCssFiles" />
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Legend_CR</title>
+	<!-- Favicon Icon -->
+	<link rel="icon" type="image/png" href="/GamerLayout/assets/img/favcion.png" />
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" type="text/css" href="/GamerLayout/assets/css/bootstrap.min.css" media="all" />
+	<!-- Slick nav CSS -->
+	<link rel="stylesheet" type="text/css" href="/GamerLayout/assets/css/slicknav.min.css" media="all" />
+	<!-- Iconfont CSS -->
+	<link rel="stylesheet" type="text/css" href="/GamerLayout/assets/css/icofont.css" media="all" />
+	<!-- Owl carousel CSS -->
+	<link rel="stylesheet" type="text/css" href="/GamerLayout/assets/css/owl.carousel.css">
+	<!-- Popup CSS -->
+	<link rel="stylesheet" type="text/css" href="/GamerLayout/assets/css/magnific-popup.css">
+	<!-- Main style CSS -->
+	<link rel="stylesheet" type="text/css" href="/GamerLayout/assets/css/style.css" media="all" />
+
+	<link rel="stylesheet" type="text/css" href="/GamerLayout/assets/css/Payment.css" media="all" />
+
+	<link rel="stylesheet" type="text/css" href="/dist/css/Red.css" media="all" />
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.12/sweetalert2.min.css" />
+
+	<!-- Responsive CSS -->
+	<link rel="stylesheet" type="text/css" href="/GamerLayout/assets/css/responsive.css" media="all" />
+	<!--[if lt IE 9]>
+	  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+	  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<![endif]-->
 </head>
-<!-- END Head-->
-<!-- START: Body-->
-<body id="main-container" class="default compact-menu">
-    <!-- START: Pre Loader-->
-    <div class="se-pre-con">
-        <div class="loader"></div>
-    </div>
-    <!-- END: Pre Loader-->
-    <!-- START: Main Menu-->
-    <a href="#" class="sidebarCollapse" id="collapse"><span class="ToggelSpan"><i class="fas fa-angle-right"></i></span></a>
-    <div class="sidebar">
-        <a href="#" class="sidebarCollapseOut ToggelSpan-collapse"><span class=""><i class="fas fa-angle-left"></i></span></a>
-        <div class="site-width">
-            <!-- START: Menu-->
-            <ul id="side-menu" class="sidebar-menu">
-                <li class="dropdown Main-logo"><img src="/dist/images/RED.png" /></li>
-                <li class="dropdown active">
-                    <ul>
-                        @if (BaseService.CheckRoleAccessability(roleID, "Menu_AccountDashboard", connectionString: connectionString))
-                        {
-                            <li class="cursor-pointer">
-                                <a href="/Home/AccountDashboard" class="Navigation">
-                                    <img class="Img-Ul" src="~/dist/images/Icons/Dashboard.png" />
-                                    Dashboard
-                                </a>
-                            </li>
-                        }
-                        <li class="cursor-pointer" onclick="OpenSection('Reports-Ul')">
-                            <a><img class="Img-Ul" src="~/dist/images/Icons/Reports.png" /> Reports</a>
-                            <ul id="Reports-Ul" class="d-none Nested-sidebar-menu">
-                                @if (BaseService.CheckRoleAccessability(roleID, "MenuVendor_ReportsShipments", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/Vendor/OrderReports">Shipments Report</a></li>
-                                }
-                                @if (BaseService.CheckRoleAccessability(roleID, "MenuVendor_ReportsInvoices", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/Vendor/InvoiceReport">Invoice Report</a></li>
-                                }
-                                @if (BaseService.CheckRoleAccessability(roleID, "MenuVendor_ReportsStock", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/Vendor/StockReport">Stock Report</a></li>
-                                }
-                                @if (BaseService.CheckRoleAccessability(roleID, "MenuVendor_ReportsProblem", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/Vendor/ProblemReport">Problem Report</a></li>
-                                }
-                            </ul>
-                        </li>
-                        <li class="cursor-pointer" onclick="OpenSection('Shipment-Ul')">
-                            <a><img class="Img-Ul" src="~/dist/images/Icons/Shipment.png" /> Shipment</a>
-                            <ul id="Shipment-Ul" class="d-none Nested-sidebar-menu">
-                                @if (BaseService.CheckRoleAccessability(roleID, "MenuVendor_AddShipment", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/Vendor/AddOrder">Add New Shipment</a></li>
-                                }
-                                @if (BaseService.CheckRoleAccessability(roleID, "MenuVendor_ShipmentList", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/Vendor/ShipmentList">Shipment List</a></li>
-                                }
-                            </ul>
-                        </li>
-                        <li class="cursor-pointer" onclick="OpenSection('Pickup-Ul')">
-                            <a><img class="Img-Ul" src="~/dist/images/Icons/Pickup.png" /> Pickup</a>
-                            <ul id="Pickup-Ul" class="d-none Nested-sidebar-menu">
-                                @if (BaseService.CheckRoleAccessability(roleID, "MenuVendor_PickupDelivery", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/Vendor/PickupRequest">Add New Items Pickup</a></li>
-                                }
-                                @if (BaseService.CheckRoleAccessability(roleID, "MenuVendor_PickupStock", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/Vendor/FulfillmentRequest">Add New Stock Pickup</a></li>
-                                }
-                                @if (BaseService.CheckRoleAccessability(roleID, "MenuVendor_PickupList", connectionString: connectionString))
-                                {
-                                    <li><a class="MenuNavigation Navigation" href="/Vendor/PickupList">Pickup Request List</a></li>
-                                }
-                            </ul>
-                        </li>
-                        @if (BaseService.CheckRoleAccessability(roleID, "MenuVendor_Products", connectionString: connectionString))
-                        {
-                            <li class="cursor-pointer">
-                                <a href="/Product/ProductList" class="Navigation">
-                                    <img class="Img-Ul" src="~/dist/images/Icons/Product.png" />
-                                    Products
-                                </a>
-                            </li>
-                        }
-                        @if (BaseService.CheckRoleAccessability(roleID, "MenuVendor_ShippingCalculator", connectionString: connectionString))
-                        {
-                            <li class="cursor-pointer">
-                                <a href="/Vendor/ShippingCalculator" class="Navigation">
-                                    <img class="Img-Ul" src="~/dist/images/Icons/Calculator.png" />
-                                    Calculator
-                                </a>
-                            </li>
-                        }
-                        @if (BaseService.CheckRoleAccessability(roleID, "MenuVendor_ContactUs", connectionString: connectionString))
-                        {
-                            <li class="cursor-pointer">
-                                <a href="/Vendor/ContactUs" class="Navigation">
-                                    <img class="Img-Ul" src="~/dist/images/Icons/ContactUs.png" />
-                                    Contact Us
-                                </a>
-                            </li>
-                        }
-                        <li class="cursor-pointer" style="padding-top: 300%;"><a href="~/User/Logout"><img class="Img-Ul" src="~/dist/images/Icons/Logout.png" /> Logout</a></li>
-                    </ul>
-                </li>
-            </ul>
-            <!-- END: Menu-->
-            <ol class="breadcrumb bg-transparent align-self-center m-0 p-0 ml-auto">
-                <li class="breadcrumb-item"><a href="#">Application</a></li>
-                <li class="breadcrumb-item active">Dashboard</li>
-            </ol>
-        </div>
-    </div>
-    <!-- END: Main Menu-->
-    <!-- START: User Bar-->
-    <div class="navbar-section">
-        <div class="row Red-Row User-Section">
-            <div class="col-sm-12 col-lg-4 col-xl-5 col-12 Search">
-                <i class="fas fa-search cursor-pointer Icon-Search" onclick="TrackShipment()"></i>
-                <input type="text" class="Txt-Search" id="TrackShipment" placeholder="Track Shipment" />
-                <i class="fas fa-angle-right cursor-pointer Icon-Arow-Right" onclick="TrackShipment()"></i>
-            </div>
-            <div class="col-sm-9 col-lg-8 col-xl-7 col-12 Notifcation">
-                <!-- <img src="/Icon.png">
-                <span>Mohamed Ahmed</span> -->
-                <select>
-                    <option>ENG</option>
-                </select>
+<body>
+	<!-- Page loader -->
+	<div id="preloader"></div>
+	<!-- header section start -->
+	<header class="header">
+		<div class="container-fluid">
+			<div class="header-area">
+				<div class="menu-area">
+					<div class="responsive-menu"></div>
+					<div class="mainmenu">
+						<ul id="primary-menu">
+ 							<li><a class="active" href="@Url.Action("Main","Gamer")">Home</a></li>
+							@*	<li><a href="movies.html">Movies</a></li>
+							<li><a href="celebrities.html">CelebritiesList</a></li>
+							<li><a href="top-movies.html">Top Movies</a></li>
+							<li><a href="blog.html">News</a></li>
+							<li>
+								<a href="#">Pages <i class="icofont icofont-simple-down"></i></a>
+								<ul>
+									<li><a href="blog-details.html">Blog Details</a></li>
+									<li><a href="movie-details.html">Movie Details</a></li>
+								</ul>
+							</li> *@
+							<li><a class="theme-btn" href="#"><i class="icofont icofont-game-control"></i> Add Account</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="header-right">
+					<form action="#">
+						<select>
+							<option value="Movies">Movies</option>
+							<option value="Movies">Movies</option>
+							<option value="Movies">Movies</option>
+						</select>
+						<input type="text" />
+						<button><i class="icofont icofont-search"></i></button>
+					</form>
+				</div>
+				<div class="user-info">
+					<ul>
+						@if (User.Identity.IsAuthenticated)
+						{
+							<li><a href="#">Welcome @AuthHelper.GetUserName(User)</a></li>
+						}
+						@if (!User.Identity.IsAuthenticated)
+						{
+							<li><a class="login-popup" href="#">Login</a></li>
+						}
+						else
+						{
+							<li>
+								<a href="~/User/Logout" class="Btn">
+								<div class="sign"><svg viewBox="0 0 512 512"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path></svg></div>
 
-                <button class="Notifcation-Alart"><img class="mr-2" src="/dist/images/Icons/Alarm.png"></button>
-                <div onclick="MenuNavigation(event,'MyAccount','Vendor')" class="User-Info">
-                    <img src="/dist/images/RED.png" width="31" />
-                    <p>@AuthHelper.GetUserName(User)</p>
-                    <p>ID: @AuthHelper.GetClaimValue(User, "UserID")</p>
-                </div>
-            </div>
-        </div>
-    </div>
+								<div class="text">Logout</div>
+							</a>
+							</li>
+						}
+					</ul>
+				</div>
 
-    <!-- Shipment Details Popup -->
-    <div class="modal fade z-index-9999" id="ShipmentDetails" tabindex="-1" aria-labelledby="ShipmentDetailsLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div id="ShipmentDetails-Body" class="modal-body">
-                    <div class="spinner-border text-danger d-block m-auto" role="status">
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+			</div>
+		</div>
+	</header>
+	<div class="login-area">
+		<div class="login-box">
+			<a href="#"><i class="icofont icofont-close"></i></a>
+			<h2>LOGIN</h2>
+			<form action="#">
+				<h6>USERNAME OR EMAIL ADDRESS</h6>
+				<input type="text" />
+				<h6>PASSWORD</h6>
+				<input type="text" />
+				<div class="login-remember">
+					<input type="checkbox" />
+					<span>Remember Me</span>
+				</div>
+				<div class="login-signup">
+					<span>SIGNUP</span>
+				</div>
+				<a href="#" class="theme-btn">LOG IN</a>
+				<span>Or Via Social</span>
+				<div class="login-social">
+					<a href="#"><i class="icofont icofont-social-facebook"></i></a>
+					<a href="#"><i class="icofont icofont-social-twitter"></i></a>
+					<a href="#"><i class="icofont icofont-social-linkedin"></i></a>
+					<a href="#"><i class="icofont icofont-social-google-plus"></i></a>
+					<a href="#"><i class="icofont icofont-camera"></i></a>
+				</div>
+			</form>
 
-    <!-- Shipment Items Popup -->
-    <div class="modal fade" id="ItemsModal" tabindex="-1" role="dialog" aria-labelledby="ItemsModal" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content" style="width: 108%;">
-                <div>
-                    <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="ItemsModal-body">
-                    <div class="spinner-border text-danger d-block m-auto" role="status">
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+		</div>
+	</div>
+	<div class="buy-ticket">
+		<div class="container">
+			<div class="buy-ticket-area Shipment-container">
+				<a href="#" class="closeIcon"><i class="icofont icofont-close"></i></a>
+				<form style="width:95%" class="needs-validation" method="post" id="AddAdvertisement" action="@Url.Action("Add","Advertisement")" novalidate>
+					<div class="row Red-Row w-100">
+						<div class="col-lg-5">
+							<div style="" class="Shipment-Details-Section">
+								<div class="col-lg-12">
+									<label class="Shipment-Details-label">UserName</label>
+									<input type="text" placeholder="Name" id="UserName" name="UserName" required />
+									<div class="invalid-feedback">
+										Please enter customer UserName.
+									</div>
+								</div>
+								<div class="col-lg-12 mt-3">
+									<label class="Shipment-Details-label">Password</label>
+									<input type="text" placeholder="Password" id="Password" name="Password" required>
+									<div class="invalid-feedback">
+										Please enter Password.
+									</div>
+								</div>
+								<div class="col-lg-12 mt-3">
+									<label class="Shipment-Details-label">Level</label>
+									<input type="number" min="0" class="input-Number" id="Level" name="Level" placeholder="Level" required />
+									<div class="invalid-feedback">
+										Please enter Level.
+									</div>
+								</div>
+								<div class="col-lg-12 mt-3">
+									<label class="Shipment-Details-label">Rank</label>
+									<input type="text" id="Rank" name="Rank" placeholder="Rank" />
+									<div class="invalid-feedback">
+										Please enter Rank.
+									</div>
+								</div>
+								<div class="col-lg-6 mt-3">
+									<label class="Shipment-Details-label">Price</label>
+									<input type="number" min="1" max="1000000" class="input-Number" id="Price" name="Price" placeholder="Price" required />
+									<div class="invalid-feedback">
+										Please enter Price
+									</div>
+								</div>
+								<div class="col-lg-6 mt-3">
+									<label class="Shipment-Details-label">Game</label>
+									@if (ViewBag.GameList != null)
+									{
+								     	@Html.DropDownList("GameId", new SelectList(ViewBag.GameList, nameof(GameDTO.Id), nameof(GameDTO.NameEn)), "--- Select Game ---", new { @class = "form-control", @required = "required" })
+									}
+									<div class="invalid-feedback">
+										Please select Game.
+									</div>
+								</div>
+								<input type="hidden" value="@AuthHelper.GetClaimValue(User,SystemConstants.Claims.UserID)" id="GamerId" name="GamerId" />
+								<div class="col-lg-12 mt-3">
+									<div class="row Red-Row justify-content-center pt-3 Game-Options">
+										<div class="files-container">
+											<div class="files-header">
+												<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+													<g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+													<g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+													<g id="SVGRepo_iconCarrier">
+														<path d="M7 10V9C7 6.23858 9.23858 4 12 4C14.7614 4 17 6.23858 17 9V10C19.2091 10 21 11.7909 21 14C21 15.4806 20.1956 16.8084 19 17.5M7 10C4.79086 10 3 11.7909 3 14C3 15.4806 3.8044 16.8084 5 17.5M7 10C7.43285 10 7.84965 10.0688 8.24006 10.1959M12 12V21M12 12L15 15M12 12L9 15" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+													</g>
+												</svg>
+												<label for="Advertisement-files">Browse File to upload!</label>
+											</div>
+											<label class="files-footer">
+												<svg fill="#000000" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M15.331 6H8.5v20h15V14.154h-8.169z"></path><path d="M18.153 6h-.009v5.342H23.5v-.002z"></path></g></svg>
+												<p id="Advertisement-files-Lable">Not selected file</p>
+												<svg onclick="deleteAllFiles()" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5.16565 10.1534C5.07629 8.99181 5.99473 8 7.15975 8H16.8402C18.0053 8 18.9237 8.9918 18.8344 10.1534L18.142 19.1534C18.0619 20.1954 17.193 21 16.1479 21H7.85206C6.80699 21 5.93811 20.1954 5.85795 19.1534L5.16565 10.1534Z" stroke="#000000" stroke-width="2"></path> <path d="M19.5 5H4.5" stroke="#000000" stroke-width="2" stroke-linecap="round"></path> <path d="M10 3C10 2.44772 10.4477 2 11 2H13C13.5523 2 14 2.44772 14 3V5H10V3Z" stroke="#000000" stroke-width="2"></path> </g></svg>
+											</label>
+											<input id="Advertisement-files" id="Files" name="Files" type="file" onchange="updateAdvertisementFiles()" accept="image/*" multiple>
+										</div>
+									</div>
 
-    <!-- Shipment Partial Items Popup -->
-    <div class="modal fade" id="PartialItemsModal" tabindex="-1" role="dialog" aria-labelledby="PartialItemsModal" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content" style="width: 108%;">
-                <div>
-                    <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="PartialItemsModal-body">
-                    <div class="spinner-border text-danger d-block m-auto" role="status">
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-7 w-100">
+							<div class="Shipment-Details-Section">
+								<div class="col-lg-12">
+									<div class="col-lg-12 col-12 Game-Type-Section">
+										<div class="row Red-Row" id="DivOrderDescription">
+											<p class="additional-comments">Description</p>
+											<textarea class="h-auto" rows="10" id="Description" name="Description" placeholder="Description"></textarea>
+										</div>
+									</div>
+									<br />
+								</div>
+								<div class="col-lg-12" id="Advertisement-Imgs">
+								</div>
+							</div>
+							<div class="col-lg-12 Buttons-Submit-Section">
+								<button onclick="AddAdvertisement('Add','Advertisement','AddAdvertisement')" type="button" id="BtnSend" class="Red-Btn">Submit Advertisement</button>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- header section end -->
+	@RenderBody()
 
-    <!-- End: User Bar-->
-    <!-- START: Main Content-->
-    <div class="MainDiv">
-        <div id="MainView">
-            @RenderBody()
-        </div>
-        <div id="MainLoder" style="display:none">
-            <span class="MainLoder">
-                <img src="~/dist/images/lo2ثثثثثث.png" />
-            </span>
-        </div>
-    </div>
-    <!-- End: Main Content-->
-    <!-- START: Back to top-->
-    <a href="#" class="scrollup text-center">
-        <i class="icon-arrow-up"></i>
-    </a>
-    <!-- END: Back to top-->
+	<!-- footer section start -->
+	<footer class="footer">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-lg-3 col-sm-6">
+					<div class="widget">
+						<img src="/dist/images/pngwing.com3.png" alt="about" />
+					</div>
+				</div>
+				<div class="col-lg-3 col-sm-6">
 
-    <partial name="_MainJsFiles" />
-    @if (TempData["SuccessMsg"] != null)
-    {
-        <script>
-            $(document).ready(function () {
-                Swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: '@TempData["SuccessMsg"]',
-                    showConfirmButton: false,
-                    timer: 5000
-                });
-            });
-        </script>
-    }
-    @if (TempData["ErrorMsg"] != null)
-    {
-        <script>
-            $(document).ready(function () {
-                Swal.fire({
-                    position: 'center',
-                    icon: 'error',
-                    title: '@TempData["ErrorMsg"]',
-                    showConfirmButton: false,
-                    timer: 5000
-                });
-            });
-        </script>
-    }
-    @RenderSection("Vendorscripts", required: false)
-    <!-- END: Page JS-->
+				</div>
+				<div class="col-lg-3 col-sm-6">
+				</div>
+				<div class="col-lg-3 col-sm-6">
+				</div>
+			</div>
+		</div>
+		<div id="To-Top">
+			<button class="ToTop-button">
+				<svg class="svgIcon" viewBox="0 0 384 512">
+					<path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"></path>
+				</svg>
+			</button>
+		</div>
+	</footer>
+	<!-- footer section end -->
+	
+	<!-- jquery main JS -->
+	<script src="/GamerLayout/assets/js/jquery.min.js"></script>
+	<!-- Bootstrap JS -->
+	<script src="/GamerLayout/assets/js/bootstrap.min.js"></script>
+	<!-- Slick nav JS -->
+	<script src="/GamerLayout/assets/js/jquery.slicknav.min.js"></script>
+	<!-- owl carousel JS -->
+	<script src="/GamerLayout/assets/js/owl.carousel.min.js"></script>
+	<!-- Popup JS -->
+	<script src="/GamerLayout/assets/js/jquery.magnific-popup.min.js"></script>
+	<!-- Isotope JS -->
+	<script src="/GamerLayout/assets/js/isotope.pkgd.min.js"></script>
+	<!-- main JS -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.12/sweetalert2.min.js"></script>
+	<script src="/js/Shipment/AddShipment.js"></script>
+	<script src="/GamerLayout/assets/js/main.js"></script>
+	<script src="/dist/js/app.js"></script>
+	<script src="~/dist/js/jquery.validate.min.js"></script>
+	<script src="~/dist/js/jquery.validate.unobtrusive.min.js"></script>
 </body>
-<!-- END: Body-->
-</html>
 
+</html>

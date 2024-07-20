@@ -6,39 +6,39 @@
 <thead>
     <tr>
         <th class="Sort-Column text-center">Code</th>
-        <th class="Sort-Column text-center">Vendor</th>
+        <th class="Sort-Column text-center">UserName</th>
+        <th class="Sort-Column text-center">Password</th>
         <th class="Sort-Column text-center">Date</th>
-        <th class="text-center">Customer</th>
-        <th class="text-center">Barnch</th>
-        <th class="text-center">Service</th>
-        <th class="Sort-Column text-center">RED Fees</th>
-        <th class="Sort-Column text-center">COD</th>
+        <th class="text-center">Game</th>
+        <th class="text-center">Gamer</th>
+        <th class="text-center">Buyer</th>
+        <th class="text-center">Description</th>
+        <th class="Sort-Column text-center">Price</th>
+        <th class="Sort-Column text-center">Level</th>
+        <th class="Sort-Column text-center">Rank</th>
         <th class="text-center">Status</th>
-        <th class="text-center">Actions</th>
     </tr>
 </thead>
 <tbody id="TableBody">
     @if (Model != null && Model.Count > 0)
     {
-        foreach (var ship in Model)
+        foreach (var ads in Model)
         {
             double REDFees = 0;
 
-            <tr id="TableRow_@ship.AdvertisementId">
-                <td class="td-small text-center text-nowrap pl-1 pr-1" onclick="ShipmentDetails('Shipment',@ship.AdvertisementId)" data-toggle="modal" data-target="#ShipmentDetails"><b>@ship.RefId</b></td>
-                <td class="td-small text-center pl-1 pr-1" style="min-width:100px;">0</td>
-                <td class="td-small text-center text-nowrap pl-1 pr-1 Date-Table">@ship.CreatedAt.ToString("dd MMM yyyy")</td>
-                <td class="td-small text-center pl-1 pr-1">
-                   0
-                    <br />
-                    <label class="text-nowrap mt-1"><i class="fa fa-map-marker"></i>&nbsp;0</label>
-                </td>
-                <td class="td-small text-center">0</td>
-                <td style=" min-width:80px" class="td-small text-center pl-1 pr-1">0</td>
-                <td class="td-small text-center text-nowrap pl-1 pr-1">@REDFees EGP</td>
-                <td class="td-small text-center text-nowrap pl-1 pr-1">0EGP</td>
-                <partial name="~/Views/Shared/Advertisement/_StatusSwitch.cshtml" model="@ship.Status"></partial>
-                <td class="td-small text-center text-nowrap pl-1 pr-1">0EGP</td>
+            <tr id="TableRow_@ads.AdvertisementId">
+                <td class="td-small text-center text-nowrap pl-1 pr-1" onclick="AdvertisementDetails('Advertisement',@ads.AdvertisementId)" data-toggle="modal" data-target="#AdvertisementDetails"><b>@ads.RefId</b></td>
+                <td class="td-small text-center pl-1 pr-1" style="min-width:100px;">@ads.UserName</td>
+                <td class="td-small text-center pl-1 pr-1" style="min-width:100px;">@ads.Password</td>
+                <td class="td-small text-center text-nowrap pl-1 pr-1 Date-Table">@ads.CreatedAt.ToString("dd MMM yyyy")</td>
+                <td class="td-small text-center pl-1 pr-1">@ads.Game?.NameEn</td>
+                <td class="td-small text-center pl-1 pr-1">@ads.Gamer?.Name</td>
+                <td class="td-small text-center pl-1 pr-1">@ads.Buyer?.Name</td>
+                <td class="td-small text-center pl-1 pr-1">@ads.Description</td>
+                <td class="td-small text-center text-nowrap pl-1 pr-1">@ads.Price EGP</td>
+                <td class="td-small text-center text-nowrap pl-1 pr-1">@ads.Level</td>
+                <td class="td-small text-center text-nowrap pl-1 pr-1">@ads.Rank</td>
+                <partial name="~/Views/Shared/Advertisement/_StatusSwitch.cshtml" model="@ads.Status"></partial>
             </tr>
         }
     }
@@ -53,7 +53,7 @@
     <tr>
         <td colspan="13">
             @{
-                await Html.RenderPartialAsync("_Pagination", new OptionDTO { Action = "All", Controller = "Shipment", Count = Model.Count, StatusId = (int)EnumStatus.All });
+                await Html.RenderPartialAsync("_Pagination", new OptionDTO { Action = "All", Controller = "Advertisement", Count = Model.Count, StatusId = (int)EnumStatus.All });
             }
         </td>
     </tr>

@@ -5,7 +5,11 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="log4net" Version="2.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.1.22" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="2.2.0" />
+    <PackageReference Include="PayPal" Version="1.9.1" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
+    <PackageReference Include="System.Text.Json" Version="4.6.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DicomApp.DAL\DicomApp.DAL.csproj" />

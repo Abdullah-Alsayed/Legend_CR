@@ -210,7 +210,7 @@ namespace DicomApp.DAL.Migrations
 
                     b.Property<int?>("LastModifiedBy");
 
-                    b.Property<string>("Level");
+                    b.Property<int>("Level");
 
                     b.Property<string>("Password")
                         .HasMaxLength(250);
@@ -218,6 +218,8 @@ namespace DicomApp.DAL.Migrations
                     b.Property<int?>("PickupRequestId");
 
                     b.Property<int>("Price");
+
+                    b.Property<string>("Rank");
 
                     b.Property<string>("RefId")
                         .HasMaxLength(255);
@@ -619,6 +621,8 @@ namespace DicomApp.DAL.Migrations
                     b.Property<string>("AddressDetails")
                         .HasMaxLength(150);
 
+                    b.Property<int>("Age");
+
                     b.Property<int?>("Apartment");
 
                     b.Property<int?>("AreaId");
@@ -632,6 +636,10 @@ namespace DicomApp.DAL.Migrations
 
                     b.Property<string>("Code")
                         .HasMaxLength(50);
+
+                    b.Property<bool>("ConfirmEmail");
+
+                    b.Property<int?>("CountryId");
 
                     b.Property<int?>("CreatedBy");
 
@@ -648,6 +656,8 @@ namespace DicomApp.DAL.Migrations
 
                     b.Property<string>("FullName")
                         .HasMaxLength(100);
+
+                    b.Property<int>("Gender");
 
                     b.Property<string>("HashedPassword");
 
@@ -719,17 +729,21 @@ namespace DicomApp.DAL.Migrations
                     b.Property<int>("RoleId")
                         .HasColumnName("RoleID");
 
+                    b.Property<string>("TelegramUserName");
+
                     b.Property<long?>("VerificationCode");
 
                     b.Property<bool?>("VisaPayment");
 
-                    b.Property<int?>("VodafoneCashNumber");
+                    b.Property<int?>("WalletNumber");
 
                     b.Property<int?>("ZoneId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("BranchId");
+
+                    b.HasIndex("CountryId");
 
                     b.HasIndex("RoleId");
 
@@ -914,6 +928,25 @@ namespace DicomApp.DAL.Migrations
                     b.ToTable("ContactUs");
                 });
 
+            modelBuilder.Entity("DicomApp.DAL.DB.Country", b =>
+                {
+                    b.Property<int>("CountryId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CountryCode");
+
+                    b.Property<string>("FlagUrl");
+
+                    b.Property<string>("NameAr");
+
+                    b.Property<string>("NameEn");
+
+                    b.HasKey("CountryId");
+
+                    b.ToTable("Countries");
+                });
+
             modelBuilder.Entity("DicomApp.DAL.DB.FollowUp", b =>
                 {
                     b.Property<int>("Id")
@@ -934,6 +967,8 @@ namespace DicomApp.DAL.Migrations
                     b.Property<int>("CreatedBy");
 
                     b.Property<int?>("FollowUpTypeId");
+
+                    b.Property<int?>("GameServiceGamerServiceId");
 
                     b.Property<bool>("IsDeleted");
 
@@ -963,6 +998,8 @@ namespace DicomApp.DAL.Migrations
                     b.HasIndex("CreatedBy");
 
                     b.HasIndex("FollowUpTypeId");
+
+                    b.HasIndex("GameServiceGamerServiceId");
 
                     b.ToTable("FollowUp");
                 });
@@ -1033,6 +1070,96 @@ namespace DicomApp.DAL.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Game");
+                });
+
+            modelBuilder.Entity("DicomApp.DAL.DB.GamerService", b =>
+                {
+                    b.Property<int>("GamerServiceId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedAt");
+
+                    b.Property<int>("CreatedBy");
+
+                    b.Property<string>("Description");
+
+                    b.Property<int>("GameId");
+
+                    b.Property<int>("GameServiceType");
+
+                    b.Property<int>("GamerId");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("LastModifiedAt");
+
+                    b.Property<int?>("LastModifiedBy");
+
+                    b.Property<int>("Level");
+
+                    b.Property<string>("Password");
+
+                    b.Property<int>("Price");
+
+                    b.Property<string>("Rank");
+
+                    b.Property<string>("RefId");
+
+                    b.Property<int>("StatusId");
+
+                    b.Property<string>("UserName");
+
+                    b.HasKey("GamerServiceId");
+
+                    b.HasIndex("GameId");
+
+                    b.HasIndex("GamerId");
+
+                    b.HasIndex("StatusId");
+
+                    b.ToTable("GamerService");
+                });
+
+            modelBuilder.Entity("DicomApp.DAL.DB.Invoice", b =>
+                {
+                    b.Property<int>("InvoiceId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("AdvertisementId");
+
+                    b.Property<DateTime>("CreatedAt");
+
+                    b.Property<int>("CreatedBy");
+
+                    b.Property<int?>("GamerServiceId");
+
+                    b.Property<int>("InvoiceType");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<bool>("IsRefund");
+
+                    b.Property<DateTime?>("LastModifiedAt");
+
+                    b.Property<int?>("LastModifiedBy");
+
+                    b.Property<int>("Price");
+
+                    b.Property<string>("RefId");
+
+                    b.HasKey("InvoiceId");
+
+                    b.HasIndex("AdvertisementId")
+                        .IsUnique()
+                        .HasFilter("[AdvertisementId] IS NOT NULL");
+
+                    b.HasIndex("GamerServiceId")
+                        .IsUnique()
+                        .HasFilter("[GamerServiceId] IS NOT NULL");
+
+                    b.ToTable("Invoices");
                 });
 
             modelBuilder.Entity("DicomApp.DAL.DB.Notification", b =>
@@ -1711,7 +1838,7 @@ namespace DicomApp.DAL.Migrations
                         .HasForeignKey("CommonUserId");
 
                     b.HasOne("DicomApp.DAL.DB.Game", "Game")
-                        .WithMany("ShipmentGame")
+                        .WithMany("Advertisements")
                         .HasForeignKey("GameId")
                         .HasConstraintName("FK_Shipment_Game")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -1799,6 +1926,10 @@ namespace DicomApp.DAL.Migrations
                         .HasForeignKey("BranchId")
                         .HasConstraintName("FK_Branch_CommonUser");
 
+                    b.HasOne("DicomApp.DAL.DB.Country", "Country")
+                        .WithMany("Users")
+                        .HasForeignKey("CountryId");
+
                     b.HasOne("DicomApp.DAL.DB.Role", "Role")
                         .WithMany("CommonUser")
                         .HasForeignKey("RoleId")
@@ -1854,6 +1985,10 @@ namespace DicomApp.DAL.Migrations
                     b.HasOne("DicomApp.DAL.DB.FollowUpType")
                         .WithMany("FollowUp")
                         .HasForeignKey("FollowUpTypeId");
+
+                    b.HasOne("DicomApp.DAL.DB.GamerService", "GameService")
+                        .WithMany("FollowUp")
+                        .HasForeignKey("GameServiceGamerServiceId");
                 });
 
             modelBuilder.Entity("DicomApp.DAL.DB.Game", b =>
@@ -1862,6 +1997,35 @@ namespace DicomApp.DAL.Migrations
                         .WithMany("Game")
                         .HasForeignKey("CategoryId")
                         .HasConstraintName("FK_Game_Category");
+                });
+
+            modelBuilder.Entity("DicomApp.DAL.DB.GamerService", b =>
+                {
+                    b.HasOne("DicomApp.DAL.DB.Game", "Game")
+                        .WithMany("GamerServices")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DicomApp.DAL.DB.CommonUser", "Gamer")
+                        .WithMany("GamerServices")
+                        .HasForeignKey("GamerId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DicomApp.DAL.DB.Status", "Status")
+                        .WithMany("GamerServices")
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("DicomApp.DAL.DB.Invoice", b =>
+                {
+                    b.HasOne("DicomApp.DAL.DB.Advertisement", "Advertisement")
+                        .WithOne("Invoice")
+                        .HasForeignKey("DicomApp.DAL.DB.Invoice", "AdvertisementId");
+
+                    b.HasOne("DicomApp.DAL.DB.GamerService", "GamerService")
+                        .WithOne("Invoice")
+                        .HasForeignKey("DicomApp.DAL.DB.Invoice", "GamerServiceId");
                 });
 
             modelBuilder.Entity("DicomApp.DAL.DB.Notification", b =>

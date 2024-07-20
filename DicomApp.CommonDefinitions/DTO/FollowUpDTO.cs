@@ -15,5 +15,6 @@ namespace DicomApp.CommonDefinitions.DTO
 
         public DateTime CreatedAt { get; set; }
         public string Title { get; set; }
+        public int? GameServiceId { get; set; }
     }
 }

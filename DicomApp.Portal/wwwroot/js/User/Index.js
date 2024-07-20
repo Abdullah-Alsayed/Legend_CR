@@ -54,4 +54,34 @@ function loadUsers(url, pageIndex) {
     });
 }
 
+function Enter(event, action) {
+     $(".Spinner").removeClass("d-none");
+    if ($(`#${action}-form`).valid()) {
+
+        let formData = $(`#${action}-form`).serialize();
+        $.ajax({
+            url: `/User/${action}`,
+            type: "POST",
+            data: formData,
+            success: function (result) {
+                $(".Spinner").addClass("d-none");
+                if (!result.success)
+                    $(`#ErrorMessage`).text(result.message);
+                else {
+                    location.href = "/Gamer/Main";
+                $(`#ErrorMessage`).text('');
+                }
+
+            },
+            error: function (err) {
+                $(".Spinner").addClass("d-none");
+                alert("try again!")
+                console.log(err);
+            }
+        });
+    } else {
+        $(".Spinner").addClass("d-none");
+        $(`#${action}-form`).submit();
+    }
+}
 

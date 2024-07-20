@@ -29,8 +29,8 @@ namespace DicomApp.DAL.DB
         public string Description { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
-        public string Level { get; set; }
-
+        public int Level { get; set; }
+        public string Rank { get; set; } = string.Empty;
         public int Price { get; set; }
 
         public bool IsRefund { get; set; }
@@ -45,7 +45,7 @@ namespace DicomApp.DAL.DB
 
         public virtual CommonUser Gamer { get; set; }
         public virtual CommonUser Buyer { get; set; }
-
+        public virtual Invoice Invoice { get; set; }
         public virtual CashTransfer CashTransfer { get; set; }
         public virtual ICollection<AdvertisementPhotos> AdvertisementPhotos { get; set; }
         public virtual ICollection<FollowUp> FollowUp { get; set; }

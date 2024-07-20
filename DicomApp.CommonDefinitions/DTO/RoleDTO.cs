@@ -11,7 +11,8 @@ namespace DicomApp.CommonDefinitions.DTO
 
         [Required(ErrorMessage = "Required")]
         public string Name { get; set; }
-
         public bool Editable { get; set; }
+        public DateTime CreationDate { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

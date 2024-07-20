@@ -134,13 +134,20 @@ namespace DicomApp.BL.Services
                 {
                     try
                     {
+                        var oldAppService = request.context.AppService.ToList();
+                        request.context.AppService.RemoveRange(oldAppService);
+
+                        var OldRoleAppService = request.context.RoleAppService.ToList();
+                        request.context.RoleAppService.RemoveRange(OldRoleAppService);
+                        request.context.SaveChanges();
+
                         var roles = req.context.Role.Where(x => !x.IsDeleted).ToList();
                         var AppServiceList = new List<AppService>();
                         foreach (var Controller in req.Permissions)
                         {
                             foreach (var Permission in Controller.Value)
                             {
-                                if (!AppServiceList.Any(x => x.Name == Permission))
+                                if (!AppServiceList.Exists(x => x.Name == Permission))
                                 {
                                     AppServiceList.Add(
                                         new AppService

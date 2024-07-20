@@ -235,7 +235,7 @@ namespace DicomApp.Portal.Controllers
                     UserID = AuthHelper.GetClaimValue(User, "UserID"),
                 }
             );
-            return Ok(roleAppServiceResponse.Success);
+            return Ok(roleAppServiceResponse);
         }
     }
 }

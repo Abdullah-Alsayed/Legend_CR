@@ -1,0 +1,1920 @@
+/*
+Theme Name: Movie Point
+Version: 1.0
+Author: Jsoft
+Description: Online Movie,Vedio and TV Show HTML Template
+*/
+
+/**
+ *** CSS Indexing ***
+ * THEME DEFAULT CSS
+ * RESET CSS
+ * HEADER AREA CSS
+ * HERO AREA CSS
+ * portfolio AREA CSS
+ * video AREA CSS
+ * news AREA CSS
+ * footer AREA CSS
+ * Movie details PAGE CSS
+ * seat plan PAGE CSS
+ * login PAGE CSS
+ * blog PAGE CSS
+ * blog details PAGE CSS
+ * PRELOADER CSS
+**/
+
+/*----------------------------------
+--------- THEME DEFAULT CSS --------
+----------------------------------*/
+@import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,900');
+body {
+    backdrop-filter:blur(10px);
+    line-height: 24px;
+    font-size: 14px;
+    color: #b6b7b9;
+    background: url(/dist/images/BG/5.jpg);
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    height: 100%;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+}
+
+/*----------------------------
+---------- RESET CSS ---------
+----------------------------*/
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 500;
+	color: #fff;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    margin: 0px;
+}
+h1 {
+    font-size: 36px;
+}
+h2 {
+    font-size: 30px;
+}
+h4 {
+    font-size: 18px;
+}
+h6 {
+    font-size: 14px;
+}
+a {
+    transition: 0.6s;
+}
+a,
+a:hover {
+    color: #fff;
+}
+img {
+    max-width: 100%;
+    height: auto;
+}
+iframe {
+    width: 100%;
+    border: none;
+}
+a,
+a:hover,
+a:focus,
+a:active,
+button:focus {
+    text-decoration: none;
+    border: none;
+    outline: 0;
+}
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+ol {
+    margin-bottom: 0;
+}
+select:focus,
+select:active {
+    box-shadow: none;
+    border: 0;
+    outline: 0
+}
+input:focus,
+textarea:focus,
+select:focus,
+button:focus {
+    outline: none;
+}
+button{
+    cursor: pointer;
+}
+textarea {
+	height: 160px;
+}
+input[type="text"],
+input[type="submit"],
+button[type="submit"],
+input[type="email"],
+input[type="url"],
+input[type="tel"],
+input[type="search"],
+input[type="password"],
+input[type="number"],
+textarea {
+    background: #24262d;
+    width: 100%;
+    padding: 8px 15px;
+    border: none;
+}
+input[type="submit"],
+button[type="submit"] {
+    width: auto;
+    color: #666;
+    padding: 4px 15px;
+}
+textarea:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+.section-title h1 i {
+    color: #fece50;
+	font-size: 40px;
+	margin-right: 5px;
+}
+.mt-100 {
+    margin-top: 100px;
+}
+.mt-30 {
+    margin-top: 30px;
+}
+.mt-20 {
+    margin-top: 20px;
+}
+.pt-60 {
+	padding-top: 60px;
+}
+.pb-90 {
+	padding-bottom: 90px;
+}
+.pb-20 {
+	padding-bottom: 20px;
+}
+.ptb-100 {
+    padding: 100px 0;
+}
+.ptb-90 {
+    padding: 90px 0;
+}
+.owl-nav div {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    width: 35px;
+    background: #fff;
+    color: #000;
+    height: 35px;
+    line-height: 36px;
+    border-radius: 100%;
+    text-align: center;
+    font-size: 29px;
+    transition: 0.4s;
+    margin-top: -60px;
+}
+.owl-nav div:hover {
+    background: #000;
+    color: #fff;
+}
+.owl-nav div.owl-next {
+    right: 20px;
+    left: auto;
+}
+.owl-dots {
+    text-align: center;
+    margin-top: 35px;
+}
+.owl-dot {
+    width: 20px;
+    height: 6px;
+	border-radius: 5px;
+    background: #595a5f;
+    display: inline-block;
+    margin: 0 5px;
+}
+.owl-dot.active {
+    width: 28px;
+    background: #eb315a;
+}
+.display-table {
+    display: table;
+    height: 100%;
+    width: 100%;
+}
+.display-tablecell {
+    display: table-cell;
+    vertical-align: middle;
+}
+.theme-btn {
+    background: #0077e4;
+    border: 1px solid #0077e4;
+    color: #fff;
+    border-radius: 35px;
+    padding: 5px 25px;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: 500;
+}
+.theme-btn:hover {
+    border: 1px solid #eb315a;
+	background: transparent;
+    color: #eb315a;
+}
+.theme-btn2:hover,
+.theme-btn2 {
+    color: #fff;
+	background: #963dad; /* Old browsers */
+	background: -moz-linear-gradient(top, #963dad 0%, #9c3db1 34%, #ba3fc4 65%, #c340ca 100%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(top, #963dad 0%,#9c3db1 34%,#ba3fc4 65%,#c340ca 100%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to bottom, #963dad 0%,#9c3db1 34%,#ba3fc4 65%,#c340ca 100%); 
+	border: none;
+}
+.flexbox-center {
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+textarea,
+input,
+textarea::-webkit-input-placeholder ,
+input::-webkit-input-placeholder {
+    color: #fff;
+}
+
+/*--------------------------------------
+-------- HEADER AREA CSS START --------
+---------------------------------------*/
+.header {
+	padding: 18px 0;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 99;
+}
+.header-area {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: baseline;
+}
+.user-info ul {
+    display: flex;
+    width: 400px;
+    align-items: center;
+    justify-content: space-between;
+}
+}
+.logo {
+    grid-column: span 2;
+    grid-row: span 2;
+    padding-right: 15px;
+}
+.header-right {
+    grid-column: span 10;
+    text-align: right;
+    display: flex;
+    align-items: center;
+}
+
+.menu-area {
+    grid-column: span 10;
+}
+.mainmenu {
+    text-align: right;
+}
+.mainmenu li {
+    display: inline-block;
+	position: relative;
+}
+.mainmenu li a:not(.theme-btn) {
+    display: inline-block;
+	margin-right: 30px;
+	padding: 3px 0;
+}
+.slicknav_menu {
+	padding: 0;
+    background: transparent;
+}
+.mainmenu {
+    display: block;
+}
+.slicknav_menu {
+	display: none;
+}
+.header.sticky {
+	border-bottom: 1px solid #fff;
+	background: #000;
+}
+.mainmenu li:hover ul {
+    transform: scaleY(1);
+}
+.mainmenu li ul li {
+	display: block;
+}
+.mainmenu li ul {
+    position: absolute;
+    top: 100%;
+    background: #000;
+    padding: 5px 15px;
+    left: 0;
+    text-align: left;
+    min-width: 200px;
+    transform: scaleY(0);
+    transition: all 0.4s;
+}
+.mainmenu li a.active, .mainmenu li a:hover {
+    color: #fff;
+}
+.header-right form {
+    display: flex;
+    max-width: 380px;
+    border: 1px solid #eee;
+    border-radius: 30px;
+    margin-left: auto;
+}
+.header-right form button {
+    background: transparent;
+    color: #fff;
+    border: none;
+    padding-right: 10px;
+}
+option {
+	color: #000;
+}
+.header-right form select {
+    background: url('../img/select-icon.png') no-repeat right center;
+    color: #fff;
+    padding: 0 20px 0 30px;
+    border: none;
+	-moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.header-right form input {
+    width: auto;
+	background: transparent;
+	color: #fff;
+    border: none;
+    margin: 0;
+    border-left: 1px solid #ddd;
+    margin-left: 20px;
+}
+
+.header-right ul li a:hover {
+	color: #eb315a;
+}
+.header-right ul li {
+    padding: 8px 0 0;
+    margin-left: 15px;
+    display: inline-block;
+}
+/*--------------------------------------
+--------- HEADER AREA CSS END ---------
+---------------------------------------*/
+
+/*----------------------------------
+-------- HERO AREA CSS START -------
+------------------------------------*/
+.hero-area {
+    position: relative;
+    background-image: url(/dist/images/flay.png);
+    background-repeat: no-repeat;
+    background-position: top left;
+    background-size: 25%;
+    background-attachment: fixed;
+    overflow: hidden;
+}
+.hero-area-slide {
+    background: #0058ff54;
+    margin: 320px 15px 50px;
+    padding-top: 52px;
+    box-shadow: 0 0 7px 7px #ffffff40;
+    border-radius: 20px;
+}
+
+.hero-area-content {
+    display: flex;
+    min-height: 591px;
+    min-width: 430px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.hero-area-content p{
+    color: #fff;
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+.hero-area-content > img {
+    position: relative;
+    margin-top: -120px;
+}
+.hero-area-slider {
+	margin: auto;
+	max-width: 950px;
+}
+
+.author-review {
+    color: #fece50;
+    float: left;
+}
+
+.review h4 {
+    padding-left: 25px;
+    overflow: hidden;
+}
+
+.review {
+    margin: 8px 0 35px;
+}
+
+.hero-area-content h3 {
+    margin-top: 35px;
+}
+
+.single-slide-cast {
+    width: 11.5%;
+}
+
+
+
+.single-slide-cast.text-center {
+    height: 45px;
+    line-height: 45px;
+    border-radius: 100%;
+    max-width: 45px;
+    border: 2px solid #eb315a;
+    color: #eb315a;
+}
+.pr-50 {
+	padding-right: 10px;
+	margin-left: -15px;
+}
+.slide-trailor {
+    display: flex;
+    overflow: hidden;
+    margin-top: 40px;
+    margin-bottom: 10px;
+    align-items: center;
+    flex-direction: row;
+}
+ .slide-trailor img{
+     width:50px !important;
+
+ }
+
+.slide-cast {
+    display: flex;
+    align-content: space-between;
+    justify-content: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+
+.slide-trailor h3 {
+    float: left;
+    margin: 0;
+    margin-right: 25px;
+}
+.hero-area-thumb .hero-area-slide {
+	margin: 0 15px;
+}
+.thumb-prev {
+    position: absolute;
+    bottom: 0;
+    left: -690px;
+    max-width: 950px;
+    -webkit-perspective: 80px;
+    perspective: 80px;
+}
+.thumb-prev .hero-area-slide {
+    -webkit-transform-style: preserve-3d;
+    -webkit-transform: rotateY(2deg);
+    transform-style: preserve-3d;
+    transform: rotateY(2deg);
+    cursor: pointer;
+}
+.thumb-next {
+    position: absolute;
+    bottom: 0;
+    right: -690px;
+    max-width: 950px;
+    -webkit-perspective: 80px;
+    perspective: 80px;
+}
+.thumb-next .hero-area-slide {
+    -webkit-transform-style: preserve-3d;
+    -webkit-transform: rotateY(-2deg);
+    transform-style: preserve-3d;
+    transform: rotateY(-2deg);
+    cursor: pointer;
+}
+/*----------------------------------
+--------- HERO AREA CSS END --------
+-----------------------------------*/
+
+/*----------------------------------
+-------- portfolio AREA CSS START -------
+------------------------------------*/
+hr {
+	margin: 0;
+	border-top: 1px solid #ddd;
+}
+.portfolio-menu {
+	padding-top: 30px;
+}
+
+.portfolio-menu li {
+    display: inline-block;
+    position: relative;
+    margin-left: 15px;
+    padding-bottom: 20px;
+    cursor: pointer;
+}
+
+.portfolio-menu li::before {
+    background: transparent;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    transition: 0.4s;
+    content: "";
+    height: 4px;
+    position: absolute;
+    z-index: 99;
+}
+
+.portfolio-menu li.active {
+    color: #fff;
+}
+
+.portfolio-menu li.active::before,.portfolio-menu li:hover::before {
+    background: #eb315a;
+}
+.portfolio-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+}
+.portfolio-content h2 {
+    margin-top: 20px;
+}
+
+.single-portfolio {
+    margin-top: 50px;
+}
+.video-area,
+.single-portfolio-img {
+	overflow: hidden;
+	position: relative;
+}
+.single-portfolio-img:hover .popup-youtube i {
+	opacity: 1;
+}
+.single-portfolio-img .popup-youtube i {
+	opacity: 0;
+}
+.video-area img,
+.single-portfolio-img img {
+    max-width: 100%;
+    max-height: 410px;
+    min-width: 100px;
+    min-height: 410px;
+    margin-bottom: 10px;
+	transition: 0.9s;
+}
+.video-area:hover img,
+.single-portfolio:hover img {
+	transform: scale(1.2);
+}
+.single-portfolio .review {
+    margin-bottom: 0;
+}
+
+.portfolio-sidebar img {
+    margin-top: 30px;
+	border-radius: 10px;
+}
+
+.portfolio-sidebar {
+    margin-top: 20px;
+}
+.portfolio-area {
+    background: url(/dist/images/horse.png);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 20%;
+    background-position: bottom right;
+}
+/*----------------------------------
+--------- portfolio AREA CSS END --------
+-----------------------------------*/
+/*----------------------------------
+-------- video AREA CSS START -------
+------------------------------------*/
+.video-area {
+    position: relative;
+    margin-top: 35px;
+}
+
+.popup-youtube i:hover {
+    color: #fece50;
+    border: 2px solid #fece50;
+}
+.popup-youtube i {
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+	color: #fff;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 18px;
+    display: inline-block;
+    transition: all 0.4s;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    left: 0;
+    right: 0;
+}
+
+.video-text {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    background: rgba(19,21,31,0.6);
+    padding: 20px 35px;
+    width: 100%;
+}
+
+.video-text .review {
+    margin-bottom: 0;
+}
+/*----------------------------------
+--------- video AREA CSS END --------
+-----------------------------------*/
+
+/*----------------------------------
+-------- news AREA CSS START -------
+------------------------------------*/
+.services {
+    margin: 4% 0px;
+}
+.services-Card {
+    display: flex;
+    justify-content: space-around;
+}
+.single-news {
+    position: relative;
+    color: #fff;
+}
+.news-content {
+    width:100%;
+    position: absolute;
+    left: 60px;
+    bottom: 35px;
+    right: 420px;
+}
+.news-bg-1 {
+	background: url('../img/news/news1.jpg') no-repeat center / cover;
+    height: 350px;
+}
+.news-bg-2 {
+	background: url('../img/news/news2.jpg') no-repeat center / cover;
+    height: 350px;
+}
+.news-bg-3 {
+	background: url('../img/news/news3.jpg') no-repeat center / cover;
+    height: 350px;
+}
+.news-date {
+    position: absolute;
+    left: 60px;
+    top: -35px;
+    background: #f09819; /* Old browsers */
+    background: -moz-radial-gradient(circle at 10% 20%, rgb(67, 144, 233) 0%, rgb(78, 226, 198) 90.1%); /* FF3.6-15 */
+    background: -webkit-radial-gradient(circle at 10% 20%, rgb(67, 144, 233) 0%, rgb(78, 226, 198) 90.1%); /* Chrome10-25,Safari5.1-6 */
+    background: radial-gradient(circle at 10% 20%, rgb(67, 144, 233) 0%, rgb(78, 226, 198) 90.1%);
+    padding: 20px;
+    border-radius:30px;
+}
+.news-date h2 span {
+	font-size: 16px;
+}
+.news-content > h2 {
+    margin-bottom: 15px;
+}
+
+.news-slider .single-news{
+    max-width: 950px;
+    margin: 50px auto 0;
+}
+.single-news a {
+    position: absolute;
+    left: 85%;
+    bottom: 0;
+    font-size: 30px;
+    border-radius: 50%;
+    border: 1px solid;
+    padding: 12px;
+}
+.news-slide-area {
+    position: relative;
+    overflow: hidden;
+}
+.news-next {
+    position: absolute;
+    width: 950px;
+    bottom: 0;
+    left: 0;
+    margin-left: -770px;
+    z-index: 99;
+    cursor: pointer;
+}
+
+.news-prev {
+    position: absolute;
+    width: 950px;
+    bottom: 0;
+    right: 0;
+    margin-right: -770px;
+    z-index: 99;
+    cursor: pointer;
+    height: 350px;
+}
+
+
+/*----------------------------------
+--------- news AREA CSS END --------
+-----------------------------------*/
+
+/*----------------------------------
+-------- testimonial AREA CSS START -------
+------------------------------------*/
+.services {
+    margin: 4% 0px;
+}
+
+.single-testimonial {
+    position: relative;
+    color: #fff;
+}
+
+.testimonial-content {
+    position: absolute;
+    left: 60px;
+    bottom: 35px;
+    right: 420px;
+}
+
+.testimonial-Bg {
+    background: #0058ff54;
+    padding-top: 52px;
+    box-shadow: 0 0 7px 7px #ffffff40;
+    border-radius: 20px;
+    height: 300px;
+    width: 100%;
+    background: lightblue;
+    position: relative;
+    overflow: hidden;
+}
+.single-news image{
+    width:10%;
+}
+.testimonial-date h2 span {
+    font-size: 16px;
+}
+
+.testimonial-content > h2 {
+    margin-bottom: 15px;
+}
+
+.testimonial-slider .single-testimonial {
+    max-width: 950px;
+    margin: 50px auto 0;
+}
+
+.single-testimonial a {
+    position: absolute;
+    right: 40px;
+    bottom: 40px;
+}
+
+.testimonial-slide-area {
+    position: relative;
+    overflow: hidden;
+}
+
+.testimonial-next {
+    position: absolute;
+    width: 950px;
+    bottom: 0;
+    left: 0;
+    margin-left: -770px;
+    z-index: 99;
+    cursor: pointer;
+}
+
+.testimonial-prev {
+    position: absolute;
+    width: 950px;
+    bottom: 0;
+    right: 0;
+    margin-right: -770px;
+    z-index: 99;
+    cursor: pointer;
+    height: 350px;
+}
+.container {
+
+}
+
+.testimonial-Bg::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, #3498db 10%, transparent 20%), radial-gradient(circle, transparent 10%, #3498db 20%);
+    background-size: 30px 30px; /* Adjust the size of the pattern */
+    animation: moveBackground 8s linear infinite; /* Adjust the animation duration and timing function */
+}
+
+@keyframes moveBackground {
+    0% {
+        transform: translate(0, 0);
+    }
+
+    100% {
+        transform: translate(20%, 20%);
+    }
+}
+
+/*----------------------------------
+--------- testimonial AREA CSS END --------
+-----------------------------------*/
+
+/*----------------------------------
+--------- footer AREA CSS START --------
+-----------------------------------*/
+.footer {
+    position: relative;
+	padding: 90px 0 30px;
+}
+.
+.widget h4,.widget img {
+    margin-bottom: 40px;
+}
+
+.widget ul li {
+    margin-top: 15px;
+}
+
+.widget h6 {
+    margin-top: 18px;
+}
+
+.widget {
+    margin-bottom: 40px;
+}
+
+.widget button {
+    background: transparent;
+    color: #eb315a;
+    border: none;
+    padding: 0;
+}
+
+.widget form {
+    margin-top: 25px;
+}
+.copyright {
+    padding-top: 25px;
+}
+/*----------------------------------
+--------- footer AREA CSS END --------
+-----------------------------------*/
+
+/*----------------------------------
+---- Movie details PAGE CSS START ----
+------------------------------------*/
+.breadcrumb-area {
+    position: relative;
+    background-image: url('../img/breadcrumb.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+	padding: 280px 0 200px;
+}
+.breadcrumb-area-content {
+	text-align: center;
+}
+.breadcrumb-area-content h1 {
+	font-size: 60px;
+}
+.transformers-box {
+    padding: 35px;
+    box-shadow: 0 0 20px #000000;
+    position: relative;
+}
+
+.transformers-box .transformers-content img {
+    display: block;
+    position: relative;
+}
+
+.transformers-content > p {
+    margin: 12px 0 30px;
+    position: relative;
+    padding-left: 70px;
+}
+.transformers-content > h2 + a.theme-btn {
+    margin: 12px 10px 20px 0;
+}
+
+.transformers-content > p::before {
+    position: absolute;
+    content: "";
+    left: 0;
+    bottom: 0;
+    top: 0;
+    width: 55px;
+    height: 2px;
+    margin: auto;
+    background: #eb315a;
+}
+
+.transformers-left {
+    color: #eb315a;
+    min-width: 100px;
+}
+
+.transformers-content ul li {
+    display: flex;
+    margin-top: 12px;
+    font-weight: 300;
+}
+
+.transformers-right .theme-btn {
+    margin: 0 8px;
+	padding: 2px 15px;
+}
+
+.transformers-bottom {
+    display: flex;
+    margin-top: 10px;
+    justify-content: space-between;
+}
+
+.transformers-bottom span {
+    display: block;
+    color: #eb315a;
+}
+
+.transformers-bottom p {
+    margin-bottom: 8px;
+}
+.transformers-box > .theme-btn {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    border-radius: 5px 0 0;
+}
+
+.details-content >div {
+    margin-top: 30px;
+}
+
+.details-content {
+    padding-top: 10px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 50px;
+}
+
+.details-content >div h2 {
+    margin-bottom: 20px;
+}
+
+.details-overview h2 {
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.details-overview h2::before {
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    background: #eb315a;
+    content: "";
+    width: 50px;
+    height: 2px;
+}
+.select-container {
+    position: relative;
+    margin-bottom: 30px;
+}
+.textarea-container {
+    position: relative;
+}
+.textarea-container button {
+	color: #fff;
+	background: transparent;
+	font-size: 20px;
+	border: none;
+}
+.textarea-container button,
+.select-container i {
+    position: absolute;
+    right: 15px;
+    bottom: 12px;
+    margin: auto;
+}
+.details-comment {
+    display: flex;
+    align-items: center;
+}
+
+.details-comment a {
+    flex: 1;
+	text-align: center;
+}
+
+.details-comment p {
+    flex: 5;
+    margin-left: 25px;
+}
+
+.details-thumb > div {
+    padding-top: 20px;
+    display: flex;
+    width: 50%;
+}
+
+.thumb-icon {
+    width: 45px;
+    font-size: 45px;
+}
+
+.thumb-text {
+	flex: 5;
+}
+
+.details-thumb {
+    display: flex;
+}
+
+.details-thumb > div h4,
+.details-thumb > div i {
+	transition: 0.4s;
+}
+.details-thumb > div:hover h4,
+.details-thumb > div:hover i {
+	color: #eb315a
+}
+.details-thumb-next {
+    text-align: right;
+}
+
+.thumb-text h4 {
+    margin-bottom: 2px;
+}
+/*----------------------------------
+----- Movie details PAGE CSS END ----
+-----------------------------------*/
+
+/*----------------------------------
+-------- seat plan PAGE CSS START -------
+------------------------------------*/
+.buy-ticket {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+	display: none;
+    background: rgba(0,0,0,0.4);
+    z-index: 99;
+    color: #171717;
+}
+
+.buy-ticket-area {
+    margin-top: 140px;
+    background: #1d232c;
+    box-shadow: 0px 0px 20px 0px #ffffffa1;
+    position: relative;
+    border-radius: 20px;
+    padding: 25px 25px;
+}
+.buy-ticket-area > a {
+    color: #fff;
+    font-size: 35px;
+    top: 20px;
+    right: 25px;
+    position: absolute;
+}
+
+.buy-ticket-box h4 {
+    color: #eb315a;
+    margin-bottom: 50px;
+}
+
+.buy-ticket-box h5 {
+    color: #000;
+    margin-bottom: 15px;
+}
+
+.buy-ticket-box h6 {
+    color: #060606;
+    text-align: center;
+    border-bottom: 5px solid #eb315a;
+    padding-bottom: 8px;
+}
+
+.ticket-box-table {
+    display: flex;
+	padding-top: 35px;
+	justify-content: space-between;
+}
+
+.ticket-table-seat td.active,
+.ticket-table-seat td:hover {
+	background: #eb315a;
+	border-color: #eb315a;
+	color: #fff;
+}
+.ticket-table-seat td {
+    width: 19px;
+    height: 19px;
+    border: 1px solid #aaa;
+    border-radius: 30px;
+    text-align: center;
+    line-height: 15px;
+    border-collapse: collapse;
+    margin: 3px;
+	font-size: 10px;
+    display: inline-block;
+}
+
+.ticket-box-table table:not(.ticket-table-seat) td {
+    line-height: 24px;
+}
+
+.ticket-box-available span {
+	display: inline-block;
+	margin-right: 30px;
+}
+.ticket-box-available input {
+	margin-right: 5px;
+	position: relative;
+	top: 2px;
+}
+.ticket-box-available {
+    margin: 50px 0;
+}
+.buy-ticket-box ul li p {
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.buy-ticket-box ul li {
+    margin-bottom: 25px;
+}
+
+.buy-ticket-box ul li:last-child {
+    margin-bottom: 0;
+}
+
+.buy-ticket-box ul {
+    position: relative;
+}
+
+.buy-ticket-box ul::before {
+    left: -50px;
+    top: 30px;
+    bottom: 50px;
+    width: 2px;
+    background: #aaa;
+    content: "";
+    position: absolute;
+}
+
+.buy-ticket-box > a.theme-btn {
+    margin-right: 5px;
+}
+/*----------------------------------
+--------- seat plan PAGE CSS END --------
+-----------------------------------*/
+
+/*----------------------------------
+-------- login PAGE CSS START -------
+------------------------------------*/
+
+/*----------------------------------
+--------- login PAGE CSS END --------
+-----------------------------------*/
+.login-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+	display: none;
+    height: 100%;
+    background: rgba(0,0,0,0.4);
+    z-index: 99;
+	padding: 0 15px;
+}
+
+.login-box {
+    max-width: 380px;
+    background: #fff;
+    position: relative;
+    color: #03090e;
+    margin: 200px auto 0;
+    padding: 40px 25px 25px;
+}
+
+.login-box a {
+    color: #03090e;
+}
+
+.login-box > a {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: #eb315a;
+    font-size: 22px;
+    color: #fff;
+    width: 35px;
+    height: 35px;
+    text-align: center;
+    line-height: 35px;
+}
+
+.login-box h2 {
+    text-align: center;
+    color: #03090e;
+    margin-bottom: 20px;
+}
+
+.login-box h6 {}
+
+.login-box h6 {
+    color: #03090e;
+    margin-bottom: 12px;
+}
+
+.login-box input {
+    margin-bottom: 20px;
+	background: transparent;
+	border: 1px solid #ddd;
+}
+
+.login-signup {
+    float: right;
+}
+
+.login-remember {
+    float: left;
+}
+
+.login-signup a {
+    color: #008aff;
+}
+
+.login-box form .theme-btn {
+    width: 100%;
+    border-radius: 0;
+	color: #fff;
+	text-align: center;
+    margin-top: 5px;
+}
+
+.login-box form .theme-btn + span {
+    margin: 22px 0;
+    display: block;
+}
+
+.login-social {
+    display: flex;
+    justify-content: space-between;
+}
+
+.login-social a i {
+    width: 45px;
+    display: inline-block;
+    height: 45px;
+    font-size: 20px;
+    line-height: 45px;
+    color: #fff;
+    background: #3a559f;
+    text-align: center;
+}
+.login-social a i.icofont-social-twitter {
+    background: #50abf1;
+}
+.login-social a i.icofont-social-linkedin {
+    background: #dd4b39;
+}
+.login-social a i.icofont-social-google-plus {
+    background: #0084b1;
+}
+.login-social a i.icofont-camera {
+    background: #c536a4;
+}
+/*----------------------------------
+-------- blog PAGE CSS START -------
+------------------------------------*/
+.blog-area {
+	padding-top: 30px;
+}
+.blog-area .single-news {
+	margin-top: 70px;
+}
+/*----------------------------------
+--------- blog PAGE CSS END --------
+-----------------------------------*/
+
+/*----------------------------------
+-------- blog details PAGE CSS START -------
+------------------------------------*/
+.news-details a i {
+	margin-right: 5px;
+}
+.news-details > h2 {
+    margin: 30px 0 5px;
+}
+
+.news-details > h2 + a,.news-details > h2 + a + a {
+    margin-right: 10px;
+    display: inline-block;
+}
+
+.news-details > p {
+    margin-top: 25px;
+}
+
+.news-details .details-thumb {
+    border-top: 1px solid #ddd;
+	padding-bottom: 15px;
+}
+
+.news-details .details-comment {
+    padding: 25px 0 30px;
+}
+
+.news-details .details-reply {
+	margin-top: 25px;
+}
+.news-details .details-reply h2 {
+    margin-bottom: 25px;
+}
+
+.blog-sidebar ul li {
+    border-bottom: 1px solid #ddd;
+    margin-top: 10px;
+    padding-bottom: 3px;
+}
+
+.blog-sidebar h4 {
+    margin-top: 35px;
+}
+
+.news-details {
+    padding-top: 35px;
+}
+.detail-author {
+    margin: 40px 0;
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid #fff;
+    padding: 30px 0;
+}
+
+.details-author h4 {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.details-author a {
+    margin-left: 20px;
+}
+/*----------------------------------
+---------  blog details PAGE CSS END --------
+-----------------------------------*/
+
+/*--------------------------------------
+-------- Pre Loader Style START --------
+---------------------------------------*/
+#preloader {
+  position: fixed;
+  z-index: 99999999999;
+  top: 0;
+  left: 0;
+  overflow: visible;
+  width: 100%;
+  height: 100%;
+  background: #fff url("../img/loader.gif") no-repeat center center;
+}
+/*--------------------------------------
+--------- Pre Loader Style END ---------
+---------------------------------------*/
+
+.card {
+    display: grid;
+    place-items: center;
+    width: 80vw;
+    max-width: 21.875rem;
+    height: 28.125rem;
+    overflow: hidden;
+    border-radius: 0.625rem;
+    box-shadow: 0 0 7px 7px #ffffff40;
+    background: #0058ff54;
+}
+
+    .card > * {
+        grid-column: 1 / 2;
+        grid-row: 1 / 2;
+    }
+
+.card__background {
+    object-fit: contain;
+    max-width: 100%;
+    height: 100%;
+}
+
+.card__content {
+    --flow-space: 0.9375rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-self: flex-end;
+    height: 55%;
+    padding: 12% 1.25rem 1.875rem;
+    background: linear-gradient( 180deg, hsla(0, 0%, 0%, 0) 0%, hsla(0, 0%, 0%, 0.3) 10%, hsl(0, 0%, 0%) 100% );
+}
+
+.card__content--container {
+    --flow-space: 1.25rem;
+}
+
+.card__title {
+    position: relative;
+    width: fit-content;
+    width: -moz-fit-content; /* Prefijo necesario para Firefox  */
+}
+
+    .card__title::after {
+        content: "";
+        position: absolute;
+        height: 0.3125rem;
+        width: calc(100% + 1.25rem);
+        bottom: calc((1.25rem - 0.5rem) * -1);
+        left: -1.25rem;
+        background-color: var(--brand-color);
+    }
+
+.card__button {
+    padding: 0.75em 1.6em;
+    width: fit-content;
+    width: -moz-fit-content; /* Prefijo necesario para Firefox  */
+    font-variant: small-caps;
+    font-weight: bold;
+    border-radius: 0.45em;
+    border: none;
+    background-color: var(--brand-color);
+    font-family: var(--font-title);
+    font-size: 1.125rem;
+    color: var(--black);
+}
+
+    .card__button:focus {
+        outline: 2px solid black;
+        outline-offset: -5px;
+    }
+
+@media (any-hover: hover) and (any-pointer: fine) {
+    .card__content {
+        transform: translateY(62%);
+        transition: transform 500ms ease-out;
+        transition-delay: 500ms;
+    }
+
+    .card__title::after {
+        opacity: 0;
+        transform: scaleX(0);
+        transition: opacity 1000ms ease-in, transform 500ms ease-out;
+        transition-delay: 500ms;
+        transform-origin: right;
+    }
+
+    .card__background {
+        transition: transform 500ms ease-in;
+    }
+
+    .card__content--container > :not(.card__title),
+    .card__button {
+        opacity: 0;
+        transition: transform 500ms ease-out, opacity 500ms ease-out;
+    }
+
+    .card:hover,
+    .card:focus-within {
+        transform: scale(1.05);
+        transition: transform 500ms ease-in;
+    }
+
+        .card:hover .card__content,
+        .card:focus-within .card__content {
+            transform: translateY(0);
+            transition: transform 500ms ease-in;
+        }
+
+        .card:focus-within .card__content {
+            transition-duration: 0ms;
+        }
+
+        .card:hover .card__background,
+        .card:focus-within .card__background {
+            transform: scale(1.3);
+        }
+
+        .card:hover .card__content--container > :not(.card__title),
+        .card:hover .card__button,
+        .card:focus-within .card__content--container > :not(.card__title),
+        .card:focus-within .card__button {
+            opacity: 1;
+            transition: opacity 500ms ease-in;
+            transition-delay: 1000ms;
+        }
+
+        .card:hover .card__title::after,
+        .card:focus-within .card__title::after {
+            opacity: 1;
+            transform: scaleX(1);
+            transform-origin: left;
+            transition: opacity 500ms ease-in, transform 500ms ease-in;
+            transition-delay: 500ms;
+        }
+}
+
+/*--------------------------------------
+---------LogOf Btn ---------
+---------------------------------------*/
+.Btn {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 45px;
+    height: 45px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition-duration: .3s;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
+    background-color: rgb(255, 65, 65);
+}
+
+/* plus sign */
+.sign {
+    width: 100%;
+    transition-duration: .3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .sign svg {
+        width: 17px;
+    }
+
+        .sign svg path {
+            fill: white;
+        }
+/* text */
+.text {
+    position: absolute;
+    right: 0%;
+    width: 0%;
+    opacity: 0;
+    color: white;
+    font-size: 1.2em;
+    font-weight: 600;
+    transition-duration: .3s;
+}
+/* hover effect on button width */
+.Btn:hover {
+    width: 125px;
+    border-radius: 40px;
+    transition-duration: .3s;
+}
+
+    .Btn:hover .sign {
+        width: 30%;
+        transition-duration: .3s;
+        padding-left: 20px;
+    }
+    /* hover effect button's text */
+    .Btn:hover .text {
+        opacity: 1;
+        width: 63%;
+        transition-duration: .3s;
+        padding-right: 10px;
+    }
+/* button click effect*/
+.Btn:active {
+    transform: translate(2px,2px);
+}
+
+/*--------------------------------------
+--------- To Tob ---------
+---------------------------------------*/
+#To-Top {
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
+    z-index: 99;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+.ToTop-button {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: rgb(20, 20, 20);
+    border: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 0px 0px 4px rgba(180, 160, 255, 0.253);
+    cursor: pointer;
+    transition-duration: 0.3s;
+    overflow: hidden;
+    position: relative;
+}
+
+.svgIcon {
+    width: 12px;
+    transition-duration: 0.3s;
+}
+
+    .svgIcon path {
+        fill: white;
+    }
+
+.ToTop-button:hover {
+    width: 140px;
+    border-radius: 50px;
+    transition-duration: 0.3s;
+    background-color: #0058ff54;
+    align-items: center;
+}
+
+    .ToTop-button:hover .svgIcon {
+        /* width: 20px; */
+        transition-duration: 0.3s;
+        transform: translateY(-200%);
+    }
+
+.ToTop-button::before {
+    position: absolute;
+    bottom: -20px;
+    content: "Back to Top";
+    color: white;
+    /* transition-duration: .3s; */
+    font-size: 0px;
+}
+
+.ToTop-button:hover::before {
+    font-size: 13px;
+    opacity: 1;
+    bottom: unset;
+    /* transform: translateY(-30px); */
+    transition-duration: 0.3s;
+}
+/*--------------------------------------
+--------- purchase ---------
+---------------------------------------*/
+.purchase-modal {
+    width: max-content;
+    height: max-content;
+    background: #FFFFFF;
+    box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
+    border-radius: 26px;
+    max-width: 450px;
+}
+
+.purchase-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+}
+
+.payment--options {
+    width: calc(100% - 40px);
+    display: grid;
+    grid-template-columns: 33% 34% 33%;
+    gap: 20px;
+    padding: 10px;
+}
+
+    .payment--options button {
+        height: 55px;
+        background: #F2F2F2;
+        border-radius: 11px;
+        padding: 0;
+        border: 0;
+        outline: none;
+        display: flex;
+        align-content: flex-start;
+        justify-content: center;
+        align-items: center;
+    }
+
+        .payment--options button svg {
+            height: 18px;
+        }
+
+        .payment--options button:last-child svg {
+            height: 22px;
+        }
+
+.separator {
+    width: calc(100% - 20px);
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 10px;
+    color: #8B8E98;
+    margin: 0 10px;
+}
+
+    .separator > p {
+        word-break: keep-all;
+        display: block;
+        text-align: center;
+        font-weight: 600;
+        font-size: 11px;
+        margin: auto;
+    }
+
+    .separator .line {
+        display: inline-block;
+        width: 100%;
+        height: 1px;
+        border: 0;
+        background-color: #e8e8e8;
+        margin: auto;
+    }
+
+.credit-card-info--form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.input_container {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.split {
+    display: grid;
+    grid-template-columns: 4fr 2fr;
+    gap: 15px;
+}
+
+    .split input {
+        width: 100%;
+    }
+
+.input_label {
+    font-size: 10px;
+    color: #8B8E98;
+    font-weight: 600;
+}
+
+.input_field {
+    width: auto;
+    height: 40px;
+    padding: 0 0 0 16px;
+    border-radius: 9px;
+    outline: none;
+    background-color: #F2F2F2;
+    border: 1px solid #e5e5e500;
+    transition: all 0.3s cubic-bezier(0.15, 0.83, 0.66, 1);
+}
+
+    .input_field:focus {
+        border: 1px solid transparent;
+        box-shadow: 0px 0px 0px 2px #242424;
+        background-color: transparent;
+    }
+
+.purchase--btn {
+    height: 55px;
+    background: #F2F2F2;
+    border-radius: 11px;
+    border: 0;
+    outline: none;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    background: linear-gradient(180deg, #363636 0%, #1B1B1B 50%, #000000 100%);
+    box-shadow: 0px 0px 0px 0px #FFFFFF, 0px 0px 0px 0px #000000;
+    transition: all 0.3s cubic-bezier(0.15, 0.83, 0.66, 1);
+}
+
+    .purchase--btn:hover {
+        box-shadow: 0px 0px 0px 2px #FFFFFF, 0px 0px 0px 4px #0000003a;
+    }
+
+/* Reset input number styles */
+.input_field::-webkit-outer-spin-button,
+.input_field::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.input_field[type=number] {
+    -moz-appearance: textfield;
+}
+.custom-loader {
+    width: 50px;
+    height: 50px;
+    display: grid;
+}
+
+    .custom-loader::before,
+    .custom-loader::after {
+        content: "";
+        grid-area: 1/1;
+        --c: radial-gradient(farthest-side,#1692f8 92%,rgba(179, 53, 53, 0));
+        background: var(--c) 50% 0, var(--c) 50% 100%, var(--c) 100% 50%, var(--c) 0 50%;
+        background-size: 12px 12px;
+        background-repeat: no-repeat;
+        animation: s2 1s infinite;
+    }
+
+    .custom-loader::before {
+        margin: 4px;
+        filter: hue-rotate(45deg);
+        background-size: 8px 8px;
+        animation-timing-function: linear
+    }
+
+@keyframes s2 {
+
+    100% {
+        transform: rotate(.5turn)
+    }
+}

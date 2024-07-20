@@ -1,0 +1,168 @@
+﻿@using DicomApp.CommonDefinitions.DTO
+@using DicomApp.DAL.DB;
+@using DicomApp.Helpers;
+@using DicomApp.BL.Services;
+@model ServiceDTO
+@{
+    var roleid = AuthHelper.GetClaimValue(User, "RoleID");
+    var accept =(int)StatusTypeEnum.Accept;
+    var checkStatusIDsForCancel = new List<int>
+    {
+        (int)StatusTypeEnum.Sold, 
+        (int)StatusTypeEnum.Reject,
+        (int)StatusTypeEnum.Published
+    };
+}
+
+<div class="list-container" id="button-list_@Model.GamerServiceId">
+    <button class="more-button" onclick="Toglebutton(@Model.GamerServiceId)" aria-label="Menu Button">
+        <div class="menu-icon-wrapper">
+            <div class="menu-icon-line half first"></div>
+            <div class="menu-icon-line"></div>
+            <div class="menu-icon-line half last"></div>
+        </div>
+    </button>
+    <ul class="more-button-list">
+        @if (roleid == (int)EnumRole.Admin)
+        {
+            if (!checkStatusIDsForCancel.Contains(Model.Status.StatusType))
+            {
+
+                <li class="more-button-list-item">
+                <i class="fa fa-upload F-Medium"></i>
+                <a data-toggle="modal" data-target="#divRequest_@Model.GamerServiceId">Accept</a>
+            </li>
+            }
+        }
+       
+       @if (!checkStatusIDsForCancel.Contains(Model.Status.StatusType))
+       {
+
+        <li class="more-button-list-item">
+            <i class="fa fa-times fa-2x"></i>
+            <a data-toggle="modal" data-target="#divReject_@Model.GamerServiceId">Reject</a>
+        </li>
+       }
+
+        <li class="more-button-list-item">
+            <i class="icon-calendar F-Medium"></i>
+            <a data-toggle="modal" data-target="#divRequest_@Model.GamerServiceId">Add Request</a>
+        </li>
+
+    </ul>
+</div>
+
+<!--Actions  Popup -->
+<div class="modal fade" id="divReject_@Model.GamerServiceId" tabindex="-1" role="dialog" aria-hidden="true" style="text-align:left">
+    <div class="modal-dialog modal-lg " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="Model-Titel">Delete User</h2>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h5 class="Model-Contetn text-danger">Are you sure you want to reject the GamerService?</h5>
+                <input type="hidden" id="EntityId" value="@Model.GamerServiceId" />
+                <div class="col-lg-12">
+                    <button class="Red-Btn-OutLine ml-3 Btn-Model btn-success pull-right" type="button" data-dismiss="modal" onclick="DeleteEntity('GamerService','RejectGamerService','TableRow_',@Model.GamerServiceId)" id="BtnDelete">Delete </button>
+                    <button class="Red-Btn-OutLine Btn-Model pull-left" type="button" data-dismiss="modal"> Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="divRequest_@Model.GamerServiceId" tabindex="-1" role="dialog" aria-hidden="true" style="text-align:left">
+    
+        <div class="modal-dialog modal-lg " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="Model-Titel">Delete User</h2>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h5 class="Model-Contetn text-success">Are you sure you want to reject the Gamer Service?</h5>
+                <input type="hidden" id="EntityId" value="@Model.GamerServiceId" />
+                <div class="col-lg-12">
+                    <button class="Red-Btn-OutLine ml-3 Btn-Model btn-success pull-right" type="button" onclick="UpdateStatus('GamerService','ChangStatusGamerService','TableRow_',@Model.GamerServiceId,@accept)" data-dismiss="modal">Accept</button>
+                    <button class="Red-Btn-OutLine Btn-Model pull-left" type="button" data-dismiss="modal"> Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<div class="modal fade" id="divConfirm_@Model.GamerServiceId" tabindex="-1" role="dialog" aria-hidden="true" style="text-align:left">
+    <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="Modal-Lablel">
+                    Code : <label>@Model.RefId</label>
+                    <br />
+                    Customer : <label>0</label>
+                    <br />
+                    Phone : <label>0 - 02</label>
+                </h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="container-fluid P-Model">
+                <div class="row">
+                    <di class="col-lg-6">
+                        <h6 class="Label-Model pt-3" style="margin-bottom:5px">Call Answer:</h6>
+                        <input type="number" id="CallAnswer_@Model.GamerServiceId" class="input-Number" value="0" min="0" />
+                    </di>
+                    <di class="col-lg-6">
+                        <h6 class="Label-Model pt-3" style="margin-bottom:5px">Call Not Answer:</h6>
+                    </di>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <button class="Red-Btn-OutLine OutLine-Red Btn-Model" onclick="CallHisory(@Model.GamerServiceId)" type="button" data-dismiss="modal">
+                    Done
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="divEditBasic_@Model.GamerServiceId" tabindex="-1" role="dialog" aria-hidden="true" style="text-align:left">
+    <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="container-fluid P-Model">
+                <div class="row">
+                    <div class="col-sm-12 pt-3">
+                        <h6 class="Label-Model">Description:</h6>
+                        <input class="input-Model" id="DescriptionTxt_@Model.GamerServiceId" value="@Model.Description">
+                    </div>
+                    <div class="col-sm-12 pt-3">
+                        <h6 class="Label-Model">UserName:</h6>
+                        <input class="input-Model" id="UserNameTxt_@Model.GamerServiceId" value="@Model.UserName">
+                    </div>
+                    <div class="col-sm-12 pt-3">
+                        <h6 class="Label-Model">Password:</h6>
+                        <input class="input-Model" id="PasswordTxt_@Model.GamerServiceId" value="@Model.Password">
+                    </div>
+                    <div class="col-sm-12 pt-3">
+                        <h6 class="Label-Model">Level:</h6>
+                        <input class="input-Model" id="LevelTxt_@Model.GamerServiceId" value="@Model.Level">
+                    </div>         
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <button class="Red-Btn-OutLine OutLine-Red Btn-Model" type="button" data-dismiss="modal" onclick="EditBasicData('@Model.GamerServiceId')">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

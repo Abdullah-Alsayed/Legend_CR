@@ -29,18 +29,70 @@ namespace DicomApp.BL.Services
                             {
                                 Id = c.Id,
                                 Name = c.Name,
-                                Editable = c.Editable
+                                Editable = c.Editable,
+                                CreationDate = c.CreationDate,
+                                IsDeleted = c.IsDeleted
                             });
 
                         if (request.RoleDTO != null)
                             query = ApplyFilter(query, request.RoleDTO);
 
+                        if (request.OrderByColumn == null)
+                            request.OrderByColumn = nameof(Role.CreationDate);
                         query = OrderByDynamic(query, request.OrderByColumn, request.IsDesc);
 
                         if (request.PageSize > 0)
                             query = ApplyPaging(query, request.PageSize, request.PageIndex);
 
                         res.RoleDTOs = query.ToList();
+                        res.Message = HttpStatusCode.OK.ToString();
+                        res.Success = true;
+                        res.StatusCode = HttpStatusCode.OK;
+                    }
+                    catch (Exception ex)
+                    {
+                        res.Message = ex.Message;
+                        res.Success = false;
+                        LogHelper.LogException(ex.Message, ex.StackTrace);
+                    }
+                    return res;
+                }
+            );
+            return res;
+        }
+
+        public static RoleResponse GetRole(RoleRequest request)
+        {
+            var res = new RoleResponse();
+            RunBase(
+                request,
+                res,
+                (RoleRequest req) =>
+                {
+                    try
+                    {
+                        var query = request
+                            .context.Role.Where(c => !c.IsDeleted)
+                            .Select(c => new RoleDTO
+                            {
+                                Id = c.Id,
+                                Name = c.Name,
+                                Editable = c.Editable,
+                                CreationDate = c.CreationDate,
+                                IsDeleted = c.IsDeleted
+                            });
+
+                        if (request.RoleDTO != null)
+                            query = ApplyFilter(query, request.RoleDTO);
+
+                        if (request.OrderByColumn == null)
+                            request.OrderByColumn = nameof(Role.CreationDate);
+                        query = OrderByDynamic(query, request.OrderByColumn, request.IsDesc);
+
+                        if (request.PageSize > 0)
+                            query = ApplyPaging(query, request.PageSize, request.PageIndex);
+
+                        res.RoleDTO = query.FirstOrDefault();
                         res.Message = HttpStatusCode.OK.ToString();
                         res.Success = true;
                         res.StatusCode = HttpStatusCode.OK;
@@ -216,7 +268,7 @@ namespace DicomApp.BL.Services
                 query = query.Where(c => c.Id == RoleDTO.Id);
 
             if (!string.IsNullOrWhiteSpace(RoleDTO.Name))
-                query = query.Where(c => c.Name.Contains(RoleDTO.Name));
+                query = query.Where(c => c.Name == RoleDTO.Name);
 
             return query;
         }

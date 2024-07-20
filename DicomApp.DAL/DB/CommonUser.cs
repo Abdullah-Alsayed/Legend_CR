@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Reflection;
 
 namespace DicomApp.DAL.DB
 {
@@ -31,6 +32,7 @@ namespace DicomApp.DAL.DB
             VendorProduct = new HashSet<VendorProduct>();
             ZoneCreatedByNavigation = new HashSet<Zone>();
             ZoneLastModifiedByNavigation = new HashSet<Zone>();
+            GamerServices = new HashSet<GamerService>();
         }
 
         public int Id { get; set; }
@@ -41,11 +43,18 @@ namespace DicomApp.DAL.DB
         public int? ModifiedBy { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
+        public bool ConfirmEmail { get; set; } = false;
         public DateTime? LastLoginDate { get; set; }
         public string Password { get; set; }
         public int RoleId { get; set; }
         public string PhoneNumber { get; set; }
         public bool IsLoggedIn { get; set; }
+        public string TelegramUserName { get; set; }
+
+        [ForeignKey(nameof(Country))]
+        public int? CountryId { get; set; }
+        public int Age { get; set; }
+        public GenderEnum Gender { get; set; }
 
         [Required(AllowEmptyStrings = true)]
         public string NationalId { get; set; }
@@ -74,7 +83,7 @@ namespace DicomApp.DAL.DB
         public string AccountName { get; set; }
         public int? AccountNumber { get; set; }
         public int? IbanNumber { get; set; }
-        public int? VodafoneCashNumber { get; set; }
+        public int? WalletNumber { get; set; }
         public string InstaPayAccountName { get; set; }
         public int? ZoneId { get; set; }
         public string ImgUrl { get; set; }
@@ -82,6 +91,8 @@ namespace DicomApp.DAL.DB
 
         public virtual Branch Branch { get; set; }
         public virtual Role Role { get; set; }
+
+        public virtual Country Country { get; set; }
         public virtual ICollection<Account> AccountCreatedByNavigation { get; set; }
         public virtual ICollection<Account> AccountLastModifiedByNavigation { get; set; }
         public virtual ICollection<AccountTransaction> AccountTransactionCreatedByNavigation { get; set; }
@@ -104,6 +115,7 @@ namespace DicomApp.DAL.DB
         public virtual ICollection<VendorProduct> VendorProduct { get; set; }
         public virtual ICollection<Zone> ZoneCreatedByNavigation { get; set; }
         public virtual ICollection<Zone> ZoneLastModifiedByNavigation { get; set; }
+        public virtual ICollection<GamerService> GamerServices { get; set; }
 
         [InverseProperty("Gamer")]
         public virtual ICollection<Advertisement> AdvertisementsGamer { get; set; }

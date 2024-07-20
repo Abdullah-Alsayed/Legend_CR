@@ -14,11 +14,12 @@
                     </div>
                     <div class="Shipment-Filter">
                         <ul id="Shipment-Filter-Ul">
-                            <li id="All" class="Active" data-status="@((int)EnumStatus.All)"> <a onclick="FilterByStatus('All','Shipment','All',@((int)EnumStatus.All))" href="javascript:;">All</a></li>
-                            <li id="Current-Shipments" data-status="@((int)EnumStatus.Current)"> <a onclick="FilterByStatus('All','Shipment','Current-Shipments', @((int)EnumStatus.Current))" href="javascript:;">Current Advertisement</a></li>
-                            <li id="Returned-Shipments" data-status="@((int)EnumStatus.CourierReturn)"><a onclick="FilterByStatus('All','Shipment','Returned-Shipments',@((int)EnumStatus.CourierReturn))" href="javascript:;">Returned Advertisement</a></li>
-                            <li id="Cancelled-Shipments" data-status="@((int)EnumStatus.Cancelled)"> <a onclick="FilterByStatus('All','Shipment','Cancelled-Shipments', @((int)EnumStatus.Cancelled))" href="javascript:;">Cancelled Advertisement</a></li>
-                            <li id="Done-Shipments" data-status="@((int)EnumStatus.Done)"> <a onclick="FilterByStatus('All','Shipment','Done-Shipments', @((int)EnumStatus.Done))" href="javascript:;">Done Advertisement</a></li>
+                            <li id="All" class="Active" data-status="@((int)StatusTypeEnum.All)"> <a onclick="FilterByStatus('All','Advertisement','All',@((int)StatusTypeEnum.All))" href="javascript:;">All</a></li>
+                            <li id="InProgress-Advertisement" data-status="@((int)StatusTypeEnum.InProgress)"> <a onclick="FilterByStatus('All','Advertisement','InProgress-Advertisement', @((int)StatusTypeEnum.InProgress))" href="javascript:;">InProgress</a></li>
+                            <li id="Accept-Advertisement" data-status="@((int)StatusTypeEnum.Accept)"> <a onclick="FilterByStatus('All','Advertisement','Accept-Advertisement', @((int)StatusTypeEnum.Accept))" href="javascript:;">Accept</a></li>
+                            <li id="Published-Advertisement" data-status="@((int)StatusTypeEnum.Published)"><a onclick="FilterByStatus('All','Advertisement','Published-Advertisement',@((int)StatusTypeEnum.Published))" href="javascript:;">Published</a></li>
+                            <li id="Reject-Advertisement" data-status="@((int)StatusTypeEnum.Reject)"> <a onclick="FilterByStatus('All','Advertisement','Reject-Advertisement', @((int)StatusTypeEnum.Reject))" href="javascript:;">Reject</a></li>
+                            <li id="Sold-Advertisement" data-status="@((int)StatusTypeEnum.Sold)"> <a onclick="FilterByStatus('All','Advertisement','Sold-Advertisement', @((int)StatusTypeEnum.Sold))" href="javascript:;">Sold</a></li>
                         </ul>
                     </div>
                 </div>
@@ -31,15 +32,15 @@
                 await Html.RenderPartialAsync("_ToolsRow", new OptionDTO
             {
                 Action = "All",
-                Controller = "Shipment",
+                Controller = "Advertisement",
                 Columns = 6,
                 Lookup = Model.Lookup,
                 SelectListType = new byte[]
             {
-            (byte)EnumSelectListType.Vendor,
-            (byte)EnumSelectListType.Zone,
-            (byte)EnumSelectListType.Area,
-            (byte)EnumSelectListType.Status
+                (byte)EnumSelectListType.Level,
+                (byte)EnumSelectListType.Price,
+                (byte)EnumSelectListType.Game,
+                (byte)EnumSelectListType.Gamer,
             },
             });
             }
@@ -48,7 +49,6 @@
     <div class="col-12">
         <span id="Ajaxloader" class="Ajaxloader d-none"></span>
     </div>
-    @*<div id="Grid">*@
     <div class="Table-container">
         <table class="table" id="Table">
             <partial name="_All" model="@Model.ObjDTOs" />

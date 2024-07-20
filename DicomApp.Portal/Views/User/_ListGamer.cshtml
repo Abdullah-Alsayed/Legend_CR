@@ -1,0 +1,48 @@
+﻿
+@using DicomApp.CommonDefinitions.DTO;
+@using DicomApp.CommonDefinitions.DTO;
+@using DicomApp.DAL.DB
+@using DicomApp.Helpers;
+@using DicomApp.BL.Services;
+@model List<UserDTO>
+
+@if (Model != null && Model.Count > 0)
+{
+    foreach (var item in Model)
+    {
+        <tr id="User_@item.Id">
+            <td id="Td-VendorInfo">
+                <b>@item.Name</b><br>
+                @item.PhoneNumber<br>
+            </td>
+            <td class="text-nowrap Date-Table">@item.CreationDate.ToString("MMM") @item.CreationDate.ToString("dd"),@item.CreationDate.ToString("yyy")</td>
+            <td id="Td-ProductType">
+                @item.Country.NameEn <img src="@item.Country.FlagUrl" width="25" />
+            </td>
+            <td class="text-center"><img src="/dist/images/Icons/@(item.Gender == GenderEnum.Male?"Male.png":"Female.png")"></td>
+            <td class="text-center">@item.PhoneNumber</td>
+            <td class="text-center">@item.Email</td>
+            <td class="text-center">@item.TelegramUserName</td>
+            <td class="text-center">@item.InstaPayAccountName</td>
+            <td class="text-center">@item.WalletNumber</td>
+            <td class="text-center"><img id="Td-Img" width="50" src="@(!string.IsNullOrEmpty(item.ImgUrl) ? "/dist/images/" + @item.ImgUrl:"/dist/images/Icons/User.png")" /></td>
+            <td>
+                <div class="Actions-Buttons">
+                    <ul>
+                        <li class="Green-Bg font-weight-bold"><a href="@Url.Action("VendorDetails", "User", new { ID = item.Id })" target="_blank"><i class="icon-note"></i></a></li>
+                        <li onclick="OpenModal(@item.Id ,'DeleteVendor-Model')" class="Red-Bg"><i class="icon-trash"></i></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    }
+}
+else
+{
+    <tr>
+        <td colspan="9">
+            <h6 class="text-center text-danger my-5">No data available in table</h6>
+        </td>
+    </tr>
+}
+<input type="hidden" value="@(Model != null ? Model.Count : 0)" id="DataCount" />

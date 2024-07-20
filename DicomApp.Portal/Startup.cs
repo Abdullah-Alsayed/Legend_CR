@@ -1,10 +1,10 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
-using System.Text;
+﻿using System.Text;
 using DicomApp.DAL.DB;
+using DicomApp.Helpers.Services.GenrateAvatar;
+using DicomApp.Helpers.Services.GetCounter;
+using DicomApp.Helpers.Services.PayPal;
+using ECommerce.Core.Services.MailServices;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Features;
@@ -83,19 +83,10 @@ namespace DicomApp.Portal
                 x.MultipartBodyLengthLimit = 20971520000;
             });
             services.AddSession();
-            // Add ASPNETCoreDemoDBContext services.
+            services.AddHttpClient<AvatarService>();
             services.AddDbContext<ShippingDBContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DicomAppDBEntities"))
             );
-
-            //services.AddSwaggerGen(c =>
-            //{
-            //    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
-            //    {
-            //        Title = "Red Express",
-            //        Version = "v1"
-            //    });
-            //});
 
             services.AddSwaggerGen(c =>
             {
@@ -130,19 +121,24 @@ namespace DicomApp.Portal
                     }
                 );
             });
+            //****************** Email Settings ******************************
+            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
+
+            //Services
+            services.AddScoped<IApiCountryService, ApiCountryService>();
+            services.AddScoped<IPayPalService, PayPalService>();
+            services.AddScoped<IMailServices, MailServices>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            // UseSession must appear before UseMvc
             app.UseSession();
             app.UseAuthentication();
 
             if (env.IsDevelopment())
             {
                 app.UseBrowserLink();
-                //app.UseExceptionHandler("/Home/Error");
                 app.UseDeveloperExceptionPage();
             }
             else

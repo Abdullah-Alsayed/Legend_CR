@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using DicomApp.CommonDefinitions.DTO;
 using DicomApp.CommonDefinitions.Requests;
 using DicomApp.DAL.DB;
@@ -127,10 +128,26 @@ namespace DicomApp.BL.Services
                         {
                             context = Context,
                             applyFilter = true,
-                            UserDTO = new UserDTO { RoleID = (int)EnumRole.Employee }
+                            UserDTO = new UserDTO { StaffOnly = true }
                         }
                     )
                     .UserDTOs;
+
+            if (LookType.Contains((byte)EnumSelectListType.Gamer))
+                lookup.UserDTOs = UserService
+                    .GetAllUsers(
+                        new UserRequest
+                        {
+                            context = Context,
+                            applyFilter = true,
+                            UserDTO = new UserDTO { RoleName = SystemConstants.Role.Gamer }
+                        }
+                    )
+                    .UserDTOs;
+            if (LookType.Contains((byte)EnumSelectListType.Game))
+                lookup.GameDTOs = GameService
+                    .GetGames(new GameRequest { context = Context })
+                    .GameDTOs;
 
             if (LookType.Contains((byte)EnumSelectListType.Status))
                 lookup.StatusDTOs = StatusService
@@ -151,31 +168,41 @@ namespace DicomApp.BL.Services
                 lookup.AreaDTOs = CityService
                     .GetCity(new CityRequest { context = Context })
                     .CityDTOs;
-
+            if (LookType.Contains((byte)EnumSelectListType.Countries))
+                lookup.CountryDTOs = CountryService
+                    .GetCountry(new CountryRequest { context = Context })
+                    .CountryDTOs;
             return lookup;
         }
 
-        public static string UploadImg(IFormFile File, string WebRootPath, string ImgUrl = null)
+        public static string UploadImg(IFormFile file, string WebRootPath, string PhotoName = null)
         {
-            string Img = String.Empty;
-            if (File != null)
+            string Photo = string.Empty;
+            string path = string.Empty;
+            string fullPath = string.Empty;
+            if (file != null)
             {
-                var extension = Path.GetExtension(File.FileName);
+                var extansion = Path.GetExtension(file.FileName);
                 var GuId = Guid.NewGuid().ToString();
-                Img = GuId + extension;
-                var UploadFile = Path.Combine(WebRootPath, "dist", "images", Img);
-                File.CopyTo(new FileStream(UploadFile, FileMode.Create));
+                Photo = GuId + extansion;
+                path = Path.Combine(WebRootPath, "dist", "images");
+
+                if (!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
+
+                fullPath = Path.Combine(path, Photo);
+                file.CopyTo(new FileStream(fullPath, FileMode.Create));
             }
-            if (ImgUrl != null && File != null)
+            //Update Photo
+            if (PhotoName != null && file != null)
             {
-                var UploadFile = Path.Combine(WebRootPath, "dist", "images", ImgUrl);
-                System.IO.File.Delete(UploadFile);
+                fullPath = Path.Combine(WebRootPath, "dist", "images", PhotoName);
+                System.IO.File.Delete(fullPath);
             }
-            if (ImgUrl != null && File == null)
-            {
-                Img = ImgUrl;
-            }
-            return string.IsNullOrEmpty(Img) ? SystemConstants.Imges.Default : Img;
+            if (PhotoName != null && file == null)
+                return PhotoName;
+
+            return string.IsNullOrEmpty(Photo) ? SystemConstants.Imges.Default : Photo;
         }
 
         public static string GenerateRefId(
@@ -187,7 +214,7 @@ namespace DicomApp.BL.Services
             switch (RefIdType)
             {
                 case EnumRefIdType.Advertisement:
-                    return "SH" + ID;
+                    return "AD" + ID;
                 case EnumRefIdType.Delivery_Pickup:
                     return "DP" + ID;
                 case EnumRefIdType.Stock_Pickup:
@@ -200,6 +227,10 @@ namespace DicomApp.BL.Services
                     return "SR" + ID;
                 case EnumRefIdType.Shipment_Refund:
                     return "RF" + ID;
+                case EnumRefIdType.GamerService:
+                    return "GS" + ID;
+                case EnumRefIdType.Invoice:
+                    return "IN" + ID;
                 case EnumRefIdType.Account_Transaction:
                     return "TR"
                         + ID

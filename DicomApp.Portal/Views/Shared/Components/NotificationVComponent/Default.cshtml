@@ -11,7 +11,7 @@
 @if (Model != null && Model.Count > 0)
 {
     <button data-toggle="dropdown" aria-expanded="false" class="Notifcation-Alart"><img class="mr-2" src="/dist/images/Icons/Alarm.png"></button>
-    <div class="Notifcation-Section dropdown-menu dropdown-menu-right border">
+    <div class="Notifcation-Section dropdown-menu dropdown-menu-right">
         <h2>@Model.Count() New Notifications</h2>
         <ul class="">
             @foreach (var item in Model.OrderByDescending(p => p.NotificationId).Take(5))
@@ -19,7 +19,7 @@
                 <li>
                     <a class="dropdown-item" href="#">
                         <div class="media">
-                            <img src="~/dist/images/Red2.png" alt="" class="d-flex mr-3 img-fluid rounded-circle w-50">
+                            <img src="~/dist/images/Icons/notification.png" alt="" class="d-flex mr-3 img-fluid rounded-circle">
                             <div class="media-body">
                                 <p>@item.Body</p>
                                 @if (DateTimeHelper.DifferenceDate(item.CreationDate) == 0)
