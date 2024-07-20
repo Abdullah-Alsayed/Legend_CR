@@ -200,6 +200,39 @@ function ShowHidePartialDelivery() {
     }
 }
 
+
+function OpenPurchasePopUp(accounId) {
+    $('#purchase-modal').modal('show');
+    $('#PupUpAccountId').val(accounId);
+}
+
+function BayByPayPal() {
+    $('.custom-loader').toggleClass('d-none');
+    $('#paypal-Btn').toggleClass('d-none');
+    var accountId = $('#PupUpAccountId').val();
+    $.ajax({
+        type: "POST",
+        url: `/gamer/Paypal`,
+        data: { accountId: accountId },
+        success: function (result) {
+          
+            if (result.success)
+                location.href = result.message;
+            else {
+
+             alert(result.message);
+            $('.custom-loader').toggleClass('d-none');
+            $('#paypal-Btn').toggleClass('d-none');
+            }
+        },
+        error: function (error) {
+            alert(error.message)
+            $('.custom-loader').toggleClass('d-none');
+            $('#paypal-Btn').toggleClass('d-none');
+        }
+    })
+
+}
 function ServiceTypeChange() {
     //let Service = $("#ShipmentServiceId").val();
     //if (Service === "3") {
@@ -382,6 +415,11 @@ function updateAdvertisementFiles() {
                     var img = $('<img>', {
                         src: e.target.result,
                         class: 'uploaded-img',
+                        click: function () { 
+                            $(this).remove();
+                            imageCount--;
+                            $('#Advertisement-files-Lable').text(imageCount + ' file(s) selected');
+                        }
                     });
                     $('#Advertisement-Imgs').append(img);
                 };
@@ -391,16 +429,18 @@ function updateAdvertisementFiles() {
         }
     });
 
-    $('#Advertisement-files-Lable').text(imageCount + ' file(s) selected'); // Update count of total images
+    $('#Advertisement-files-Lable').text(imageCount + ' file(s) selected');
 
     if (validFiles.length < filesArray.length) {
         alert('Some files were not added. Ensure each file is an image, less than 2MB, and you select a maximum of 5 files.');
     }
 }
+
 function deleteAllFiles() {
     $('#Advertisement-Imgs').empty();
     $('#Advertisement-files-Lable').text('Not selected file');
 }
+
 function GetFeesSummary() {
     var RefundCash = $("#RefundCash").val();
     $("#lblRefundCash").html(RefundCash + " EGP");

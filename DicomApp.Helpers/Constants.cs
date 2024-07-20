@@ -66,6 +66,15 @@ namespace DicomApp.Helpers
             public const string Main = "Main";
         }
 
+        public static class Claims
+        {
+            public const string UserID = "UserID";
+            public const string Name = "Name";
+            public const string Email = "Email";
+            public const string RoleID = "RoleID";
+            public const string RoleName = "RoleName";
+        }
+
         public static class ActionType
         {
             public const string View = "View";

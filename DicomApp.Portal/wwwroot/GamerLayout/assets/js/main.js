@@ -1,6 +1,7 @@
 (function ($) {
 	"use strict";
-	
+
+
 	/*----------------------------
     Responsive menu Active
     ------------------------------ */
@@ -12,14 +13,14 @@
 	/*----------------------------
     START - Scroll to Top
     ------------------------------ */
-	$(window).on('scroll', function() {
+	$(window).on('scroll', function () {
 		if ($(this).scrollTop() > 600) {
-			$('.scrollToTop').fadeIn();
+			$('#To-Top').fadeIn();
 		} else {
-			$('.scrollToTop').fadeOut();
+			$('#To-Top').fadeOut();
 		}
 	});
-	$('.scrollToTop').on('click', function () {
+	$('.ToTop-button').on('click', function () {
 		$('html, body').animate({scrollTop : 0},2000);
 		return false;
 	});
@@ -165,6 +166,12 @@
 	jQuery(window).load(function(){
 		jQuery("#preloader").fadeOut(500);
 	});
-	
+
+
+	$('#purchase-modal').on('shown.bs.modal', function (e) {
+		$('html, body').animate({ scrollTop: 0 }, 300);
+		return false;
+	})
+
 
 }(jQuery));

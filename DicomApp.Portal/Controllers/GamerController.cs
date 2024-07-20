@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Printing;
 using System.Linq;
+using System.Threading.Tasks;
 using DicomApp.BL.Services;
 using DicomApp.CommonDefinitions.DTO;
 using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
@@ -9,18 +11,28 @@ using DicomApp.CommonDefinitions.Requests;
 using DicomApp.CommonDefinitions.Responses;
 using DicomApp.DAL.DB;
 using DicomApp.Helpers;
+using DicomApp.Helpers.Services.PayPal;
 using DicomApp.Portal.Helpers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace DicomApp.Portal.Controllers
 {
     public class GamerController : Controller
     {
         private readonly ShippingDBContext _context;
+        readonly IPayPalService _payPalService;
+        readonly IConfiguration _configuration;
 
-        public GamerController(ShippingDBContext context)
+        public GamerController(
+            ShippingDBContext context,
+            IPayPalService payPalService,
+            IConfiguration configuration
+        )
         {
             _context = context;
+            _payPalService = payPalService;
+            _configuration = configuration;
         }
 
         [AuthorizePerRole(SystemConstants.Permission.Main)]
@@ -49,7 +61,7 @@ namespace DicomApp.Portal.Controllers
             model.StatusTypes = new List<int>
             {
                 (int)StatusTypeEnum.Pending,
-                (int)StatusTypeEnum.InProgress
+                (int)StatusTypeEnum.Published
             };
             var advertisementRequest = new AdvertisementRequest
             {
@@ -63,6 +75,9 @@ namespace DicomApp.Portal.Controllers
                 OrderByColumn = nameof(Advertisement.Price),
                 Top = 10
             };
+            ViewBag.GameList = GameService
+                .GetGames(new GameRequest { context = _context })
+                .GameDTOs;
             mainResponse.TopAdvertisements = DicomApp
                 .BL.Services.AdvertisementService.GetAllAdvertisements(advertisementRequest)
                 .AdsDTOs;
@@ -72,6 +87,7 @@ namespace DicomApp.Portal.Controllers
                 .GameDTOs;
 
             advertisementRequest.Top = 0;
+            advertisementRequest.OrderByColumn = nameof(Advertisement.CreatedAt);
             mainResponse.AllAdvertisements = DicomApp
                 .BL.Services.AdvertisementService.GetAllAdvertisements(advertisementRequest)
                 .AdsDTOs;
@@ -82,6 +98,63 @@ namespace DicomApp.Portal.Controllers
                 return PartialView("_advertisementListTable", mainResponse);
             else
                 return View(mainResponse);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Paypal(int accountId)
+        {
+            try
+            {
+                var advertisementRequest = new AdvertisementRequest
+                {
+                    RoleID = AuthHelper.GetClaimValue(User, SystemConstants.Claims.RoleID),
+                    UserID = AuthHelper.GetClaimValue(User, SystemConstants.Claims.UserID),
+                    context = _context,
+                    AdsDTO = new AdsDTO { AdvertisementId = accountId },
+                    applyFilter = true,
+                };
+
+                var accountResponse = DicomApp.BL.Services.AdvertisementService.GetAdvertisement(
+                    advertisementRequest
+                );
+                if (accountResponse.Success && accountResponse.AdsDTO != null)
+                {
+                    var account = accountResponse.AdsDTO;
+                    var returnUrl = $"{_configuration["AppDomain"]}/Gamer/SuccessPay";
+                    var cancelUrl = $"{_configuration["AppDomain"]}/Gamer/CancelPay";
+                    var createPayment = await _payPalService.PurchaseAccountAsync(
+                        account.Price,
+                        returnUrl,
+                        cancelUrl
+                    );
+                    var approverUrl = createPayment
+                        ?.links?.Find(x => x.rel.ToLower() == "approval_url")
+                        ?.href;
+
+                    return !string.IsNullOrEmpty(approverUrl)
+                        ? Json(new { success = true, message = approverUrl })
+                        : Json(new { success = false, message = "field" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+            return Json(new { success = false, message = "field" });
+        }
+
+        public async Task<IActionResult> SuccessPay(string payerID, string paymentID)
+        {
+            var result = await _payPalService.ExecutePaymentAsync(payerID, paymentID);
+            if (result.state == "created")
+                return View();
+            else
+                return RedirectToAction("CancelPay");
+        }
+
+        public async Task<IActionResult> CancelPay()
+        {
+            return View();
         }
 
         #region Reports

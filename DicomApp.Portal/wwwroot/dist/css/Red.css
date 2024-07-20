@@ -139,13 +139,15 @@
     display: none;
 }
 .uploaded-img{
+    cursor:pointer;
     width:150px;
     height:150px;
 }
 #Advertisement-Imgs {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-evenly;
-    gap:25px;
+    gap: 25px;
 }
 /*Context munue*/
 .list-container {
