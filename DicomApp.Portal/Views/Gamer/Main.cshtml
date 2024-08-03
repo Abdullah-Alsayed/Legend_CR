@@ -10,7 +10,7 @@
 <section class="hero-area" id="home">
 	<div class="container">
 		<div class="hero-area-slider">
-			@if (Model!= null && Model.TopAdvertisements != null)
+			@if (Model!= null && Model.TopAdvertisements != null && Model.TopAdvertisements.Count > 1)
 			{				
 				foreach (var adv in Model.TopAdvertisements)
 				{
@@ -53,13 +53,75 @@
 								<a onclick="OpenPurchasePopUp(@adv.AdvertisementId)" class="theme-btn" href="javascript:;"><i class="icofont icofont-money"></i> Purchase</a>
 						</div>
 					</div>
-				</div>
+					</div>
 				}
+			}
+			else
+			{
+				<div class="row hero-area-slide">
+					<div class="col-lg-6 col-md-5">
+						<div class="hero-area-content">
+							<img src="/GamerLayout/assets/img/slide1.png" alt="about" />
+						</div>
+					</div>
+					<div class="col-lg-6 col-md-7">
+						<div class="hero-area-content pr-50">
+							<h2></h2>
+							<div class="review">
+								<div class="author-review">
+									<i class="icofont icofont-star"></i>
+									<i class="icofont icofont-star"></i>
+									<i class="icofont icofont-star"></i>
+									<i class="icofont icofont-star"></i>
+									<i class="icofont icofont-star"></i>
+								</div>
+								<h4></h4>
+							</div>
+							<p></p>
+							<div class="slide-cast">		
+							</div>
+							<div class="slide-trailor">
+								<h3></h3>
+							</div>
+							<a class="theme-btn" href="javascript:;"><i class="icofont icofont-money"></i> Purchase</a>
+						</div>
+					</div>
+				</div>
+
+				<div class="row hero-area-slide">
+					<div class="col-lg-6 col-md-5">
+						<div class="hero-area-content">
+							<img src="/GamerLayout/assets/img/slide2.png" alt="about" />
+						</div>
+					</div>
+					<div class="col-lg-6 col-md-7">
+						<div class="hero-area-content pr-50">
+							<h2></h2>
+							<div class="review">
+								<div class="author-review">
+									<i class="icofont icofont-star"></i>
+									<i class="icofont icofont-star"></i>
+									<i class="icofont icofont-star"></i>
+									<i class="icofont icofont-star"></i>
+									<i class="icofont icofont-star"></i>
+								</div>
+								<h4></h4>
+							</div>
+							<p></p>
+							<div class="slide-cast">
+							</div>
+							<div class="slide-trailor">
+								<h3></h3>
+							</div>
+							<a class="theme-btn" href="javascript:;"><i class="icofont icofont-money"></i> Purchase</a>
+						</div>
+					</div>
+				</div>
+
 			}
 		</div>
 
 		<div class="hero-area-thumb">
-
 			<div class="thumb-prev">
 				<div class="row hero-area-slide">
 					<div class="col-lg-6">
@@ -203,7 +265,7 @@
 		<div class="row">
 			<div class="col-lg-12">
 				<div class="row portfolio-item">
-					@if (Model != null && Model.TopAdvertisements != null)
+					@if (Model != null && Model.AllAdvertisements != null)
 					{
 						foreach (var adv in Model.AllAdvertisements)
 						{
@@ -242,50 +304,26 @@
 		<div class="row">
 			<div class="col-lg-12 text-center text-lg-left mb-4">
 				<div class="section-title">
-					<h1><img src="/dist/images/King.png" width="120"/>Our Services</h1>
+					<h1><img src="/dist/images/King.png" width="120"/>Games</h1>
 				</div>
 			<hr />
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-lg-6 services-Card">
-				<article class="card">
-					<img class="card__background"
-						 src="/dist/images/BlueBox.png"
-						 alt="Photo of Cartagena's cathedral at the background and some colonial style houses"
-						 width="1920"
-						 height="2193" />
-					<div class="card__content | flow">
-						<div class="card__content--container | flow">
-							<h2 class="card__title">Charge</h2>
-							<p class="card__description">
-								Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rerum in
-								labore laudantium deserunt fugiat numquam.
-							</p>
-						</div>
-						<button class="card__button">Order Now</button>
-					</div>
-				</article>
-			</div>
-			<div class="col-lg-6 services-Card">
-				<article class="card">
-					<img class="card__background"
-						 src="/dist/images/levelUp1.png"
-						 alt="Photo of Cartagena's cathedral at the background and some colonial style houses"
-						 width="1920"
-						 height="2193" />
-					<div class="card__content | flow">
-						<div class="card__content--container | flow">
-							<h2 class="card__title">Level Up</h2>
-							<p class="card__description">
-								Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rerum in
-								labore laudantium deserunt fugiat numquam.
-							</p>
-						</div>
-						<button class="card__button">Order Now</button>
-					</div>
-				</article>
-			</div>
+			@foreach (var game in Model.Games)
+			{
+				<div class="col-lg-6 services-Card">
+					<a href="@Url.Action("Details","Game",new {Id = game.Id})" target="_blank">
+						<article class="card">
+							<img class="card__background"
+									src="/dist/images/@game.ImgUrl"
+									alt="Photo of Cartagena's cathedral at the background and some colonial style houses"
+									width="1920"
+									height="2193" />
+						</article>
+					</a>
+				</div>
+			}
 		</div>
     </div>
 </section>
@@ -306,61 +344,74 @@
 
 	<div class="news-slide-area">
 		<div class="news-slider">
-			<div class="single-news">
+			@if(Model!= null && Model.Testimonials != null && Model.Testimonials.Count>1){
+				foreach (var testimonial in Model.Testimonials)
+				{
+		     <div class="single-news">
 				<div class="testimonial-Bg"></div>
 				<div class="news-date">
-					<h2><span>NOV</span> 25</h2>
-					<h1>2017</h1>
+				<h2><span>@testimonial.CreatedAt.ToString("MMM")</span> @testimonial.CreatedAt.Day</h2>
+					<h1>@testimonial.CreatedAt.Year</h1>
 				</div>
 				<div class="news-content">
-					<h3>user name</h3>
-					<p>Comment</p>
+					<h2>@testimonial.UserDTO.Name</h2>
+					<p>@testimonial.Comment</p>
 					<div class="review">
 						<div class="author-review">
-							<i class="icofont icofont-star"></i>
-							<i class="icofont icofont-star"></i>
-							<i class="icofont icofont-star"></i>
-							<i class="icofont icofont-star"></i>
-							<i class="icofont icofont-star"></i>
+							@for (int i = 0; i < testimonial.Rate; i++)
+							{
+								<i class="icofont icofont-star"></i>
+							}
 						</div>
 					</div>
-					<a href="#"><i class="icofont icofont-ui-rate-add"></i></a>
 				</div>
+				@if (Model.CanAddFeedBack)
+				{
+					<a href="javascript:;"><i class="icofont icofont-ui-rate-add open-feedback"></i></a>
+				}
 			</div>
-
-			<div class="single-news">
-				<div class="news-bg-2"></div>
-				<div class="news-date">
-					<h2><span>NOV</span> 25</h2>
-					<h1>2017</h1>
+				}
+			}
+			else
+			{
+				<div class="single-news">
+					<div class="testimonial-Bg"></div>
+					<div class="news-content">
+					<h3>keep you feedback</h3>
+					</div>
+						@if (Model.CanAddFeedBack)
+						{
+							<a href="javascript:;"><i class="icofont icofont-ui-rate-add open-feedback"></i></a>
+						}
 				</div>
-				<div class="news-content">
-					<h2>The Witch Queen</h2>
-					<p>Witch Queen is a tall woman with a slim build. She has pink hair, which is pulled up under her hat, and teal eyes.</p>
+				<div class="single-news">
+					<div class="testimonial-Bg"></div>
+					<div class="news-content">
+					   <h3>keep you feedback</h3>
+					</div>
+						@if (Model.CanAddFeedBack)
+						{
+							<a href="javascript:;"><i class="icofont icofont-ui-rate-add open-feedback"></i></a>
+						}
 				</div>
-				<a href="#">Read More</a>
-			</div>
-
-			<div class="single-news">
-				<div class="news-bg-3"></div>
-				<div class="news-date">
-					<h2><span>NOV</span> 25</h2>
-					<h1>2017</h1>
+				<div class="single-news">
+					<div class="testimonial-Bg"></div>
+					<div class="news-content">
+					<h3>keep you feedback</h3>
+					</div>
+					@if (Model.CanAddFeedBack)
+					{
+					<a href="javascript:;"><i class="icofont icofont-ui-rate-add open-feedback"></i></a>
+					}
 				</div>
-				<div class="news-content">
-					<h2>The Witch Queen</h2>
-					<p>Witch Queen is a tall woman with a slim build. She has pink hair, which is pulled up under her hat, and teal eyes.</p>
-				</div>
-				<a href="#">Read More</a>
-			</div>
-
+			}
 		</div>
 	</div>
 </section>
 <!-- news section end -->
 
 
-<!-- Modal -->
+<!--purchase Modal -->
 <div class="modal fade" id="purchase-modal" tabindex="-1" role="dialog" aria-labelledby="purchase-modalLabel" aria-hidden="true">
 	<div class="modal-dialog  modal-sm" role="document">
     <div class="modal-content">
@@ -447,6 +498,74 @@
 
     </div>
   </div>
+</div>
+
+
+
+
+
+<!-- feedback -->
+<div class="rating-container">
+	<i class="icofont icofont-close close-Icon"></i>
+<div class="rating-card">
+	<div class="text-wrapper">
+		<h2	class="">Please Rate Your Experience</h2>
+		<h3 class="text-secondary">to help us serve you better</h3>
+	</div>
+	<form>
+		<div class="comment-Section">
+
+			<div>
+				<p class="additional-comments">Comment</p>
+				<textarea rows="10" id="Comment" name="Comment" placeholder="Comment"></textarea>
+			</div>
+				<span class="error-message" id="comment-error"></span>
+		</div>
+		<div class="rating-stars-container">
+			<input value="5" name="star" id="star-5" type="radio" />
+			<label for="star-5" class="star-label">
+				<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+					<path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"
+						  pathLength="360"></path>
+				</svg>
+			</label>
+			<input value="4" name="star" id="star-4" type="radio" />
+			<label for="star-4" class="star-label">
+				<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+					<path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"
+						  pathLength="360"></path>
+				</svg>
+			</label>
+			<input value="3" name="star" id="star-3" type="radio" />
+			<label for="star-3" class="star-label">
+				<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+					<path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"
+						  pathLength="360"></path>
+				</svg>
+			</label>
+			<input value="2" name="star" id="star-2" type="radio" />
+			<label for="star-2" class="star-label">
+				<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+					<path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"
+						  pathLength="360"></path>
+				</svg>
+			</label>
+			<input value="1" name="star" id="star-1" type="radio" />
+			<label for="star-1" class="star-label">
+				<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+					<path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"
+						  pathLength="360"></path>
+				</svg>
+			</label>		
+		</div>
+		  <span class="error-message" id="rating-error"></span>
+   </form>
+	<div>
+		<button class="theme-btn" id="AddTestimonial" type="button">
+			Save
+		</button>
+	</div>
+</div>
 </div>
 
 

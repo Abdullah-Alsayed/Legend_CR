@@ -12,7 +12,11 @@ namespace DicomApp.DAL.DB
             : base(options) { }
 
         public virtual DbSet<Account> Account { get; set; }
-        public virtual DbSet<AccountTransaction> AccountTransaction { get; set; }
+        public virtual DbSet<Transaction> Transaction { get; set; }
+
+        public virtual DbSet<Testimonial> Testimonial { get; set; }
+
+        public virtual DbSet<GameCharge> GameCharges { get; set; }
         public virtual DbSet<AppService> AppService { get; set; }
         public virtual DbSet<Branch> Branch { get; set; }
         public virtual DbSet<CashTransfer> CashTransfer { get; set; }
@@ -108,7 +112,7 @@ namespace DicomApp.DAL.DB
                     .HasConstraintName("FK_Account_CommonUser");
             });
 
-            modelBuilder.Entity<AccountTransaction>(entity =>
+            modelBuilder.Entity<Transaction>(entity =>
             {
                 entity
                     .Property(e => e.CreatedAt)
@@ -123,12 +127,6 @@ namespace DicomApp.DAL.DB
                 entity.Property(e => e.RefId).HasMaxLength(100);
 
                 entity
-                    .HasOne(d => d.CashTransfer)
-                    .WithMany(p => p.AccountTransaction)
-                    .HasForeignKey(d => d.CashTransferId)
-                    .HasConstraintName("FK_AccountTransaction_CashTransfer");
-
-                entity
                     .HasOne(d => d.CreatedByNavigation)
                     .WithMany(p => p.AccountTransactionCreatedByNavigation)
                     .HasForeignKey(d => d.CreatedBy)
@@ -141,31 +139,6 @@ namespace DicomApp.DAL.DB
                     .HasForeignKey(d => d.LastModifiedBy)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_AccountTransaction_CommonUser1");
-
-                entity
-                    .HasOne(d => d.PickupRequest)
-                    .WithMany(p => p.AccountTransaction)
-                    .HasForeignKey(d => d.PickupRequestId)
-                    .HasConstraintName("FK_AccountTransaction_PickupRequest");
-
-                entity
-                    .HasOne(d => d.Receiver)
-                    .WithMany(p => p.AccountTransactionReceiver)
-                    .HasForeignKey(d => d.ReceiverId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_AccountTransaction_Account1");
-
-                entity
-                    .HasOne(d => d.Sender)
-                    .WithMany(p => p.AccountTransactionSender)
-                    .HasForeignKey(d => d.SenderId)
-                    .HasConstraintName("FK_AccountTransaction_Account");
-
-                entity
-                    .HasOne(d => d.Vendor)
-                    .WithMany(p => p.AccountTransactionVendor)
-                    .HasForeignKey(d => d.VendorId)
-                    .HasConstraintName("FK_AccountTransaction_Account2");
             });
 
             modelBuilder.Entity<AppService>(entity =>

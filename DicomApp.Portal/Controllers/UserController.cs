@@ -97,6 +97,12 @@ namespace DicomApp.Portal.Controllers
         }
 
         [AllowAnonymous]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
         public IActionResult LoginPatient()
         {
             return View();

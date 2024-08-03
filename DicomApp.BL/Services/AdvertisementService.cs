@@ -52,7 +52,7 @@ namespace DicomApp.BL.Services
                         request.context.Advertisement.Add(ship);
                         request.context.SaveChanges();
                         ship.RefId = BaseHelper.GenerateRefId(
-                            EnumRefIdType.Advertisement,
+                            EnumRefIdType.Transaction,
                             ship.AdvertisementId
                         );
 
@@ -588,17 +588,14 @@ namespace DicomApp.BL.Services
                         else
                             ship = request.context.Advertisement.Where(s => !s.IsDeleted);
 
-                        if (request.PageSize > 0)
-                            ship = ApplyPaging(ship, request.PageSize, request.PageIndex);
-
                         if (request.applyFilter)
                             ship = ApplyFilter(ship, request.AdsDTO, req.RoleID, req.UserID);
 
                         if (!string.IsNullOrEmpty(request.OrderByColumn))
                             ship = OrderByDynamic(ship, request.OrderByColumn, request.IsDesc);
 
-                        if (req.Top != 0)
-                            ship = ship.Take(req.Top);
+                        if (request.PageSize > 0)
+                            ship = ApplyPaging(ship, request.PageSize, request.PageIndex);
 
                         var query = ship.Select(s => new AdsDTO
                         {
@@ -762,7 +759,7 @@ namespace DicomApp.BL.Services
             if (filter.GameId != 0)
                 query = query.Where(c => c.GameId == filter.GameId);
 
-            if (filter.BuyerId != 0)
+            if (filter.BuyerId.HasValue && filter.BuyerId != 0)
                 query = query.Where(c => c.BuyerId == filter.BuyerId);
 
             if (filter.Price != 0)

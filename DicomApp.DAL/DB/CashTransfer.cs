@@ -7,7 +7,7 @@ namespace DicomApp.DAL.DB
     {
         public CashTransfer()
         {
-            AccountTransaction = new HashSet<AccountTransaction>();
+            AccountTransaction = new HashSet<Transaction>();
             Shipment = new HashSet<Advertisement>();
         }
 
@@ -38,7 +38,7 @@ namespace DicomApp.DAL.DB
         public virtual CommonUser LastModifiedByNavigation { get; set; }
         public virtual Account Receiver { get; set; }
         public virtual Zone Zone { get; set; }
-        public virtual ICollection<AccountTransaction> AccountTransaction { get; set; }
+        public virtual ICollection<Transaction> AccountTransaction { get; set; }
         public virtual ICollection<Advertisement> Shipment { get; set; }
     }
 }

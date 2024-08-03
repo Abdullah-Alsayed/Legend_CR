@@ -245,7 +245,7 @@ function ServiceTypeChange() {
 function AddAdvertisement(ActionName, ControllerName, FormName) {
     $(".invalid-feedback").removeClass("d-none");
     if ($(`#${FormName}`).valid()) {
-
+            $(".Spinner").removeClass("d-none");
             $("#BtnSend").prop('disabled', true);
             $('#MainLoder').fadeIn(100);
             $("#MainView").hide();
@@ -254,11 +254,13 @@ function AddAdvertisement(ActionName, ControllerName, FormName) {
             let formData = new FormData($(`#${FormName}`)[0]);
 
             // Append files to formData
-            let files = $(`#${FormName} input[type='file']`)[0].files;
-            for (let i = 0; i < files.length; i++) {
-                formData.append('files', files[i]);
+        //let files = $(`#${FormName} input[type='file']`)[0].files;
+        validFiles = validFiles.filter((file, index, self) =>
+            index === self.findIndex((f) => f.name === file.name && f.size === file.size)
+        );
+            for (let i = 0; i < validFiles.length; i++) {
+                formData.append('files', validFiles[i]);
             }
-
             $.ajax({
                 url: `/${ControllerName}/${ActionName}`,
                 contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
@@ -268,8 +270,10 @@ function AddAdvertisement(ActionName, ControllerName, FormName) {
                 contentType: false, 
                 dataType: 'html',
                 success: function (response) {
-                    $(".buy-ticket").css("display","none");
+                    $(".buy-ticket").css("display", "none");
+                    $(".Spinner").addClass("d-none");
                     if (response.includes('successfully')) {
+                        validFiles = [];
                         Swal.fire({
                             position: 'center',
                             icon: 'success',
@@ -399,11 +403,10 @@ function EditAdvertisement(ActionName, ControllerName, FormName) {
         $("label:contains('This field is required.')").fadeOut();
     }
 }
-
+var validFiles = [];
 function updateAdvertisementFiles() {
     var files = $("#Advertisement-files")[0].files;
     var filesArray = Array.from(files);
-    var validFiles = [];
     var imageCount = $('#Advertisement-Imgs img').length;
 
     filesArray.forEach(function (file) {
@@ -431,7 +434,6 @@ function updateAdvertisementFiles() {
     });
 
     $('#Advertisement-files-Lable').text(imageCount + ' file(s) selected');
-
     if (validFiles.length < filesArray.length) {
         alert('Some files were not added. Ensure each file is an image, less than 2MB, and you select a maximum of 5 files.');
     }

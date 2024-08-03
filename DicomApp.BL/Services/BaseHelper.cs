@@ -18,7 +18,7 @@ namespace DicomApp.BL.Services
     {
         public static class Constants
         {
-            public const int PageSize = 25;
+            public const int PageSize = 50;
             public const int MaxFreeWeight = 3;
             public const int MinFreeShipCount = 5;
             public const int PartialDeliveryFees = 10;
@@ -231,7 +231,7 @@ namespace DicomApp.BL.Services
                     return "GS" + ID;
                 case EnumRefIdType.Invoice:
                     return "IN" + ID;
-                case EnumRefIdType.Account_Transaction:
+                case EnumRefIdType.Transaction:
                     return "TR"
                         + ID
                         + (TransactionType == (int)EnumTransactionType.Withdraw ? "W" : "D");

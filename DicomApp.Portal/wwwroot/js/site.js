@@ -1191,7 +1191,33 @@ function OpenEditGameModel(id, Modal) {
         }
     });
 }
-
+function OpenEditGameChargeModel(id, Model) {
+    $.ajax({
+        type: "GET",
+        url: `/GameCharge/EditGameCharge/${id}`,
+        success: function (result) {
+            if (!result) {
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'failed try again',
+                    showConfirmButton: false,
+                    timer: 4000
+                });
+            }
+            else {
+                $(`#${Model} #Id`).val(result.id);
+                $(`#${Model} #Price`).val(result.price);
+                $(`#${Model} #Count`).val(result.count);
+                $(`#${Model} #Discount`).val(result.discount);
+                $(`#${Model} #GameId`).val(result.gameId);
+                $(`#${Model} #Img`).val(result.img);
+                $(`#${Model} #EditGameChargeImg`).attr("src", `/dist/images/${result.img}`);
+                $(`#${Model}`).modal('show');
+            }
+        }
+    });
+}
 function EditGame(Modal, FormID) {
     if ($(`#${FormID}`).valid()) {
         $("#BtnSend").prop('disabled', true);
@@ -1235,6 +1261,62 @@ function EditGame(Modal, FormID) {
                         $(`#${Tr} #ImgUrl img`).attr('src', `/dist/images/Fake-Img2.png`);
                     else
                         $(`#${Tr} #ImgUrl img`).attr('src', `/dist/images/${result.model.imgUrl}`);
+
+                    $(`#${Modal}`).modal('hide');
+                    $("#BtnSend").prop('disabled', false);
+                    $(".Spinner").addClass("d-none");
+                    alertSuccess();
+                }
+
+            }
+        })
+    }
+    else {
+        $(`#${FormID}`).submit();
+        $("label:contains('This field is required.')").css("display", "none");
+        $(".Spinner").addClass("d-none");
+    }
+}
+
+function EditChargeGame(Modal, FormID) {
+    if ($(`#${FormID}`).valid()) {
+        $("#BtnSend").prop('disabled', true);
+        $(".Spinner").removeClass("d-none");
+        let GameId = $(`#${Modal} #Id`).val();
+        let Tr = `Tr_${GameId}`
+        let formData = formSerialize(FormID);
+        $.ajax({
+            type: "POST",
+            url: `/GameCharge/EditGameCharge`,
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (result) {
+                if (!result.success) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        title: 'failed try again',
+                        showConfirmButton: false,
+                        timer: 4000
+                    });
+                    $(".Spinner").addClass("d-none");
+                }
+                else {
+                    let file = document.querySelector(`#${FormID} #ImgFile`);
+
+                    $(`#${Tr} #Price`).text(result.model.price);
+                    $(`#${Tr} #Count`).text(result.model.count);
+                    $(`#${Tr} #Discount`).text(result.model.discount);
+                    $(`#${Tr} #Game`).html(`<b>${result.model.game.nameEn}</b> <img src="/dist/images/${result.model.game.imgUrl}" width="50px"></img>`);
+
+                    if (file.files.length > 0)
+                        $(`#${Tr} #ImgUrl img`).attr('src', URL.createObjectURL(file.files[0]));
+
+                    else if (result.model.img == null)
+                        $(`#${Tr} #ImgUrl img`).attr('src', `/dist/images/Fake-Img2.png`);
+                    else
+                        $(`#${Tr} #ImgUrl img`).attr('src', `/dist/images/${result.model.img}`);
 
                     $(`#${Modal}`).modal('hide');
                     $("#BtnSend").prop('disabled', false);

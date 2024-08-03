@@ -79,92 +79,6 @@ namespace DicomApp.DAL.Migrations
                     b.ToTable("Account");
                 });
 
-            modelBuilder.Entity("DicomApp.DAL.DB.AccountTransaction", b =>
-                {
-                    b.Property<int>("AccountTransactionId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("AdvertisementId");
-
-                    b.Property<double>("CancelFees");
-
-                    b.Property<int?>("CashTransferId");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())");
-
-                    b.Property<int>("CreatedBy");
-
-                    b.Property<double>("GameFees");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<DateTime>("LastModifiedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())");
-
-                    b.Property<int>("LastModifiedBy");
-
-                    b.Property<double>("PartialDeliveryFees");
-
-                    b.Property<double>("PickupFees");
-
-                    b.Property<int?>("PickupRequestId");
-
-                    b.Property<int>("ReceiverId");
-
-                    b.Property<string>("RefId")
-                        .HasMaxLength(100);
-
-                    b.Property<double?>("RefundCash");
-
-                    b.Property<double?>("RefundFees");
-
-                    b.Property<int?>("SenderId");
-
-                    b.Property<double>("ShippingFees");
-
-                    b.Property<double?>("ShippingFeesPaid");
-
-                    b.Property<double>("SizeFees");
-
-                    b.Property<int?>("StatusId");
-
-                    b.Property<double>("Total");
-
-                    b.Property<byte>("TypeId");
-
-                    b.Property<double>("VendorCash");
-
-                    b.Property<int?>("VendorId");
-
-                    b.Property<double>("WeightFees");
-
-                    b.HasKey("AccountTransactionId");
-
-                    b.HasIndex("CashTransferId");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("LastModifiedBy");
-
-                    b.HasIndex("PickupRequestId");
-
-                    b.HasIndex("ReceiverId");
-
-                    b.HasIndex("SenderId");
-
-                    b.HasIndex("StatusId");
-
-                    b.HasIndex("VendorId");
-
-                    b.ToTable("AccountTransaction");
-                });
-
             modelBuilder.Entity("DicomApp.DAL.DB.Advertisement", b =>
                 {
                     b.Property<int>("AdvertisementId")
@@ -1072,6 +986,43 @@ namespace DicomApp.DAL.Migrations
                     b.ToTable("Game");
                 });
 
+            modelBuilder.Entity("DicomApp.DAL.DB.GameCharge", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Count");
+
+                    b.Property<DateTime>("CreatedAt");
+
+                    b.Property<int?>("CreatedBy");
+
+                    b.Property<int?>("DeleteBy");
+
+                    b.Property<DateTime?>("DeletedOn");
+
+                    b.Property<int>("Discount");
+
+                    b.Property<int>("GameId");
+
+                    b.Property<string>("Img");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("LastModifiedAt");
+
+                    b.Property<int?>("LastModifiedBy");
+
+                    b.Property<int>("Price");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameId");
+
+                    b.ToTable("GameCharges");
+                });
+
             modelBuilder.Entity("DicomApp.DAL.DB.GamerService", b =>
                 {
                     b.Property<int>("GamerServiceId")
@@ -1356,9 +1307,9 @@ namespace DicomApp.DAL.Migrations
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("(getdate())");
 
-                    b.Property<DateTime>("DeleteAt");
+                    b.Property<DateTime?>("DeleteAt");
 
-                    b.Property<int>("DeleteBy");
+                    b.Property<int?>("DeleteBy");
 
                     b.Property<bool>("Editable")
                         .ValueGeneratedOnAdd()
@@ -1497,6 +1448,111 @@ namespace DicomApp.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Status");
+                });
+
+            modelBuilder.Entity("DicomApp.DAL.DB.Testimonial", b =>
+                {
+                    b.Property<int>("TestimonialId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Comment");
+
+                    b.Property<DateTime>("CreatedAt");
+
+                    b.Property<int>("CreatedBy");
+
+                    b.Property<int?>("DeleteBy");
+
+                    b.Property<DateTime?>("DeletedOn");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime>("LastModifiedAt");
+
+                    b.Property<int?>("LastModifiedBy");
+
+                    b.Property<int?>("LastModifiedByNavigationId");
+
+                    b.Property<int>("Rate");
+
+                    b.HasKey("TestimonialId");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("LastModifiedByNavigationId");
+
+                    b.ToTable("Testimonial");
+                });
+
+            modelBuilder.Entity("DicomApp.DAL.DB.Transaction", b =>
+                {
+                    b.Property<int>("TransactionId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("AccountId");
+
+                    b.Property<int?>("AccountId1");
+
+                    b.Property<int?>("AccountId2");
+
+                    b.Property<int?>("AdvertisementId");
+
+                    b.Property<int>("Amount");
+
+                    b.Property<int>("BuyerId");
+
+                    b.Property<int?>("CashTransferId");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime")
+                        .HasDefaultValueSql("(getdate())");
+
+                    b.Property<int>("CreatedBy");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<bool>("IsSuccess");
+
+                    b.Property<DateTime>("LastModifiedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime")
+                        .HasDefaultValueSql("(getdate())");
+
+                    b.Property<int?>("LastModifiedBy");
+
+                    b.Property<string>("PaymentId");
+
+                    b.Property<int?>("PickupRequestId");
+
+                    b.Property<string>("RefId")
+                        .HasMaxLength(100);
+
+                    b.Property<byte>("TypeId");
+
+                    b.HasKey("TransactionId");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("AccountId1");
+
+                    b.HasIndex("AccountId2");
+
+                    b.HasIndex("AdvertisementId");
+
+                    b.HasIndex("BuyerId");
+
+                    b.HasIndex("CashTransferId");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("LastModifiedBy");
+
+                    b.HasIndex("PickupRequestId");
+
+                    b.ToTable("Transaction");
                 });
 
             modelBuilder.Entity("DicomApp.DAL.DB.UserLocation", b =>
@@ -1773,48 +1829,6 @@ namespace DicomApp.DAL.Migrations
                         .HasConstraintName("FK_Account_CommonUser");
                 });
 
-            modelBuilder.Entity("DicomApp.DAL.DB.AccountTransaction", b =>
-                {
-                    b.HasOne("DicomApp.DAL.DB.CashTransfer", "CashTransfer")
-                        .WithMany("AccountTransaction")
-                        .HasForeignKey("CashTransferId")
-                        .HasConstraintName("FK_AccountTransaction_CashTransfer");
-
-                    b.HasOne("DicomApp.DAL.DB.CommonUser", "CreatedByNavigation")
-                        .WithMany("AccountTransactionCreatedByNavigation")
-                        .HasForeignKey("CreatedBy")
-                        .HasConstraintName("FK_AccountTransaction_CommonUser");
-
-                    b.HasOne("DicomApp.DAL.DB.CommonUser", "LastModifiedByNavigation")
-                        .WithMany("AccountTransactionLastModifiedByNavigation")
-                        .HasForeignKey("LastModifiedBy")
-                        .HasConstraintName("FK_AccountTransaction_CommonUser1");
-
-                    b.HasOne("DicomApp.DAL.DB.PickupRequest", "PickupRequest")
-                        .WithMany("AccountTransaction")
-                        .HasForeignKey("PickupRequestId")
-                        .HasConstraintName("FK_AccountTransaction_PickupRequest");
-
-                    b.HasOne("DicomApp.DAL.DB.Account", "Receiver")
-                        .WithMany("AccountTransactionReceiver")
-                        .HasForeignKey("ReceiverId")
-                        .HasConstraintName("FK_AccountTransaction_Account1");
-
-                    b.HasOne("DicomApp.DAL.DB.Account", "Sender")
-                        .WithMany("AccountTransactionSender")
-                        .HasForeignKey("SenderId")
-                        .HasConstraintName("FK_AccountTransaction_Account");
-
-                    b.HasOne("DicomApp.DAL.DB.Status", "Status")
-                        .WithMany()
-                        .HasForeignKey("StatusId");
-
-                    b.HasOne("DicomApp.DAL.DB.Account", "Vendor")
-                        .WithMany("AccountTransactionVendor")
-                        .HasForeignKey("VendorId")
-                        .HasConstraintName("FK_AccountTransaction_Account2");
-                });
-
             modelBuilder.Entity("DicomApp.DAL.DB.Advertisement", b =>
                 {
                     b.HasOne("DicomApp.DAL.DB.Branch")
@@ -1999,6 +2013,14 @@ namespace DicomApp.DAL.Migrations
                         .HasConstraintName("FK_Game_Category");
                 });
 
+            modelBuilder.Entity("DicomApp.DAL.DB.GameCharge", b =>
+                {
+                    b.HasOne("DicomApp.DAL.DB.Game", "Game")
+                        .WithMany("GameCharges")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("DicomApp.DAL.DB.GamerService", b =>
                 {
                     b.HasOne("DicomApp.DAL.DB.Game", "Game")
@@ -2103,6 +2125,60 @@ namespace DicomApp.DAL.Migrations
                         .WithMany("ShipmentCustomerFollowUp")
                         .HasForeignKey("CreatedBy")
                         .HasConstraintName("FK_ShipmentCustomerFollowup_CommonUser");
+                });
+
+            modelBuilder.Entity("DicomApp.DAL.DB.Testimonial", b =>
+                {
+                    b.HasOne("DicomApp.DAL.DB.CommonUser", "CreatedByNavigation")
+                        .WithMany("Testimonials")
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DicomApp.DAL.DB.CommonUser", "LastModifiedByNavigation")
+                        .WithMany()
+                        .HasForeignKey("LastModifiedByNavigationId");
+                });
+
+            modelBuilder.Entity("DicomApp.DAL.DB.Transaction", b =>
+                {
+                    b.HasOne("DicomApp.DAL.DB.Account")
+                        .WithMany("AccountTransactionReceiver")
+                        .HasForeignKey("AccountId");
+
+                    b.HasOne("DicomApp.DAL.DB.Account")
+                        .WithMany("AccountTransactionSender")
+                        .HasForeignKey("AccountId1");
+
+                    b.HasOne("DicomApp.DAL.DB.Account")
+                        .WithMany("AccountTransactionVendor")
+                        .HasForeignKey("AccountId2");
+
+                    b.HasOne("DicomApp.DAL.DB.Advertisement", "Advertisement")
+                        .WithMany("Transactions")
+                        .HasForeignKey("AdvertisementId");
+
+                    b.HasOne("DicomApp.DAL.DB.CommonUser", "Buyer")
+                        .WithMany()
+                        .HasForeignKey("BuyerId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DicomApp.DAL.DB.CashTransfer")
+                        .WithMany("AccountTransaction")
+                        .HasForeignKey("CashTransferId");
+
+                    b.HasOne("DicomApp.DAL.DB.CommonUser", "CreatedByNavigation")
+                        .WithMany("AccountTransactionCreatedByNavigation")
+                        .HasForeignKey("CreatedBy")
+                        .HasConstraintName("FK_AccountTransaction_CommonUser");
+
+                    b.HasOne("DicomApp.DAL.DB.CommonUser", "LastModifiedByNavigation")
+                        .WithMany("AccountTransactionLastModifiedByNavigation")
+                        .HasForeignKey("LastModifiedBy")
+                        .HasConstraintName("FK_AccountTransaction_CommonUser1");
+
+                    b.HasOne("DicomApp.DAL.DB.PickupRequest")
+                        .WithMany("AccountTransaction")
+                        .HasForeignKey("PickupRequestId");
                 });
 
             modelBuilder.Entity("DicomApp.DAL.DB.UserLocation", b =>

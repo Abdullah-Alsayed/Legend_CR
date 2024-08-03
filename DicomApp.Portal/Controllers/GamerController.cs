@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DicomApp.BL.Services;
 using DicomApp.CommonDefinitions.DTO;
 using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
+using DicomApp.CommonDefinitions.DTO.CashDTOs;
 using DicomApp.CommonDefinitions.DTO.VendorProductDTOs;
 using DicomApp.CommonDefinitions.Requests;
 using DicomApp.CommonDefinitions.Responses;
@@ -14,12 +15,15 @@ using DicomApp.Helpers;
 using DicomApp.Helpers.Services.PayPal;
 using DicomApp.Portal.Helpers;
 using ECommerce.Core.Services.MailServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using PayPal;
+using static DicomApp.Helpers.SystemConstants;
 
 namespace DicomApp.Portal.Controllers
 {
+    [Authorize]
     public class GamerController : Controller
     {
         private readonly ShippingDBContext _context;
@@ -51,7 +55,8 @@ namespace DicomApp.Portal.Controllers
         {
             var mainResponse = new MainResponse();
             var userID = AuthHelper.GetClaimValue(User, "UserID");
-            var model = new AdsDTO();
+            var roleID = AuthHelper.GetClaimValue(User, "RoleID");
+			var model = new AdsDTO();
             //model.Search = Search;
 
             //if (From.HasValue)
@@ -70,15 +75,14 @@ namespace DicomApp.Portal.Controllers
             };
             var advertisementRequest = new AdvertisementRequest
             {
-                RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
+                RoleID = roleID,
                 UserID = userID,
                 context = _context,
                 AdsDTO = model,
                 applyFilter = true,
                 PageIndex = PageIndex,
-                PageSize = PageSize,
+                PageSize = 20,
                 OrderByColumn = nameof(Advertisement.Price),
-                Top = 10
             };
             ViewBag.GameList = GameService
                 .GetGames(new GameRequest { context = _context })
@@ -91,7 +95,15 @@ namespace DicomApp.Portal.Controllers
                 .GetGames(new GameRequest { context = _context })
                 .GameDTOs;
 
-            advertisementRequest.Top = 0;
+            mainResponse.Testimonials = TestimonialService
+                .GetTestimonials(new TestimonialRequest { context = _context , IsDesc = true  , OrderByColumn = nameof( Testimonial.CreatedAt) , PageSize = PageSize })
+                .TestimonialDTOs;
+
+			mainResponse.CanAddFeedBack = TestimonialService
+				.CanAddTestimonials(new TestimonialRequest { context = _context, UserID = userID , RoleID = roleID })
+				.Success;
+
+			advertisementRequest.PageSize = PageSize;
             advertisementRequest.OrderByColumn = nameof(Advertisement.CreatedAt);
             mainResponse.AllAdvertisements = DicomApp
                 .BL.Services.AdvertisementService.GetAllAdvertisements(advertisementRequest)
@@ -110,10 +122,13 @@ namespace DicomApp.Portal.Controllers
         {
             try
             {
+                var RoleID = AuthHelper.GetClaimValue(User, SystemConstants.Claims.RoleID);
+                var UserID = AuthHelper.GetClaimValue(User, SystemConstants.Claims.UserID);
+
                 var advertisementRequest = new AdvertisementRequest
                 {
-                    RoleID = AuthHelper.GetClaimValue(User, SystemConstants.Claims.RoleID),
-                    UserID = AuthHelper.GetClaimValue(User, SystemConstants.Claims.UserID),
+                    RoleID = RoleID,
+                    UserID = UserID,
                     context = _context,
                     AdsDTO = new AdsDTO { AdvertisementId = accountId },
                     applyFilter = true,
@@ -137,9 +152,27 @@ namespace DicomApp.Portal.Controllers
                         ?.links?.Find(x => x.rel.ToLower() == "approval_url")
                         ?.href;
 
-                    return !string.IsNullOrEmpty(approverUrl)
-                        ? Json(new { success = true, message = approverUrl })
-                        : Json(new { success = false, message = "field" });
+                    if (!string.IsNullOrEmpty(approverUrl))
+                    {
+                        TransactionService.AddTransaction(
+                            new TransactionRequest
+                            {
+                                UserID = UserID,
+                                RoleID = RoleID,
+                                context = _context,
+                                TransactionDTO = new TransactionDTO
+                                {
+                                    AdvertisementId = accountId,
+                                    PaymentId = createPayment.id,
+                                    Amount = account.Price,
+                                    BuyerId = UserID
+                                }
+                            }
+                        );
+                        return Json(new { success = true, message = approverUrl });
+                    }
+                    else
+                        return Json(new { success = false, message = "field" });
                 }
             }
             catch (Exception ex)
@@ -154,10 +187,12 @@ namespace DicomApp.Portal.Controllers
             var result = await _payPalService.ExecutePaymentAsync(payerID, paymentID);
             if (result.state != "failed")
             {
+                var RoleID = AuthHelper.GetClaimValue(User, SystemConstants.Claims.RoleID);
+                var UserID = AuthHelper.GetClaimValue(User, SystemConstants.Claims.UserID);
                 var advertisementRequest = new AdvertisementRequest
                 {
-                    RoleID = AuthHelper.GetClaimValue(User, SystemConstants.Claims.RoleID),
-                    UserID = AuthHelper.GetClaimValue(User, SystemConstants.Claims.UserID),
+                    RoleID = RoleID,
+                    UserID = UserID,
                     context = _context,
                     AdsDTO = new AdsDTO
                     {
@@ -172,6 +207,20 @@ namespace DicomApp.Portal.Controllers
                     );
                 if (accountResponse.Success)
                 {
+                    var transaction = TransactionService.SuccessPay(
+                        new TransactionRequest
+                        {
+                            context = _context,
+                            UserID = UserID,
+                            RoleID = RoleID,
+                            TransactionDTO = new TransactionDTO
+                            {
+                                PaymentId = paymentID,
+                                AdvertisementId = accountId
+                            }
+                        }
+                    );
+
                     var body =
                         $"userName : {accountResponse.AdsDTO.UserName} ,  password : {accountResponse.AdsDTO.Password}";
                     var emailResult = await _mailServices.SendAsync(

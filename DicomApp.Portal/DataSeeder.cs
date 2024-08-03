@@ -93,6 +93,7 @@ namespace DicomApp.Portal
                     Name = SystemConstants.Role.SuperAdmin,
                     CreationDate = System.DateTime.Now,
                     IsDeleted = false
+                    , 
                 },
                 new Role
                 {

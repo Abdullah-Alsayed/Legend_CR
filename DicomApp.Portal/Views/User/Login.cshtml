@@ -10,7 +10,7 @@
 <!-- START: Head-->
 <head>
     <meta charset="UTF-8">
-    <title>Red Express</title>
+    <title>Legend CR</title>
     <link rel="shortcut icon" href="~/dist/images/favicon.ico" />
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <!-- START: Template CSS-->
@@ -54,7 +54,7 @@
                     @Html.PasswordFor(model => model.Password, new { @placeholder = "Enter your password", @class = "form-control", @id = "password" })
                     @Html.ValidationMessageFor(model => model.Password, "", new { @class = "validation-message" })
                 </div>
-                    <a class="Regester" href="@Url.Action("Register")"> Create new user </a>
+                    <a class="Regester" href="/User/Create"> Create new user </a>
                  <div class="form-group mb-0">
                         <button class="login-button w-100" onclick="ShowSpiner()" type="submit">
                             Log In

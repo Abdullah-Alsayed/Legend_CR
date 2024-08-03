@@ -219,16 +219,16 @@
     public enum EnumRefIdType
     {
         Advertisement,
+        Transaction,
         Delivery_Pickup,
         Stock_Pickup,
         Cash_Delivery,
         Cash_Collect,
         Shipment_Return,
         Shipment_Refund,
-        Account_Transaction,
         Cash_Transfer,
         GamerService,
-        Invoice
+        Invoice,
     }
 
     public enum EnumProblemType : int

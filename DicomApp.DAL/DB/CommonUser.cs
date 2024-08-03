@@ -12,8 +12,8 @@ namespace DicomApp.DAL.DB
         {
             AccountCreatedByNavigation = new HashSet<Account>();
             AccountLastModifiedByNavigation = new HashSet<Account>();
-            AccountTransactionCreatedByNavigation = new HashSet<AccountTransaction>();
-            AccountTransactionLastModifiedByNavigation = new HashSet<AccountTransaction>();
+            AccountTransactionCreatedByNavigation = new HashSet<Transaction>();
+            AccountTransactionLastModifiedByNavigation = new HashSet<Transaction>();
             AccountUser = new HashSet<Account>();
             CashTransferCreatedByNavigation = new HashSet<CashTransfer>();
             CashTransferLastModifiedByNavigation = new HashSet<CashTransfer>();
@@ -95,8 +95,8 @@ namespace DicomApp.DAL.DB
         public virtual Country Country { get; set; }
         public virtual ICollection<Account> AccountCreatedByNavigation { get; set; }
         public virtual ICollection<Account> AccountLastModifiedByNavigation { get; set; }
-        public virtual ICollection<AccountTransaction> AccountTransactionCreatedByNavigation { get; set; }
-        public virtual ICollection<AccountTransaction> AccountTransactionLastModifiedByNavigation { get; set; }
+        public virtual ICollection<Transaction> AccountTransactionCreatedByNavigation { get; set; }
+        public virtual ICollection<Transaction> AccountTransactionLastModifiedByNavigation { get; set; }
         public virtual ICollection<Account> AccountUser { get; set; }
         public virtual ICollection<CashTransfer> CashTransferCreatedByNavigation { get; set; }
         public virtual ICollection<CashTransfer> CashTransferLastModifiedByNavigation { get; set; }
@@ -116,8 +116,9 @@ namespace DicomApp.DAL.DB
         public virtual ICollection<Zone> ZoneCreatedByNavigation { get; set; }
         public virtual ICollection<Zone> ZoneLastModifiedByNavigation { get; set; }
         public virtual ICollection<GamerService> GamerServices { get; set; }
-
-        [InverseProperty("Gamer")]
+        [InverseProperty("CreatedByNavigation")]
+        public virtual ICollection<Testimonial> Testimonials { get; set; }
+		[InverseProperty("Gamer")]
         public virtual ICollection<Advertisement> AdvertisementsGamer { get; set; }
 
         [InverseProperty("Buyer")]

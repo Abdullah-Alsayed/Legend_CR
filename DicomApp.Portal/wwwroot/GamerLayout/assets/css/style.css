@@ -46,6 +46,7 @@ body {
 /*----------------------------
 ---------- RESET CSS ---------
 ----------------------------*/
+
 h1,
 h2,
 h3,
@@ -53,7 +54,7 @@ h4,
 h5,
 h6 {
     font-weight: 500;
-	color: #fff;
+    color: #fff;
 }
 h1,
 h2,
@@ -469,7 +470,7 @@ option {
 }
 
 .single-slide-cast {
-    width: 11.5%;
+    width: 25%;
 }
 
 
@@ -710,11 +711,14 @@ hr {
     color: #fff;
 }
 .news-content {
-    width:100%;
+    font-size: 24px;
+    gap: 10px;
+    display: flex;
+    width: 950px;
     position: absolute;
-    left: 60px;
-    bottom: 35px;
-    right: 420px;
+    bottom: 60px;
+    flex-direction: column;
+    align-items: center;
 }
 .news-bg-1 {
 	background: url('../img/news/news1.jpg') no-repeat center / cover;
@@ -751,14 +755,15 @@ hr {
     margin: 50px auto 0;
 }
 .single-news a {
-    position: absolute;
-    left: 85%;
-    bottom: 0;
+  position: absolute;
+    left: 92%;
+    bottom: 10px;
     font-size: 30px;
     border-radius: 50%;
     border: 1px solid;
     padding: 12px;
 }
+
 .news-slide-area {
     position: relative;
     overflow: hidden;
@@ -811,7 +816,7 @@ hr {
 .testimonial-Bg {
     background: #0058ff54;
     padding-top: 52px;
-    box-shadow: 0 0 7px 7px #ffffff40;
+    box-shadow: -20px -13px 20px 4px #ffffff40;
     border-radius: 20px;
     height: 300px;
     width: 100%;
@@ -1918,3 +1923,337 @@ hr {
         transform: rotate(.5turn)
     }
 }
+
+
+/*Feedback*/
+
+.rating-container {
+    display: none;
+    position: absolute;
+    top: 77%;
+    right: 24%;
+    z-index: 9;
+}
+.close-Icon {
+    position: absolute;
+    cursor: pointer;
+    right: 0px;
+    display: flex;
+    content: "X";
+    font-size: 30px;
+    width: 40px;
+    height: 40px;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    align-content: flex-end;
+    justify-content: center;
+    align-items: center;
+    padding: 25px;
+}
+.rating-card {
+    width: 980px;
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to right bottom, #1e167e, #000000);
+    padding: 20px 20px;
+    border-radius: 10px;
+    gap: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.058);
+}
+.rating-card .error-message {
+    font-weight: bolder;
+    color: red;
+    font-size: 15px;
+}
+.comment-Section {
+    margin-bottom: 10px;
+    gap: 10px;
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-content: center;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+.comment-Section textarea {
+    color: black;
+    font-size: 14px;
+    width: 500px;
+    height: 100px;
+    background: #fff;
+}
+.text-wrapper {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.text-primary {
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.text-secondary {
+    color: #cccccc;
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+}
+
+.rating-stars-container {
+    width: 100%;
+    height: 30px;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: center;
+}
+
+.star-label svg {
+    fill: rgb(210, 210, 210);
+    width: 20px;
+    height: auto;
+}
+
+.rating-stars-container input {
+    appearance: unset;
+}
+
+    .rating-stars-container input:hover ~ .star-label svg {
+        fill: rgb(255, 204, 185);
+    }
+
+    .rating-stars-container input:checked ~ .star-label svg {
+        fill: rgb(255, 102, 47);
+        animation: slide-in-fwd-center 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+    }
+
+@keyframes slide-in-fwd-center {
+    0% {
+        transform: scale(1.6);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.socials-container {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding-top: 20px;
+    border-top: 1px solid rgb(150, 150, 150);
+}
+
+.social-button {
+    text-decoration: none;
+}
+
+    .social-button svg {
+        width: 15px;
+        fill: rgb(228, 228, 228);
+    }
+
+    .social-button:hover svg {
+        fill: rgb(255, 102, 47);
+    }
+/*
+    game Details
+*/
+.GameDetails {
+    padding-top:10%;
+}
+@import url('https://fonts.googleapis.com/css?family=Poppins:100,300,400,500,600,700,800, 800i, 900&display=swap');
+
+.chargeCard {
+    position: relative;
+}
+.contentBx-Title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-weight: bold;
+}
+    .contentBx-Title i {
+         color: #ffd700;
+    }
+.chargeCard .card {
+    position: relative;
+    width: 320px;
+    height: 450px;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.chargeCard .card:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #1BBFE9;
+    clip-path: circle(150px at 80% 20%);
+    transition: 0.5s ease-in-out;
+}
+
+.chargeCard .card:hover:before {
+    clip-path: circle(300px at 80% -20%);
+}
+
+.chargeCard .card:after {
+    content: "Legends";
+    position: absolute;
+    top: 30%;
+    left: -20%;
+    font-size: 5em;
+    font-weight: 800;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.04);
+
+}
+
+.chargeCard .card .imgBx {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
+    width: 100%;
+    height: 100%;
+    transition: .5s;
+}
+
+.chargeCard .card:hover .imgBx {
+    top: 0%;
+    transform: translateY(-25%);
+    /* bug  */
+}
+
+.chargeCard .card .imgBx img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(20deg);
+    width: 270px;
+}
+
+.chargeCard .card .contentBx {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 100px;
+    text-align: center;
+    transition: 1s;
+    z-index: 90;
+}
+
+.chargeCard .card:hover .contentBx {
+    height: 210px;
+}
+
+.chargeCard .card .contentBx h2 {
+    position: relative;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #fff;
+}
+
+.chargeCard .card .contentBx .size,
+.chargeCard .card .contentBx .color {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 20px;
+    transition: .5s;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.chargeCard .card:hover .contentBx .size {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: .5s;
+}
+
+.chargeCard .card:hover .contentBx .color {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: .6s;
+}
+
+
+.chargeCard .card .contentBx .size span {
+    width: 26px;
+    height: 26px;
+    text-align: center;
+    line-height: 26px;
+    font-size: 14px;
+    display: inline-block;
+    color: #111;
+    background: #fff;
+    margin: 0 5px;
+    transition: .5s;
+    color: #111;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.chargeCard .card .contentBx .size span:hover {  /* other bug */
+    background: #B90000;
+}
+
+.chargeCard .card .contentBx .color span {
+    width: 20px;
+    height: 20px;
+    background: #ff0;
+    border-radius: 50%;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+.chargeCard .card .contentBx .color span:nth-child(2) {
+     background: #1BBFE9;
+}
+
+.chargeCard .card .contentBx .color span:nth-child(3) {
+     background: #1B2FE9;
+}
+
+.chargeCard .card .contentBx .color span:nth-child(4) {
+     background: #080481;
+}
+
+    .chargeCard .card .contentBx a {
+        background: #1bbfe9;
+        display: inline-block;
+        padding: 10px 20px;
+        border-radius: 20px;
+        margin-top: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        color: #fff;
+        opacity: 0;
+        transform: translateY(50px);
+        transition: .5s;
+    }
+
+.chargeCard .card:hover .contentBx a {
+    opacity: 1;
+    transform: translateY(0px);
+    transition-delay: .7s;
+} 

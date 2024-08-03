@@ -19,20 +19,20 @@ namespace DicomApp.Portal
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
 
             var host = BuildWebHost(args);
-            using (var scope = host.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                var context = services.GetRequiredService<ShippingDBContext>();
-                if (context != null)
-                    await DataSeeder.Seed(context);
-                else
-                {
-                    var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(
-                        "ShippingDBContext could not be resolved from the service provider."
-                    );
-                }
-            }
+            //using (var scope = host.Services.CreateScope())
+            //{
+            //    var services = scope.ServiceProvider;
+            //    var context = services.GetRequiredService<ShippingDBContext>();
+            //    if (context != null)
+            //        await DataSeeder.Seed(context);
+            //    else
+            //    {
+            //        var logger = services.GetRequiredService<ILogger<Program>>();
+            //        logger.LogError(
+            //            "ShippingDBContext could not be resolved from the service provider."
+            //        );
+            //    }
+            //}
 
             await host.RunAsync();
         }

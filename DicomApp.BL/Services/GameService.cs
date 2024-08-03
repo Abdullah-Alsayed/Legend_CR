@@ -141,6 +141,16 @@ namespace DicomApp.BL.Services
                                 CategoryId = p.CategoryId,
                                 CategoryName = p.Category.NameEn,
                                 Description = p.Description,
+                                GameChargesDto = p
+                                    .GameCharges.Select(x => new GameChargeDTO
+                                    {
+                                        Count = x.Count,
+                                        Id = x.Id,
+                                        Discount = x.Discount,
+                                        Price = x.Price,
+                                        Img = x.Img,
+                                    })
+                                    .ToList()
                             });
 
                         res.TotalCount = 1;

@@ -65,6 +65,9 @@
 .GamerImg{
     min-width:10%;
 }
+.Gold-color {
+    color: #d4af37;
+}
 /* Files Style*/
 .files-container {
     height: 300px;

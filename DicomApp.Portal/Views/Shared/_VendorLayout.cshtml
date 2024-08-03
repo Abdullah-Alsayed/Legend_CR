@@ -34,19 +34,14 @@
 	<link rel="stylesheet" type="text/css" href="/GamerLayout/assets/css/magnific-popup.css">
 	<!-- Main style CSS -->
 	<link rel="stylesheet" type="text/css" href="/GamerLayout/assets/css/style.css" media="all" />
+	<!-- Responsive CSS -->
+	<link rel="stylesheet" type="text/css" href="/GamerLayout/assets/css/responsive.css" media="all" />
 
 	<link rel="stylesheet" type="text/css" href="/GamerLayout/assets/css/Payment.css" media="all" />
 
 	<link rel="stylesheet" type="text/css" href="/dist/css/Red.css" media="all" />
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.12/sweetalert2.min.css" />
-
-	<!-- Responsive CSS -->
-	<link rel="stylesheet" type="text/css" href="/GamerLayout/assets/css/responsive.css" media="all" />
-	<!--[if lt IE 9]>
-	  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-	  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-	<![endif]-->
 </head>
 <body>
 	<!-- Page loader -->
@@ -141,6 +136,7 @@
 
 		</div>
 	</div>
+
 	<div class="buy-ticket">
 		<div class="container">
 			<div class="buy-ticket-area Shipment-container">
@@ -235,7 +231,8 @@
 								</div>
 							</div>
 							<div class="col-lg-12 Buttons-Submit-Section">
-								<button onclick="AddAdvertisement('Add','Advertisement','AddAdvertisement')" type="button" id="BtnSend" class="Red-Btn">Submit Advertisement</button>
+								<button onclick="AddAdvertisement('Add','Advertisement','AddAdvertisement')" type="button" id="BtnSend" class="Red-Btn">Submit Advertisement 
+									<span class="Spinner spinner-border spinner-border-sm ml-2 mb-1 d-none" role="status" aria-hidden="true"></span></button>
 							</div>
 						</div>
 					</div>
@@ -243,6 +240,8 @@
 			</div>
 		</div>
 	</div>
+
+
 	<!-- header section end -->
 	@RenderBody()
 
@@ -287,12 +286,12 @@
 	<!-- Isotope JS -->
 	<script src="/GamerLayout/assets/js/isotope.pkgd.min.js"></script>
 	<!-- main JS -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.12/sweetalert2.min.js"></script>
-	<script src="/js/Shipment/AddShipment.js"></script>
 	<script src="/GamerLayout/assets/js/main.js"></script>
+ 	<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.12/sweetalert2.min.js"></script>
+	<script src="/js/Shipment/AddShipment.js"></script>
 	<script src="/dist/js/app.js"></script>
 	<script src="~/dist/js/jquery.validate.min.js"></script>
-	<script src="~/dist/js/jquery.validate.unobtrusive.min.js"></script>
+	<script src="~/dist/js/jquery.validate.unobtrusive.min.js"></script> 
 </body>
 
 </html>

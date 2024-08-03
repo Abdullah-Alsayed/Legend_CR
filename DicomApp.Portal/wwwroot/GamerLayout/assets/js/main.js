@@ -14,6 +14,7 @@
     START - Scroll to Top
     ------------------------------ */
 	$(window).on('scroll', function () {
+		console.log(scrollY);
 		if ($(this).scrollTop() > 600) {
 			$('#To-Top').fadeIn();
 		} else {
@@ -129,24 +130,7 @@
 		}
 	});
 	
-	/*----------------------------
-	START - videos popup
-	------------------------------ */
-	$('.popup-youtube').magnificPopup({type:'iframe'});
-	//iframe scripts
-	$.extend(true, $.magnificPopup.defaults, {  
-		iframe: {
-			patterns: {
-				//youtube videos
-				youtube: {
-					index: 'youtube.com/', 
-					id: 'v=', 
-					src: 'https://www.youtube.com/embed/%id%?autoplay=1' 
-				}
-			}
-		}
-	});
-	
+
 	/*----------------------------
     START - Isotope
     ------------------------------ */
@@ -173,5 +157,66 @@
 		return false;
 	})
 
+	$('.open-feedback').on('click', function (e) {
+		$('.rating-container').fadeIn(500);
+	})
+	$('.close-Icon').on('click', function (e) {
+		$('.rating-container').fadeOut(500);
+	})
+	$('#AddTestimonial').click(AddTestimonial);
+	function AddTestimonial() {
+		// Clear previous error messages
+		$('#comment-error').text('');
+		$('#rating-error').text('');
+
+		var comment = $('#Comment').val();
+		var rating = $('input[name="star"]:checked').val();
+
+		// Validate the form fields
+		var isValid = true;
+
+		if (!rating) {
+			$('#rating-error').text('Please select a rating!');
+			isValid = false;
+		}
+
+		if (!comment) {
+			$('#comment-error').text('Please enter a comment!');
+			isValid = false;
+		}
+
+		if (!isValid) {
+			return;
+		}
+		// Send the form data via AJAX request
+		$.ajax({
+			url: '/Testimonial/Create',
+			method: 'POST',
+			data: {
+				Comment: comment,
+				Rating: rating
+			},
+			success: function (response) {
+				if (response.success) {
+					Swal.fire({
+						icon: 'success',
+						text: response.message
+					});
+				} else {
+					Swal.fire({
+						icon: 'error',
+						text: response.message
+					});
+				}
+				$('.rating-container').fadeOut(500);
+			},
+			error: function (xhr, status, error) {
+				Swal.fire({
+					icon: 'error',
+					text: 'Something went wrong. Please try again later.'
+				});
+			}
+		});
+	}
 
 }(jQuery));

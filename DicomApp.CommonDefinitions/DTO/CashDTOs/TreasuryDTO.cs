@@ -29,6 +29,6 @@ namespace DicomApp.CommonDefinitions.DTO.CashDTOs
         public double TotalDelivered { get; set; }
         public double TotalOthers { get; set; }
         public double TotalRefunded { get; set; }
-        public IEnumerable<AccountTransactionDTO> TransactionDTOs { get; set; }
+        public IEnumerable<TransactionDTO> TransactionDTOs { get; set; }
     }
 }

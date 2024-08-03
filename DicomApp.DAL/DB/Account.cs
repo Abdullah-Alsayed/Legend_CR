@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace DicomApp.DAL.DB
@@ -8,9 +7,9 @@ namespace DicomApp.DAL.DB
     {
         public Account()
         {
-            AccountTransactionReceiver = new HashSet<AccountTransaction>();
-            AccountTransactionSender = new HashSet<AccountTransaction>();
-            AccountTransactionVendor = new HashSet<AccountTransaction>();
+            AccountTransactionReceiver = new HashSet<Transaction>();
+            AccountTransactionSender = new HashSet<Transaction>();
+            AccountTransactionVendor = new HashSet<Transaction>();
             CashTransfer = new HashSet<CashTransfer>();
         }
 
@@ -35,9 +34,9 @@ namespace DicomApp.DAL.DB
         public virtual CommonUser LastModifiedByNavigation { get; set; }
         public virtual Role Role { get; set; }
         public virtual CommonUser User { get; set; }
-        public virtual ICollection<AccountTransaction> AccountTransactionReceiver { get; set; }
-        public virtual ICollection<AccountTransaction> AccountTransactionSender { get; set; }
-        public virtual ICollection<AccountTransaction> AccountTransactionVendor { get; set; }
+        public virtual ICollection<Transaction> AccountTransactionReceiver { get; set; }
+        public virtual ICollection<Transaction> AccountTransactionSender { get; set; }
+        public virtual ICollection<Transaction> AccountTransactionVendor { get; set; }
         public virtual ICollection<CashTransfer> CashTransfer { get; set; }
     }
 }

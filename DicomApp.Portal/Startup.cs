@@ -143,7 +143,8 @@ namespace DicomApp.Portal
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseDeveloperExceptionPage();
+                //app.UseExceptionHandler("/Home/Error");
             }
             var provider = new FileExtensionContentTypeProvider();
             // Add new mappings

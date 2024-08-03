@@ -18,7 +18,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width" />
-    <title>RED Express</title>
+    <title>Legend CR</title>
     <link rel="shortcut icon" href="~/dist/images/favicon.ico" />
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <partial name="_MainCssFiles" />
@@ -85,6 +85,10 @@
                                 {
                                     <li><a class="MenuNavigation Navigation" href="/Game/GameList">Game</a></li>
                                 }
+                                @if (BaseService.CheckRoleAccessability(roleID, SystemConstants.Permission.ListGame, connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/GameCharge/GameChargeList">Game Charge</a></li>
+                                }
                                 @if (BaseService.CheckRoleAccessability(roleID, SystemConstants.Permission.CategoryList, connectionString: connectionString))
                                 {
                                     <li><a class="MenuNavigation Navigation" href="/Category/CategoryList">Category</a></li>
@@ -105,7 +109,7 @@
                                 }
                             </ul>
                         </li>
-                        @if (BaseService.CheckRoleAccessability(roleID, "Menu_Products", connectionString: connectionString))
+                        @if (BaseService.CheckRoleAccessability(roleID, SystemConstants.Permission.ListGamerService, connectionString: connectionString))
                         {
                             <li class="cursor-pointer">
                                 <a href="/GamerService/All" class="Navigation">
@@ -114,16 +118,15 @@
                                 </a>
                             </li>
                         }
-                        @if (BaseService.CheckRoleAccessability(roleID, "Menu_Products", connectionString: connectionString))
+                        @if (BaseService.CheckRoleAccessability(roleID, SystemConstants.Permission.ListTestimonial, connectionString: connectionString))
                         {
                             <li class="cursor-pointer">
-                                <a href="/Invoice/All" class="Navigation">
+                                <a href="/Testimonial/All" class="Navigation">
                                     <img class="Img-Ul" src="~/dist/images/Icons/Invoicing-Cash.png" />
-                                    Invoicing & Cash
+                                    Testimonial
                                 </a>
                             </li>
-                        }
-                       
+                        }                      
                         <li style="padding-top: 100%;"><a href="~/User/Logout"><img class="Img-Ul" src="~/dist/images/Icons/Logout.png" /> Logout</a></li>
                     </ul>
                 </li>

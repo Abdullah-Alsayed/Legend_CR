@@ -64,6 +64,14 @@ namespace DicomApp.Helpers
 
             // Gamer
             public const string Main = "Main";
+
+            //Testimonial
+            public const string ListTestimonial = "ListTestimonial";
+
+            //GameCharge
+            public const string AddGameCharge = "AddGameCharge";
+            public const string EditGameCharge = "EditGameCharge";
+            public const string GameChargeDelete = "GameChargeDelete";
         }
 
         public static class Claims
