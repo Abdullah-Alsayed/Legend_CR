@@ -41,7 +41,9 @@
 		$('.login-area').hide();
 		return false;
 	});
-	
+
+	AOS.init();
+
 	/*----------------------------
     START - Slider activation
     ------------------------------ */
@@ -49,7 +51,7 @@
 	heroSlider.owlCarousel({
 		loop:true,
 		dots: true,
-		autoplay: false,
+		autoplay: true,
 		autoplayTimeout:4000,
 		nav: false,
 		items: 1,
@@ -59,6 +61,49 @@
 			}
 		}
 	});
+	document.addEventListener('scroll', function () {
+		const heroArea = document.querySelector('.hero-area' );
+
+		// Get the scroll position
+		const scrollY = window.scrollY;
+
+		// Adjust these multipliers to change the speed and direction of the background movement
+		const xMultiplier = 0.1;
+		const yMultiplier = 0.2;
+
+		// Calculate new background positions
+		const backgroundPosX = scrollY * xMultiplier;
+		const backgroundPosY = scrollY * yMultiplier;
+
+		// Set the new background positions
+		heroArea.style.backgroundPosition = `${backgroundPosX}px ${backgroundPosY}px`;
+	});
+
+	document.addEventListener('scroll', function () {
+		const portfolioArea = document.querySelector('.portfolio-area');
+
+		// Get the scroll position
+		const scrollY = window.scrollY;
+
+		// Start changing the background position after scrolling 650 pixels
+		if (scrollY > 650) {
+			// Adjust these multipliers to change the speed and direction of the background movement
+			const xMultiplier = 0.1;
+			const yMultiplier = 0.2;
+
+			// Calculate the new background positions
+			const backgroundPosX = 100 - ((scrollY - 650) * xMultiplier); // 100% to 0%
+			const backgroundPosY = ((scrollY - 650) * yMultiplier); // 0% to 100%
+
+			// Ensure the position doesn't go below 0% or above 100%
+			const finalBackgroundPosX = Math.max(0, backgroundPosX);
+			const finalBackgroundPosY = Math.min(100, backgroundPosY);
+
+			// Set the new background positions
+			portfolioArea.style.backgroundPosition = `${finalBackgroundPosX}% ${finalBackgroundPosY}%`;
+		}
+	});
+
 	heroSlider.on('changed.owl.carousel', function(property) {
 		var current = property.item.index;
 		var prevRating = $(property.target).find(".owl-item").eq(current).prev().find('.hero-area-slide').html();
@@ -78,8 +123,8 @@
 	newsSlider.owlCarousel({
 		loop:true,
 		dots: true,
-		autoplay: false,
-		autoplayTimeout:4000,
+		autoplay: true,
+		autoplayTimeout:6000,
 		nav: false,
 		items: 1,
 		responsive:{

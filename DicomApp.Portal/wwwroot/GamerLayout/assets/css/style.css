@@ -26,6 +26,19 @@ Description: Online Movie,Vedio and TV Show HTML Template
 /*----------------------------------
 --------- THEME DEFAULT CSS --------
 ----------------------------------*/
+@font-face {
+    font-family: 'Supercell Magic';
+    src: url('/GamerLayout/assets/fonts/Supercell-Magic.eot');
+    src: local('Supercell Magic'), local('Supercell-Magic'),
+        url('/GamerLayout/assets/fonts/Supercell-Magic.eot?#iefix') format('embedded-opentype'),
+        url('/GamerLayout/assets/fonts/Supercell-Magic.woff2') format('woff2'),
+        url('/GamerLayout/assets/fonts/Supercell-Magic.woff') format('woff'),
+        url('/GamerLayout/assets/fonts/Supercell-Magic.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
 @import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,900');
 body {
     backdrop-filter:blur(10px);
@@ -33,7 +46,7 @@ body {
     font-size: 14px;
     color: #b6b7b9;
     background: url(/dist/images/BG/5.jpg);
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Supercell Magic', 'Poppins', sans-serif;
     font-weight: 400;
     height: 100%;
     background-attachment: fixed;
@@ -389,12 +402,12 @@ option {
 
 .header-right form input {
     width: auto;
-	background: transparent;
-	color: #fff;
+    background: transparent;
+    color: #fff;
     border: none;
     margin: 0;
     border-left: 1px solid #ddd;
-    margin-left: 20px;
+    margin-left: 5px;
 }
 
 .header-right ul li a:hover {
@@ -437,11 +450,12 @@ option {
     align-items: center;
     justify-content: center;
 }
-.hero-area-content p{
-    color: #fff;
-    font-size: 18px;
-    margin-bottom: 15px;
-}
+    .hero-area-content p {
+        color: #fff;
+        font-size: 18px;
+        margin-bottom: 15px;
+        line-break: anywhere;
+    }
 .hero-area-content > img {
     position: relative;
     margin-top: -120px;
@@ -1530,7 +1544,7 @@ hr {
     border-radius: 0.45em;
     border: none;
     background-color: var(--brand-color);
-    font-family: var(--font-title);
+    font-family: 'Supercell Magic', var(--font-title);
     font-size: 1.125rem;
     color: var(--black);
 }
@@ -1962,7 +1976,7 @@ hr {
     padding: 20px 20px;
     border-radius: 10px;
     gap: 10px;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Supercell Magic', Arial, Helvetica, sans-serif;
     box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.058);
 }
 .rating-card .error-message {
@@ -2148,7 +2162,7 @@ hr {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) rotate(20deg);
+    transform: translate(-50%, -50%) rotate(0deg);
     width: 270px;
 }
 

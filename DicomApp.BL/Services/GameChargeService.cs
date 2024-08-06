@@ -187,14 +187,7 @@ namespace DicomApp.BL.Services
                 {
                     try
                     {
-                        var game = request
-                            .context.Game.Select(x => new GameDTO
-                            {
-                                NameEn = x.NameEn,
-                                NameAr = x.NameAr,
-                                ImgUrl = x.ImgUrl
-                            })
-                            .FirstOrDefault(x => x.Id == request.GameChargeDTO.GameId);
+                        var game = request.context.Game.Find(request.GameChargeDTO.GameId);
                         var GameCharge = AddOrEditGameCharge(request.UserID, request.GameChargeDTO);
                         var url = BaseHelper.UploadImg(
                             request.GameChargeDTO.File,
@@ -203,7 +196,13 @@ namespace DicomApp.BL.Services
                         GameCharge.Img = url;
                         request.context.GameCharges.Add(GameCharge);
                         request.context.SaveChanges();
-                        request.GameChargeDTO.Game = game;
+                        request.GameChargeDTO.Game = new GameDTO
+                        {
+                            ImgUrl = game?.ImgUrl,
+                            NameEn = game?.NameEn,
+                            NameAr = game?.NameAr
+                        };
+                        request.GameChargeDTO.Img = url;
                         res.GameChargeDTOs.Add(request.GameChargeDTO);
                         res.Message = "Added Successfully";
                         res.Success = true;
