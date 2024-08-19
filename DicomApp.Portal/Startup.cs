@@ -3,6 +3,7 @@ using DicomApp.DAL.DB;
 using DicomApp.Helpers.Services.GenrateAvatar;
 using DicomApp.Helpers.Services.GetCounter;
 using DicomApp.Helpers.Services.PayPal;
+using DicomApp.Helpers.Services.Telegram;
 using ECommerce.Core.Services.MailServices;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -128,6 +129,7 @@ namespace DicomApp.Portal
             services.AddScoped<IApiCountryService, ApiCountryService>();
             services.AddScoped<IPayPalService, PayPalService>();
             services.AddScoped<IMailServices, MailServices>();
+            services.AddScoped<ITelegramService, TelegramService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

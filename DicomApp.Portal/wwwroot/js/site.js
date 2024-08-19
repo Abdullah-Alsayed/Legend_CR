@@ -505,7 +505,7 @@ function ChangeUserPassword(Id) {
 }
 
 
-function GamerForm()
+function GamerForm(actionName = "SaveGamer")
 {
     if ($('#Gamer-Form').valid()) {
 
@@ -519,7 +519,7 @@ function GamerForm()
     }
 
         $.ajax({
-            url: `/User/SaveGamer`,
+            url: `/User/${actionName}`,
             type: "POST",
             data: formData,
             contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
@@ -645,7 +645,7 @@ function ComparePassword() {
     }
 }
 
-function AddEntity(ControllerName, ActionName, FormID) {
+function AddEntity(ControllerName, ActionName, FormID, Navigation = true) {
     if ($(`#${FormID}`).valid()) {
         let Count = $(`tbody tr`).length;
         $("#BtnSend").prop('disabled', true);
@@ -672,9 +672,10 @@ function AddEntity(ControllerName, ActionName, FormID) {
                        else
                         $('#AddInvoice-Model').modal('hide');
 
-
+                        if (Navigation) {
                         $(".modal-backdrop").remove();
                         MenuNavigation(event, "All", ControllerName);
+                        }
                     }
                      else
                         $(`tbody`).prepend(result);
@@ -682,7 +683,8 @@ function AddEntity(ControllerName, ActionName, FormID) {
                     $(`#${FormID} img`).attr('src', '');
                     $(`#DataCount-Span`).text(`Showing : ${+(++Count)}`);
 
-                    alertSuccess()
+                    alertSuccess();
+                    $(".form-container").fadeOut();
                 }
             },
             complete: function () {
@@ -766,9 +768,10 @@ function UpdateStatus(ControllerName, ActionName, Tr, id = 0, status =0) {
     if (id == 0)
         id = $("#EntityId").val();
 
+    let price = $(`#Price_${id}`).val();
     $.ajax({
         type: "PUT",
-        url: `/${ControllerName}/${ActionName}/?ID=${id}&&status=${status}`,
+        url: `/${ControllerName}/${ActionName}/?ID=${id}&&status=${status}?price=${price}`,
         success: function (result) {
             if (result.success == false) {
                 alertError(result.message);
@@ -2484,4 +2487,4 @@ function alertError(title = 'Failed, try again', timer = 3000) {
 }
 
 
-function showConfirmationDialog(n, t, i) { $("#modal-dialog-confirmation-messageTitle").text(n); $("#modal-dialog-confirmation-messageText").html(t); $("#modal-dialog-confirmation-aConfirm").unbind("click"); $("#modal-dialog-confirmation-aConfirm").click(function () { $("#modal-dialog-confirmation").modal("hide"); i() }); $("#modal-dialog-confirmation").modal("show") } $(document).ready(function () { $(".date-popup").datepicker({ keyboardNavigation: !1, forceParse: !1, todayHighlight: !0 }) });
+//function showConfirmationDialog(n, t, i) { $("#modal-dialog-confirmation-messageTitle").text(n); $("#modal-dialog-confirmation-messageText").html(t); $("#modal-dialog-confirmation-aConfirm").unbind("click"); $("#modal-dialog-confirmation-aConfirm").click(function () { $("#modal-dialog-confirmation").modal("hide"); i() }); $("#modal-dialog-confirmation").modal("show") } $(document).ready(function () { $(".date-popup").datepicker({ keyboardNavigation: !1, forceParse: !1, todayHighlight: !0 }) });

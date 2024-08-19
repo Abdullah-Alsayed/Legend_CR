@@ -14,7 +14,6 @@
     START - Scroll to Top
     ------------------------------ */
 	$(window).on('scroll', function () {
-		console.log(scrollY);
 		if ($(this).scrollTop() > 600) {
 			$('#To-Top').fadeIn();
 		} else {
@@ -208,7 +207,15 @@
 	$('.close-Icon').on('click', function (e) {
 		$('.rating-container').fadeOut(500);
 	})
+	$('.closePush-Icon').on('click', function (e) {
+		$('.form-container').fadeOut(300);
+	})
+
+	$('#Push-Btn').on('click', function (e) {
+		$('.form-container').fadeIn(400);
+	})
 	$('#AddTestimonial').click(AddTestimonial);
+
 	function AddTestimonial() {
 		// Clear previous error messages
 		$('#comment-error').text('');
@@ -263,5 +270,6 @@
 			}
 		});
 	}
+
 
 }(jQuery));

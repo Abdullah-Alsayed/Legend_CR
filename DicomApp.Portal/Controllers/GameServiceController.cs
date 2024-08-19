@@ -6,6 +6,8 @@ using DicomApp.CommonDefinitions.DTO;
 using DicomApp.CommonDefinitions.Requests;
 using DicomApp.DAL.DB;
 using DicomApp.Helpers;
+using DicomApp.Helpers.Services.PayPal;
+using DicomApp.Helpers.Services.Telegram;
 using DicomApp.Portal.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -19,11 +21,20 @@ namespace DicomApp.Portal.Controllers
     {
         private readonly ShippingDBContext _context;
         private readonly IHostingEnvironment _hosting;
+        private readonly IPayPalService _payPalService;
+        private readonly ITelegramService _telegramService;
 
-        public GamerServiceController(ShippingDBContext context, IHostingEnvironment hosting)
+        public GamerServiceController(
+            ShippingDBContext context,
+            IHostingEnvironment hosting,
+            IPayPalService payPalService,
+            ITelegramService telegramService
+        )
         {
             _context = context;
             _hosting = hosting;
+            _payPalService = payPalService;
+            _telegramService = telegramService;
         }
 
         #region GamerService actions
@@ -173,7 +184,7 @@ namespace DicomApp.Portal.Controllers
 
         [AuthorizePerRole(SystemConstants.Permission.ChangStatusGamerService)]
         [HttpPut]
-        public ActionResult ChangStatusGamerService(int ID, int status)
+        public ActionResult ChangStatusGamerService(int ID, int status, int price)
         {
             var request = new GamerServiceRequest();
             request.context = _context;
@@ -181,6 +192,9 @@ namespace DicomApp.Portal.Controllers
             request.UserID = AuthHelper.GetClaimValue(User, "UserID");
             request.ServiceDTO.GamerServiceId = ID;
             request.ServiceDTO.StatusType = status;
+            request.ServiceDTO.Price = price;
+            request.PaymentService = _payPalService;
+            request.TelegramService = _telegramService;
             var response = BL.Services.GamerServiceService.ChangStatusGamerService(request);
             return Json(response.Message);
         }
@@ -205,8 +219,8 @@ namespace DicomApp.Portal.Controllers
             string Description,
             string UserName,
             string Password,
-            int Level,
-            string Rank
+            string Level,
+            string CurrentLevel
         )
         {
             var request = new GamerServiceRequest
@@ -221,7 +235,7 @@ namespace DicomApp.Portal.Controllers
                     UserName = UserName,
                     Password = Password,
                     Level = Level,
-                    Rank = Rank
+                    CurrentLevel = CurrentLevel
                 }
             };
 

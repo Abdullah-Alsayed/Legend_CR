@@ -31,6 +31,7 @@ namespace DicomApp.BL.Services
                         var serv = new GamerService()
                         {
                             StatusId = status?.Id ?? 0,
+                            CurrentLevel = request.ServiceDTO.CurrentLevel,
                             GamerId = request.ServiceDTO.GamerId,
                             GameId = request.ServiceDTO.GameId,
                             GameServiceType = request.ServiceDTO.GameServiceType,
@@ -38,8 +39,7 @@ namespace DicomApp.BL.Services
                             UserName = request.ServiceDTO.UserName,
                             Password = request.ServiceDTO.Password,
                             Price = request.ServiceDTO.Price,
-                            Level = req.ServiceDTO.Level,
-                            Rank = req.ServiceDTO.Rank,
+                            Level = request.ServiceDTO.Level,
                             CreatedAt = DateTime.Now,
                             CreatedBy = request.UserID,
                             IsDeleted = false,
@@ -139,7 +139,7 @@ namespace DicomApp.BL.Services
                         serv.Password = request.ServiceDTO.Password;
                         serv.Price = request.ServiceDTO.Price;
                         serv.Level = request.ServiceDTO.Level;
-                        serv.Rank = request.ServiceDTO.Rank;
+                        serv.CurrentLevel = request.ServiceDTO.CurrentLevel;
                         serv.StatusId = request.ServiceDTO.StatusId;
                         serv.LastModifiedAt = DateTime.Now;
                         serv.LastModifiedBy = request.UserID;
@@ -212,7 +212,7 @@ namespace DicomApp.BL.Services
                             serv.UserName = request.ServiceDTO.UserName;
                             serv.Password = request.ServiceDTO.Password;
                             serv.Level = request.ServiceDTO.Level;
-                            serv.Rank = request.ServiceDTO.Rank;
+                            serv.CurrentLevel = request.ServiceDTO.CurrentLevel;
 
                             serv.LastModifiedAt = DateTime.Now;
                             serv.LastModifiedBy = request.UserID;
@@ -365,6 +365,12 @@ namespace DicomApp.BL.Services
                         if (status != null && serv != null)
                         {
                             serv.StatusId = status.Id;
+                            if (
+                                request.ServiceDTO.Price > 0
+                                && request.ServiceDTO.GameServiceType == GameServiceType.Push
+                            )
+                                serv.Price = request.ServiceDTO.Price;
+
                             serv.LastModifiedAt = DateTime.Now;
                             serv.LastModifiedBy = request.UserID;
                             request.context.SaveChanges();
@@ -398,9 +404,11 @@ namespace DicomApp.BL.Services
                                     RecipientId = 0,
                                 }
                             );
-
                             request.context.SaveChanges();
-
+                            if (
+                                request.ServiceDTO.GameServiceType == GameServiceType.Push
+                                && status.StatusType == (int)StatusTypeEnum.Accept
+                            ) { }
                             response.Message =
                                 "Gamer Service " + serv.RefId + " successfully updated";
                             response.Success = true;
@@ -462,7 +470,7 @@ namespace DicomApp.BL.Services
                             CreatedBy = s.CreatedBy,
                             Price = s.Price,
                             Level = s.Level,
-                            Rank = s.Rank,
+                            CurrentLevel = s.CurrentLevel,
                             RefId = s.RefId,
                             GameId = s.GameId,
                             StatusId = s.StatusId,
@@ -560,7 +568,7 @@ namespace DicomApp.BL.Services
                             CreatedAt = s.CreatedAt,
                             CreatedBy = s.CreatedBy,
                             Level = s.Level,
-                            Rank = s.Rank,
+                            CurrentLevel = s.CurrentLevel,
                             Price = s.Price,
                             RefId = s.RefId,
                             GameId = s.GameId,
@@ -683,7 +691,8 @@ namespace DicomApp.BL.Services
                     || c.UserName.ToLower().Contains(filter.Search)
                     || c.Description.Contains(filter.Search)
                     || c.Password.Contains(filter.Search)
-                    || c.Rank.Contains(filter.Search)
+                    || c.Level.Contains(filter.Search)
+                    || c.CurrentLevel.Contains(filter.Search)
                 );
             }
 
@@ -708,11 +717,11 @@ namespace DicomApp.BL.Services
             if (filter.Price != 0)
                 query = query.Where(c => c.Price > filter.Price);
 
-            if (filter.LessLevel != 0)
-                query = query.Where(c => c.Level < filter.LessLevel);
+            //if (filter.LessLevel != 0)
+            //    query = query.Where(c => c.Level < filter.LessLevel);
 
-            if (filter.GreeterLevel != 0)
-                query = query.Where(c => c.Level > filter.GreeterLevel);
+            //if (filter.GreeterLevel != 0)
+            //    query = query.Where(c => c.Level > filter.GreeterLevel);
 
             if (filter.LessPrice != 0)
                 query = query.Where(c => c.Price < filter.LessPrice);

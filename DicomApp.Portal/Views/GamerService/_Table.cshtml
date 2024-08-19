@@ -16,7 +16,7 @@
             <td class="td-small text-center pl-1 pr-1">@serv.GameServiceType</td>
             <td class="td-small text-center text-nowrap pl-1 pr-1">@serv.Price EGP</td>
             <td class="td-small text-center text-nowrap pl-1 pr-1">@serv.Level</td>
-            <td class="td-small text-center text-nowrap pl-1 pr-1">@serv.Rank</td>
+            <td class="td-small text-center text-nowrap pl-1 pr-1">@serv.CurrentLevel</td>
             <partial name="~/Views/Shared/Advertisement/_StatusSwitch.cshtml" model="@serv.Status"></partial>
             <td class="text-center pr-0" id="TableTD_@serv.GamerServiceId">
                 <partial name="~/Views/GamerService/_CommonActions.cshtml" model="@serv"></partial>

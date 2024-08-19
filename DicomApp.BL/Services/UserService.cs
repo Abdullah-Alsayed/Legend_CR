@@ -91,7 +91,8 @@ namespace DicomApp.BL.Services
                                             NameAr = c.Country.NameAr,
                                             NameEn = c.Country.NameEn
                                         }
-                                        : null
+                                        : null,
+                                TelegramUserName = c.TelegramUserName,
                             });
 
                         if (request.applyFilter)
@@ -170,6 +171,7 @@ namespace DicomApp.BL.Services
                                 InstaPayAccountName = c.InstaPayAccountName,
                                 ZoneId = c.ZoneId,
                                 IsDeleted = c.IsDeleted,
+                                TelegramUserName = c.TelegramUserName,
                             })
                             .LastOrDefault();
 
@@ -247,6 +249,7 @@ namespace DicomApp.BL.Services
                                 InstaPayAccountName = c.InstaPayAccountName,
                                 ZoneId = c.ZoneId,
                                 IsDeleted = c.IsDeleted,
+                                TelegramUserName = c.TelegramUserName,
                             });
 
                         res.UserDTO = query.FirstOrDefault();
@@ -389,7 +392,7 @@ namespace DicomApp.BL.Services
                         {
                             var UserExist = request.context.CommonUser.Any(m =>
                                 m.Email == request.UserDTO.Email
-                                && m.Email != user.Email
+                                && m.Id != user.Id
                                 && m.IsDeleted == false
                             );
                             if (!UserExist)
@@ -423,6 +426,7 @@ namespace DicomApp.BL.Services
                                 user.AccountName = request.UserDTO.AccountName;
                                 user.AccountNumber = request.UserDTO.AccountNumber;
                                 user.ImgUrl = request.UserDTO.ImgUrl;
+                                user.TelegramUserName = request.UserDTO.TelegramUserName;
 
                                 request.context.SaveChanges();
 

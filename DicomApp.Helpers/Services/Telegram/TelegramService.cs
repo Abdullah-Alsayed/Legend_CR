@@ -4,7 +4,7 @@ using Telegram.Bot;
 
 namespace DicomApp.Helpers.Services.Telegram
 {
-    internal class TelegramService : ITelegramService
+    public class TelegramService : ITelegramService
     {
         public async Task<bool> SendMessage(string userName, string message)
         {

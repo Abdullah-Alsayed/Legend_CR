@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace DicomApp.Helpers.Services.Telegram
 {
-    internal interface ITelegramService
+    public interface ITelegramService
     {
-        //Task<bool> SendMessage(string userName, string message);
+        Task<bool> SendMessage(string userName, string message);
     }
 }

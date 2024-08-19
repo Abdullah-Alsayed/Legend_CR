@@ -116,9 +116,11 @@ namespace DicomApp.DAL.DB
         public virtual ICollection<Zone> ZoneCreatedByNavigation { get; set; }
         public virtual ICollection<Zone> ZoneLastModifiedByNavigation { get; set; }
         public virtual ICollection<GamerService> GamerServices { get; set; }
+
         [InverseProperty("CreatedByNavigation")]
         public virtual ICollection<Testimonial> Testimonials { get; set; }
-		[InverseProperty("Gamer")]
+
+        [InverseProperty("Gamer")]
         public virtual ICollection<Advertisement> AdvertisementsGamer { get; set; }
 
         [InverseProperty("Buyer")]

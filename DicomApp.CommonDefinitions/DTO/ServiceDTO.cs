@@ -12,8 +12,8 @@ namespace DicomApp.CommonDefinitions.DTO
         public string UserName { get; set; }
         public string Password { get; set; }
         public int Price { get; set; }
-        public int Level { get; set; }
-        public string Rank { get; set; }
+        public string CurrentLevel { get; set; }
+        public string Level { get; set; }
         public int GamerServiceId { get; set; }
         public int StatusId { get; set; }
         public GameServiceType GameServiceType { get; set; }
