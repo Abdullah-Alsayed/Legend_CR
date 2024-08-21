@@ -39,5 +39,6 @@ namespace DicomApp.DAL.DB
         public virtual Invoice Invoice { get; set; }
         public virtual CommonUser Gamer { get; set; }
         public virtual ICollection<FollowUp> FollowUp { get; set; }
+        public virtual ICollection<Transaction> Transactions { get; set; }
     }
 }

@@ -39,7 +39,8 @@ namespace DicomApp.BL.Services
                                 LastModifiedBy = p.LastModifiedBy,
                                 RefId = p.RefId,
                                 TransactionId = p.TransactionId,
-                                TypeId = p.TypeId
+                                ServiceId = p.ServiceId,
+                                TransactionTypeEnum = p.TransactionTypeEnum,
                             });
 
                         if (request.TransactionDTO != null)
@@ -126,7 +127,8 @@ namespace DicomApp.BL.Services
                             Amount = req.TransactionDTO.Amount,
                             PaymentId = req.TransactionDTO.PaymentId,
                             IsSuccess = false,
-                            TypeId = req.TransactionDTO.TypeId,
+                            ServiceId = req.TransactionDTO.ServiceId,
+                            TransactionTypeEnum = req.TransactionDTO.TransactionTypeEnum,
                             BuyerId = req.UserID,
                             CreatedBy = req.UserID,
                             CreatedAt = DateTime.Now,

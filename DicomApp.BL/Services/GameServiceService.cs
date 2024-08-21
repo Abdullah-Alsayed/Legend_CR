@@ -405,10 +405,12 @@ namespace DicomApp.BL.Services
                                 }
                             );
                             request.context.SaveChanges();
-                            if (
-                                request.ServiceDTO.GameServiceType == GameServiceType.Push
-                                && status.StatusType == (int)StatusTypeEnum.Accept
-                            ) { }
+                            response.ServiceDTO = new ServiceDTO
+                            {
+                                GameServiceType = serv.GameServiceType,
+                                StatusType = status.StatusType,
+                                GamerId = serv.GamerId
+                            };
                             response.Message =
                                 "Gamer Service " + serv.RefId + " successfully updated";
                             response.Success = true;

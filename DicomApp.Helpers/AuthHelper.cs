@@ -21,5 +21,17 @@ namespace DicomApp.Helpers
                 return claim.Value;
             return null;
         }
+
+        public static string GetRoleName(
+            ClaimsPrincipal user,
+            string name = SystemConstants.Claims.RoleName
+        )
+        {
+            var identity = user.Identity as ClaimsIdentity;
+            var claim = identity.FindFirst(c => c.Type == name);
+            if (claim != null)
+                return claim.Value;
+            return null;
+        }
     }
 }

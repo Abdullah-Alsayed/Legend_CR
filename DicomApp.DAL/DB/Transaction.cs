@@ -8,8 +8,8 @@ namespace DicomApp.DAL.DB
         public int TransactionId { get; set; }
         public string RefId { get; set; }
         public string PaymentId { get; set; }
-        public byte TypeId { get; set; }
         public int? AdvertisementId { get; set; }
+        public int? ServiceId { get; set; }
         public int BuyerId { get; set; }
         public int Amount { get; set; }
         public bool IsSuccess { get; set; }
@@ -18,8 +18,9 @@ namespace DicomApp.DAL.DB
         public int? LastModifiedBy { get; set; }
         public DateTime LastModifiedAt { get; set; }
         public bool IsDeleted { get; set; }
-
+        public TransactionTypeEnum TransactionTypeEnum { get; set; }
         public virtual Advertisement Advertisement { get; set; }
+        public virtual GamerService Service { get; set; }
         public virtual CommonUser Buyer { get; set; }
         public virtual CommonUser CreatedByNavigation { get; set; }
         public virtual CommonUser LastModifiedByNavigation { get; set; }

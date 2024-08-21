@@ -764,14 +764,14 @@ function DeleteEntity(ControllerName, ActionName, Tr, id = 0) {
     })
 }
 
-function UpdateStatus(ControllerName, ActionName, Tr, id = 0, status =0) {
+function UpdateStatus(ControllerName, ActionName, Tr, id = 0, status = 0) {
     if (id == 0)
         id = $("#EntityId").val();
 
     let price = $(`#Price_${id}`).val();
     $.ajax({
         type: "PUT",
-        url: `/${ControllerName}/${ActionName}/?ID=${id}&&status=${status}?price=${price}`,
+        url: `/${ControllerName}/${ActionName}/?ID=${id}&status=${status}&price=${price}`,
         success: function (result) {
             if (result.success == false) {
                 alertError(result.message);

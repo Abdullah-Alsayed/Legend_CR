@@ -16,4 +16,11 @@ namespace DicomApp.DAL.DB
         Push = 1,
         Charge
     }
+
+    public enum TransactionTypeEnum
+    {
+        Acount,
+        Push,
+        Change
+    }
 }

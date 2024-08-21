@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DicomApp.DAL.DB;
 
 namespace DicomApp.CommonDefinitions.DTO.CashDTOs
 {
@@ -19,5 +20,7 @@ namespace DicomApp.CommonDefinitions.DTO.CashDTOs
         public bool IsDeleted { get; set; }
         public string Search { get; set; }
         public string PaymentId { get; set; }
+        public int? ServiceId { get; set; }
+        public TransactionTypeEnum TransactionTypeEnum { get; set; }
     }
 }
