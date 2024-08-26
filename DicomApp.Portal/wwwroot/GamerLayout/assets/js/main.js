@@ -1,3 +1,4 @@
+
 (function ($) {
 	"use strict";
 
@@ -62,6 +63,7 @@
 	});
 	document.addEventListener('scroll', function () {
 		const heroArea = document.querySelector('.hero-area' );
+		if (heroArea != null) {
 
 		// Get the scroll position
 		const scrollY = window.scrollY;
@@ -76,6 +78,7 @@
 
 		// Set the new background positions
 		heroArea.style.backgroundPosition = `${backgroundPosX}px ${backgroundPosY}px`;
+        }
 	});
 
 	document.addEventListener('scroll', function () {
@@ -85,7 +88,7 @@
 		const scrollY = window.scrollY;
 
 		// Start changing the background position after scrolling 650 pixels
-		if (scrollY > 650) {
+		if (scrollY > 650 && portfolioArea != null) {
 			// Adjust these multipliers to change the speed and direction of the background movement
 			const xMultiplier = 0.1;
 			const yMultiplier = 0.2;
@@ -216,6 +219,38 @@
 	})
 	$('#AddTestimonial').click(AddTestimonial);
 
+	$('#UpdateUserData').on('show.bs.modal', function (e) {
+		$('#UpdateUserLoader').show();
+		$('#Gamer-Form').addClass('d-none');
+
+		var userId = $('#UserID').val();
+		$.ajax({
+			url: '/User/GetUserData',
+			type: 'GET',
+			data: { Id: userId },
+			dataType: 'json',
+			success: function (response) {
+				if (response) {
+
+ 					$('#Name').val(response.name);
+					$('#Email').val(response.email);
+					$('#PhoneNumber').val(response.phoneNumber);
+					$('#TelegramUserName').val(response.telegramUserName);
+					$('#Age').val(response.age);
+					$('#Gender').val(response.gender);
+
+					$('#UpdateUserLoader').hide();
+					$('#Gamer-Form').removeClass('d-none');
+				}
+			},
+			error: function () {
+				console.error('An error occurred while fetching user data.');
+
+				$('#UpdateUserLoader').hide();
+				$('#Gamer-Form').removeClass('d-none');
+			}
+		});
+	});
 	function AddTestimonial() {
 		// Clear previous error messages
 		$('#comment-error').text('');

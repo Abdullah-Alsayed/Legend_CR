@@ -56,7 +56,7 @@ namespace DicomApp.Portal.Controllers
             var mainResponse = new MainResponse();
             var userID = AuthHelper.GetClaimValue(User, "UserID");
             var roleID = AuthHelper.GetClaimValue(User, "RoleID");
-			var model = new AdsDTO();
+            var model = new AdsDTO();
             //model.Search = Search;
 
             //if (From.HasValue)
@@ -96,14 +96,29 @@ namespace DicomApp.Portal.Controllers
                 .GameDTOs;
 
             mainResponse.Testimonials = TestimonialService
-                .GetTestimonials(new TestimonialRequest { context = _context , IsDesc = true  , OrderByColumn = nameof( Testimonial.CreatedAt) , PageSize = PageSize })
+                .GetTestimonials(
+                    new TestimonialRequest
+                    {
+                        context = _context,
+                        IsDesc = true,
+                        OrderByColumn = nameof(Testimonial.CreatedAt),
+                        PageSize = PageSize
+                    }
+                )
                 .TestimonialDTOs;
 
-			mainResponse.CanAddFeedBack = TestimonialService
-				.CanAddTestimonials(new TestimonialRequest { context = _context, UserID = userID , RoleID = roleID })
-				.Success;
+            mainResponse.CanAddFeedBack = TestimonialService
+                .CanAddTestimonials(
+                    new TestimonialRequest
+                    {
+                        context = _context,
+                        UserID = userID,
+                        RoleID = roleID
+                    }
+                )
+                .Success;
 
-			advertisementRequest.PageSize = PageSize;
+            advertisementRequest.PageSize = 30;
             advertisementRequest.OrderByColumn = nameof(Advertisement.CreatedAt);
             mainResponse.AllAdvertisements = DicomApp
                 .BL.Services.AdvertisementService.GetAllAdvertisements(advertisementRequest)
@@ -115,132 +130,6 @@ namespace DicomApp.Portal.Controllers
                 return PartialView("_advertisementListTable", mainResponse);
             else
                 return View(mainResponse);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Paypal(int accountId)
-        {
-            try
-            {
-                var RoleID = AuthHelper.GetClaimValue(User, SystemConstants.Claims.RoleID);
-                var UserID = AuthHelper.GetClaimValue(User, SystemConstants.Claims.UserID);
-
-                var advertisementRequest = new AdvertisementRequest
-                {
-                    RoleID = RoleID,
-                    UserID = UserID,
-                    context = _context,
-                    AdsDTO = new AdsDTO { AdvertisementId = accountId },
-                    applyFilter = true,
-                };
-
-                var accountResponse = DicomApp.BL.Services.AdvertisementService.GetAdvertisement(
-                    advertisementRequest
-                );
-                if (accountResponse.Success && accountResponse.AdsDTO != null)
-                {
-                    var account = accountResponse.AdsDTO;
-                    var returnUrl =
-                        $"{_configuration["AppDomain"]}/Gamer/SuccessPay?AccountId={accountId}";
-                    var cancelUrl = $"{_configuration["AppDomain"]}/Gamer/CancelPay";
-                    var createPayment = await _payPalService.PurchaseAccountAsync(
-                        account.Price,
-                        returnUrl,
-                        cancelUrl
-                    );
-                    var approverUrl = createPayment
-                        ?.links?.Find(x => x.rel.ToLower() == "approval_url")
-                        ?.href;
-
-                    if (!string.IsNullOrEmpty(approverUrl))
-                    {
-                        TransactionService.AddTransaction(
-                            new TransactionRequest
-                            {
-                                UserID = UserID,
-                                RoleID = RoleID,
-                                context = _context,
-                                TransactionDTO = new TransactionDTO
-                                {
-                                    AdvertisementId = accountId,
-                                    PaymentId = createPayment.id,
-                                    Amount = account.Price,
-                                    BuyerId = UserID
-                                }
-                            }
-                        );
-                        return Json(new { success = true, message = approverUrl });
-                    }
-                    else
-                        return Json(new { success = false, message = "field" });
-                }
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = ex.Message });
-            }
-            return Json(new { success = false, message = "field" });
-        }
-
-        public async Task<IActionResult> SuccessPay(string payerID, string paymentID, int accountId)
-        {
-            var result = await _payPalService.ExecutePaymentAsync(payerID, paymentID);
-            if (result.state != "failed")
-            {
-                var RoleID = AuthHelper.GetClaimValue(User, SystemConstants.Claims.RoleID);
-                var UserID = AuthHelper.GetClaimValue(User, SystemConstants.Claims.UserID);
-                var advertisementRequest = new AdvertisementRequest
-                {
-                    RoleID = RoleID,
-                    UserID = UserID,
-                    context = _context,
-                    AdsDTO = new AdsDTO
-                    {
-                        AdvertisementId = accountId,
-                        StatusType = (int)StatusTypeEnum.Sold
-                    },
-                    applyFilter = true,
-                };
-                var accountResponse =
-                    DicomApp.BL.Services.AdvertisementService.ChangStatusAdvertisement(
-                        advertisementRequest
-                    );
-                if (accountResponse.Success)
-                {
-                    var transaction = TransactionService.SuccessPay(
-                        new TransactionRequest
-                        {
-                            context = _context,
-                            UserID = UserID,
-                            RoleID = RoleID,
-                            TransactionDTO = new TransactionDTO
-                            {
-                                PaymentId = paymentID,
-                                AdvertisementId = accountId
-                            }
-                        }
-                    );
-
-                    var body =
-                        $"userName : {accountResponse.AdsDTO.UserName} ,  password : {accountResponse.AdsDTO.Password}";
-                    var emailResult = await _mailServices.SendAsync(
-                        new EmailDto
-                        {
-                            Email = accountResponse.AdsDTO.Gamer.Email,
-                            Subject = "congratulations",
-                            Body = body
-                        }
-                    );
-                }
-                return View();
-            }
-            else
-                return RedirectToAction("CancelPay");
-        }
-
-        public async Task<IActionResult> CancelPay()
-        {
-            return View();
         }
 
         #region Reports

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace DicomApp.DAL.DB
 {
@@ -19,5 +21,6 @@ namespace DicomApp.DAL.DB
         public int? DeleteBy { get; set; }
 
         public virtual Game Game { get; set; }
+        public virtual ICollection<GamerService> GamerServices { get; set; }
     }
 }

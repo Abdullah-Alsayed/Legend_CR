@@ -201,19 +201,22 @@ function ShowHidePartialDelivery() {
 }
 
 
-function OpenPurchasePopUp(accounId) {
+function OpenPurchasePopUp(accounId = 0, gameChargeId=0) {
     $('#purchase-modal').modal('show');
     $('#PupUpAccountId').val(accounId);
+    $('#PupUpgameChargeId').val(gameChargeId);
 }
+
 
 function BayByPayPal() {
     $('.custom-loader').toggleClass('d-none');
     $('#paypal-Btn').toggleClass('d-none');
     var accountId = $('#PupUpAccountId').val();
+    var gameChargeId = $('#PupUpgameChargeId').val();
     $.ajax({
         type: "POST",
-        url: `/gamer/Paypal`,
-        data: { accountId: accountId },
+        url: `/payment/Paypal`,
+        data: { accountId: accountId, gameChargeId: gameChargeId },
         success: function (result) {
           
             if (result.success)

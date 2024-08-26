@@ -24,14 +24,18 @@ namespace DicomApp.Helpers.Services.Telegram
                 //var us = "LegendRC_bot (7529769946)";
                 //var xxxx = await botClient.GetMeAsync();
                 //var zzzzz = await botClient.GetMyNameAsync();
-                //var chat = await botClient.GetChatAsync($"@{us}");
+
                 var me = await botClient.GetMeAsync();
                 var updates = await botClient.GetUpdatesAsync(3);
                 foreach (var update in updates)
                 {
                     // send response to incoming message
-                    await botClient.SendTextMessageAsync(message.Chat.Id, "The Matrix has you...");
+                    await botClient.SendTextMessageAsync(
+                        update.Message.Chat.Id,
+                        "The Matrix has you..."
+                    );
                 }
+                var chat = await botClient.GetChatAsync($"@{userName}");
                 var result = await botClient.SendTextMessageAsync(chat.Id, message);
 
                 Console.WriteLine("Message sent successfully!");

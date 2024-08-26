@@ -406,8 +406,8 @@ option {
     color: #fff;
     border: none;
     margin: 0;
-    border-left: 1px solid #ddd;
-    margin-left: 5px;
+/*    border-left: 1px solid #ddd;
+*/    margin-left: 5px;
 }
 
 .header-right ul li a:hover {
@@ -2327,47 +2327,88 @@ hr {
     background-size: 200% 100%;
     animation: gradient 5s ease infinite;
 }
-    .form-container input , textarea {
+.form-container_Modal {
+ 
+    width: 500px;
+    background: linear-gradient(#212121, #212121) padding-box, linear-gradient(145deg, transparent 35%,#e81cff, #40c9ff) border-box;
+    border: 2px solid transparent;
+    padding: 32px 24px;
+    font-size: 14px;
+    font-family: inherit;
+    color: white;
+    flex-direction: column;
+    gap: 20px;
+    box-sizing: border-box;
+    border-radius: 16px;
+    background-size: 200% 100%;
+    animation: gradient 5s ease infinite;
+}
+
+
+
+    /* Apply styles to both .form-container and .form-container_Modal */
+    .form-container input,
+    .form-container_Modal input,
+    .form-container textarea,
+    .form-container_Modal textarea {
         background: #fff !important;
         color: black !important;
     }
-        .form-container input , textarea ::placeholder {
+
+        /* Placeholder styling */
+        .form-container input::placeholder,
+        .form-container_Modal input::placeholder,
+        .form-container textarea::placeholder,
+        .form-container_Modal textarea::placeholder {
             color: black !important;
         }
-    .form-container textarea {
+
+    /* Specific textarea height */
+    .form-container textarea,
+    .form-container_Modal textarea {
         height: 50%;
     }
-    @keyframes gradient {
-        0% {
-            background-position: 0% 50%;
-        }
 
-        50% {
-            background-position: 100% 50%;
-        }
-
-        100% {
-            background-position: 0% 50%;
-        }
+/* Keyframe animation */
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
     }
 
-    .form-container button:active {
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Button active state */
+.form-container button:active,
+.form-container_Modal button:active {
     scale: 0.95;
 }
 
-.form-container .form {
+/* Form styling */
+.form-container .form,
+.form-container_Modal .form {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
-.form-container .form-group {
+/* Form group styling */
+.form-container .form-group,
+.form-container_Modal .form-group {
     display: flex;
     flex-direction: column;
     gap: 2px;
 }
 
-    .form-container .form-group label {
+    /* Label styling */
+    .form-container .form-group label,
+    .form-container_Modal .form-group label {
         display: block;
         margin-bottom: 5px;
         color: #717171;
@@ -2375,7 +2416,11 @@ hr {
         font-size: 12px;
     }
 
-    .form-container .form-group input {
+    /* Input and textarea styling */
+    .form-container .form-group input,
+    .form-container_Modal .form-group input,
+    .form-container .form-group textarea,
+    .form-container_Modal .form-group textarea {
         width: 100%;
         padding: 12px 16px;
         border-radius: 8px;
@@ -2385,33 +2430,24 @@ hr {
         border: 1px solid #414141;
     }
 
-    .form-container .form-group textarea {
-        width: 100%;
-        padding: 12px 16px;
-        border-radius: 8px;
-        resize: none;
-        color: #fff;
-        height: 96px;
-        border: 1px solid #414141;
-        background-color: transparent;
-        font-family: inherit;
-    }
+        /* Placeholder opacity */
+        .form-container .form-group input::placeholder,
+        .form-container_Modal .form-group input::placeholder {
+            opacity: 0.5;
+        }
 
-    .form-container .form-group input::placeholder {
-        opacity: 0.5;
-    }
+        /* Focus state */
+        .form-container .form-group input:focus,
+        .form-container_Modal .form-group input:focus,
+        .form-container .form-group textarea:focus,
+        .form-container_Modal .form-group textarea:focus {
+            outline: none;
+            border-color: #e81cff;
+        }
 
-    .form-container .form-group input:focus {
-        outline: none;
-        border-color: #e81cff;
-    }
-
-    .form-container .form-group textarea:focus {
-        outline: none;
-        border-color: #e81cff;
-    }
-
-.form-container .form-submit-btn {
+/* Submit button styling */
+.form-container .form-submit-btn,
+.form-container_Modal .form-submit-btn {
     display: flex;
     align-items: flex-start;
     justify-content: center;
@@ -2430,7 +2466,9 @@ hr {
     border-radius: 6px;
 }
 
-    .form-container .form-submit-btn:hover {
+    /* Submit button hover state */
+    .form-container .form-submit-btn:hover,
+    .form-container_Modal .form-submit-btn:hover {
         background-color: #fff;
         border-color: #fff;
     }

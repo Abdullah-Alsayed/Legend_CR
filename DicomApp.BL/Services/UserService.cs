@@ -399,13 +399,16 @@ namespace DicomApp.BL.Services
                             {
                                 user.ModificationDate = DateTime.Now;
                                 user.ModifiedBy = request.UserID;
-                                user.RoleId = request.UserDTO.RoleID;
+                                if (request.UserDTO.RoleID != 0)
+                                    user.RoleId = request.UserDTO.RoleID;
+
                                 user.Name = request.UserDTO.Name;
                                 user.Email = request.UserDTO.Email;
                                 user.PhoneNumber = request.UserDTO.PhoneNumber;
                                 user.AreaId = request.UserDTO.AreaId;
                                 user.ZoneId = request.UserDTO.ZoneId;
                                 user.Address = request.UserDTO.Address;
+                                user.Name = request.UserDTO.Name;
                                 user.FullName = request.UserDTO.FullName;
                                 user.AddressDetails = request.UserDTO.AddressDetails;
                                 user.ProductType = request.UserDTO.ProductType;
@@ -427,9 +430,12 @@ namespace DicomApp.BL.Services
                                 user.AccountNumber = request.UserDTO.AccountNumber;
                                 user.ImgUrl = request.UserDTO.ImgUrl;
                                 user.TelegramUserName = request.UserDTO.TelegramUserName;
+                                user.Gender = request.UserDTO.Gender;
+                                user.Age = request.UserDTO.Age;
 
                                 request.context.SaveChanges();
 
+                                res.UserDTO = request.UserDTO;
                                 res.Message = "User updated successfully";
                                 res.Success = true;
                                 res.StatusCode = HttpStatusCode.OK;

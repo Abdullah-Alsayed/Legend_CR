@@ -25,9 +25,17 @@ namespace DicomApp.BL.Services
                 {
                     try
                     {
+                        var statusType = request.ServiceDTO.GameChargeId.HasValue
+                            ? (int)StatusTypeEnum.Accept
+                            : (int)StatusTypeEnum.InProgress;
+
                         var status = request.context.Status.FirstOrDefault(x =>
-                            x.StatusType == (int)StatusTypeEnum.InProgress
+                            x.StatusType == statusType
                         );
+                        var gameCharge = request.context.GameCharges.FirstOrDefault(x =>
+                            x.Id == request.ServiceDTO.GameChargeId
+                        );
+
                         var serv = new GamerService()
                         {
                             StatusId = status?.Id ?? 0,
@@ -35,10 +43,14 @@ namespace DicomApp.BL.Services
                             GamerId = request.ServiceDTO.GamerId,
                             GameId = request.ServiceDTO.GameId,
                             GameServiceType = request.ServiceDTO.GameServiceType,
+                            GameChargeId = request.ServiceDTO.GameChargeId,
                             Description = request.ServiceDTO.Description,
                             UserName = request.ServiceDTO.UserName,
                             Password = request.ServiceDTO.Password,
-                            Price = request.ServiceDTO.Price,
+                            Price =
+                                gameCharge != null
+                                    ? (gameCharge.Price - gameCharge.Discount)
+                                    : request.ServiceDTO.Price,
                             Level = request.ServiceDTO.Level,
                             CreatedAt = DateTime.Now,
                             CreatedBy = request.UserID,
@@ -56,7 +68,7 @@ namespace DicomApp.BL.Services
                             Title = "Gamer Service Added",
                             CreatedBy = request.UserID,
                             GameServiceId = serv.GamerServiceId,
-                            StatusId = serv.StatusId
+                            StatusId = serv.StatusId,
                         };
                         FollowUpService.Add(follow, request.context);
 
@@ -83,7 +95,9 @@ namespace DicomApp.BL.Services
                         request.context.SaveChanges();
                         response.ServiceDTO = new ServiceDTO
                         {
-                            GamerServiceId = serv.GamerServiceId
+                            Price = serv.Price,
+                            GamerServiceId = serv.GamerServiceId,
+                            GameServiceType = serv.GameServiceType,
                         };
                         response.Message = "New GamerService " + serv.RefId + " successfully added";
                         response.Success = true;
@@ -407,9 +421,12 @@ namespace DicomApp.BL.Services
                             request.context.SaveChanges();
                             response.ServiceDTO = new ServiceDTO
                             {
+                                GamerServiceId = serv.GamerServiceId,
+                                GameChargeId = serv.GameChargeId,
+                                Price = serv.Price,
                                 GameServiceType = serv.GameServiceType,
                                 StatusType = status.StatusType,
-                                GamerId = serv.GamerId
+                                GamerId = serv.GamerId,
                             };
                             response.Message =
                                 "Gamer Service " + serv.RefId + " successfully updated";

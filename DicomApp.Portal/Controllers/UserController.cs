@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
+using Telegram.Bot.Types;
 
 namespace DicomApp.Portal.Controllers
 {
@@ -497,10 +498,10 @@ namespace DicomApp.Portal.Controllers
                 UserDTO = new UserDTO() { Id = Id },
                 applyFilter = true,
             };
-            var UserData = UserService.GetAllUsers(userRequest);
+            var UserData = UserService.GetUser(userRequest);
 
             if (UserData.Success)
-                return Json(UserData.UserDTOs.FirstOrDefault());
+                return Json(UserData.UserDTO);
             else
                 return Json(false);
         }
@@ -552,6 +553,46 @@ namespace DicomApp.Portal.Controllers
                 TempData["ErrorMsg"] = userResponse.Message;
 
             return RedirectToAction("ListUser");
+        }
+
+        [AuthorizePerRole(SystemConstants.Permission.EditStaff)]
+        [HttpPost]
+        public async Task<ActionResult> EditUserInfo(UserDTO model)
+        {
+            model.ImgUrl = BaseHelper.UploadImg(model.File, hosting.WebRootPath, model.ImgUrl);
+            var userRequest = new UserRequest
+            {
+                RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
+                UserID = AuthHelper.GetClaimValue(User, "UserID"),
+                context = _context,
+                UserDTO = model
+            };
+            var userResponse = UserService.EditUser(userRequest);
+            if (userResponse.Success)
+            {
+                var currentUser = HttpContext.User;
+                var claimsIdentity = currentUser.Identity as ClaimsIdentity;
+
+                if (claimsIdentity != null)
+                {
+                    // Remove existing claims
+                    claimsIdentity.RemoveClaim(claimsIdentity.FindFirst("Name"));
+                    claimsIdentity.RemoveClaim(claimsIdentity.FindFirst("Email"));
+
+                    // Add updated claims
+                    claimsIdentity.AddClaim(new Claim("Name", userResponse.UserDTO.Name ?? ""));
+                    claimsIdentity.AddClaim(new Claim("Email", userResponse.UserDTO.Email ?? ""));
+
+                    // Update the authentication cookie
+                    await HttpContext.SignInAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        new ClaimsPrincipal(claimsIdentity),
+                        new AuthenticationProperties { AllowRefresh = true }
+                    );
+                }
+            }
+
+            return Json(userResponse);
         }
 
         [AllowAnonymous]

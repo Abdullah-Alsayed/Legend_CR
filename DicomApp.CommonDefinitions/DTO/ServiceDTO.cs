@@ -16,6 +16,8 @@ namespace DicomApp.CommonDefinitions.DTO
         public string Level { get; set; }
         public int GamerServiceId { get; set; }
         public int StatusId { get; set; }
+        public int? GameChargeId { get; set; }
+
         public GameServiceType GameServiceType { get; set; }
         public string RefId { get; set; }
         public bool IsDeleted { get; set; }

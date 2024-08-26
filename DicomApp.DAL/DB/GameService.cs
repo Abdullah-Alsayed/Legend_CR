@@ -19,6 +19,7 @@ namespace DicomApp.DAL.DB
 
         [ForeignKey(nameof(Gamer))]
         public int GamerId { get; set; }
+        public int? GameChargeId { get; set; }
 
         public string Description { get; set; }
         public string UserName { get; set; }
@@ -35,6 +36,7 @@ namespace DicomApp.DAL.DB
         public bool IsDeleted { get; set; }
 
         public virtual Game Game { get; set; }
+        public virtual GameCharge GameCharge { get; set; }
         public virtual Status Status { get; set; }
         public virtual Invoice Invoice { get; set; }
         public virtual CommonUser Gamer { get; set; }

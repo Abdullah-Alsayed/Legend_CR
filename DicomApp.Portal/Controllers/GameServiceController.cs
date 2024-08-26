@@ -8,6 +8,7 @@ using DicomApp.CommonDefinitions.DTO.CashDTOs;
 using DicomApp.CommonDefinitions.Requests;
 using DicomApp.CommonDefinitions.Responses;
 using DicomApp.DAL.DB;
+using DicomApp.DAL.Migrations;
 using DicomApp.Helpers;
 using DicomApp.Helpers.Services.PayPal;
 using DicomApp.Helpers.Services.Telegram;
@@ -51,26 +52,39 @@ namespace DicomApp.Portal.Controllers
 
         [AuthorizePerRole(SystemConstants.Permission.AddGamerService)]
         [HttpPost]
-        public IActionResult Add(ServiceDTO model)
+        public async Task<IActionResult> Add(ServiceDTO model)
         {
-            var roleName = AuthHelper.GetRoleName(User, SystemConstants.Claims.RoleName);
-            var request = new GamerServiceRequest();
-            request.context = _context;
-            request.RoleID = AuthHelper.GetClaimValue(User, "RoleID");
-            request.UserID = AuthHelper.GetClaimValue(User, "UserID");
-            request.ServiceDTO = model;
-            request.RoutPath = _hosting.WebRootPath;
+            var response = new GamerServiceResponse();
+            try
+            {
+                var roleName = AuthHelper.GetRoleName(User, SystemConstants.Claims.RoleName);
+                var request = new GamerServiceRequest();
+                var roleID = AuthHelper.GetClaimValue(User, SystemConstants.Claims.RoleID);
+                var userID = AuthHelper.GetClaimValue(User, SystemConstants.Claims.UserID);
+                request.context = _context;
+                request.RoleID = roleID;
+                request.UserID = userID;
+                request.ServiceDTO = model;
+                request.RoutPath = _hosting.WebRootPath;
 
-            if (roleName == SystemConstants.Role.Gamer)
-                model.GamerId = request.UserID;
+                if (roleName == SystemConstants.Role.Gamer)
+                    model.GamerId = request.UserID;
 
-            var response = BL.Services.GamerServiceService.AddGamerService(request);
-            //request.PageIndex = 0;
-            //request.PageSize = BaseHelper.Constants.PageSize;
-            //request.IsDesc = true;
-            //request.OrderByColumn = nameof(GamerService.CreatedAt);
-            //var Getresponse = BL.Services.GamerServiceService.GetAllGamerServices(request);
-            return Json(response);
+                response = BL.Services.GamerServiceService.AddGamerService(request);
+                if (model.GameChargeId.HasValue)
+                    await AddPayment(userID, roleID, response);
+
+                //request.PageIndex = 0;
+                //request.PageSize = BaseHelper.Constants.PageSize;
+                //request.IsDesc = true;
+                //request.OrderByColumn = nameof(GamerService.CreatedAt);
+                //var Getresponse = BL.Services.GamerServiceService.GetAllGamerServices(request);
+                return Json(response);
+            }
+            catch (Exception)
+            {
+                return Json(response);
+            }
         }
 
         [AuthorizePerRole(SystemConstants.Permission.AddGamerService)]
@@ -212,52 +226,60 @@ namespace DicomApp.Portal.Controllers
                 && response.ServiceDTO.GameServiceType == GameServiceType.Push
                 && response.ServiceDTO.StatusType == (int)StatusTypeEnum.Accept
             )
+                await AddPayment(userID, roleID, response);
+
+            return Json(response.Message);
+        }
+
+        private async Task AddPayment(int userID, int roleID, GamerServiceResponse response)
+        {
+            var returnUrl =
+                $"{_configuration["AppDomain"]}/Payment/SuccessPay?ServiceId={response.ServiceDTO.GamerServiceId}";
+            var cancelUrl = $"{_configuration["AppDomain"]}/Payment/CancelPay";
+            var createPayment = await _payPalService.PurchaseAccountAsync(
+                response.ServiceDTO.Price,
+                returnUrl,
+                cancelUrl
+            );
+            var approverUrl = createPayment
+                ?.links?.Find(x => x.rel.ToLower() == "approval_url")
+                ?.href;
+            if (!string.IsNullOrEmpty(approverUrl))
             {
-                var returnUrl = $"{_configuration["AppDomain"]}/Service/SuccessPay?ServiceId={ID}";
-                var cancelUrl = $"{_configuration["AppDomain"]}/Service/CancelPay";
-                var createPayment = await _payPalService.PurchaseAccountAsync(
-                    price,
-                    returnUrl,
-                    cancelUrl
-                );
-                var approverUrl = createPayment
-                    ?.links?.Find(x => x.rel.ToLower() == "approval_url")
-                    ?.href;
-                if (!string.IsNullOrEmpty(approverUrl))
-                {
-                    TransactionService.AddTransaction(
-                        new TransactionRequest
-                        {
-                            UserID = userID,
-                            RoleID = roleID,
-                            context = _context,
-                            TransactionDTO = new TransactionDTO
-                            {
-                                ServiceId = ID,
-                                PaymentId = createPayment.id,
-                                Amount = price,
-                                BuyerId = response.ServiceDTO.GamerId,
-                                TransactionTypeEnum = TransactionTypeEnum.Push
-                            }
-                        }
-                    );
-                    var userResponse = UserService.GetUser(
-                        new UserRequest
-                        {
-                            context = _context,
-                            UserDTO = new UserDTO { Id = response.ServiceDTO.GamerId }
-                        }
-                    );
-                    if (userResponse.Success)
+                TransactionService.AddTransaction(
+                    new TransactionRequest
                     {
-                        var messageResult = await _telegramService.SendMessage(
-                            userResponse.UserDTO.TelegramUserName,
-                            $"Pay on this Link {approverUrl}"
-                        );
+                        UserID = userID,
+                        RoleID = roleID,
+                        context = _context,
+                        TransactionDTO = new TransactionDTO
+                        {
+                            ServiceId = response.ServiceDTO.GamerServiceId,
+                            PaymentId = createPayment.id,
+                            Amount = response.ServiceDTO.GamerServiceId,
+                            BuyerId = response.ServiceDTO.GamerId,
+                            TransactionTypeEnum =
+                                response.ServiceDTO.GameServiceType == GameServiceType.Charge
+                                    ? TransactionTypeEnum.Change
+                                    : TransactionTypeEnum.Push
+                        }
                     }
+                );
+                var userResponse = UserService.GetUser(
+                    new UserRequest
+                    {
+                        context = _context,
+                        UserDTO = new UserDTO { Id = response.ServiceDTO.GamerId }
+                    }
+                );
+                if (userResponse.Success)
+                {
+                    var messageResult = await _telegramService.SendMessage(
+                        userResponse.UserDTO.TelegramUserName,
+                        $"Pay on this Link {approverUrl}"
+                    );
                 }
             }
-            return Json(response.Message);
         }
 
         [AuthorizePerRole(SystemConstants.Permission.RejectGamerService)]

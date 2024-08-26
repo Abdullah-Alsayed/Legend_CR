@@ -505,18 +505,24 @@ function ChangeUserPassword(Id) {
 }
 
 
-function GamerForm(actionName = "SaveGamer")
+function GamerForm(actionName = "SaveGamer", navigation = true)
 {
     if ($('#Gamer-Form').valid()) {
-
+        $("#BtnSend").attr("disabled", true);
     $(".Spinner").removeClass("d-none");
     var id = $('#Id').val();
     let formData = new FormData($(`#Gamer-Form`)[0]);
   
-    let files = $(`#Gamer-Form input[type='file']`)[0].files;
-    for (let i = 0; i < files.length; i++) {
-        formData.append('files', files[i]);
-    }
+        let fileInput = $(`#Gamer-Form input[type='file']`);
+        if (fileInput.length > 0) {
+            let files = fileInput[0].files;
+
+            if (files.length > 0) {
+                for (let i = 0; i < files.length; i++) {
+                    formData.append('files', files[i]);
+                }
+            }
+        }
 
         $.ajax({
             url: `/User/${actionName}`,
@@ -530,8 +536,13 @@ function GamerForm(actionName = "SaveGamer")
                 $(".Spinner").addClass("d-none");
                 if (result.success)
                 {
-                    alertSuccess(result.message);
-                    MenuNavigation(event, 'ListGamer', 'User');
+                    alertSuccessTop(result.message,4000);
+                    $("#UserNamelable").text(result.userDTO.name);
+                    $("#UpdateUserData").modal('hide');
+                //   $(".swal2-backdrop-show").remove();
+                    if (navigation) 
+                        MenuNavigation(event, 'ListGamer', 'User');
+                    $("#BtnSend").attr("disabled", false);
                 }
                 else
                     alertError(result.message);
@@ -650,6 +661,8 @@ function AddEntity(ControllerName, ActionName, FormID, Navigation = true) {
         let Count = $(`tbody tr`).length;
         $("#BtnSend").prop('disabled', true);
         $(".Spinner").removeClass("d-none");
+        $(".custom-loader").removeClass("d-none");
+
         let formData = formSerialize(FormID);
         $.ajax({
             url: `/${ControllerName}/${ActionName}`,
@@ -662,6 +675,7 @@ function AddEntity(ControllerName, ActionName, FormID, Navigation = true) {
                     alertError(result.message);
                     $("#BtnSend").prop('disabled', false);
                     $(".Spinner").addClass("d-none");
+                    $(".custom-loader").addClass("d-none");
                 }
                 else {
                     ResetForm(FormID);
@@ -682,6 +696,7 @@ function AddEntity(ControllerName, ActionName, FormID, Navigation = true) {
 
                     $(`#${FormID} img`).attr('src', '');
                     $(`#DataCount-Span`).text(`Showing : ${+(++Count)}`);
+                    $(".custom-loader").addClass("d-none");
 
                     alertSuccess();
                     $(".form-container").fadeOut();
@@ -693,6 +708,7 @@ function AddEntity(ControllerName, ActionName, FormID, Navigation = true) {
                 alertError();
                 $("#BtnSend").prop('disabled', false);
                 $(".Spinner").addClass("d-none");
+                $(".custom-loader").addClass("d-none");
             }
         })
     } else {
@@ -2466,7 +2482,7 @@ function ResetForm(FormID) {
 }
 
 // Sweet Alert PopUp Messege
-function alertSuccess(title = 'Success', timer = 3000) {
+function alertSuccess(title = 'Success', timer = 3000 ) {
     Swal.fire({
         position: 'center',
         icon: 'success',
@@ -2475,7 +2491,15 @@ function alertSuccess(title = 'Success', timer = 3000) {
         timer: timer
     });
 }
-
+function alertSuccessTop(title = 'Success', timer = 3000) {
+    Swal.fire({
+        position: 'top',
+        icon: 'success',
+        title: title,
+        showConfirmButton: false,
+        timer: timer
+    });
+}
 function alertError(title = 'Failed, try again', timer = 3000) {
     Swal.fire({
         position: 'center',
