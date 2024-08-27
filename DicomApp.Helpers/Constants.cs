@@ -74,6 +74,12 @@ namespace DicomApp.Helpers
             public const string GameChargeDelete = "GameChargeDelete";
         }
 
+        public static class Languages
+        {
+            public const string Arabic = "ar-EG";
+            public const string English = "en-US";
+        }
+
         public static class Claims
         {
             public const string UserID = "UserID";
@@ -81,6 +87,7 @@ namespace DicomApp.Helpers
             public const string Email = "Email";
             public const string RoleID = "RoleID";
             public const string RoleName = "RoleName";
+            public const string Language = "Language";
         }
 
         public static class ActionType

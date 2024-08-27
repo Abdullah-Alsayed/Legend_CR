@@ -81,6 +81,7 @@ namespace DicomApp.DAL.DB
         public int? BranchId { get; set; }
         public string Bank { get; set; }
         public string AccountName { get; set; }
+        public string Language { get; set; }
         public int? AccountNumber { get; set; }
         public int? IbanNumber { get; set; }
         public int? WalletNumber { get; set; }

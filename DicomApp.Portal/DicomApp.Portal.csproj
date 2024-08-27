@@ -126,6 +126,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\dist\Fonts\" />
+    <Folder Include="Resources\" />
   </ItemGroup>
 
   <ItemGroup>

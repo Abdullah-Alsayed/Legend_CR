@@ -13,6 +13,7 @@ using DicomApp.DAL.DB;
 using DicomApp.Helpers;
 using DicomApp.Helpers.Services.GenrateAvatar;
 using Microsoft.EntityFrameworkCore;
+using Telegram.Bot.Types;
 
 namespace DicomApp.BL.Services
 {
@@ -66,6 +67,7 @@ namespace DicomApp.BL.Services
                                 AccountName = c.AccountName,
                                 AccountNumber = c.AccountNumber,
                                 Bank = c.Bank,
+                                Language = c.Language,
                                 IBANNumber = c.IbanNumber,
                                 ImgUrl = c.ImgUrl,
                                 InstaPayAccountName = c.InstaPayAccountName,
@@ -149,6 +151,7 @@ namespace DicomApp.BL.Services
                                 AreaId = c.AreaId,
                                 Lat = c.Lat,
                                 Lng = c.Lng,
+                                Language = c.Language,
                                 ModificationDate = c.ModificationDate,
                                 Code = c.Code,
                                 AddressDetails = c.AddressDetails,
@@ -224,6 +227,7 @@ namespace DicomApp.BL.Services
                                 ConfirmPassword = c.Password,
                                 IsLoggedIn = c.IsLoggedIn,
                                 Address = c.Address,
+                                Language = c.Language,
                                 AreaId = c.AreaId,
                                 Lat = c.Lat,
                                 Lng = c.Lng,
@@ -312,7 +316,8 @@ namespace DicomApp.BL.Services
                                     RoleID = user.user.RoleId,
                                     RoleName = user.role.Name,
                                     PhoneNumber = user.user.PhoneNumber,
-                                    Password = user.user.Password
+                                    Password = user.user.Password,
+                                    Language = user.user.Language,
                                 }
                             };
                         }
@@ -432,6 +437,7 @@ namespace DicomApp.BL.Services
                                 user.TelegramUserName = request.UserDTO.TelegramUserName;
                                 user.Gender = request.UserDTO.Gender;
                                 user.Age = request.UserDTO.Age;
+                                user.Language = request.UserDTO.Language;
 
                                 request.context.SaveChanges();
 
@@ -446,6 +452,46 @@ namespace DicomApp.BL.Services
                                 res.Success = false;
                                 res.StatusCode = HttpStatusCode.OK;
                             }
+                        }
+                        else
+                        {
+                            res.Message = "Invalid update user";
+                            res.Success = false;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        res.Message = ex.Message;
+                        res.Success = false;
+                        LogHelper.LogException(ex.Message, ex.StackTrace);
+                    }
+                    return res;
+                }
+            );
+            return res;
+        }
+
+        public static UserResponse EditLanguage(UserRequest request)
+        {
+            var res = new UserResponse();
+            RunBase(
+                request,
+                res,
+                (UserRequest req) =>
+                {
+                    try
+                    {
+                        var user = request.context.CommonUser.Find(request.UserID);
+
+                        if (user != null)
+                        {
+                            user.Language = request.UserDTO.Language;
+                            request.context.SaveChanges();
+
+                            res.UserDTO = request.UserDTO;
+                            res.Message = "User updated successfully";
+                            res.Success = true;
+                            res.StatusCode = HttpStatusCode.OK;
                         }
                         else
                         {
@@ -579,6 +625,7 @@ namespace DicomApp.BL.Services
                         User.WalletNumber = request.UserDTO.WalletNumber;
                         User.InstaPayAccountName = request.UserDTO.InstaPayAccountName;
                         User.ImgUrl = request.UserDTO.ImgUrl;
+                        User.Language = request.UserDTO.Language;
 
                         if (request.UserDTO.File == null)
                         {

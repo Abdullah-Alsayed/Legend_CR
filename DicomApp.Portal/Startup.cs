@@ -1,21 +1,26 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
 using DicomApp.DAL.DB;
 using DicomApp.Helpers.Services.GenrateAvatar;
 using DicomApp.Helpers.Services.GetCounter;
 using DicomApp.Helpers.Services.PayPal;
 using DicomApp.Helpers.Services.Telegram;
 using ECommerce.Core.Services.MailServices;
+using Localization;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Rotativa.AspNetCore;
+using Sortech.CRM.Identity.Api.Localization;
 
 namespace DicomApp.Portal
 {
@@ -125,6 +130,13 @@ namespace DicomApp.Portal
             //****************** Email Settings ******************************
             services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
 
+            //****************** Localization ******************************
+            // services.AddLocalization();
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+            services.AddSingleton<LocalizerMiddleware>();
+            services.AddDistributedMemoryCache();
+            services.AddSingleton<IStringLocalizerFactory, JsonStringLocalizerFactory>();
+
             //Services
             services.AddScoped<IApiCountryService, ApiCountryService>();
             services.AddScoped<IPayPalService, PayPalService>();
@@ -149,6 +161,15 @@ namespace DicomApp.Portal
                 //app.UseExceptionHandler("/Home/Error");
             }
             var provider = new FileExtensionContentTypeProvider();
+
+            //****************** Localization ******************************
+            var options = new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture(new CultureInfo("ar-EG"))
+            };
+            app.UseRequestLocalization(options);
+            app.UseMiddleware<LocalizerMiddleware>();
+
             // Add new mappings
             app.UseStaticFiles(
                 new StaticFileOptions

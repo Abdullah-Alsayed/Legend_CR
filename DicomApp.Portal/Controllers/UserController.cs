@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
 using Telegram.Bot.Types;
 
@@ -124,7 +125,8 @@ namespace DicomApp.Portal.Controllers
                     new Claim("Name", user.Name ?? ""),
                     new Claim("Email", user.Email ?? ""),
                     new Claim("RoleID", user.RoleID.ToString()),
-                    new Claim("RoleName", user.RoleName)
+                    new Claim("RoleName", user.RoleName),
+                    new Claim("Language", user.Language ?? SystemConstants.Languages.Arabic)
                 };
 
                 var claimsIdentity = new ClaimsIdentity(
@@ -575,13 +577,20 @@ namespace DicomApp.Portal.Controllers
 
                 if (claimsIdentity != null)
                 {
-                    // Remove existing claims
-                    claimsIdentity.RemoveClaim(claimsIdentity.FindFirst("Name"));
-                    claimsIdentity.RemoveClaim(claimsIdentity.FindFirst("Email"));
+                    claimsIdentity.RemoveClaim(
+                        claimsIdentity.FindFirst(SystemConstants.Claims.Name)
+                    );
+                    claimsIdentity.RemoveClaim(
+                        claimsIdentity.FindFirst(SystemConstants.Claims.Email)
+                    );
 
                     // Add updated claims
-                    claimsIdentity.AddClaim(new Claim("Name", userResponse.UserDTO.Name ?? ""));
-                    claimsIdentity.AddClaim(new Claim("Email", userResponse.UserDTO.Email ?? ""));
+                    claimsIdentity.AddClaim(
+                        new Claim(SystemConstants.Claims.Name, userResponse.UserDTO.Name ?? "")
+                    );
+                    claimsIdentity.AddClaim(
+                        new Claim(SystemConstants.Claims.Email, userResponse.UserDTO.Email ?? "")
+                    );
 
                     // Update the authentication cookie
                     await HttpContext.SignInAsync(
@@ -593,6 +602,48 @@ namespace DicomApp.Portal.Controllers
             }
 
             return Json(userResponse);
+        }
+
+        [Authorize]
+        public async Task<ActionResult> EditLanguage(string language)
+        {
+            var userRequest = new UserRequest
+            {
+                RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
+                UserID = AuthHelper.GetClaimValue(User, "UserID"),
+                context = _context,
+                UserDTO = new UserDTO { Language = language }
+            };
+            var userResponse = UserService.EditLanguage(userRequest);
+            if (userResponse.Success)
+            {
+                var currentUser = HttpContext.User;
+                var claimsIdentity = currentUser.Identity as ClaimsIdentity;
+
+                if (claimsIdentity != null)
+                {
+                    // Remove existing claims
+                    claimsIdentity.RemoveClaim(
+                        claimsIdentity.FindFirst(SystemConstants.Claims.Language)
+                    );
+
+                    // Add updated claims
+                    claimsIdentity.AddClaim(
+                        new Claim(
+                            SystemConstants.Claims.Language,
+                            userResponse.UserDTO.Language ?? ""
+                        )
+                    );
+
+                    // Update the authentication cookie
+                    await HttpContext.SignInAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        new ClaimsPrincipal(claimsIdentity),
+                        new AuthenticationProperties { AllowRefresh = true }
+                    );
+                }
+            }
+            return RedirectToAction("Main", "Gamer");
         }
 
         [AllowAnonymous]

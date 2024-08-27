@@ -5,6 +5,9 @@
 @using DicomApp.Portal.Controllers;
 @using DicomApp.BL.Services;
 @using DicomApp.CommonDefinitions.DTO;
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<GamerController> Localizer
+
 @{
     string connectionString = @Startup.Configuration["ConnectionStrings:DicomAppDBEntities"];
     long roleID = 0;
@@ -58,7 +61,7 @@
 					<div class="responsive-menu"></div>
 					<div class="mainmenu">
 						<ul id="primary-menu">
- 							<li><a class="active" href="@Url.Action("Main","Gamer")">Home</a></li>
+							<li><a class="active" href="@Url.Action("Main","Gamer")">@Localizer["Home"]</a></li>
 							@*	<li><a href="movies.html">Movies</a></li>
 							<li><a href="celebrities.html">CelebritiesList</a></li>
 							<li><a href="top-movies.html">Top Movies</a></li>
@@ -70,7 +73,6 @@
 									<li><a href="movie-details.html">Movie Details</a></li>
 								</ul>
 							</li> *@
-							<li><a class="theme-btn" href="#"><i class="icofont icofont-game-control"></i> Add Account</a></li>
 						</ul>
 					</div>
 				</div>
@@ -85,29 +87,54 @@
 						<button><i class="icofont icofont-search"></i></button>
 					</form>
 				</div>
-				<div class="user-info">
+								<div class="user-info">
 					<ul>
 						@if (User.Identity.IsAuthenticated)
 						{
 							<li class="cursor-pointer"><a data-toggle="modal" data-target="#UpdateUserData" href="#">Welcome </a><a data-toggle="modal" id="UserNamelable" data-target="#UpdateUserData" href="#">@AuthHelper.GetUserName(User)</a></li>
 						}
-						@if (!User.Identity.IsAuthenticated)
-						{
-							<li><a class="login-popup" href="#">Login</a></li>
-						}
-						else
-						{
-							<li>
-								<a href="~/User/Logout" class="Btn">
-								<div class="sign"><svg viewBox="0 0 512 512"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path></svg></div>
-
-								<div class="text">Logout</div>
-							</a>
-							</li>
-						}
 					</ul>
 				</div>
-
+				<div>
+					<a class="theme-btn" href="#"><i class="icofont icofont-game-control"></i> Add Account</a>
+				</div>
+				<div>
+					<label class="popup">
+						<input type="checkbox" />
+						<div tabindex="0" class="burger">
+							<img src="~/gamerlayout/assets/img/translation.png" />
+						</div>
+						<nav class="popup-window">
+							<ul>
+								<li>
+									<a href="@Url.Action("EditLanguage","User",new { language = SystemConstants.Languages.Arabic })">
+										<img src="~/gamerlayout/assets/img/ar-flag.png" />
+									عربي
+									</a>
+								</li>
+								<li>
+									<a href="@Url.Action("EditLanguage","User",new { language = SystemConstants.Languages.English })">
+										<img src="~/gamerlayout/assets/img/En-Flag.png" />
+										English
+									</a>
+								</li>
+							</ul>
+						</nav>
+					</label>
+				</div>
+				<div>
+					@if (!User.Identity.IsAuthenticated)
+					{
+					   <a class="login-popup" href="#">Login</a>
+					}
+					else
+					{
+						<a href="~/User/Logout" class="Btn">
+							<div class="sign"><svg viewBox="0 0 512 512"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path></svg></div>
+						<div class="text">Logout</div>
+						</a>
+					}
+				</div>
 			</div>
 		</div>
 	</header>

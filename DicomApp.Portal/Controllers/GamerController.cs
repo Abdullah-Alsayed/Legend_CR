@@ -18,6 +18,7 @@ using ECommerce.Core.Services.MailServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Localization;
 using PayPal;
 using static DicomApp.Helpers.SystemConstants;
 
@@ -30,18 +31,21 @@ namespace DicomApp.Portal.Controllers
         readonly IPayPalService _payPalService;
         readonly IConfiguration _configuration;
         readonly IMailServices _mailServices;
+        readonly IStringLocalizer<GamerController> _stringLocalizer;
 
         public GamerController(
             ShippingDBContext context,
             IPayPalService payPalService,
             IConfiguration configuration,
-            IMailServices mailServices
+            IMailServices mailServices,
+            IStringLocalizer<GamerController> stringLocalizer
         )
         {
             _context = context;
             _payPalService = payPalService;
             _configuration = configuration;
             _mailServices = mailServices;
+            _stringLocalizer = stringLocalizer;
         }
 
         [AuthorizePerRole(SystemConstants.Permission.Main)]
