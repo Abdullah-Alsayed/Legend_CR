@@ -1,4 +1,4 @@
-
+﻿
 (function ($) {
 	"use strict";
 
@@ -25,7 +25,7 @@
 		$('html, body').animate({scrollTop : 0},2000);
 		return false;
 	});
-	$('.menu-area ul > li > .theme-btn').on('click', function () {
+	$('#openBuy-ticket').on('click', function () {
 		$('.buy-ticket').show();
 		return false;
 	});
@@ -251,6 +251,23 @@
 			}
 		});
 	});
+	var translations = {
+		en: {
+			selectRating: "Please select a rating!",
+			enterComment: "Please enter a comment!",
+			success: "Your testimonial has been added successfully!",
+			error: "Something went wrong. Please try again later."
+		},
+		ar: {
+			selectRating: "يرجى اختيار تقييم!",
+			enterComment: "يرجى إدخال تعليق!",
+			success: "تم إضافة رائيك بنجاح!",
+			error: "حدث خطأ ما. حاول مرة أخرى لاحقًا."
+		}
+	};
+
+	userLanguage = (userLanguage && userLanguage.length >= 2) ? userLanguage.substring(0, 2) : "en";
+
 	function AddTestimonial() {
 		// Clear previous error messages
 		$('#comment-error').text('');
@@ -263,18 +280,19 @@
 		var isValid = true;
 
 		if (!rating) {
-			$('#rating-error').text('Please select a rating!');
+			$('#rating-error').text(translations[userLanguage].selectRating);
 			isValid = false;
 		}
 
 		if (!comment) {
-			$('#comment-error').text('Please enter a comment!');
+			$('#comment-error').text(translations[userLanguage].enterComment);
 			isValid = false;
 		}
 
 		if (!isValid) {
 			return;
 		}
+
 		// Send the form data via AJAX request
 		$.ajax({
 			url: '/Testimonial/Create',
@@ -287,7 +305,7 @@
 				if (response.success) {
 					Swal.fire({
 						icon: 'success',
-						text: response.message
+						text: translations[userLanguage].success
 					});
 				} else {
 					Swal.fire({
@@ -300,7 +318,7 @@
 			error: function (xhr, status, error) {
 				Swal.fire({
 					icon: 'error',
-					text: 'Something went wrong. Please try again later.'
+					text: translations[userLanguage].error
 				});
 			}
 		});

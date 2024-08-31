@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Security.Claims;
@@ -8,7 +7,6 @@ using System.Threading.Tasks;
 using DicomApp.BL.Services;
 using DicomApp.BLL;
 using DicomApp.CommonDefinitions.DTO;
-using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
 using DicomApp.CommonDefinitions.Requests;
 using DicomApp.CommonDefinitions.Responses;
 using DicomApp.DAL.DB;
@@ -20,12 +18,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
-using Telegram.Bot.Types;
 
 namespace DicomApp.Portal.Controllers
 {
@@ -239,7 +233,7 @@ namespace DicomApp.Portal.Controllers
                 new List<byte> { (byte)EnumSelectListType.Role },
                 _context
             );
-            var currRoleName = AuthHelper.GetUserName(User, "RoleID");
+            var currRoleName = AuthHelper.GetClaimStringValue(User, "RoleID");
             if (
                 currRoleName == SystemConstants.Role.SuperAdmin
                 || currRoleName == SystemConstants.Role.Admin

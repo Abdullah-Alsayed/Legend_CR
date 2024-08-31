@@ -3,10 +3,16 @@
 @using DicomApp.CommonDefinitions.Responses
 @using DicomApp.DAL.DB
 @using DicomApp.Helpers
+@using DicomApp.Portal.Controllers
+@using Microsoft.Extensions.Localization
 @model MainResponse
+@inject IStringLocalizer<GamerController> Localizer
+
 @{
     ViewData["Title"] = "Main";
     Layout = "~/Views/Shared/_VendorLayout.cshtml";
+	var language = AuthHelper.GetClaimStringValue(User, SystemConstants.Claims.Language);
+
 }
 
 <!-- hero area start -->
@@ -50,10 +56,10 @@
 									}
 							</div>
 							<div class="slide-trailor">
-								<h3>@adv.Game.NameEn</h3>
+								<h3>@(language == SystemConstants.Languages.Arabic ? adv.Game.NameAr:adv.Game.NameEn)</h3>
 									<img src="/dist/images/@adv.Game.ImgUrl"/>
 							</div>
-								<a onclick="OpenPurchasePopUp(@adv.AdvertisementId)" class="theme-btn" href="javascript:;"><i class="icofont icofont-money"></i> Purchase</a>
+								<a onclick="OpenPurchasePopUp(@adv.AdvertisementId)" class="theme-btn" href="javascript:;"><i class="icofont icofont-money"></i> @Localizer["purchase"]</a>
 						</div>
 					</div>
 					</div>
@@ -68,59 +74,20 @@
 						</div>
 					</div>
 					<div class="col-lg-6 col-md-7">
-						<div class="hero-area-content pr-50">
-							<h2></h2>
-							<div class="review">
-								<div class="author-review">
-									<i class="icofont icofont-star"></i>
-									<i class="icofont icofont-star"></i>
-									<i class="icofont icofont-star"></i>
-									<i class="icofont icofont-star"></i>
-									<i class="icofont icofont-star"></i>
-								</div>
-								<h4></h4>
-							</div>
-							<p></p>
-							<div class="slide-cast">		
-							</div>
-							<div class="slide-trailor">
-								<h3></h3>
-							</div>
-							<a class="theme-btn" href="javascript:;"><i class="icofont icofont-money"></i> Purchase</a>
-						</div>
+						<h2>@Localizer["notFound"] @Localizer["advertisements"]</h2>
 					</div>
 				</div>
 
 				<div class="row hero-area-slide">
 					<div class="col-lg-6 col-md-5">
 						<div class="hero-area-content">
-							<img src="/GamerLayout/assets/img/slide2.png" alt="about" />
+							<img src="/GamerLayout/assets/img/slide1.png" alt="about" />
 						</div>
 					</div>
 					<div class="col-lg-6 col-md-7">
-						<div class="hero-area-content pr-50">
-							<h2></h2>
-							<div class="review">
-								<div class="author-review">
-									<i class="icofont icofont-star"></i>
-									<i class="icofont icofont-star"></i>
-									<i class="icofont icofont-star"></i>
-									<i class="icofont icofont-star"></i>
-									<i class="icofont icofont-star"></i>
-								</div>
-								<h4></h4>
-							</div>
-							<p></p>
-							<div class="slide-cast">
-							</div>
-							<div class="slide-trailor">
-								<h3></h3>
-							</div>
-							<a class="theme-btn" href="javascript:;"><i class="icofont icofont-money"></i> Purchase</a>
-						</div>
+						<h2>@Localizer["notFound"] @Localizer["advertisements"]</h2>
 					</div>
 				</div>
-
 			}
 		</div>
 
@@ -145,7 +112,6 @@
 								</div>
 								<h4>180k voters</h4>
 							</div>
-							<p>She is a devil princess from the demon world. She grew up sheltered by her parents and doesn't really know how to be evil or any of the common actions,   She is unable to cry due to Keita's accidental first wish, despite needed for him to wish...</p>
 							<h3>Cast:</h3>
 							<div class="slide-cast">
 								<div class="single-slide-cast">
@@ -175,7 +141,7 @@
 							</div>
 							<div class="slide-trailor">
 								<h3>Watch Trailer</h3>
-								<a class="theme-btn theme-btn2" href="#"><i class="icofont icofont-play"></i> Tickets</a>
+								<a class="theme-btn theme-btn2" href="#"><i class="icofont icofont-play"></i> @Localizer["purchase"]</a>
 							</div>
 						</div>
 					</div>
@@ -202,7 +168,6 @@
 								</div>
 								<h4>180k voters</h4>
 							</div>
-							<p>She is a devil princess from the demon world. She grew up sheltered by her parents and doesn't really know how to be evil or any of the common actions,   She is unable to cry due to Keita's accidental first wish, despite needed for him to wish...</p>
 							<h3>Cast:</h3>
 							<div class="slide-cast">
 								<div class="single-slide-cast">
@@ -232,7 +197,7 @@
 							</div>
 							<div class="slide-trailor">
 								<h3>Watch Trailer</h3>
-								<a class="theme-btn theme-btn2" href="#"><i class="icofont icofont-play"></i> Tickets</a>
+								<a class="theme-btn theme-btn2" href="#"><i class="icofont icofont-play"></i> @Localizer["purchase"]</a>
 							</div>
 						</div>
 					</div>
@@ -249,16 +214,23 @@
 		<div class="row flexbox-center">
 			<div class="col-lg-6 text-center text-lg-left">
 				<div class="section-title">
-					<h1><img src="/dist/images/Cub.png" width="120"></img> Top Accounts</h1>
+					<h1><img src="/dist/images/Cub.png" width="120"></img>@Localizer["topAccounts"]</h1>
 				</div>
 			</div>
 			<div class="col-lg-6 text-center text-lg-right">
 				<div class="portfolio-menu">
 					<ul>
-						<li data-filter="*" class="active">All</li>
+						<li data-filter="*" class="active">@Localizer["all"]</li>
 						@foreach (var game in Model.Games)
 						{
-							<li data-filter=".@game.NameEn">@game.NameEn</li>
+							if (language == SystemConstants.Languages.Arabic)
+							{
+								
+							<li data-filter=".@game.NameEn">@game.NameAr</li>
+							}else
+							{
+								<li data-filter=".@game.NameEn">@game.NameEn</li>
+							}
 						}
 					</ul>
 				</div>
@@ -272,7 +244,7 @@
 					{
 						foreach (var adv in Model.AllAdvertisements)
 						{
-							<div class="col-md-3 col-sm-6 @adv.Game.NameEn">
+							<div class="col-md-3 col-sm-6 @(language== SystemConstants.Languages.Arabic? adv.Game.NameAr: adv.Game.NameEn)">
 								<div class="single-portfolio">
 									<div class="single-portfolio-img">
 										<img src="/dist/images/@(adv.AdvertisementPhotos?.FirstOrDefault() ?? "portfolio1.png")" alt="portfolio" />
@@ -292,7 +264,7 @@
 				</div>
 			</div>
 			<div class="col-lg-12 mt-5">
-				<button class="theme-btn w-100"> More</button>
+				<button class="theme-btn w-100">@Localizer["more"]</button>
 			</div>
 		</div>
 	</div>
@@ -304,7 +276,7 @@
 		<div class="row">
 			<div class="col-lg-12 text-center text-lg-left mb-4">
 				<div class="section-title">
-					<h1><img src="/dist/images/King.png" width="120"/>Games</h1>
+					<h1><img src="/dist/images/King.png" width="120" /> @Localizer["games"]</h1>
 				</div>
 			<hr />
 			</div>
@@ -334,7 +306,7 @@
 		<div class="row">
 			<div class="col-lg-12">
 				<div class="section-title pb-20">
-					<h1><img src="/dist/images/Stars.png" width="120"></img> Testimonial</h1>
+					<h1><img src="/dist/images/Stars.png" width="120"></img> @Localizer["testimonial"]</h1>
 				</div>
 			</div>
 		</div>
@@ -376,7 +348,7 @@
 				<div class="single-news">
 					<div class="testimonial-Bg"></div>
 					<div class="news-content">
-					<h3>keep you feedback</h3>
+						<h3>@Localizer["keepYouFeedback"]</h3>
 					</div>
 						@if (Model.CanAddFeedBack)
 						{
@@ -386,7 +358,7 @@
 				<div class="single-news">
 					<div class="testimonial-Bg"></div>
 					<div class="news-content">
-					   <h3>keep you feedback</h3>
+						<h3>@Localizer["keepYouFeedback"]</h3>
 					</div>
 						@if (Model.CanAddFeedBack)
 						{
@@ -396,7 +368,7 @@
 				<div class="single-news">
 					<div class="testimonial-Bg"></div>
 					<div class="news-content">
-					<h3>keep you feedback</h3>
+						<h3>@Localizer["keepYouFeedback"]</h3>
 					</div>
 					@if (Model.CanAddFeedBack)
 					{
@@ -415,7 +387,7 @@
 		<div class="row">
 			<div class="col-lg-12">
 				<div class="section-title pb-20">
-					<h1><img src="/dist/images/levelUp2.png" width="120"></img> Push</h1>
+					<h1><img src="/dist/images/levelUp2.png" width="120"></img> @Localizer["push"]</h1>
 				</div>
 			</div>
 		</div>
@@ -424,8 +396,8 @@
 
 	<div class="Push-Box">
 		<div class="Push-Content">
-			<p> Push Your level </p>
-			<button class="theme-btn" type="button" id="Push-Btn"> Push </button>
+			<p>@Localizer["pushYourLevel"]</p>
+			<button class="theme-btn" type="button" id="Push-Btn"> @Localizer["push"] </button>
 		</div>
 	</div>
 </section>
@@ -436,15 +408,15 @@
 	<i class="icofont icofont-close close-Icon"></i>
 <div class="rating-card">
 	<div class="text-wrapper">
-		<h2	class="">Please Rate Your Experience</h2>
-		<h3 class="text-secondary">to help us serve you better</h3>
+			<h2 class="">@Localizer["pleaseRateYourExperience"]</h2>
+			<h3 class="text-secondary">@Localizer["helpServeBetter"]</h3>
 	</div>
 	<form>
 		<div class="comment-Section">
 
 			<div>
-				<p class="additional-comments">Comment</p>
-				<textarea rows="10" id="Comment" name="Comment" placeholder="Comment"></textarea>
+				<p class="additional-comments">@Localizer["comment"]</p>
+				<textarea rows="10" id="Comment" name="Comment" placeholder="@Localizer["comment"]"></textarea>
 			</div>
 				<span class="error-message" id="comment-error"></span>
 		</div>
@@ -489,7 +461,7 @@
    </form>
 	<div>
 		<button class="theme-btn" id="AddTestimonial" type="button">
-			Save
+			@Localizer["save"]
 		</button>
 	</div>
 </div>
@@ -502,55 +474,55 @@
                         <div class="container-fluid">
                             <div class="row pt-1">
                                 <div class="col-lg-6 pt-3">
-                                    <label>User Name</label>
-                                    <input class="input-Model" required id="UserName" name="UserName" placeholder="User Name" />
+                                    <label>@Localizer["userName"]</label>
+					<input class="input-Model" required id="UserName" name="UserName" placeholder="@Localizer["userName"]" />
                                     <div class="invalid-feedback">
-                                        Please enter User Name
+                                       @Localizer["pleaseEnter"] @Localizer["userName"]
                                     </div>
                                 </div>
 
                                 <div class="col-lg-6 pt-3">
-                                    <label > Password</label>
-                                    <input class="input-Model" required id="Password" name="Password" placeholder="Password" />
+					<label> @Localizer["password"]</label>
+					<input class="input-Model" required id="Password" name="Password" placeholder="@Localizer["password"]" />
                                     <div class="invalid-feedback">
-                                        Please enter Password
+						@Localizer["pleaseEnter"] @Localizer["password"]
                                     </div>
                                 </div>
 
                                 <div class="col-lg-6 pt-3">
-                                    <label >Level</label>
-                                    <input class="input-Model" type="text" required id="Level" name="Level" placeholder="Level" />
+					<label>@Localizer["level"]</label>
+					<input class="input-Model" type="text" required id="Level" name="Level" placeholder="@Localizer["level"]" />
                                     <div class="invalid-feedback">
-                                        Please enter Level
-                                    </div>
+						@Localizer["pleaseEnter"] @Localizer["level"]
+					</div>
                                 </div>                                                    
 
 								 <div class="col-lg-6 pt-3">
-			                		<label >Current Level</label>
-					<input class="input-Model" type="text" required id="CurrentLevel" name="CurrentLevel" placeholder="Current Level" />
+					<label>@Localizer["currentLevel"]</label>
+					<input class="input-Model" type="text" required id="CurrentLevel" name="CurrentLevel" placeholder="@Localizer["currentLevel"]" />
                                     <div class="invalid-feedback">
-                                        Please enter Current Level
-                                    </div>
+						@Localizer["pleaseEnter"] @Localizer["currentLevel"]
+					</div>
 
                                 </div>    
                                  <div class="col-lg-12 pt-3">
-                                    <label >Games</label>
-                                    @Html.DropDownList("GameId", new SelectList(Model.Games, nameof(GameDTO.Id), nameof(GameDTO.NameEn)), "---  Game ---", new { @class = "form-control ", @required = "required" })
+					<label>@Localizer["games"]</label>
+					@Html.DropDownList("GameId", new SelectList(Model.Games, nameof(GameDTO.Id), language == SystemConstants.Languages.Arabic ? nameof(GameDTO.NameAr) : nameof(GameDTO.NameEn)), $"---{Localizer["pleaseSelect"]} {Localizer["games"]} ---", new { @class = "form-control ", @required = "required" })
                                     <div class="invalid-feedback">
-                                        Please enter Games
-                                    </div>
+						@Localizer["pleaseSelect"] @Localizer["games"]
+					</div>
                                 </div>
 
                                 <div class="col-lg-12 pt-3">
-                                    <label>Description</label>
-                                    <textarea class="input-Model" rows="5" id="Description" name="Description" placeholder="Description"></textarea>
+					<label>@Localizer["description"]</label>
+					<textarea class="input-Model" rows="5" id="Description" name="Description" placeholder="@Localizer["description"]"></textarea>
                                 </div>
 
 								<input type="hidden" id="GamerId" name="GamerId"value="@AuthHelper.GetClaimValue(User, SystemConstants.Claims.UserID)">
 								<input type="hidden" id="GameServiceType" name="GameServiceType"value="@GameServiceType.Push">
                                 <div class="col-lg-12">
 									<button class="form-submit-btn" onclick="AddEntity('GamerService','Add','AddPush-form',false)" type="button" id="BtnSend">
-                                       Send
+                                       @Localizer["save"]
                                      <div class="custom-loader d-none"></div>
                                     </button>
                                 </div>

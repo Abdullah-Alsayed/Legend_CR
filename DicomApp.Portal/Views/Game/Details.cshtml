@@ -2,10 +2,15 @@
 @using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs
 @using DicomApp.DAL.DB
 @using DicomApp.Helpers
+@using DicomApp.Portal.Controllers
+@using Microsoft.Extensions.Localization
 @model GameDTO
+@inject IStringLocalizer<GameController> Localizer
 @{
 	ViewData["Title"] = "Main";
 	Layout = "~/Views/Shared/_VendorLayout.cshtml";
+   var language = AuthHelper.GetClaimStringValue(User, SystemConstants.Claims.Language);
+
 }
 
 <section class="GameDetails">
@@ -13,7 +18,7 @@
 		<div class="row">
 			<div class="col-lg-12 text-center text-lg-left mb-4">
 				<div class="section-title text-center">
-					<h1><img src="/dist/images/@Model.ImgUrl" width="250" class="mr-5" />@Model.NameEn</h1>
+                    <h1><img src="/dist/images/@Model.ImgUrl" width="250" class="mr-5" />@(language == SystemConstants.Languages.Arabic ? Model.NameAr : Model.NameEn)</h1>
 				</div>
 				<hr />
 			</div>
@@ -34,7 +39,7 @@
 								<div class="color">
 								<h3>@game.Price $</h3>
 								</div>
-                            <a href="#" data-toggle="modal" data-target="#ChargeModal_@game.Id">Buy Now</a>
+                            <a href="#" data-toggle="modal" data-target="#ChargeModal_@game.Id">@Localizer["chargeNow"]</a>
                       
 							</div>
 						</div>
@@ -49,18 +54,18 @@
                                             <div class="container-fluid">
                                                 <div class="row pt-1">
                                                     <div class="col-lg-6 pt-3">
-                                                        <label>User Name</label>
-                                                        <input class="input-Model" required id="UserName" name="UserName" placeholder="User Name" />
+                                                        <label>@Localizer["userName"]</label>
+                                                        <input class="input-Model" required id="UserName" name="UserName" placeholder="@Localizer["userName"]" />
                                                         <div class="invalid-feedback">
-                                                            Please enter User Name
+                                                            @Localizer["pleaseEnter"] @Localizer["userName"]
                                                         </div>
                                                     </div>
 
                                                     <div class="col-lg-6 pt-3">
-                                                        <label>Password</label>
-                                                        <input class="input-Model" required id="Password" name="Password" placeholder="Password" />
+                                                        <label>@Localizer["password"]</label>
+                                                        <input class="input-Model" required id="Password" name="Password" placeholder="@Localizer["password"]" />
                                                         <div class="invalid-feedback">
-                                                            Please enter Password
+                                                            @Localizer["pleaseEnter"] @Localizer["password"]
                                                         </div>
                                                     </div>
 
@@ -70,7 +75,7 @@
                                                     <input type="hidden" id="GameId" name="GameId" value="@Model.Id">
                                                     <div class="col-lg-12 mt-3">
                                                         <button class="form-submit-btn" onclick="AddEntity('GamerService','Add','AddCharge-form_@game.Id',false)" type="button" id="BtnSend">
-                                                            Send
+                                                            @Localizer["send"]
                                                             <div class="custom-loader d-none"></div>
                                                         </button>
                                                     </div>
@@ -90,4 +95,4 @@
 	</div>
 </section>
 
-                                                        3
+                                                        

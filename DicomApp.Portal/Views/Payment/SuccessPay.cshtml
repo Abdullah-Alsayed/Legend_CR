@@ -1,4 +1,6 @@
-﻿
+﻿@using DicomApp.Portal.Controllers
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<PaymentController> Localizer
 @{
     ViewData["Title"] = "SuccessPay";
     Layout = "~/Views/Shared/_VendorLayout.cshtml";
@@ -10,11 +12,10 @@
         <i class="ion-close-round close"></i>
     </div>
     <div class="body">
-        <h2 class="title">Payment Successful</h2>
+            <h2 class="title">@Localizer["paymentSuccessful"]</h2>
         <img class="main-img" src="https://res.cloudinary.com/dw1zug8d6/image/upload/v1542777688/group-3_3x.png" alt="">
         <p>
-            Your payment was successful! You can <br>
-            now continue using Artycoin.
+            @Localizer["paymentSuccessfulMessage"]
         </p>
     </div>
 </div>

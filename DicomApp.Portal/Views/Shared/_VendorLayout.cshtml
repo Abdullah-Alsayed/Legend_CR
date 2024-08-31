@@ -9,15 +9,19 @@
 @inject IStringLocalizer<GamerController> Localizer
 
 @{
-    string connectionString = @Startup.Configuration["ConnectionStrings:DicomAppDBEntities"];
-    long roleID = 0;
-    if (User.Identity.IsAuthenticated)
-    {
-        roleID = AuthHelper.GetClaimValue(User, "RoleID");
-    }
+	string connectionString = @Startup.Configuration["ConnectionStrings:DicomAppDBEntities"];
+	long roleID = 0;
+	string direction = "rtl ";
+	string language = SystemConstants.Languages.English;
+	if (User.Identity.IsAuthenticated)
+	{
+		roleID = AuthHelper.GetClaimValue(User, SystemConstants.Claims.RoleID);
+		language = AuthHelper.GetClaimStringValue(User,SystemConstants.Claims.Language);
+		//direction = language == SystemConstants.Languages.Arabic ? "rtl" : "ltr";
+	}
 }
 <!DOCTYPE HTML>
-<html lang="zxx">
+<html lang="@language">
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -48,7 +52,8 @@
 	<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 	<link rel="preload" href="~/GamerLayout/assets/fonts/Supercell-Magic.woff2" as="font" type="font/woff2" crossorigin>
 
-
+	<style>
+	</style>
 </head>
 <body>
 	<!-- Page loader -->
@@ -61,7 +66,7 @@
 					<div class="responsive-menu"></div>
 					<div class="mainmenu">
 						<ul id="primary-menu">
-							<li><a class="active" href="@Url.Action("Main","Gamer")">@Localizer["Home"]</a></li>
+							<li><a class="active" href="@Url.Action("Main","Gamer")">@Localizer["home"]</a></li>
 							@*	<li><a href="movies.html">Movies</a></li>
 							<li><a href="celebrities.html">CelebritiesList</a></li>
 							<li><a href="top-movies.html">Top Movies</a></li>
@@ -91,12 +96,12 @@
 					<ul>
 						@if (User.Identity.IsAuthenticated)
 						{
-							<li class="cursor-pointer"><a data-toggle="modal" data-target="#UpdateUserData" href="#">Welcome </a><a data-toggle="modal" id="UserNamelable" data-target="#UpdateUserData" href="#">@AuthHelper.GetUserName(User)</a></li>
+							<li class="cursor-pointer"><a data-toggle="modal" data-target="#UpdateUserData" href="#">@Localizer["welcome"]</a><a data-toggle="modal" id="UserNamelable" data-target="#UpdateUserData" href="#"> @AuthHelper.GetClaimStringValue(User)</a></li>
 						}
 					</ul>
 				</div>
-				<div>
-					<a class="theme-btn" href="#"><i class="icofont icofont-game-control"></i> Add Account</a>
+				<div id="openBuy-ticket">
+					<a class="theme-btn" href="javascript:;"><i class="icofont icofont-game-control"></i> @Localizer["addAccount"]</a>
 				</div>
 				<div>
 					<label class="popup">
@@ -125,13 +130,13 @@
 				<div>
 					@if (!User.Identity.IsAuthenticated)
 					{
-					   <a class="login-popup" href="#">Login</a>
+						<a class="login-popup" href="#">@Localizer["login"]</a>
 					}
 					else
 					{
 						<a href="~/User/Logout" class="Btn">
 							<div class="sign"><svg viewBox="0 0 512 512"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path></svg></div>
-						<div class="text">Logout</div>
+							<div class="text">@Localizer["logout"]</div>
 						</a>
 					}
 				</div>
@@ -142,21 +147,21 @@
 	<div class="login-area">
 		<div class="login-box">
 			<a href="#"><i class="icofont icofont-close"></i></a>
-			<h2>LOGIN</h2>
+			<h2>@Localizer["login"]</h2>
 			<form action="#">
-				<h6>USERNAME OR EMAIL ADDRESS</h6>
+				<h6>@Localizer["userNameOrEmail"]</h6>
 				<input type="text" />
-				<h6>PASSWORD</h6>
+				<h6>@Localizer["password"]</h6>
 				<input type="text" />
 				<div class="login-remember">
 					<input type="checkbox" />
-					<span>Remember Me</span>
+					<span>@Localizer["rememberMe"]</span>
 				</div>
 				<div class="login-signup">
-					<span>SIGNUP</span>
+					<span>@Localizer["signUp"]</span>
 				</div>
-				<a href="#" class="theme-btn">LOG IN</a>
-				<span>Or Via Social</span>
+				<a href="#" class="theme-btn">@Localizer["login"]</a>
+				<span>@Localizer["viaSocial"]</span>
 				<div class="login-social">
 					<a href="#"><i class="icofont icofont-social-facebook"></i></a>
 					<a href="#"><i class="icofont icofont-social-twitter"></i></a>
@@ -179,48 +184,48 @@
 						<div class="col-lg-5">
 							<div style="" class="Shipment-Details-Section">
 								<div class="col-lg-12">
-									<label class="Shipment-Details-label">UserName</label>
-									<input type="text" placeholder="Name" id="UserName" name="UserName" required />
+									<label class="Shipment-Details-label">@Localizer["userName"]</label>
+									<input type="text" placeholder="@Localizer["userName"]" id="UserName" name="UserName" required />
 									<div class="invalid-feedback">
-										Please enter customer UserName.
+										@Localizer["pleaseEnter"] @Localizer["userName"].
 									</div>
 								</div>
 								<div class="col-lg-12 mt-3">
-									<label class="Shipment-Details-label">Password</label>
-									<input type="text" placeholder="Password" id="Password" name="Password" required>
+									<label class="Shipment-Details-label">@Localizer["password"]</label>
+									<input type="text" placeholder="@Localizer["password"]" id="Password" name="Password" required>
 									<div class="invalid-feedback">
-										Please enter Password.
+										@Localizer["pleaseEnter"] @Localizer["password"].
 									</div>
 								</div>
 								<div class="col-lg-12 mt-3">
-									<label class="Shipment-Details-label">Level</label>
-									<input type="number" min="0" class="input-Number" id="Level" name="Level" placeholder="Level" required />
+									<label class="Shipment-Details-label">@Localizer["level"]</label>
+									<input type="number" min="0" class="input-Number" id="Level" name="Level" placeholder="@Localizer["level"]" required />
 									<div class="invalid-feedback">
-										Please enter Level.
+										@Localizer["pleaseEnter"] @Localizer["level"].
 									</div>
 								</div>
 								<div class="col-lg-12 mt-3">
-									<label class="Shipment-Details-label">Rank</label>
-									<input type="text" id="Rank" name="Rank" placeholder="Rank" />
+									<label class="Shipment-Details-label">@Localizer["rank"]</label>
+									<input type="text" id="Rank" name="Rank" placeholder="@Localizer["rank"]" />
 									<div class="invalid-feedback">
-										Please enter Rank.
+										@Localizer["pleaseEnter"] @Localizer["rank"].
 									</div>
 								</div>
 								<div class="col-lg-6 mt-3">
-									<label class="Shipment-Details-label">Price</label>
-									<input type="number" min="1" max="1000000" class="input-Number" id="Price" name="Price" placeholder="Price" required />
+									<label class="Shipment-Details-label">@Localizer["price"]</label>
+									<input type="number" min="1" max="1000000" class="input-Number" id="Price" name="@Localizer["price"]" placeholder="@Localizer["price"]" required />
 									<div class="invalid-feedback">
-										Please enter Price
+										@Localizer["pleaseEnter"] @Localizer["price"]
 									</div>
 								</div>
 								<div class="col-lg-6 mt-3">
-									<label class="Shipment-Details-label">Game</label>
+									<label class="Shipment-Details-label">@Localizer["game"]</label>
 									@if (ViewBag.GameList != null)
 									{
-								     	@Html.DropDownList("GameId", new SelectList(ViewBag.GameList, nameof(GameDTO.Id), nameof(GameDTO.NameEn)), "--- Select Game ---", new { @class = "form-control", @required = "required" })
+										@Html.DropDownList("GameId", new SelectList(ViewBag.GameList, nameof(GameDTO.Id), language == SystemConstants.Languages.Arabic ? nameof(GameDTO.NameAr): nameof(GameDTO.NameEn)), $"--- {Localizer["pleaseSelect"]} {Localizer["game"]} ---", new { @class = "form-control", @required = "required" })
 									}
 									<div class="invalid-feedback">
-										Please select Game.
+										@Localizer["pleaseSelect"] @Localizer["game"].
 									</div>
 								</div>
 								<input type="hidden" value="@AuthHelper.GetClaimValue(User,SystemConstants.Claims.UserID)" id="GamerId" name="GamerId" />
@@ -235,11 +240,11 @@
 														<path d="M7 10V9C7 6.23858 9.23858 4 12 4C14.7614 4 17 6.23858 17 9V10C19.2091 10 21 11.7909 21 14C21 15.4806 20.1956 16.8084 19 17.5M7 10C4.79086 10 3 11.7909 3 14C3 15.4806 3.8044 16.8084 5 17.5M7 10C7.43285 10 7.84965 10.0688 8.24006 10.1959M12 12V21M12 12L15 15M12 12L9 15" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
 													</g>
 												</svg>
-												<label for="Advertisement-files">Browse File to upload!</label>
+												<label for="Advertisement-files">@Localizer["browseUpload"]</label>
 											</div>
 											<label class="files-footer">
 												<svg fill="#000000" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M15.331 6H8.5v20h15V14.154h-8.169z"></path><path d="M18.153 6h-.009v5.342H23.5v-.002z"></path></g></svg>
-												<p id="Advertisement-files-Lable">Not selected file</p>
+												<p id="Advertisement-files-Lable">@Localizer["notSelectedFile"]</p>
 												<svg onclick="deleteAllFiles()" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5.16565 10.1534C5.07629 8.99181 5.99473 8 7.15975 8H16.8402C18.0053 8 18.9237 8.9918 18.8344 10.1534L18.142 19.1534C18.0619 20.1954 17.193 21 16.1479 21H7.85206C6.80699 21 5.93811 20.1954 5.85795 19.1534L5.16565 10.1534Z" stroke="#000000" stroke-width="2"></path> <path d="M19.5 5H4.5" stroke="#000000" stroke-width="2" stroke-linecap="round"></path> <path d="M10 3C10 2.44772 10.4477 2 11 2H13C13.5523 2 14 2.44772 14 3V5H10V3Z" stroke="#000000" stroke-width="2"></path> </g></svg>
 											</label>
 											<input id="Advertisement-files" id="Files" name="Files" type="file" onchange="updateAdvertisementFiles()" accept="image/*" multiple>
@@ -254,8 +259,8 @@
 								<div class="col-lg-12">
 									<div class="col-lg-12 col-12 Game-Type-Section">
 										<div class="row Red-Row" id="DivOrderDescription">
-											<p class="additional-comments">Description</p>
-											<textarea class="h-auto" rows="10" id="Description" name="Description" placeholder="Description"></textarea>
+											<p class="additional-comments">@Localizer["description"]</p>
+											<textarea class="h-auto" rows="10" id="Description" name="Description" placeholder="@Localizer["description"]"></textarea>
 										</div>
 									</div>
 									<br />
@@ -264,7 +269,8 @@
 								</div>
 							</div>
 							<div class="col-lg-12 Buttons-Submit-Section">
-								<button onclick="AddAdvertisement('Add','Advertisement','AddAdvertisement')" type="button" id="BtnSend" class="Red-Btn">Submit Advertisement 
+								<button onclick="AddAdvertisement('Add','Advertisement','AddAdvertisement')" type="button" id="BtnSend" class="Red-Btn">
+									@Localizer["add"] @Localizer["advertisement"]
 									<span class="Spinner spinner-border spinner-border-sm ml-2 mb-1 d-none" role="status" aria-hidden="true"></span></button>
 							</div>
 						</div>
@@ -289,56 +295,56 @@
 							<div class="col-lg-12">
 								<div class="Shipment-Details-Section">
 									<div class="col-lg-12">
-										<label class="Shipment-Details-label">Name</label>
-										<input type="text" placeholder="Name" id="Name" name="Name" required />
+										<label class="Shipment-Details-label">@Localizer["name"]</label>
+										<input type="text" placeholder="@Localizer["name"]" id="Name" name="Name" required />
 										<div class="invalid-feedback">
-											Please enter Name.
+											@Localizer["pleaseEnter"] @Localizer["name"].
 										</div>
 									</div>
 									<div class="col-lg-12 mt-3">
-										<label class="Shipment-Details-label">Email</label>
-										<input type="text" placeholder="Email" id="Email" name="Email" required>
+										<label class="Shipment-Details-label">@Localizer["email"]</label>
+										<input type="text" placeholder="@Localizer["email"]" id="Email" name="Email" required>
 										<div class="invalid-feedback">
-											Please enter Email.
+											@Localizer["pleaseEnter"] @Localizer["email"].
 										</div>
 									</div>
 									<div class="col-lg-12 mt-3">
-										<label class="Shipment-Details-label">PhoneNumber</label>
-										<input type="text" id="PhoneNumber" name="PhoneNumber" placeholder="Phone Number" required />
+										<label class="Shipment-Details-label">@Localizer["phoneNumber"]</label>
+										<input type="text" id="PhoneNumber" name="PhoneNumber" placeholder="@Localizer["phoneNumber"]" required />
 										<div class="invalid-feedback">
-											Please enter PhoneNumber.
+											@Localizer["pleaseEnter"] @Localizer["phoneNumber"].
 										</div>
 									</div>
 									<div class="col-lg-12 mt-3">
-										<label class="Shipment-Details-label">TelegramUserName</label>
-										<input type="text" id="TelegramUserName" name="TelegramUserName" placeholder="Telegram User Name" />
+										<label class="Shipment-Details-label">@Localizer["telegramUserName"]</label>
+										<input type="text" id="TelegramUserName" name="TelegramUserName" placeholder="@Localizer["telegramUserName"]" />
 										<div class="invalid-feedback">
-											Please enter TelegramUserName.
+											@Localizer["pleaseEnter"] @Localizer["telegramUserName"].
 										</div>
 									</div>
 									<div class="col-lg-6 mt-3">
-										<label class="Shipment-Details-label">Age</label>
-										<input type="number" min="1" max="1000000" class="input-Number" id="Age" name="Age" placeholder="Age" required />
+										<label class="Shipment-Details-label">@Localizer["age"]</label>
+										<input type="number" min="1" max="1000000" class="input-Number" id="Age" name="Age" placeholder="@Localizer["age"]" required />
 										<div class="invalid-feedback">
-											Please enter Price
+											@Localizer["pleaseEnter"] @Localizer["age"].
 										</div>
 									</div>
 									<div class="col-lg-6 mt-2 mb-2">
-										<label class="Shipment-Details-label mb-2">Gender</label>
-										<select class="form-control" required id="@nameof(UserDTO.Gender)" name="@nameof(UserDTO.Gender)" placeholder="Gender">
+										<label class="Shipment-Details-label mb-2">@Localizer["gender"]</label>
+										<select class="form-control" required id="@nameof(UserDTO.Gender)" name="@nameof(UserDTO.Gender)" placeholder="@Localizer["gender"]">
 
-											<option value="">--- Select Gender ---</option>
-											<option value="@( (int) GenderEnum.Male)">Male</option>
-											<option value="@( (int) GenderEnum.Female)">Female</option>
+											<option value="">--- @Localizer["pleaseSelect"] @Localizer["gender"] ---</option>
+											<option value="@( (int) GenderEnum.Male)">@Localizer["male"]</option>
+											<option value="@( (int) GenderEnum.Female)">@Localizer["female"]</option>
 										</select>
 										<div class="invalid-feedback">
-											Please enter Gender
+											@Localizer["pleaseSelect"] @Localizer["gender"].
 										</div>
 									</div>
 									<div class="col-lg-12">
 										<div class="col-lg-12 Buttons-Submit-Section">
 											<button type="button" onclick="GamerForm('EditUserInfo',false)" id="BtnSend" class="Red-Btn">
-									         	Save
+												@Localizer["save"]
 												<span class="Spinner spinner-border spinner-border-sm ml-2 mb-1 d-none" role="status" aria-hidden="true"></span>
 											</button>
 										</div>
@@ -445,29 +451,29 @@
 					</div>
 					<div class="separator">
 						<hr class="line">
-						<p>or pay using credit card</p>
+						<p>@Localizer["payUsingCredit"]</p>
 						<hr class="line">
 					</div>
 					<div class="credit-card-info--form">
 						<div class="input_container">
-							<label for="password_field" class="input_label">Card holder full name</label>
-							<input id="password_field" class="input_field" type="text" name="input-name" title="Inpit title" placeholder="Enter your full name">
+								<label for="password_field" class="input_label">@Localizer["cardHolderFullName"]</label>
+							<input id="password_field" class="input_field" type="text" name="input-name" title="@Localizer["cardHolderFullName"]" placeholder="@Localizer["pleaseEnter"] @Localizer["yourFullName"]">
 						</div>
 						<div class="input_container">
-							<label for="password_field" class="input_label">Card Number</label>
-							<input id="password_field" class="input_field" type="number" name="input-name" title="Inpit title" placeholder="0000 0000 0000 0000">
+								<label for="password_field" class="input_label">@Localizer["cardNumber"]</label>
+							<input id="password_field" class="input_field" type="number" name="input-name" title="@Localizer["cardNumber"]" placeholder="0000 0000 0000 0000">
 						</div>
 						<div class="input_container">
-							<label for="password_field" class="input_label">Expiry Date / CVV</label>
+								<label for="password_field" class="input_label">@Localizer["expiryDate"]/ CVV</label>
 							<div class="split">
-								<input id="password_field" class="input_field" type="text" name="input-name" title="Expiry Date" placeholder="01/23">
+								<input id="password_field" class="input_field" type="text" name="input-name" title="@Localizer["expiryDate"]" placeholder="01/23">
 								<input id="password_field" class="input_field" type="number" name="cvv" title="CVV" placeholder="CVV">
 							</div>
 						</div>
 					</div>
 					<input type="hidden" id="PupUpAccountId" value="0"/>
 			    	<input type="hidden" id="PupUpgameChargeId" value="0" />
-					<button class="purchase--btn">Checkout</button>
+						<button class="purchase--btn">@Localizer["checkout"]</button>
 				</form>
 			</div>
 
@@ -476,7 +482,10 @@
 </div>
 
 
-
+	<script>
+		// Get the user's language from the ViewBag
+		var userLanguage = "@language";
+	</script>
 	<!-- jquery main JS -->
 	<script src="/GamerLayout/assets/js/jquery.min.js"></script>
 	<!-- Bootstrap JS -->
