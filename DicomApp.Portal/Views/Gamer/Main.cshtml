@@ -214,7 +214,7 @@
 		<div class="row flexbox-center">
 			<div class="col-lg-6 text-center text-lg-left">
 				<div class="section-title">
-					<h1><img src="/dist/images/Cub.png" width="120"></img>@Localizer["topAccounts"]</h1>
+					<h1><img src="/dist/images/Cub.png" width="120"></img>@Localizer["latestAccounts"]</h1>
 				</div>
 			</div>
 			<div class="col-lg-6 text-center text-lg-right">
@@ -225,11 +225,11 @@
 						{
 							if (language == SystemConstants.Languages.Arabic)
 							{
-								
-							<li data-filter=".@game.NameEn">@game.NameAr</li>
+
+								<li data-filter=".@game.NameEn.RemoveWhiteSpace()">@game.NameAr</li>
 							}else
 							{
-								<li data-filter=".@game.NameEn">@game.NameEn</li>
+								<li data-filter=".@game.NameEn.RemoveWhiteSpace()">@game.NameEn</li>
 							}
 						}
 					</ul>
@@ -244,7 +244,7 @@
 					{
 						foreach (var adv in Model.AllAdvertisements)
 						{
-							<div class="col-md-3 col-sm-6 @(language== SystemConstants.Languages.Arabic? adv.Game.NameAr: adv.Game.NameEn)">
+							<div class="col-md-3 col-sm-6 @adv.Game.NameEn.RemoveWhiteSpace()">
 								<div class="single-portfolio">
 									<div class="single-portfolio-img">
 										<img src="/dist/images/@(adv.AdvertisementPhotos?.FirstOrDefault() ?? "portfolio1.png")" alt="portfolio" />
@@ -264,7 +264,7 @@
 				</div>
 			</div>
 			<div class="col-lg-12 mt-5">
-				<button class="theme-btn w-100">@Localizer["more"]</button>
+				<a  href="@Url.Action("All")" target="_blank" class="theme-btn w-100">@Localizer["more"]</a>
 			</div>
 		</div>
 	</div>

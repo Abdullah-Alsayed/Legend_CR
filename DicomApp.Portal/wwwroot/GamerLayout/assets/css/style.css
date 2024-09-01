@@ -149,6 +149,7 @@ input[type="tel"],
 input[type="search"],
 input[type="password"],
 input[type="number"],
+select,
 textarea {
     background: #24262d;
     width: 100%;
@@ -2689,4 +2690,9 @@ hr {
     transform: scale(var(--nav-active-scale));
     visibility: visible;
     opacity: 1;
+}
+.Accounts-Filter {
+    width: 90% !important;
+    top: 110% !important;
+    left: 3% !important;
 }

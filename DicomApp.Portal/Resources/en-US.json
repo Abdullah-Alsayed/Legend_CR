@@ -58,5 +58,7 @@
   "paymentSuccessful": "payment Successful",
   "paymentSuccessfulMessage": "Your payment was successful",
   "paymentFail": "Payment Fail",
-  "paymentFailMessage": "Your payment was Fail"
+  "paymentFailMessage": "Your payment was Fail",
+  "latestAccounts": "Latest Accounts"
+
 }

@@ -58,5 +58,6 @@
   "paymentSuccessful": "تمت عملية الدفع بنجاح",
   "paymentSuccessfulMessage": "تمت عملية الدفع بنجاح",
   "paymentFail": "فشل الدفع",
-  "paymentFailMessage": "فشل الدفع الخاص بك"
+  "paymentFailMessage": "فشل الدفع الخاص بك",
+  "latestAccounts": "احدث الحسابات"
 }

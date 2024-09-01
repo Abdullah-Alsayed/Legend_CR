@@ -1,6 +1,9 @@
 ﻿
 @using DicomApp.CommonDefinitions.DTO
 @model OptionDTO
+@if (!Model.FilterOnly)
+{
+    
 <div class="col-12 col-sm-12 col-lg-12 Search-Section d-flex">
     <div>
         <i class="fas fa-search Icon-Search"></i>
@@ -12,8 +15,13 @@
             <li class="DarkGreen-Bg cursor-pointer" onclick="tableToExcel('Table')"><img class="ActionsButtons-image" src="~/dist/images/Icons/excel.png"></li>
             <li class="lightRed-Bg"><a class="cursor-pointer" href="javascripy:;"><img class="ActionsButtons-image" onclick="PDFReport('@Model.Controller','@Model.Action')" src="~/dist/images/Icons/Pdf.png"></a></li>
         </ul>
-        <button onclick="OpenFilter()" class="Filter"><img img src="~/dist/images/Icons/Filter.png">Filter</button>
+        <button onclick="OpenFilter()" class="Filter"><img src="~/dist/images/Icons/Filter.png">Filter</button>
         @*<button data-isDesc="trus" onclick="Sort('@Model.Controller','@Model.Action')" id="Sort-Btn" class="Sort"><img img src="~/dist/images/Icons/Sort.png">Sort</button>*@
     </div>
-</div>
+    </div>
+}
+else
+{
+    <button onclick="OpenFilter()" class="theme-btn">Filter</button>
+}
 <partial name="_FilterModal" model="Model" />

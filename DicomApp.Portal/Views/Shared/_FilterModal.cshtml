@@ -10,7 +10,7 @@
 @if (Model.SelectListType != null && Model.SelectListType.Count() > 0)
 {
     <div class="Filter-Container @Model.ClassName" id="Filter-Model">
-        <div class="modal-content">
+        <div class="modal-content" style="background:#000">
             <div class="modal-body">
                 <form asp-action="@Model.Action" asp-controller="@Model.Controller" enctype="multipart/form-data" id="FilterForm">
                     <div class="container-fluid P-5">
@@ -151,7 +151,7 @@
                                 {
                                     <div class="col-lg-@Model.Columns pt-3">
                                         <label class="Label-Model">Games</label>
-                                        @Html.DropDownList("GameId", new SelectList(Model.Lookup.GameDTOs, nameof(GameDTO.Id), nameof(GameDTO.NameEn)), "---  Game ---", new { @class = "form-control ", @required = "required" })
+                                        @Html.DropDownList("GameId", new SelectList(Model.Lookup.GameDTOs, nameof(GameDTO.Id), Model.Language == SystemConstants.Languages.Arabic ? nameof(GameDTO.NameAr) : nameof(GameDTO.NameEn)), "---  Game ---", new { @class = "form-control ", @required = "required" })
                                     </div>
                                 }
                                 if (Model.SelectListType.Contains((byte)EnumSelectListType.GameServiceType))

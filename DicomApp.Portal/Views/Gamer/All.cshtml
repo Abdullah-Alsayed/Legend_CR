@@ -1,0 +1,76 @@
+﻿@using DicomApp.CommonDefinitions.DTO
+@using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs
+@using DicomApp.Helpers
+@using DicomApp.Portal.Controllers
+@using Microsoft.Extensions.Localization
+@model ViewModel<AdsDTO>
+@inject IStringLocalizer<GamerController> Localizer
+@{
+    ViewData["Title"] = "All";
+    Layout = "~/Views/Shared/_VendorLayout.cshtml";
+	var language = AuthHelper.GetClaimStringValue(User, SystemConstants.Claims.Language);
+}
+<section class="portfolio-area pt-60" data-aos="zoom-in-up" data-aos-duration="500">
+	<div class="container">
+		<div class="row flexbox-center">
+			<div class="col-lg-6 text-center text-lg-left">
+				<div class="section-title">
+					<h1><img src="/dist/images/Cub.png" width="120"></img>@Localizer["topAccounts"]</h1>
+				</div>
+			</div>
+			<div class="col-lg-6 text-center text-lg-right">
+				<div class="portfolio-menu">
+					@{
+						await Html.RenderPartialAsync("_ToolsRow", new OptionDTO
+			{
+				Action = "All",
+				Controller = "Gamer",
+				Columns = 6,
+				Lookup = Model.Lookup,
+				FilterOnly = true,
+				ClassName = "Accounts-Filter",
+				Language = language,
+					SelectListType = new byte[]
+			{
+					(byte)EnumSelectListType.Level,
+					(byte)EnumSelectListType.Price,
+					(byte)EnumSelectListType.Game,
+			},
+			});
+					}
+				</div>
+
+			</div>
+		</div>
+		<hr />
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="row portfolio-item">
+					@if (Model != null && Model.ObjDTOs != null)
+					{
+						foreach (var adv in Model.ObjDTOs)
+						{
+							<div class="col-md-3 col-sm-6 @adv.Game.NameEn.RemoveWhiteSpace()">
+								<div class="single-portfolio">
+									<div class="single-portfolio-img">
+										<img src="/dist/images/@(adv.AdvertisementPhotos?.FirstOrDefault() ?? "portfolio1.png")" alt="portfolio" />
+										<a href="javascript:;" onclick="OpenPurchasePopUp(@adv.AdvertisementId)" class="popup-youtube">
+											<i class="icofont icofont-game-control"></i>
+										</a>
+									</div>
+									<div class="portfolio-content">
+										<h3>@adv.UserName</h3>
+										<h5>@adv.Price $</h5>
+									</div>
+								</div>
+							</div>
+						}
+
+					}
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+

@@ -48,7 +48,6 @@ namespace DicomApp.Portal.Controllers
             _stringLocalizer = stringLocalizer;
         }
 
-        [AuthorizePerRole(SystemConstants.Permission.Main)]
         public IActionResult Main(
             string Search,
             int PageIndex,
@@ -391,53 +390,78 @@ namespace DicomApp.Portal.Controllers
 
         #endregion
 
-        [AuthorizePerRole("Vendor_advertisementList")]
-        public IActionResult advertisementList(
+        public IActionResult All(
             string Search,
+            string OrderByColumn,
+            bool? IsDesc,
             int PageIndex,
             DateTime? From,
             DateTime? To,
+            int StatusType,
+            int GamerId,
+            int GameId,
+            int LessPrice,
+            int GreeterPrice,
+            int LessLevel,
+            int GreeterLevel,
             string ActionType = null
         )
         {
-            var userID = AuthHelper.GetClaimValue(User, "UserID");
-            var model = new AdsDTO();
-            model.GamerId = userID;
-            model.Search = Search;
+            ViewModel<AdsDTO> ViewData = new ViewModel<AdsDTO>();
+
+            var filter = new AdsDTO()
+            {
+                StatusType = StatusType,
+                GamerId = GamerId,
+                GameId = GameId,
+                Search = Search,
+                LessPrice = LessPrice,
+                GreeterPrice = GreeterPrice,
+                LessLevel = LessLevel,
+                GreeterLevel = GreeterLevel,
+
+                StatusTypes = new List<int>
+                {
+                    (int)StatusTypeEnum.Pending,
+                    (int)StatusTypeEnum.Published
+                }
+            };
+
+            if (ActionType != SystemConstants.ActionType.PartialView)
+            {
+                ViewData.Lookup = BaseHelper.GetLookup(
+                    new List<byte>
+                    {
+                        (byte)EnumSelectListType.Game,
+                        (byte)EnumSelectListType.Gamer,
+                    },
+                    _context
+                );
+            }
+
             if (From.HasValue)
-                model.DateFrom = From.Value;
-
+                filter.DateFrom = From.Value;
             if (To.HasValue)
-                model.DateTo = To.Value;
+                filter.DateTo = To.Value;
 
-            var PageSize =
-                ActionType == SystemConstants.ActionType.Print ? 0 : BaseHelper.Constants.PageSize;
-
-            var advertisementRequest = new AdvertisementRequest
+            var request = new AdvertisementRequest
             {
                 RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
-                UserID = userID,
+                UserID = AuthHelper.GetClaimValue(User, "UserID"),
                 context = _context,
-                AdsDTO = model,
-                applyFilter = true,
+                IsDesc = IsDesc ?? true,
                 PageIndex = PageIndex,
-                PageSize = PageSize
+                PageSize = BaseHelper.Constants.PageSize,
+                OrderByColumn = OrderByColumn ?? nameof(Advertisement.CreatedAt),
+                applyFilter = true,
+                AdsDTO = filter
             };
-            var advertisementResponse =
-                DicomApp.BL.Services.AdvertisementService.GetAllAdvertisements(
-                    advertisementRequest
-                );
+            var response = BL.Services.AdvertisementService.GetAllAdvertisements(request);
+            ViewData.ObjDTOs = response.AdsDTOs;
             if (ActionType == SystemConstants.ActionType.PartialView)
-                return PartialView("_advertisementList", advertisementResponse.AdsDTOs);
-            else if (ActionType == SystemConstants.ActionType.Print)
-                return BaseHelper.GeneratePDF<List<AdsDTO>>(
-                    "advertisementListPDF",
-                    advertisementResponse.AdsDTOs
-                );
-            else if (ActionType == SystemConstants.ActionType.Table)
-                return PartialView("_advertisementListTable", advertisementResponse.AdsDTOs);
+                return PartialView(ViewData);
             else
-                return View(advertisementResponse.AdsDTOs);
+                return View(ViewData);
         }
 
         [AuthorizePerRole("Vendor_Addadvertisement")]
