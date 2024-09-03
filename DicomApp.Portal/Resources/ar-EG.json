@@ -59,5 +59,14 @@
   "paymentSuccessfulMessage": "تمت عملية الدفع بنجاح",
   "paymentFail": "فشل الدفع",
   "paymentFailMessage": "فشل الدفع الخاص بك",
-  "latestAccounts": "احدث الحسابات"
+  "latestAccounts": "احدث الحسابات",
+  "lessThanPrice": "سعر اقل من",
+  "greeterThanPrice": "سعر اكثر من",
+  "lessThanLevel": "مستوى أقل من",
+  "greaterThanLevel": "مستوى أكثر من",
+  "from": "من",
+  "to": "إلى",
+  "filter": "تصفية",
+  "clear": "مسح",
+  "thereAreNoAccounts": "لا يوجد حسابات"
 }

@@ -59,6 +59,15 @@
   "paymentSuccessfulMessage": "Your payment was successful",
   "paymentFail": "Payment Fail",
   "paymentFailMessage": "Your payment was Fail",
-  "latestAccounts": "Latest Accounts"
+  "latestAccounts": "Latest Accounts",
 
+  "lessThanPrice": "less Than Price",
+  "greeterThanPrice": "Greeter Than Price",
+  "lessThanLevel": "Less Than Level",
+  "greaterThanLevel": "greeter Than Level",
+  "from": "from",
+  "to": "to",
+  "filter": "Filter",
+  "clear": "Clear",
+  "thereAreNoAccounts": "There Are No Accounts"
 }

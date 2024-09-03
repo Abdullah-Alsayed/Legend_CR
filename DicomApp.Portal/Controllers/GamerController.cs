@@ -398,7 +398,6 @@ namespace DicomApp.Portal.Controllers
             DateTime? From,
             DateTime? To,
             int StatusType,
-            int GamerId,
             int GameId,
             int LessPrice,
             int GreeterPrice,
@@ -408,11 +407,9 @@ namespace DicomApp.Portal.Controllers
         )
         {
             ViewModel<AdsDTO> ViewData = new ViewModel<AdsDTO>();
-
             var filter = new AdsDTO()
             {
                 StatusType = StatusType,
-                GamerId = GamerId,
                 GameId = GameId,
                 Search = Search,
                 LessPrice = LessPrice,
@@ -459,7 +456,7 @@ namespace DicomApp.Portal.Controllers
             var response = BL.Services.AdvertisementService.GetAllAdvertisements(request);
             ViewData.ObjDTOs = response.AdsDTOs;
             if (ActionType == SystemConstants.ActionType.PartialView)
-                return PartialView(ViewData);
+                return PartialView("_All", response.AdsDTOs);
             else
                 return View(ViewData);
         }

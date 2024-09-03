@@ -3,14 +3,18 @@
 @using DicomApp.DAL.DB;
 @using DicomApp.Helpers;
 @using DicomApp.CommonDefinitions.DTO
+@using DicomApp.Portal.Controllers
+@using Microsoft.Extensions.Localization
 @model OptionDTO
+@inject IStringLocalizer<GamerController> Localizer
+
 @{
     Model.Columns = Model.Columns == 0 ? 6 : Model.Columns;
 }
 @if (Model.SelectListType != null && Model.SelectListType.Count() > 0)
 {
     <div class="Filter-Container @Model.ClassName" id="Filter-Model">
-        <div class="modal-content" style="background:#000">
+        <div class="modal-content" style="background:#1d232c">
             <div class="modal-body">
                 <form asp-action="@Model.Action" asp-controller="@Model.Controller" enctype="multipart/form-data" id="FilterForm">
                     <div class="container-fluid P-5">
@@ -18,35 +22,35 @@
                             @if (Model.SelectListType != null && Model.SelectListType.Count() > 0)
                             {
                                     <div class="col-lg-@Model.Columns pt-3">
-                                        <label class="Label-Model">From</label>
+                                        <label class="Label-Model">@Localizer["from"]</label>
                                         <input type="date" id="From" name="From" class="input-Model">
                                     </div>
                                 
                                     <div class="col-lg-@Model.Columns pt-3">
-                                        <label class="Label-Model">To</label>
+                                        <label class="Label-Model">@Localizer["to"]</label>
                                         <input type="date" id="To" name="To" class="input-Model">
                                     </div>
                               
                                 if (Model.SelectListType.Contains((byte)EnumSelectListType.Level))
                                 {
                                     <div class="col-lg-@Model.Columns pt-3">
-                                        <label class="Label-Model">less than level</label>
+                                        <label class="Label-Model">@Localizer["lessThanLevel"]</label>
                                         <input type="number" min="0" id="LessLevel" name="LessLevel" class="input-Model">
                                     </div>
 
                                     <div class="col-lg-@Model.Columns pt-3">
-                                        <label class="Label-Model">greeter than level</label>
+                                        <label class="Label-Model">@Localizer["greaterThanLevel"]</label>
                                         <input type="number" min="0" id="GreeterLevel" name="GreeterLevel" class="input-Model">
                                     </div>
                                 }
                                 if (Model.SelectListType.Contains((byte)EnumSelectListType.Price))
                                 {
                                     <div class="col-lg-@Model.Columns pt-3">
-                                        <label class="Label-Model">less than price</label>
+                                        <label class="Label-Model">@Localizer["lessThanPrice"]</label>
                                         <input type="number" min="0" id="LessPrice" name="LessPrice" class="input-Model">
                                     </div>
                                     <div class="col-lg-@Model.Columns pt-3">
-                                        <label class="Label-Model">greeter than price</label>
+                                        <label class="Label-Model">@Localizer["greeterThanPrice"]</label>
                                         <input type="number" min="0" id="GreeterPrice" name="GreeterPrice" class="input-Model">
                                     </div>
                                 }
@@ -144,14 +148,14 @@
                                 {
                                     <div class="col-lg-@Model.Columns pt-3">
                                         <label class="Label-Model">Gamers</label>
-                                        @Html.DropDownList("GamerId", new SelectList(Model.Lookup.UserDTOs, nameof(UserDTO.Id), nameof(UserDTO.Name)), "---  Gamer ---", new { @class = "form-control ", @required = "required" })
+                                        @Html.DropDownList("GamerId", new SelectList(Model.Lookup.UserDTOs, nameof(UserDTO.Id), nameof(UserDTO.Name)), "---  Gamer ---", new { @class = "", @required = "required" })
                                     </div>
                                 }
                                 if (Model.SelectListType.Contains((byte)EnumSelectListType.Game))
                                 {
                                     <div class="col-lg-@Model.Columns pt-3">
-                                        <label class="Label-Model">Games</label>
-                                        @Html.DropDownList("GameId", new SelectList(Model.Lookup.GameDTOs, nameof(GameDTO.Id), Model.Language == SystemConstants.Languages.Arabic ? nameof(GameDTO.NameAr) : nameof(GameDTO.NameEn)), "---  Game ---", new { @class = "form-control ", @required = "required" })
+                                        <label class="Label-Model">@Localizer["games"].ToString()</label>
+                                        @Html.DropDownList("GameId", new SelectList(Model.Lookup.GameDTOs, nameof(GameDTO.Id), Model.Language == SystemConstants.Languages.Arabic ? nameof(GameDTO.NameAr) : nameof(GameDTO.NameEn)), $"--- {Localizer["games"].ToString()} ---", new { @class = "", @required = "required" })
                                     </div>
                                 }
                                 if (Model.SelectListType.Contains((byte)EnumSelectListType.GameServiceType))
@@ -177,13 +181,13 @@
                                     </div>
                                 }
                                 <div class="col-lg-12 d-flex justify-content-between pt-3">
-                                    <button type="button" onclick="ClearFilter()" class="Red-Btn-OutLine OutLine-white Btn-Sm"> Clear </button>
+                                    <button type="button" onclick="ClearFilter()" class="Red-Btn-OutLine OutLine-white Btn-Sm cursor-pointer"> @Localizer["clear"] </button>
                                     @if (Model.ClassName == "Filter-Container-Dashbord")
                                     {
-                                        <button type="button" onclick="DashbordFilter('@Model.Action','@Model.Controller')" class="Red-Btn-OutLine OutLine-Red Btn-Sm"> Filter </button>
+                                        <button type="button" onclick="DashbordFilter('@Model.Action','@Model.Controller')" class="Red-Btn-OutLine OutLine-Red Btn-Sm cursor-pointer"> @Localizer["filter"] </button>
                                     }else
                                     {
-                                        <button type="button" onclick="Filter('@Model.Action','@Model.Controller')" class="Red-Btn-OutLine OutLine-Red Btn-Sm"> Filter </button>
+                                        <button type="button" onclick="Filter('@Model.Action','@Model.Controller')" class="Red-Btn-OutLine OutLine-Red Btn-Sm cursor-pointer"> @Localizer["filter"] </button>
                                     }
                                 </div>
                             }
@@ -194,6 +198,3 @@
         </div>
     </div>
 }
-
-<script src="~/dist/vendors/select2/js/select2.full.min.js"></script>
-<script src="~/dist/js/select2.script.js"></script>

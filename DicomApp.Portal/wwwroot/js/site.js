@@ -108,22 +108,35 @@ function PreviousPage(ControllerName, ActionName, Filter) {
 
 function Filter(ActionName, ControllerName) {
     PageIndex = 0;
-    var Url = GetPramter(ControllerName, ActionName, 'Table');
-    $("#Ajaxloader").css("display", "inline-block").fadeIn(20000)
-    $("#Ajaxloader").removeClass("d-none");
+    var Url = GetPramter(ControllerName, ActionName, ControllerName == "Gamer" && ActionName == "All" ? 'PartialView' :'Table' );
+    if (ControllerName != "Gamer" && ActionName != "All")
+     {
+        $("#Ajaxloader").css("display", "inline-block").fadeIn(500)
+        $("#Ajaxloader").removeClass("d-none");
+    } else {
+        $("#AllAccountsList-Section").fadeOut(500);
+        $(".Account-Spinner").css("display", "inline-block").fadeIn(500);
+        $(".Account-Spinner").removeClass("d-none");
+    }
     $.ajax({
         url: Url,
         type: "GET",
         contentType: "application/json; charset=utf-8",
         success: function (result) {
-            if  (ActionName == "All") {
+            if (ControllerName == "Gamer" && ActionName == "All")
+            {
+                $("#AllAccountsList-Section").fadeIn(500);
+                $("#AllAccountsList-Section").html(result);
+            }
+            else if  (ActionName == "All") {
                 $("#Table").html(result);
             }
             else {
                 $("tbody").html(result);
             }
             ResetTdSort();
-            $("#Ajaxloader").fadeOut(1000);
+            $("#Ajaxloader").fadeOut(500);
+            $(".Account-Spinner").fadeOut(500);
             var DataCount = $(`#DataCount`).val();
             $(`#DataCount-Span`).text(`Showing : ${DataCount}`);
         },

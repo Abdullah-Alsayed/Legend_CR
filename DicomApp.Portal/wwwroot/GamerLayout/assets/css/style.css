@@ -150,7 +150,9 @@ input[type="search"],
 input[type="password"],
 input[type="number"],
 select,
+option
 textarea {
+    color:#EEF0F4 !important;
     background: #24262d;
     width: 100%;
     padding: 8px 15px;
@@ -244,6 +246,7 @@ textarea:focus {
     vertical-align: middle;
 }
 .theme-btn {
+    text-align: center;
     background: #0077e4;
     border: 1px solid #0077e4;
     color: #fff;
@@ -387,9 +390,7 @@ input::-webkit-input-placeholder {
     border: none;
     padding-right: 10px;
 }
-option {
-	color: #000;
-}
+
 .header-right form select {
     background: url('../img/select-icon.png') no-repeat right center;
     color: #fff;
@@ -921,6 +922,7 @@ hr {
 .footer {
     position: relative;
 	padding: 90px 0 30px;
+    z-index:-1;
 }
 .
 .widget h4,.widget img {
@@ -1764,17 +1766,19 @@ hr {
 .purchase-modal {
     width: max-content;
     height: max-content;
-    background: #FFFFFF;
+    background: #1d232c;
     box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
     border-radius: 26px;
     max-width: 450px;
 }
 
 .purchase-form {
+    background: #1d232c;
     display: flex;
     flex-direction: column;
     gap: 20px;
     padding: 20px;
+    border-radius:20px;
 }
 
 .payment--options {
@@ -1811,16 +1815,18 @@ hr {
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
     gap: 10px;
-    color: #8B8E98;
+    color: #EEF0F4;
     margin: 0 10px;
+    font-size: 12px;
 }
 
     .separator > p {
+        color: #EEF0F4;
         word-break: keep-all;
         display: block;
         text-align: center;
         font-weight: 600;
-        font-size: 11px;
+        font-size: 12px;
         margin: auto;
     }
 
@@ -1858,8 +1864,8 @@ hr {
     }
 
 .input_label {
-    font-size: 10px;
-    color: #8B8E98;
+    font-size: 12px;
+    color: #EEF0F4;
     font-weight: 600;
 }
 
@@ -2695,4 +2701,35 @@ hr {
     width: 90% !important;
     top: 110% !important;
     left: 3% !important;
+}
+
+
+/* From Uiverse.io by xXJollyHAKERXx */
+.Account-Spinner {
+    background-image: linear-gradient(rgb(186, 66, 255) 35%,rgb(0, 225, 255));
+    width: 100px;
+    height: 100px;
+    animation: spinning82341 2.7s linear infinite;
+    text-align: center;
+    border-radius: 50px;
+    filter: blur(1px);
+    box-shadow: 0px -5px 20px 0px rgb(186, 66, 255), 0px 5px 20px 0px rgb(0, 225, 255);
+}
+
+.Account-spinnerTwo {
+    background-color: #0077e4;
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+    filter: blur(10px);
+}
+
+@keyframes spinning82341 {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.modal-content {
+    background: #1d232c !important;
 }

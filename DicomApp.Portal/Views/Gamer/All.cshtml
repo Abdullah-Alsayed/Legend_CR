@@ -45,13 +45,18 @@
 		<hr />
 		<div class="row">
 			<div class="col-lg-12">
-				<div class="row portfolio-item">
-					@if (Model != null && Model.ObjDTOs != null)
+				<div class="d-flex justify-content-center w-100 mt-5">
+					<div class="Account-Spinner d-none">
+						<div class="Account-spinnerTwo"></div>
+					</div>
+				</div>
+				<div class="row" id="AllAccountsList-Section">
+					@if (Model != null && Model.ObjDTOs != null&&Model.ObjDTOs.Any())
 					{
 						foreach (var adv in Model.ObjDTOs)
 						{
 							<div class="col-md-3 col-sm-6 @adv.Game.NameEn.RemoveWhiteSpace()">
-								<div class="single-portfolio">
+								<div class="">
 									<div class="single-portfolio-img">
 										<img src="/dist/images/@(adv.AdvertisementPhotos?.FirstOrDefault() ?? "portfolio1.png")" alt="portfolio" />
 										<a href="javascript:;" onclick="OpenPurchasePopUp(@adv.AdvertisementId)" class="popup-youtube">
@@ -65,7 +70,13 @@
 								</div>
 							</div>
 						}
-
+					}
+					else
+					{
+                        <div class="d-flex justify-content-center w-100 mt-5">
+                            <img src="~/gamerlayout/assets/css/rejected.png" />
+							<h1>@Localizer["thereAreNoAccounts"]</h1>
+						</div>
 					}
 				</div>
 			</div>
