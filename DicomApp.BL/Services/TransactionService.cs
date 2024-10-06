@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
 using DicomApp.CommonDefinitions.DTO;
 using DicomApp.CommonDefinitions.DTO.CashDTOs;
 using DicomApp.CommonDefinitions.Records;
@@ -35,12 +36,15 @@ namespace DicomApp.BL.Services
                                 CreatedBy = p.CreatedBy,
                                 IsDeleted = p.IsDeleted,
                                 IsSuccess = p.IsSuccess,
+                                Attachment = p.Attachment,
+                                PaymentId = p.PaymentId,
                                 LastModifiedAt = p.LastModifiedAt,
                                 LastModifiedBy = p.LastModifiedBy,
                                 RefId = p.RefId,
                                 TransactionId = p.TransactionId,
                                 ServiceId = p.ServiceId,
-                                TransactionTypeEnum = p.TransactionTypeEnum,
+                                TransactionType = p.TransactionType,
+                                TransactionSource = p.TransactionSource
                             });
 
                         if (request.TransactionDTO != null)
@@ -128,7 +132,9 @@ namespace DicomApp.BL.Services
                             PaymentId = req.TransactionDTO.PaymentId,
                             IsSuccess = false,
                             ServiceId = req.TransactionDTO.ServiceId,
-                            TransactionTypeEnum = req.TransactionDTO.TransactionTypeEnum,
+                            TransactionType = req.TransactionDTO.TransactionType,
+                            TransactionSource = req.TransactionDTO.TransactionSource,
+                            Attachment = req.TransactionDTO.Attachment,
                             BuyerId = req.UserID,
                             CreatedBy = req.UserID,
                             CreatedAt = DateTime.Now,

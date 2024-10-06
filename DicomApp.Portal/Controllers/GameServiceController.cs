@@ -258,7 +258,8 @@ namespace DicomApp.Portal.Controllers
                             PaymentId = createPayment.id,
                             Amount = response.ServiceDTO.GamerServiceId,
                             BuyerId = response.ServiceDTO.GamerId,
-                            TransactionTypeEnum =
+                            TransactionSource = TransactionSourceEnum.Paypal,
+                            TransactionType =
                                 response.ServiceDTO.GameServiceType == GameServiceType.Charge
                                     ? TransactionTypeEnum.Change
                                     : TransactionTypeEnum.Push

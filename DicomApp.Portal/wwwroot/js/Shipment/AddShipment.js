@@ -207,8 +207,19 @@ function OpenPurchasePopUp(accounId = 0, gameChargeId=0) {
     $('#PupUpgameChargeId').val(gameChargeId);
 }
 
+//function isAuthenticated(isAuthenticated) {
+//    if (isAuthenticated != 'false') {
+//        $('#Login-PupUp-Modal').modal('show');
+//        return false;
+//    }
+//}
+function BayByPayPal(isAuthenticated = 'false')
+{
 
-function BayByPayPal() {
+    var result = authenticatedCheck(isAuthenticated,"purchase-modal");
+    if (!result)
+        return false;
+        
     $('.custom-loader').toggleClass('d-none');
     $('#paypal-Btn').toggleClass('d-none');
     var accountId = $('#PupUpAccountId').val();
@@ -235,6 +246,69 @@ function BayByPayPal() {
         }
     })
 
+}
+function AccountCheckout(isAuthenticated = 'false') {
+   
+    var result = authenticatedCheck(isAuthenticated,"purchase-modal");
+    if (!result)
+        return false;
+
+    let formData = new FormData();
+
+    // Get the selected files
+    let files = $('#Attachment-files')[0].files;
+
+    // Append each file to the FormData
+    formData.append('file', files[0]);
+
+    // Get the hidden input values
+    let accountId = $('#PupUpAccountId').val();
+    formData.append('AccountId', accountId);
+
+    let gameChargeId = $('#PupUpgameChargeId').val();
+    formData.append('GameChargeId', gameChargeId);
+
+    let checkoutButton = $('#Account-checkout');
+    let checkoutLabel = $('#Account-checkout-Label');
+    let loader = $('.loader');
+
+    checkoutButton.prop('disabled', true);
+    checkoutLabel.addClass('d-none'); // Hide the label
+    loader.removeClass('d-none'); // Show the loader
+
+    if (files.length === 0) {
+        ToastError('Please select a file to upload.');
+        checkoutButton.prop('disabled', false);
+        checkoutLabel.removeClass('d-none'); // Show the label back
+        loader.addClass('d-none'); // Hide the loader
+        return; // Stop the function if no file is selected
+    }
+
+    $.ajax({
+        url: '/Payment/PayFromAttatchment',
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            if (response.success) {
+                $('#Attachment-files-Lable').text('');
+                $("#Attachment-files").val('');
+                ToastSuccess(response.message);
+            }
+            else
+                ToastError(response.message);
+
+        },
+        error: function (xhr, status, error) {
+            console.log('Error: ' + error);
+            ToastError(response.message);
+        }, complete: function () {
+            checkoutButton.prop('disabled', false);
+            checkoutLabel.removeClass('d-none'); // Show the label back
+            loader.addClass('d-none'); // Hide the loader        
+        }
+    });
 }
 function ServiceTypeChange() {
     //let Service = $("#ShipmentServiceId").val();
@@ -407,7 +481,7 @@ function EditAdvertisement(ActionName, ControllerName, FormName) {
     }
 }
 var validFiles = [];
-function updateAdvertisementFiles() {
+function updateAdvertisementFiles(language = "ar-EG") {
     var files = $("#Advertisement-files")[0].files;
     var filesArray = Array.from(files);
     var imageCount = $('#Advertisement-Imgs img').length;
@@ -435,13 +509,51 @@ function updateAdvertisementFiles() {
             }
         }
     });
+    if (type === "payment") 
+      $('#Advertisement-files-Lable-payment').text(imageCount + ' file(s) selected');
+     else 
+      $('#Advertisement-files-Lable').text(imageCount + ' file(s) selected');
 
-    $('#Advertisement-files-Lable').text(imageCount + ' file(s) selected');
+    
     if (validFiles.length < filesArray.length) {
         alert('Some files were not added. Ensure each file is an image, less than 2MB, and you select a maximum of 5 files.');
     }
 }
+function UploadAttachmentFiles(language = "ar-EG") {
+    var files = $("#Attachment-files")[0].files;
+    var filesArray = Array.from(files);
+    var imageCount = $('#Attachment-Imgs img').length;
 
+    filesArray.forEach(function (file) {
+        var fileType = file.type.split('/')[0];
+        if (fileType === 'image' && file.size <= 2 * 1024 * 1024) {
+            if (imageCount < 5) {
+                validFiles.push(file);
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var img = $('<img>', {
+                        src: e.target.result,
+                        class: 'uploaded-img',
+                        click: function () {
+                            $(this).remove();
+                            imageCount--;
+                            $('#Attachment-files-Lable').text(imageCount + ' file(s) selected');
+                        }
+                    });
+                    $('#Attachment-Imgs').append(img);
+                };
+                reader.readAsDataURL(file);
+                imageCount++;
+            }
+        }
+    });
+        $('#Attachment-files-Lable').text(imageCount + ' file(s) selected');
+
+
+    if (validFiles.length < filesArray.length) {
+        alert('Some files were not added. Ensure each file is an image, less than 2MB, and you select a maximum of 5 files.');
+    }
+}
 function deleteAllFiles() {
     $('#Advertisement-Imgs').empty();
     $('#Advertisement-files-Lable').text('Not selected file');

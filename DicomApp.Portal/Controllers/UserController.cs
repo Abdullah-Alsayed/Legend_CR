@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -210,7 +211,7 @@ namespace DicomApp.Portal.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();
-            return RedirectToAction("Login");
+            return RedirectToAction("Main", "Gamer");
         }
 
         public IActionResult NotFound()
@@ -233,7 +234,7 @@ namespace DicomApp.Portal.Controllers
                 new List<byte> { (byte)EnumSelectListType.Role },
                 _context
             );
-            var currRoleName = AuthHelper.GetClaimStringValue(User, "RoleID");
+            var currRoleName = AuthHelper.GetClaimStringValue(User, "RoleName");
             if (
                 currRoleName == SystemConstants.Role.SuperAdmin
                 || currRoleName == SystemConstants.Role.Admin
@@ -598,7 +599,7 @@ namespace DicomApp.Portal.Controllers
             return Json(userResponse);
         }
 
-        [Authorize]
+        [AllowAnonymous]
         public async Task<ActionResult> EditLanguage(string language)
         {
             var userRequest = new UserRequest
@@ -637,6 +638,11 @@ namespace DicomApp.Portal.Controllers
                     );
                 }
             }
+            Response.Cookies.Append(
+                "PreferredLanguage",
+                language,
+                new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
+            );
             return RedirectToAction("Main", "Gamer");
         }
 

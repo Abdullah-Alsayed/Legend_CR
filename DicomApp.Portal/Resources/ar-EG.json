@@ -3,6 +3,7 @@
   "home": "الصفحة الرئيسية",
   "addAccount": "إضافة حساب",
   "login": "تسجيل الدخول",
+  "register": "تسجبل حساب جديد",
   "logout": "الخروج",
   "userNameOrEmail": "اسم المستخدم أو البريد الإلكتروني",
   "password": "كلمة المرور",
@@ -68,5 +69,8 @@
   "to": "إلى",
   "filter": "تصفية",
   "clear": "مسح",
-  "thereAreNoAccounts": "لا يوجد حسابات"
+  "thereAreNoAccounts": "لا يوجد حسابات",
+  "dashboard": "لوحه التحكم",
+  "payUsingWallet": "الدفع باستخدام المحفظة"
+
 }

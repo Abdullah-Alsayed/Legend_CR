@@ -52,6 +52,7 @@ namespace DicomApp.Helpers
             public const string ListInvoice = "ListInvoice";
             public const string AddInvoice = "AddInvoice";
             public const string RefundInvoice = "RefundInvoice";
+            public const string ListTransaction = "ListTransaction";
 
             //User
             public const string ListStaff = "ListStaff";

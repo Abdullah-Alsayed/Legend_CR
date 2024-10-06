@@ -11,7 +11,7 @@
 @{
     ViewData["Title"] = "Main";
     Layout = "~/Views/Shared/_VendorLayout.cshtml";
-	var language = AuthHelper.GetClaimStringValue(User, SystemConstants.Claims.Language);
+	var language = AuthHelper.GetLanguageValue(User, Context);
 
 }
 

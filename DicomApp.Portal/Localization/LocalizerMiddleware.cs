@@ -12,33 +12,36 @@ namespace Localization
     {
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            // Set the culture key based on the request Claims
+            // Attempt to get the culture key from user claims
             var cultureKey = context
                 .User.Claims.FirstOrDefault(c => c.Type == SystemConstants.Claims.Language)
                 ?.Value;
 
-            // If there is supplied a culture
-            if (!string.IsNullOrEmpty(cultureKey))
+            // If there is no culture key in claims, check the cookies
+            if (string.IsNullOrEmpty(cultureKey))
             {
-                // Check if the culture exists
-                if (DoesCultureExist(cultureKey))
-                {
-                    // Set the culture Info
-                    var culture = new CultureInfo(cultureKey);
-
-                    // Set the culture in the current thread responsible for that request
-                    Thread.CurrentThread.CurrentCulture = culture;
-                    Thread.CurrentThread.CurrentUICulture = culture;
-                }
+                // Try to retrieve the language from cookies
+                cultureKey = context.Request.Cookies["PreferredLanguage"];
             }
 
-            // Await the next request
+            // If there is a culture key (either from claims or cookies)
+            if (!string.IsNullOrEmpty(cultureKey) && DoesCultureExist(cultureKey))
+            {
+                // Set the culture Info
+                var culture = new CultureInfo(cultureKey);
+
+                // Set the culture in the current thread responsible for that request
+                Thread.CurrentThread.CurrentCulture = culture;
+                Thread.CurrentThread.CurrentUICulture = culture;
+            }
+
+            // Continue with the next request
             await next(context);
         }
 
         private static bool DoesCultureExist(string cultureName)
         {
-            // Return the culture where the culture equals the culture name set
+            // Return whether the culture exists
             return CultureInfo
                 .GetCultures(CultureTypes.AllCultures)
                 .Any(culture =>

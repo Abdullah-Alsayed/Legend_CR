@@ -9,6 +9,8 @@ using DicomApp.DAL.DB;
 using DicomApp.Helpers;
 using DicomApp.Helpers.Services.PayPal;
 using ECommerce.Core.Services.MailServices;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
@@ -20,15 +22,18 @@ namespace DicomApp.Portal.Controllers
         readonly IPayPalService _payPalService;
         readonly IConfiguration _configuration;
         readonly IMailServices _mailServices;
+        private readonly IHostingEnvironment _hosting;
 
         public PaymentController(
             ShippingDBContext context,
             IPayPalService payPalService,
             IConfiguration configuration,
-            IMailServices mailServices
+            IMailServices mailServices,
+            IHostingEnvironment hosting
         )
         {
             _context = context;
+            _hosting = hosting;
             _payPalService = payPalService;
             _configuration = configuration;
             _mailServices = mailServices;
@@ -47,6 +52,69 @@ namespace DicomApp.Portal.Controllers
                     return Json(new { success = false, message = "field" });
 
                 //    return await Charge(gameChargeId, RoleID, UserID);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        public async Task<IActionResult> PayFromAttatchment(int accountId, IFormFile file)
+        {
+            try
+            {
+                if (file != null)
+                {
+                    var RoleID = AuthHelper.GetClaimValue(User, SystemConstants.Claims.RoleID);
+                    var UserID = AuthHelper.GetClaimValue(User, SystemConstants.Claims.UserID);
+                    if (accountId != 0)
+                    {
+                        var account = AdvertisementService.GetAdvertisement(
+                            new AdvertisementRequest
+                            {
+                                context = _context,
+                                AdsDTO = new AdsDTO { AdvertisementId = accountId }
+                            }
+                        );
+                        var img = BaseHelper.UploadImg(file, _hosting.ContentRootPath);
+                        var transactionResult = TransactionService.AddTransaction(
+                            new TransactionRequest
+                            {
+                                context = _context,
+                                UserID = UserID,
+                                RoleID = RoleID,
+                                TransactionDTO = new TransactionDTO
+                                {
+                                    AdvertisementId = accountId,
+                                    TransactionType = TransactionTypeEnum.Account,
+                                    TransactionSource = TransactionSourceEnum.Attachments,
+                                    Attachment = img,
+                                    BuyerId = UserID,
+                                    Amount = account?.AdsDTO?.Price ?? 0
+                                }
+                            }
+                        );
+
+                        var result = AdvertisementService.ChangStatusAdvertisement(
+                            new AdvertisementRequest
+                            {
+                                context = _context,
+                                UserID = UserID,
+                                RoleID = RoleID,
+                                AdsDTO = new AdsDTO
+                                {
+                                    AdvertisementId = accountId,
+                                    StatusType = (int)StatusTypeEnum.Pending
+                                }
+                            }
+                        );
+                        return Json(result);
+                    }
+                    else
+                        return Json(new { success = false, message = "field" });
+                }
+                else
+                    return Json(new { success = false, message = "field" });
             }
             catch (Exception ex)
             {
@@ -156,6 +224,7 @@ namespace DicomApp.Portal.Controllers
                             {
                                 AdvertisementId = accountId,
                                 PaymentId = createPayment.id,
+                                TransactionSource = TransactionSourceEnum.Paypal,
                                 Amount = account.Price,
                                 BuyerId = UserID
                             }

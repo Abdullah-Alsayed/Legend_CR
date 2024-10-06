@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace DicomApp.Helpers
 {
@@ -19,6 +20,26 @@ namespace DicomApp.Helpers
             var claim = identity.FindFirst(c => c.Type == Name);
             if (claim != null)
                 return claim.Value;
+            return null;
+        }
+
+        public static string GetLanguageValue(ClaimsPrincipal user, HttpContext httpContext)
+        {
+            if (user.Identity.IsAuthenticated)
+            {
+                var identity = user.Identity as ClaimsIdentity;
+                var claim = identity?.FindFirst(c => c.Type == SystemConstants.Claims.Language);
+
+                if (claim != null)
+                    return claim.Value;
+            }
+
+            if (
+                !user.Identity.IsAuthenticated
+                && httpContext.Request.Cookies.ContainsKey("PreferredLanguage")
+            )
+                return httpContext.Request.Cookies["PreferredLanguage"];
+
             return null;
         }
 

@@ -52,7 +52,7 @@
 		loop:true,
 		dots: true,
 		autoplay: true,
-		autoplayTimeout:4000,
+		autoplayTimeout:8000,
 		nav: false,
 		items: 1,
 		responsive:{
@@ -219,6 +219,9 @@
 	})
 	$('#AddTestimonial').click(AddTestimonial);
 
+
+	//$('#Account-checkout').on('click', function(), AccountCheckout());
+
 	$('#UpdateUserData').on('show.bs.modal', function (e) {
 		$('#UpdateUserLoader').show();
 		$('#Gamer-Form').addClass('d-none');
@@ -323,6 +326,5 @@
 			}
 		});
 	}
-
 
 }(jQuery));

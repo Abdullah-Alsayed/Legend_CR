@@ -118,6 +118,19 @@
                                 </a>
                             </li>
                         }
+                        <li class="cursor-pointer" onclick="OpenSection('TransactionManagement-Ul')">
+                            <a><img class="Img-Ul" src="~/dist/images/Icons/Invoicing-Cash.png" /> Transaction</a>
+                            <ul id="TransactionManagement-Ul" class="d-none Nested-sidebar-menu">
+                                @if (BaseService.CheckRoleAccessability(roleID, SystemConstants.Permission.ListInvoice, connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Invoice/All">Invoice</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, SystemConstants.Permission.ListTransaction, connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Invoice/AllTransaction">Transaction</a></li>
+                                }
+                            </ul>
+                        </li>
                         @if (BaseService.CheckRoleAccessability(roleID, SystemConstants.Permission.ListTestimonial, connectionString: connectionString))
                         {
                             <li class="cursor-pointer">
@@ -126,7 +139,14 @@
                                     Testimonial
                                 </a>
                             </li>
-                        }                      
+                        }
+
+                        <li id="Dashboard-li" class="cursor-pointer">
+                            <a href="/Gamer/Main">
+                                <img class="Img-Ul" src="~/dist/images/Icons/Dashboard.png" />
+                                User Layout
+                            </a>
+                        </li>
                         <li style="padding-top: 100%;"><a href="~/User/Logout"><img class="Img-Ul" src="~/dist/images/Icons/Logout.png" /> Logout</a></li>
                     </ul>
                 </li>

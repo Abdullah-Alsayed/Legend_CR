@@ -2522,6 +2522,51 @@ function alertError(title = 'Failed, try again', timer = 3000) {
         timer: timer
     });
 }
+function ToastSuccess(title = 'Success', timer = 3000)
+{
+    const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: timer,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+        }
+    });
+    Toast.fire({
+        icon: "success",
+        title: title
+    });
+}
+function ToastError(title = 'Error', timer = 3000) {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: timer,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+        }
+    });
+    Toast.fire({
+        icon: "error",
+        title: title
+    });
+}
+
+function authenticatedCheck(isAuthenticated, modal = null) {
+    if (isAuthenticated == 'false') {
+        $('#Login-PupUp-Modal').modal('show');
+        if (modal != null) {
+        $(`#${modal}`).modal('hide');
+        }
+        return false;
+    } else return true;
+}
 
 
 //function showConfirmationDialog(n, t, i) { $("#modal-dialog-confirmation-messageTitle").text(n); $("#modal-dialog-confirmation-messageText").html(t); $("#modal-dialog-confirmation-aConfirm").unbind("click"); $("#modal-dialog-confirmation-aConfirm").click(function () { $("#modal-dialog-confirmation").modal("hide"); i() }); $("#modal-dialog-confirmation").modal("show") } $(document).ready(function () { $(".date-popup").datepicker({ keyboardNavigation: !1, forceParse: !1, todayHighlight: !0 }) });

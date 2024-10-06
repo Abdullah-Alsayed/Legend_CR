@@ -4,6 +4,7 @@
   "addAccount": "Add Account",
   "login": "Login",
   "logout": "Logout",
+  "register": "Register",
   "userNameOrEmail": "USERNAME OR EMAIL ADDRESS",
   "password": "password",
   "rememberMe": "Remember Me",
@@ -69,5 +70,7 @@
   "to": "to",
   "filter": "Filter",
   "clear": "Clear",
-  "thereAreNoAccounts": "There Are No Accounts"
+  "thereAreNoAccounts": "There Are No Accounts",
+  "dashboard": "Dashboard",
+  "payUsingWallet": "pay Using Wallet"
 }

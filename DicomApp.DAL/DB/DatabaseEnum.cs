@@ -19,8 +19,15 @@ namespace DicomApp.DAL.DB
 
     public enum TransactionTypeEnum
     {
-        Acount,
+        Account,
         Push,
-        Change
+        Change,
+        None
+    }
+
+    public enum TransactionSourceEnum
+    {
+        Paypal,
+        Attachments
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using DicomApp.DAL.DB;
@@ -15,26 +16,33 @@ namespace DicomApp.Portal
     {
         public static async Task Main(string[] args)
         {
-            var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
-            XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
+            try
+            {
+                var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
+                XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
 
-            var host = BuildWebHost(args);
-            //using (var scope = host.Services.CreateScope())
-            //{
-            //    var services = scope.ServiceProvider;
-            //    var context = services.GetRequiredService<ShippingDBContext>();
-            //    if (context != null)
-            //        await DataSeeder.Seed(context);
-            //    else
-            //    {
-            //        var logger = services.GetRequiredService<ILogger<Program>>();
-            //        logger.LogError(
-            //            "ShippingDBContext could not be resolved from the service provider."
-            //        );
-            //    }
-            //}
+                var host = BuildWebHost(args);
+                using (var scope = host.Services.CreateScope())
+                {
+                    var services = scope.ServiceProvider;
+                    var context = services.GetRequiredService<ShippingDBContext>();
+                    if (context != null)
+                        await DataSeeder.Seed(context);
+                    else
+                    {
+                        var logger = services.GetRequiredService<ILogger<Program>>();
+                        logger.LogError(
+                            "ShippingDBContext could not be resolved from the service provider."
+                        );
+                    }
+                }
 
-            await host.RunAsync();
+                await host.RunAsync();
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         public static IWebHost BuildWebHost(string[] args) =>

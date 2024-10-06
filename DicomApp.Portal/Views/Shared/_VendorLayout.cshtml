@@ -11,12 +11,14 @@
 @{
 	string connectionString = @Startup.Configuration["ConnectionStrings:DicomAppDBEntities"];
 	long roleID = 0;
+	string roleName = string.Empty;
 	string direction = "rtl ";
-	string language = SystemConstants.Languages.English;
+	string language = AuthHelper.GetLanguageValue(User,Context);
+	string IsAuthenticated = @User.Identity.IsAuthenticated.ToString().ToLower();
 	if (User.Identity.IsAuthenticated)
 	{
 		roleID = AuthHelper.GetClaimValue(User, SystemConstants.Claims.RoleID);
-		language = AuthHelper.GetClaimStringValue(User,SystemConstants.Claims.Language);
+		roleName = AuthHelper.GetClaimStringValue(User, SystemConstants.Claims.RoleName);
 		//direction = language == SystemConstants.Languages.Arabic ? "rtl" : "ltr";
 	}
 }
@@ -67,32 +69,20 @@
 					<div class="mainmenu">
 						<ul id="primary-menu">
 							<li><a class="active" href="@Url.Action("Main","Gamer")">@Localizer["home"]</a></li>
-							@*	<li><a href="movies.html">Movies</a></li>
-							<li><a href="celebrities.html">CelebritiesList</a></li>
-							<li><a href="top-movies.html">Top Movies</a></li>
-							<li><a href="blog.html">News</a></li>
-							<li>
-								<a href="#">Pages <i class="icofont icofont-simple-down"></i></a>
-								<ul>
-									<li><a href="blog-details.html">Blog Details</a></li>
-									<li><a href="movie-details.html">Movie Details</a></li>
-								</ul>
-							</li> *@
+							@if (User.Identity.IsAuthenticated && roleName != SystemConstants.Role.Gamer)
+							{
+							   <li><a class="active" href="@Url.Action("index","Home")">@Localizer["dashboard"]</a></li>	
+							}
 						</ul>
 					</div>
 				</div>
 				<div class="header-right">
 					<form action="#">
-@* 						<select>
-							<option value="Movies">Movies</option>
-							<option value="Movies">Movies</option>
-							<option value="Movies">Movies</option>
-						</select> *@
 						<input type="text" />
 						<button><i class="icofont icofont-search"></i></button>
 					</form>
 				</div>
-								<div class="user-info">
+				<div class="user-info">
 					<ul>
 						@if (User.Identity.IsAuthenticated)
 						{
@@ -130,7 +120,7 @@
 				<div>
 					@if (!User.Identity.IsAuthenticated)
 					{
-						<a class="login-popup" href="#">@Localizer["login"]</a>
+						<a class="theme-btn" data-toggle="modal" data-target="#Login-PupUp-Modal" href="#">@Localizer["login"]</a>
 					}
 					else
 					{
@@ -144,7 +134,7 @@
 		</div>
 	</header>
 
-	<div class="login-area">
+@* 	<div class="login-area">
 		<div class="login-box">
 			<a href="#"><i class="icofont icofont-close"></i></a>
 			<h2>@Localizer["login"]</h2>
@@ -170,9 +160,49 @@
 					<a href="#"><i class="icofont icofont-camera"></i></a>
 				</div>
 			</form>
-
 		</div>
+	</div> *@
+	<div>
+		<div class="modal fade" id="Login-PupUp-Modal" tabindex="-1" role="dialog" aria-labelledby="Login-PupUp-Modal-Label" aria-hidden="true">
+			<div class="modal-dialog" style="margin:revert-layer;" role="document">
+			<div class="login-area Login-PupUp-container">
+            <div class="modal-content"style="background-color:transparent!important;border:none !important">
+					<div class="Login-PupUp-Box">
+						<div class="Login-PupUp-heading">@Localizer["login"]</div>
+						<form class="Login-PupUp-form" method="post" asp-action="Login" asp-controller="User" id="Login-Form">
+							<input required="" class="input" type="email" name="Email" id="Email" placeholder="@Localizer["userNameOrEmail"]">
+							<input required="" class="input" type="password" name="Password" id="Password" placeholder="@Localizer["password"]">
+							<span class="forgot-password"><a href="@Url.Action("Create","User")">@Localizer["register"]</a></span>
+							<input class="login-button" type="submit" value="@Localizer["login"]">
+						</form>
+						<div class="social-account-container">
+							<span class="title">Or Sign in with</span>
+							<div class="social-accounts">
+								<button class="social-button google">
+									<svg class="svg" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 488 512">
+										<path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"></path>
+									</svg>
+								</button>
+								<button class="social-button apple">
+									<svg class="svg" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512">
+										<path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"></path>
+									</svg>
+								</button>
+								<button class="social-button twitter">
+									<svg class="svg" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
+										<path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"></path>
+									</svg>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+    </div>
+  </div>
+</div>
 	</div>
+
+
 
 	<!-- Add Account -->
 	<div class="buy-ticket">
@@ -247,7 +277,7 @@
 												<p id="Advertisement-files-Lable">@Localizer["notSelectedFile"]</p>
 												<svg onclick="deleteAllFiles()" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5.16565 10.1534C5.07629 8.99181 5.99473 8 7.15975 8H16.8402C18.0053 8 18.9237 8.9918 18.8344 10.1534L18.142 19.1534C18.0619 20.1954 17.193 21 16.1479 21H7.85206C6.80699 21 5.93811 20.1954 5.85795 19.1534L5.16565 10.1534Z" stroke="#000000" stroke-width="2"></path> <path d="M19.5 5H4.5" stroke="#000000" stroke-width="2" stroke-linecap="round"></path> <path d="M10 3C10 2.44772 10.4477 2 11 2H13C13.5523 2 14 2.44772 14 3V5H10V3Z" stroke="#000000" stroke-width="2"></path> </g></svg>
 											</label>
-											<input id="Advertisement-files" id="Files" name="Files" type="file" onchange="updateAdvertisementFiles()" accept="image/*" multiple>
+											<input id="Advertisement-files" name="Files" type="file" onchange="updateAdvertisementFiles()" accept="image/*" multiple>
 										</div>
 									</div>
 
@@ -392,13 +422,13 @@
 	
 
 	<!--purchase Modal -->
-<div class="modal fade" id="purchase-modal" tabindex="-1" role="dialog" aria-labelledby="purchase-modalLabel" aria-hidden="true">
+	<div class="modal fade" id="purchase-modal" tabindex="-1" role="dialog" aria-labelledby="purchase-modalLabel" aria-hidden="true">
 	<div class="modal-dialog  modal-sm" role="document">
     <div class="modal-content">
 			<div class="purchase-modal">
-				<form class="purchase-form">
+				<form class="purchase-form" action="">
 					<div class="payment--options">
-						<button name="paypal" onclick="BayByPayPal()" type="button">
+							<button name="paypal" onclick="BayByPayPal('@IsAuthenticated')" type="button">
 					        <div class="custom-loader d-none"></div>
 							<svg id="paypal-Btn" xml:space="preserve" viewBox="0 0 124 33" height="33px" width="124px" y="0px" x="0px" id="Layer_1" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
 <path d="M46.211,6.749h-6.839c-0.468,0-0.866,0.34-0.939,0.802l-2.766,17.537c-0.055,0.346,0.213,0.658,0.564,0.658  h3.265c0.468,0,0.866-0.34,0.939-0.803l0.746-4.73c0.072-0.463,0.471-0.803,0.938-0.803h2.165c4.505,0,7.105-2.18,7.784-6.5  c0.306-1.89,0.013-3.375-0.872-4.415C50.224,7.353,48.5,6.749,46.211,6.749z M47,13.154c-0.374,2.454-2.249,2.454-4.062,2.454  h-1.032l0.724-4.583c0.043-0.277,0.283-0.481,0.563-0.481h0.473c1.235,0,2.4,0,3.002,0.704C47.027,11.668,47.137,12.292,47,13.154z" fill="#253B80"></path>
@@ -451,29 +481,43 @@
 					</div>
 					<div class="separator">
 						<hr class="line">
-						<p>@Localizer["payUsingCredit"]</p>
+						<p>@Localizer["payUsingWallet"]</p>
 						<hr class="line">
 					</div>
+						<span class="text-center">
+							<h3>+201118690648</h3>
+						</span>
 					<div class="credit-card-info--form">
-						<div class="input_container">
-								<label for="password_field" class="input_label">@Localizer["cardHolderFullName"]</label>
-							<input id="password_field" class="input_field" type="text" name="input-name" title="@Localizer["cardHolderFullName"]" placeholder="@Localizer["pleaseEnter"] @Localizer["yourFullName"]">
-						</div>
-						<div class="input_container">
-								<label for="password_field" class="input_label">@Localizer["cardNumber"]</label>
-							<input id="password_field" class="input_field" type="number" name="input-name" title="@Localizer["cardNumber"]" placeholder="0000 0000 0000 0000">
-						</div>
-						<div class="input_container">
-								<label for="password_field" class="input_label">@Localizer["expiryDate"]/ CVV</label>
-							<div class="split">
-								<input id="password_field" class="input_field" type="text" name="input-name" title="@Localizer["expiryDate"]" placeholder="01/23">
-								<input id="password_field" class="input_field" type="number" name="cvv" title="CVV" placeholder="CVV">
+					    <div class="col-lg-12 mt-3">
+								<div class="row Red-Row justify-content-center pt-3 Game-Options">
+									<div class="files-container">
+										<div class="files-header">
+											<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+												<g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+												<g id="SVGRepo_iconCarrier">
+													<path d="M7 10V9C7 6.23858 9.23858 4 12 4C14.7614 4 17 6.23858 17 9V10C19.2091 10 21 11.7909 21 14C21 15.4806 20.1956 16.8084 19 17.5M7 10C4.79086 10 3 11.7909 3 14C3 15.4806 3.8044 16.8084 5 17.5M7 10C7.43285 10 7.84965 10.0688 8.24006 10.1959M12 12V21M12 12L15 15M12 12L9 15" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+												</g>
+											</svg>
+											<label for="Attachment-files">@Localizer["browseUpload"]</label>
+										</div>
+										<label class="files-footer">
+											<svg fill="#000000" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M15.331 6H8.5v20h15V14.154h-8.169z"></path><path d="M18.153 6h-.009v5.342H23.5v-.002z"></path></g></svg>
+											<p id="Attachment-files-Lable">@Localizer["notSelectedFile"]</p>
+											<svg onclick="deleteAllFiles()" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5.16565 10.1534C5.07629 8.99181 5.99473 8 7.15975 8H16.8402C18.0053 8 18.9237 8.9918 18.8344 10.1534L18.142 19.1534C18.0619 20.1954 17.193 21 16.1479 21H7.85206C6.80699 21 5.93811 20.1954 5.85795 19.1534L5.16565 10.1534Z" stroke="#000000" stroke-width="2"></path> <path d="M19.5 5H4.5" stroke="#000000" stroke-width="2" stroke-linecap="round"></path> <path d="M10 3C10 2.44772 10.4477 2 11 2H13C13.5523 2 14 2.44772 14 3V5H10V3Z" stroke="#000000" stroke-width="2"></path> </g></svg>
+										</label>
+										<input id="Attachment-files"  name="Files" type="file" onchange="UploadAttachmentFiles('@language')" accept="image/*" multiple>
+									</div>
+								</div>
+
 							</div>
-						</div>
 					</div>
 					<input type="hidden" id="PupUpAccountId" value="0"/>
 			    	<input type="hidden" id="PupUpgameChargeId" value="0" />
-						<button class="purchase--btn">@Localizer["checkout"]</button>
+						<button type="button" class="purchase--btn" id="Account-checkout" onclick="AccountCheckout('@IsAuthenticated')">
+							<span id="Account-checkout-Label"> @Localizer["checkout"] </span>
+							<div class="d-flex justify-content-center"> <span class="loader d-none"></span></div>
+						</button>
 				</form>
 			</div>
 

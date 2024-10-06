@@ -4,6 +4,7 @@ using System.Linq;
 using DicomApp.BL.Services;
 using DicomApp.CommonDefinitions.DTO;
 using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
+using DicomApp.CommonDefinitions.DTO.CashDTOs;
 using DicomApp.CommonDefinitions.Requests;
 using DicomApp.DAL.DB;
 using DicomApp.Helpers;
@@ -152,6 +153,56 @@ namespace DicomApp.Portal.Controllers
                         return PartialView("_Advertisement", response.InvoiceDTOs);
                 }
             }
+            else
+                return View(ViewData);
+        }
+
+        [AuthorizePerRole(SystemConstants.Permission.ListTransaction)]
+        public IActionResult AllTransaction(
+            string Search,
+            string OrderByColumn,
+            bool? IsDesc,
+            int PageIndex,
+            DateTime? From,
+            DateTime? To,
+            string TransactionType,
+            string ActionType = null
+        )
+        {
+            ViewModel<TransactionDTO> ViewData = new ViewModel<TransactionDTO>();
+            var filter = new TransactionDTO()
+            {
+                TransactionType = !string.IsNullOrEmpty(TransactionType)
+                    ? Enum.Parse<TransactionTypeEnum>(TransactionType)
+                    : TransactionTypeEnum.None,
+                Search = Search,
+            };
+            if (ActionType != SystemConstants.ActionType.Table) { }
+
+            if (From.HasValue)
+                filter.DateFrom = From.Value;
+            if (To.HasValue)
+                filter.DateTo = To.Value;
+
+            var request = new TransactionRequest
+            {
+                RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
+                UserID = AuthHelper.GetClaimValue(User, "UserID"),
+                context = _context,
+                IsDesc = IsDesc ?? true,
+                PageIndex = PageIndex,
+                PageSize = BaseHelper.Constants.PageSize,
+                OrderByColumn = OrderByColumn ?? nameof(Invoice.CreatedAt),
+                applyFilter = true,
+                TransactionDTO = filter
+            };
+
+            var response = BL.Services.TransactionService.GetTransactions(request);
+            ViewData.ObjDTOs = response.TransactionDTOs;
+            if (ActionType == SystemConstants.ActionType.PartialView)
+                return PartialView(ViewData);
+            else if (ActionType == SystemConstants.ActionType.Table)
+                return PartialView("_AllTransaction", response.TransactionDTOs);
             else
                 return View(ViewData);
         }

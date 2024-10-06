@@ -137,8 +137,8 @@
     text-align: center;
     color: #EEF0F4;
 }
-    
-#Advertisement-files {
+
+#Advertisement-files, #Attachment-files {
     display: none;
 }
 .uploaded-img{
@@ -146,7 +146,7 @@
     width:150px;
     height:150px;
 }
-#Advertisement-Imgs {
+#Advertisement-Imgs{
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;

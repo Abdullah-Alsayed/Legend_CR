@@ -147,6 +147,7 @@ namespace DicomApp.Portal
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+
             app.UseSession();
             app.UseAuthentication();
 
@@ -183,7 +184,7 @@ namespace DicomApp.Portal
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}"
+                    template: "{controller=Gamer}/{action=Main}/{id?}"
                 );
             });
 

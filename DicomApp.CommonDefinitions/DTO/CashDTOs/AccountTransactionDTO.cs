@@ -21,6 +21,11 @@ namespace DicomApp.CommonDefinitions.DTO.CashDTOs
         public string Search { get; set; }
         public string PaymentId { get; set; }
         public int? ServiceId { get; set; }
-        public TransactionTypeEnum TransactionTypeEnum { get; set; }
+        public TransactionTypeEnum TransactionType { get; set; }
+        public TransactionSourceEnum TransactionSource { get; set; }
+        public string Attachment { get; set; }
+
+        public DateTime? DateFrom { get; set; }
+        public DateTime? DateTo { get; set; }
     }
 }

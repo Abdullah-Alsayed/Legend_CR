@@ -76,7 +76,7 @@ namespace DicomApp.BL.Services
                 {
                     try
                     {
-                        if (!request.context.Testimonial.Any(x => x.CreatedBy == req.UserID))
+                        if (request.context.Testimonial.Any(x => x.CreatedBy == req.UserID))
                         {
                             res.Message = "you have already evaluated";
                             res.Success = false;
@@ -111,7 +111,7 @@ namespace DicomApp.BL.Services
                 {
                     try
                     {
-                        if (!request.context.Testimonial.Any(x => x.CreatedBy == req.UserID))
+                        if (request.context.Testimonial.Any(x => x.CreatedBy == req.UserID))
                         {
                             res.Message = "you have already evaluated";
                             res.Success = false;

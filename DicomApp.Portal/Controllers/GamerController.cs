@@ -48,6 +48,7 @@ namespace DicomApp.Portal.Controllers
             _stringLocalizer = stringLocalizer;
         }
 
+        [AllowAnonymous]
         public IActionResult Main(
             string Search,
             int PageIndex,
