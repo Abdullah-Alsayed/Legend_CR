@@ -5,6 +5,7 @@ using DicomApp.CommonDefinitions.DTO;
 using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
 using DicomApp.CommonDefinitions.DTO.CashDTOs;
 using DicomApp.CommonDefinitions.Requests;
+using DicomApp.CommonDefinitions.Responses;
 using DicomApp.DAL.DB;
 using DicomApp.Helpers;
 using DicomApp.Helpers.Services.PayPal;
@@ -13,6 +14,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Localization;
 
 namespace DicomApp.Portal.Controllers
 {
@@ -22,6 +24,7 @@ namespace DicomApp.Portal.Controllers
         readonly IPayPalService _payPalService;
         readonly IConfiguration _configuration;
         readonly IMailServices _mailServices;
+        readonly IStringLocalizer<PaymentController> _stringLocalizer;
         private readonly IHostingEnvironment _hosting;
 
         public PaymentController(
@@ -29,7 +32,8 @@ namespace DicomApp.Portal.Controllers
             IPayPalService payPalService,
             IConfiguration configuration,
             IMailServices mailServices,
-            IHostingEnvironment hosting
+            IHostingEnvironment hosting,
+            IStringLocalizer<PaymentController> stringLocalizer
         )
         {
             _context = context;
@@ -37,6 +41,7 @@ namespace DicomApp.Portal.Controllers
             _payPalService = payPalService;
             _configuration = configuration;
             _mailServices = mailServices;
+            _stringLocalizer = stringLocalizer;
         }
 
         [HttpPost]
@@ -76,7 +81,7 @@ namespace DicomApp.Portal.Controllers
                                 AdsDTO = new AdsDTO { AdvertisementId = accountId }
                             }
                         );
-                        var img = BaseHelper.UploadImg(file, _hosting.ContentRootPath);
+                        var img = BaseHelper.UploadImg(file, _hosting.WebRootPath);
                         var transactionResult = TransactionService.AddTransaction(
                             new TransactionRequest
                             {
@@ -181,6 +186,49 @@ namespace DicomApp.Portal.Controllers
         public async Task<IActionResult> CancelPay()
         {
             return View();
+        }
+
+        public async Task<IActionResult> AcceptPayment(int Id)
+        {
+            var transactionRequest = new TransactionRequest
+            {
+                RoleID = AuthHelper.GetClaimValue(User, SystemConstants.Claims.RoleID),
+                UserID = AuthHelper.GetClaimValue(User, SystemConstants.Claims.UserID),
+                context = _context,
+                TransactionDTO = new TransactionDTO { TransactionId = Id },
+                applyFilter = true,
+            };
+            var transactionResponse = DicomApp.BL.Services.TransactionService.AcceptPayment(
+                transactionRequest
+            );
+            if (transactionResponse.Success)
+            {
+                var body =
+                    $"userName : {transactionResponse.TransactionDTO.Advertisement.UserName} ,  password : {transactionResponse.TransactionDTO.Advertisement.Password}";
+                var emailResult = await _mailServices.SendAsync(
+                    new EmailDto
+                    {
+                        Email = transactionResponse.TransactionDTO.Advertisement.Gamer.Email,
+                        Subject = "congratulations",
+                        Body = body
+                    }
+                );
+                return Json(
+                    new
+                    {
+                        success = true,
+                        message = _stringLocalizer[SystemConstants.Message.Success].ToString()
+                    }
+                );
+            }
+            else
+                return Json(
+                    new
+                    {
+                        success = false,
+                        message = _stringLocalizer[SystemConstants.Message.Field].ToString()
+                    }
+                );
         }
 
         #region helpers

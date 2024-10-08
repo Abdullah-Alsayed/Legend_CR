@@ -25,8 +25,7 @@
                 Action = "AllTransaction",
                 Controller = "Invoice",
                 Lookup = Model.Lookup,
-                SelectListType = new byte[] {
-            }
+                SelectListType = new byte[] { }
             });
             }
         </div>
@@ -39,6 +38,7 @@
                 <thead>
                     <tr>
                         <td>RefId</td>
+                        <td>Advertisement</td>
                         <td>Is Success</td>
                         <td>Amount</td>
                         <td>PaymentId</td>
@@ -62,61 +62,6 @@
                     </tr>
                 </tfoot>
             </table>
-        </div>
-    </div>
-    <!-- Add New GameCharge Model -->
-    <div class="modal fade" id="AddGameCharge-Model" tabindex="-1" role="dialog" aria-labelledby="AddGameChargeLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div>
-                    <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <h2 class="Model-Titel">Add New GameCharge</h2>
-                    <form asp-action="AddGameCharge" asp-controller="GameCharge" class="needs-validation" enctype="multipart/form-data" id="AddGameCharge-Form" novalidate>
-                        <div class="container-fluid P-Model">
-                            <div class="row pt-2">
-                                <div class="col-lg-6 pt-3">
-                                    <label class="Label-Model">Price</label>
-                                    <input class="input-Model" type="number" required placeholder="Price" name="Price" id="Price" />
-                                    <div class="invalid-feedback">
-                                        Please enter Price
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 pt-3">
-                                    <label class="Label-Model">Count</label>
-                                    <input class="input-Model" type="number" required placeholder="Count" name="Count" id="Count" />
-                                    <div class="invalid-feedback">
-                                        Please enter Count
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 pt-3">
-                                    <label class="Label-Model">Discount</label>
-                                    <input class="input-Model" type="number" required placeholder="Discount" name="Discount" id="Discount" />
-                                    <div class="invalid-feedback">
-                                        Please enter Discount
-                                    </div>
-                                </div>
-                                <div class="col-lg-12">
-                                    <button class="Red-Btn-OutLine OutLine-white Btn-Model mt-3" onclick="OpenFileInput('AddGameCharge-Form')" type="button">Upload Image</button>
-                                    <input type="file" accept="image/*,.png,.jpg,.gif" id="ImgFile" name="File" class="form-control d-none Add-Photo" onchange="UpdateImgDisplay(event,'AddGameChargeImg')" placeholder="Photo">
-                                </div>
-                                <div class="row justify-content-center pt-3">
-                                    <div> <img width="250" id="AddGameChargeImg" /> </div>
-                                </div>
-                                <div class="col-lg-12">
-                                    <button class="Red-Btn-OutLine OutLine-Red Btn-Model" type="button" onclick="AddEntity('GameCharge','AddGameCharge','AddGameCharge-Form')" id="BtnSend">
-                                        Add GameCharge
-                                        <span class="Spinner spinner-border spinner-border-sm ml-2 mb-1 d-none" role="status" aria-hidden="true"></span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
         </div>
     </div>
 </main>

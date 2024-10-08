@@ -571,3 +571,41 @@ function GetFeesSummary() {
         $("#spanTotalFees").html((Number(RefundCash) + Number(data.shippingFees)) + " EGP");
     })
 }
+
+function ConfirmTransaction(transactionId, advertisementId) {
+    let confirmButton = $(`#BtnConfirm_${transactionId}`);
+    let spinner = confirmButton.find('.Spinner');
+    let modalId = `#ConfirmTransaction-Model_${transactionId}`; // Modal ID
+
+    // Disable the button and show the spinner
+    confirmButton.prop('disabled', true);
+    spinner.removeClass('d-none');
+
+    $.ajax({
+        url: '/Payment/AcceptPayment', 
+        type: 'POST',
+        data: { Id: transactionId },
+        success: function (response) {
+            if (response.success) {
+                $(`tr[data-AdvertisementId="${advertisementId}"]`).fadeOut(500, function () {
+                    $(this).remove();
+                });
+                alertSuccess(response.message); 
+            }
+            else {
+                alertError(response.message); 
+            }
+        },
+        error: function () {
+            alert('Error occurred while processing the request.');
+        },
+        complete: function () {
+            // Close the modal
+            $(modalId).modal('hide');
+
+            confirmButton.prop('disabled', false);
+            spinner.addClass('d-none');
+
+        }
+    });
+}

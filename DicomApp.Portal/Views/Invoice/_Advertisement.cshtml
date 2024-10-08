@@ -5,6 +5,7 @@
 <thead>
     <tr>
         <th class="Sort-Column text-center">Code</th>
+        <th class="Sort-Column text-center">RefId</th>
         <th class="Sort-Column text-center">Price</th>
         <th class="Sort-Column text-center">Refund</th>
         <th class="Sort-Column text-center">Invoice Type</th>
@@ -20,6 +21,7 @@
         {
             <tr id="Invoice_@inv.InvoiceId">
                 <td class="td-small text-center text-nowrap pl-1 pr-1"><b>@inv.RefId</b></td>
+                <td class="td-small text-center text-nowrap pl-1 pr-1"><b>@inv.Advertisement?.RefId</b></td>
                 <td class="td-small text-center text-nowrap pl-1 pr-1">@inv.Price EGP</td>
                 <td class="td-small text-center pl-1 pr-1">@inv.IsRefund</td>
                 <td class="td-small text-center pl-1 pr-1">@(inv.InvoiceType == (int)InvoiceTypeEnum.Advertisement ? "Advertisement" : "Service") </td>

@@ -135,6 +135,7 @@ namespace DicomApp.Portal
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             services.AddSingleton<LocalizerMiddleware>();
             services.AddDistributedMemoryCache();
+            //  services.AddSingleton<IStringLocalizer>();
             services.AddSingleton<IStringLocalizerFactory, JsonStringLocalizerFactory>();
 
             //Services
@@ -147,7 +148,6 @@ namespace DicomApp.Portal
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-
             app.UseSession();
             app.UseAuthentication();
 

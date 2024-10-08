@@ -126,5 +126,11 @@ namespace DicomApp.Helpers
             public static string Gamer = "Gamer";
             public static string Default = "Fake-Img.png";
         }
+
+        public static class Message
+        {
+            public static string Success = "success";
+            public static string Field = "field";
+        }
     }
 }

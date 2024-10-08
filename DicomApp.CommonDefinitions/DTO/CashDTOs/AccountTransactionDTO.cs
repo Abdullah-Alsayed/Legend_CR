@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
 using DicomApp.DAL.DB;
 
 namespace DicomApp.CommonDefinitions.DTO.CashDTOs
@@ -25,6 +26,7 @@ namespace DicomApp.CommonDefinitions.DTO.CashDTOs
         public TransactionSourceEnum TransactionSource { get; set; }
         public string Attachment { get; set; }
 
+        public AdsDTO Advertisement { get; set; }
         public DateTime? DateFrom { get; set; }
         public DateTime? DateTo { get; set; }
     }

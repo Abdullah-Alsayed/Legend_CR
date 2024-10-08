@@ -18,7 +18,7 @@ namespace DicomApp.BL.Services
     {
         public static class Constants
         {
-            public const int PageSize = 100;
+            public const int PageSize = 50;
             public const int MaxFreeWeight = 3;
             public const int MinFreeShipCount = 5;
             public const int PartialDeliveryFees = 10;

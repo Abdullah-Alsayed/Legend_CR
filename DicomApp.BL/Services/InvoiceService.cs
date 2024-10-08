@@ -161,12 +161,17 @@ namespace DicomApp.BL.Services
                             CreatedBy = s.CreatedBy,
                             LastModifiedAt = s.LastModifiedAt,
                             LastModifiedBy = s.LastModifiedBy,
-                            GamerService = s.GamerServiceId.HasValue
-                                ? new ServiceDTO
-                                {
-                                    GameServiceType = s.GamerService.GameServiceType
-                                }
-                                : null,
+                            GamerService =
+                                s.GamerService != null
+                                    ? new ServiceDTO
+                                    {
+                                        GameServiceType = s.GamerService.GameServiceType
+                                    }
+                                    : null,
+                            Advertisement =
+                                s.Advertisement != null
+                                    ? new AdsDTO { RefId = s.Advertisement.RefId }
+                                    : null
                         });
                         response.InvoiceDTOs = query.ToList();
                         response.Message = HttpStatusCode.OK.ToString();

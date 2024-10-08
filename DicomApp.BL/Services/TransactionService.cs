@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using DicomApp.CommonDefinitions.DTO;
+using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
 using DicomApp.CommonDefinitions.DTO.CashDTOs;
 using DicomApp.CommonDefinitions.Records;
 using DicomApp.CommonDefinitions.Requests;
@@ -44,7 +45,16 @@ namespace DicomApp.BL.Services
                                 TransactionId = p.TransactionId,
                                 ServiceId = p.ServiceId,
                                 TransactionType = p.TransactionType,
-                                TransactionSource = p.TransactionSource
+                                TransactionSource = p.TransactionSource,
+                                Advertisement =
+                                    p.Advertisement != null
+                                        ? new CommonDefinitions.DTO.AdvertisementDTOs.AdsDTO
+                                        {
+                                            RefId = p.Advertisement.RefId,
+                                            Price = p.Advertisement.Price,
+                                            Description = p.Advertisement.Description
+                                        }
+                                        : null
                             });
 
                         if (request.TransactionDTO != null)
@@ -98,13 +108,110 @@ namespace DicomApp.BL.Services
                         if (advertisement != null && transaction != null)
                             advertisement.BuyerId = transaction.BuyerId;
 
+                        var invoice = new Invoice
+                        {
+                            AdvertisementId = advertisement.AdvertisementId,
+                            CreatedAt = DateTime.Now,
+                            CreatedBy = request.UserID,
+                            InvoiceType = (int)InvoiceTypeEnum.Advertisement,
+                            Price = advertisement.Price,
+                        };
+                        request.context.Invoices.Add(invoice);
                         request.context.SaveChanges();
+                        invoice.RefId = BaseHelper.GenerateRefId(
+                            EnumRefIdType.Invoice,
+                            invoice.InvoiceId
+                        );
+                        request.context.SaveChanges();
+
                         res.Message = "Pay Successfully";
                         res.Success = true;
                         res.StatusCode = HttpStatusCode.OK;
                     }
                     catch (Exception ex)
                     {
+                        res.Message = ex.Message;
+                        res.Success = false;
+                        LogHelper.LogException(ex.Message, ex.StackTrace);
+                    }
+                    return res;
+                }
+            );
+            return res;
+        }
+
+        public static TransactionResponse AcceptPayment(TransactionRequest request)
+        {
+            var res = new TransactionResponse();
+            RunBase(
+                request,
+                res,
+                (TransactionRequest req) =>
+                {
+                    var contextTransaction = request.context.Database.BeginTransaction();
+                    try
+                    {
+                        var transaction = request
+                            .context.Transaction.Include(x => x.Advertisement)
+                            .ThenInclude(x => x.Gamer)
+                            .FirstOrDefault(x =>
+                                x.TransactionId == request.TransactionDTO.TransactionId
+                            );
+
+                        if (transaction != null)
+                        {
+                            var status = request.context.Status.FirstOrDefault(x =>
+                                x.StatusType == (int)StatusTypeEnum.Sold
+                            );
+                            transaction.IsSuccess = true;
+                            transaction.Advertisement.BuyerId = transaction.BuyerId;
+                            transaction.Advertisement.StatusId = status.Id;
+                            transaction.LastModifiedAt = DateTime.Now;
+                            transaction.LastModifiedBy = request.UserID;
+
+                            var allTransactionFromAdv = request
+                                .context.Transaction.Where(x =>
+                                    x.AdvertisementId == transaction.AdvertisementId
+                                    && x.TransactionId != transaction.TransactionId
+                                )
+                                .ToList();
+                            request.context.Transaction.RemoveRange(allTransactionFromAdv);
+                            var invoice = new Invoice
+                            {
+                                AdvertisementId = transaction.AdvertisementId,
+                                CreatedAt = DateTime.Now,
+                                CreatedBy = request.UserID,
+                                InvoiceType = (int)InvoiceTypeEnum.Advertisement,
+                                Price = transaction.Advertisement.Price,
+                            };
+                            request.context.Invoices.Add(invoice);
+                            request.context.SaveChanges();
+                            invoice.RefId = BaseHelper.GenerateRefId(
+                                EnumRefIdType.Invoice,
+                                invoice.InvoiceId
+                            );
+                            request.context.SaveChanges();
+                        }
+                        res.TransactionDTO = new TransactionDTO
+                        {
+                            Advertisement = new AdsDTO
+                            {
+                                UserName = transaction.Advertisement.UserName,
+                                Password = transaction.Advertisement.Password,
+                                Gamer = new UserDTO
+                                {
+                                    Email = transaction.Advertisement.Gamer.Email
+                                }
+                            }
+                        };
+                        contextTransaction.Commit();
+                        res.Message = "Pay Successfully";
+                        res.Success = true;
+                        res.StatusCode = HttpStatusCode.OK;
+                    }
+                    catch (Exception ex)
+                    {
+                        contextTransaction.Rollback();
                         res.Message = ex.Message;
                         res.Success = false;
                         LogHelper.LogException(ex.Message, ex.StackTrace);

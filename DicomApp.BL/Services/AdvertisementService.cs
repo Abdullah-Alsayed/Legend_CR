@@ -52,7 +52,7 @@ namespace DicomApp.BL.Services
                         request.context.Advertisement.Add(ship);
                         request.context.SaveChanges();
                         ship.RefId = BaseHelper.GenerateRefId(
-                            EnumRefIdType.Transaction,
+                            EnumRefIdType.Advertisement,
                             ship.AdvertisementId
                         );
 
