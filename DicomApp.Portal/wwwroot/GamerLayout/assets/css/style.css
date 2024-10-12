@@ -589,7 +589,11 @@ input::-webkit-input-placeholder {
 /*----------------------------------
 --------- HERO AREA CSS END --------
 -----------------------------------*/
-
+.LogoSection {
+    width: 45%;
+    display: flex;
+    justify-content: flex-start;
+}
 /*----------------------------------
 -------- portfolio AREA CSS START -------
 ------------------------------------*/
