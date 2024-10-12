@@ -10,7 +10,7 @@
     Layout = "~/Views/Shared/_VendorLayout.cshtml";
 	var language = AuthHelper.GetLanguageValue(User, Context);
 }
-<section class="portfolio-area pt-60" data-aos="zoom-in-up" data-aos-duration="500">
+<section class="portfolio-area pt-180" data-aos="zoom-in-up" data-aos-duration="500">
 	<div class="container">
 		<div class="row flexbox-center">
 			<div class="col-lg-6 text-center text-lg-left">
@@ -19,7 +19,7 @@
 				</div>
 			</div>
 			<div class="col-lg-6 text-center text-lg-right">
-				<div class="portfolio-menu">
+				<div class="portfolio-menu pb-3">
 					@{
 						await Html.RenderPartialAsync("_ToolsRow", new OptionDTO
 			{

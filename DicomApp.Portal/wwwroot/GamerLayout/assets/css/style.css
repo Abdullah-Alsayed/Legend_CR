@@ -185,6 +185,9 @@ textarea:focus {
 .pt-60 {
 	padding-top: 60px;
 }
+.pt-180 {
+    padding-top: 180px;
+}
 .pb-90 {
 	padding-bottom: 90px;
 }
@@ -466,10 +469,10 @@ input::-webkit-input-placeholder {
 .hero-area-content {
     display: flex;
     min-height: 591px;
-    min-width: 430px;
+    min-width: fit-content;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: center;    
 }
     .hero-area-content p {
         color: #fff;
@@ -538,7 +541,7 @@ input::-webkit-input-placeholder {
 .slide-cast {
     display: flex;
     align-content: space-between;
-    justify-content: flex-start;
+    justify-content: center;
     flex-direction: row;
     flex-wrap: wrap;
     gap: 15px;
@@ -651,12 +654,14 @@ hr {
 }
 .video-area img,
 .single-portfolio-img img {
+border: 3px solid #0077e4;
     max-width: 100%;
     max-height: 410px;
     min-width: 100px;
     min-height: 410px;
     margin-bottom: 10px;
-	transition: 0.9s;
+    border-radius: 20px;
+    transition: 0.9s;
 }
 .video-area:hover img,
 .single-portfolio:hover img {

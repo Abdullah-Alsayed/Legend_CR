@@ -24,7 +24,7 @@
 				foreach (var adv in Model.TopAdvertisements)
 				{
 				 <div class="row hero-area-slide">
-					<div class="col-lg-6 col-md-5">
+					<div class="col-lg-6 col-md-5 col-xs-12 col-12">
 						<div class="hero-area-content">
 							<img src="/dist/images/@adv.AdvertisementPhotos.FirstOrDefault()" alt="about" />
 						</div>
@@ -101,7 +101,7 @@
 					</div>
 					<div class="col-lg-6">
 						<div class="hero-area-content pr-50">
-							<h2>Last Avatar</h2>
+							<h2></h2>
 							<div class="review">
 								<div class="author-review">
 									<i class="icofont icofont-star"></i>
@@ -110,9 +110,9 @@
 									<i class="icofont icofont-star"></i>
 									<i class="icofont icofont-star"></i>
 								</div>
-								<h4>180k voters</h4>
+								<h4></h4>
 							</div>
-							<h3>Cast:</h3>
+							<h3></h3>
 							<div class="slide-cast">
 								<div class="single-slide-cast">
 									<img src="/GamerLayout/assets/img/cast/cast1.png" alt="about" />
@@ -126,22 +126,6 @@
 								<div class="single-slide-cast">
 									<img src="/GamerLayout/assets/img/cast/cast4.png" alt="about" />
 								</div>
-								<div class="single-slide-cast">
-									<img src="/GamerLayout/assets/img/cast/cast5.png" alt="about" />
-								</div>
-								<div class="single-slide-cast">
-									<img src="/GamerLayout/assets/img/cast/cast6.png" alt="about" />
-								</div>
-								<div class="single-slide-cast">
-									<img src="/GamerLayout/assets/img/cast/cast7.png" alt="about" />
-								</div>
-								<div class="single-slide-cast text-center">
-									5+
-								</div>
-							</div>
-							<div class="slide-trailor">
-								<h3>Watch Trailer</h3>
-								<a class="theme-btn theme-btn2" href="#"><i class="icofont icofont-play"></i> @Localizer["purchase"]</a>
 							</div>
 						</div>
 					</div>
@@ -152,12 +136,12 @@
 				<div class="row hero-area-slide">
 					<div class="col-lg-6">
 						<div class="hero-area-content">
-							<img src="/GamerLayout/assets/img/slide1.png" alt="about" />
+							<img src="/dist/images/next.jpg" alt="about" />
 						</div>
 					</div>
 					<div class="col-lg-6">
 						<div class="hero-area-content pr-50">
-							<h2>The Deer God</h2>
+							<h2></h2>
 							<div class="review">
 								<div class="author-review">
 									<i class="icofont icofont-star"></i>
@@ -166,7 +150,7 @@
 									<i class="icofont icofont-star"></i>
 									<i class="icofont icofont-star"></i>
 								</div>
-								<h4>180k voters</h4>
+								<h4></h4>
 							</div>
 							<h3>Cast:</h3>
 							<div class="slide-cast">
@@ -182,22 +166,6 @@
 								<div class="single-slide-cast">
 									<img src="/GamerLayout/assets/img/cast/cast4.png" alt="about" />
 								</div>
-								<div class="single-slide-cast">
-									<img src="/GamerLayout/assets/img/cast/cast5.png" alt="about" />
-								</div>
-								<div class="single-slide-cast">
-									<img src="/GamerLayout/assets/img/cast/cast6.png" alt="about" />
-								</div>
-								<div class="single-slide-cast">
-									<img src="/GamerLayout/assets/img/cast/cast7.png" alt="about" />
-								</div>
-								<div class="single-slide-cast text-center">
-									5+
-								</div>
-							</div>
-							<div class="slide-trailor">
-								<h3>Watch Trailer</h3>
-								<a class="theme-btn theme-btn2" href="#"><i class="icofont icofont-play"></i> @Localizer["purchase"]</a>
 							</div>
 						</div>
 					</div>
@@ -221,15 +189,19 @@
 				<div class="portfolio-menu">
 					<ul>
 						<li data-filter="*" class="active">@Localizer["all"]</li>
-						@foreach (var game in Model.Games)
+						@if (Model != null && Model.Games != null && Model.Games.Any())
 						{
-							if (language == SystemConstants.Languages.Arabic)
-							{
 
-								<li data-filter=".@game.NameEn.RemoveWhiteSpace()">@game.NameAr</li>
-							}else
+							foreach (var game in Model.Games)
 							{
-								<li data-filter=".@game.NameEn.RemoveWhiteSpace()">@game.NameEn</li>
+								if (language == SystemConstants.Languages.Arabic)
+								{
+
+									<li data-filter=".@game.NameEn.RemoveWhiteSpace()">@game.NameAr</li>
+								}else
+								{
+									<li data-filter=".@game.NameEn.RemoveWhiteSpace()">@game.NameEn</li>
+								}
 							}
 						}
 					</ul>
@@ -282,19 +254,21 @@
 			</div>
 		</div>
 		<div class="row">
-			@foreach (var game in Model.Games)
-			{
-				<div class="col-lg-6 services-Card" data-aos="flip-up">
-					<a href="@Url.Action("Details","Game",new {Id = game.Id})" target="_blank">
-						<article class="card">
-							<img class="card__background"
-									src="/dist/images/@game.ImgUrl"
-									alt="Photo of Cartagena's cathedral at the background and some colonial style houses"
-									width="1920"
-									height="2193" />
-						</article>
-					</a>
-				</div>
+			@if(Model != null && Model.Games!=null &&Model.Games.Any()){
+				foreach (var game in Model.Games)
+				{
+					<div class="col-lg-6 services-Card" data-aos="flip-up">
+						<a href="@Url.Action("Details","Game",new {Id = game.Id})" target="_blank">
+							<article class="card">
+								<img class="card__background"
+										src="/dist/images/@game.ImgUrl"
+										alt="Photo of Cartagena's cathedral at the background and some colonial style houses"
+										width="1920"
+										height="2193" />
+							</article>
+						</a>
+					</div>
+				}
 			}
 		</div>
     </div>
@@ -507,7 +481,7 @@
                                 </div>    
                                  <div class="col-lg-12 pt-3">
 					<label>@Localizer["games"]</label>
-					@Html.DropDownList("GameId", new SelectList(Model.Games, nameof(GameDTO.Id), language == SystemConstants.Languages.Arabic ? nameof(GameDTO.NameAr) : nameof(GameDTO.NameEn)), $"---{Localizer["pleaseSelect"]} {Localizer["games"]} ---", new { @class = "form-control ", @required = "required" })
+					@Html.DropDownList("GameId", new SelectList(Model.Games??new List<GameDTO>(), nameof(GameDTO.Id), language == SystemConstants.Languages.Arabic ? nameof(GameDTO.NameAr) : nameof(GameDTO.NameEn)), $"---{Localizer["pleaseSelect"]} {Localizer["games"]} ---", new { @class = "form-control ", @required = "required" })
                                     <div class="invalid-feedback">
 						@Localizer["pleaseSelect"] @Localizer["games"]
 					</div>

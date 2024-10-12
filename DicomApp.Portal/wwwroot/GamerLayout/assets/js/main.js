@@ -26,7 +26,11 @@
 		return false;
 	});
 	$('#openBuy-ticket').on('click', function () {
-		$('.buy-ticket').show();
+		let isAuthenticated =$(this).data('isauthenticated').toString();
+		let authenticated = authenticatedCheck(isAuthenticated);
+		if (authenticated)
+			$('.buy-ticket').show();
+
 		return false;
 	});
 	$('.buy-ticket .buy-ticket-area > a').on('click', function () {
@@ -51,7 +55,7 @@
 	heroSlider.owlCarousel({
 		loop:true,
 		dots: true,
-		autoplay: true,
+		autoplay: false,
 		autoplayTimeout:8000,
 		nav: false,
 		items: 1,
@@ -125,7 +129,7 @@
 	newsSlider.owlCarousel({
 		loop:true,
 		dots: true,
-		autoplay: true,
+		autoplay: false,
 		autoplayTimeout:6000,
 		nav: false,
 		items: 1,
