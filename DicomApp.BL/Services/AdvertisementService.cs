@@ -42,6 +42,7 @@ namespace DicomApp.BL.Services
                             UserName = request.AdsDTO.UserName,
                             Password = request.AdsDTO.Password,
                             Price = request.AdsDTO.Price,
+                            OldPrice = request.AdsDTO.OldPrice,
                             Level = req.AdsDTO.Level,
                             Rank = req.AdsDTO.Rank,
                             IsRefund = false,
@@ -160,6 +161,7 @@ namespace DicomApp.BL.Services
                         ship.UserName = request.AdsDTO.UserName;
                         ship.Password = request.AdsDTO.Password;
                         ship.Price = request.AdsDTO.Price;
+                        ship.OldPrice = request.AdsDTO.OldPrice;
                         ship.Level = request.AdsDTO.Level;
                         ship.Rank = request.AdsDTO.Rank;
                         ship.StatusId =
@@ -495,6 +497,7 @@ namespace DicomApp.BL.Services
                             CreatedAt = s.CreatedAt,
                             CreatedBy = s.CreatedBy,
                             Price = s.Price,
+                            OldPrice = s.OldPrice,
                             Level = s.Level,
                             Rank = s.Rank,
                             RefId = s.RefId,
@@ -610,6 +613,7 @@ namespace DicomApp.BL.Services
                             Level = s.Level,
                             Rank = s.Rank,
                             Price = s.Price,
+                            OldPrice = s.OldPrice,
                             RefId = s.RefId,
                             GameId = s.GameId,
                             BuyerId = s.BuyerId,

@@ -32,6 +32,7 @@ namespace DicomApp.DAL.DB
         public int Level { get; set; }
         public string Rank { get; set; } = string.Empty;
         public int Price { get; set; }
+        public int OldPrice { get; set; }
 
         public bool IsRefund { get; set; }
         public DateTime CreatedAt { get; set; }

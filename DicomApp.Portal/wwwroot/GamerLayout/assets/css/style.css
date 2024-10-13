@@ -149,8 +149,6 @@ input[type="tel"],
 input[type="search"],
 input[type="password"],
 input[type="number"],
-select,
-option
 textarea {
     color:#EEF0F4 !important;
     background: #24262d;
@@ -2787,3 +2785,6 @@ border: 3px solid #0077e4;
         color: #0099ff;
         font-size: 9px;
     }
+.form-control select{
+    color:black !important;
+}

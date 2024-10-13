@@ -222,7 +222,13 @@
 		$('.form-container').fadeIn(400);
 	})
 	$('#AddTestimonial').click(AddTestimonial);
-
+	$('#Login-Form').on('submit', function (e) {
+		// Show the loader
+		$('#login-text').hide();
+		$('#login-loader').show();
+		// Disable the submit button to prevent multiple clicks
+		$('.login-button').prop('disabled', true);
+	});
 
 	//$('#Account-checkout').on('click', function(), AccountCheckout());
 

@@ -280,6 +280,57 @@
 
 
 
+	.form-container {
+		position: relative;
+		left: 10%;
+		bottom: 275px;
+		width: 350px;
+		background: linear-gradient(#212121, #212121) padding-box, linear-gradient(145deg, transparent 35%, #e81cff, #40c9ff) border-box;
+		padding: 32px 24px;
+		font-size: 14px;
+		font-family: inherit;
+		color: white;
+		display: none;
+		flex-direction: column;
+		gap: 20px;
+		box-sizing: border-box;
+		border-radius: 16px;
+		background-size: 200% 100%;
+		animation: gradient 5s ease infinite;
+	}
+
+	.single-news a {
+		left: 80%;
+	}
+
+	.rating-container {
+		position: absolute;
+		top: 75%;
+		right: 9%;
+		z-index: 9;
+	}
+
+	.rating-card {
+		width: 350px;
+		height: 350px;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		background: linear-gradient(to right bottom, #1e167e, #000000);
+		padding: 10px 10px;
+		border-radius: 10px;
+		gap: 10px;
+		font-family: 'Supercell Magic', Arial, Helvetica, sans-serif;
+		box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.058);
+		align-content: stretch;
+		flex-wrap: nowrap;
+	}
+
+	.comment-Section textarea {
+		width: auto
+	}
+
 
 }
 @media only screen and (max-width: 576px) {
@@ -427,57 +478,6 @@
 	}
 }
 
-
-	.form-container {
-		position: relative;
-		left: 10%;
-		bottom: 275px;
-		width: 350px;
-		background: linear-gradient(#212121, #212121) padding-box, linear-gradient(145deg, transparent 35%, #e81cff, #40c9ff) border-box;
-		padding: 32px 24px;
-		font-size: 14px;
-		font-family: inherit;
-		color: white;
-		display: none;
-		flex-direction: column;
-		gap: 20px;
-		box-sizing: border-box;
-		border-radius: 16px;
-		background-size: 200% 100%;
-		animation: gradient 5s ease infinite;
-	}
-
-	.single-news a {
-		left: 80%;
-	}
-
-	.rating-container {
-		position: absolute;
-		top: 75%;
-		right: 9%;
-		z-index: 9;
-	}
-
-	.rating-card {
-		width: 350px;
-		height: 350px;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		background: linear-gradient(to right bottom, #1e167e, #000000);
-		padding: 10px 10px;
-		border-radius: 10px;
-		gap: 10px;
-		font-family: 'Supercell Magic', Arial, Helvetica, sans-serif;
-		box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.058);
-		align-content: stretch;
-		flex-wrap: nowrap;
-	}
-
-	.comment-Section textarea {
-		width: auto
-	}
 
 
 

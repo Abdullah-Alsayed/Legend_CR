@@ -176,8 +176,11 @@
 							<input required="" class="input" type="email" name="Email" id="Email" placeholder="@Localizer["userNameOrEmail"]">
 							<input required="" class="input" type="password" name="Password" id="Password" placeholder="@Localizer["password"]">
 							<span class="forgot-password"><a href="@Url.Action("Create","User")">@Localizer["register"]</a></span>
-							<input class="login-button" type="submit" value="@Localizer["login"]">
-						</form>
+								<button class="login-button" type="submit">
+									<span id="login-text">@Localizer["login"]</span>
+									<span id="login-loader" class="loader" style="display:none;"></span>
+								</button>
+							</form>
 						<div class="social-account-container">
 							<span class="title">Or Sign in with</span>
 							<div class="social-accounts">
@@ -246,7 +249,7 @@
 								</div>
 								<div class="col-lg-6 mt-3">
 									<label class="Shipment-Details-label">@Localizer["price"]</label>
-									<input type="number" min="1" max="1000000" class="input-Number" id="Price" name="@Localizer["price"]" placeholder="@Localizer["price"]" required />
+									<input type="number" min="1" max="1000000" class="input-Number" id="Price" name="Price" placeholder="@Localizer["price"]" required />
 									<div class="invalid-feedback">
 										@Localizer["pleaseEnter"] @Localizer["price"]
 									</div>

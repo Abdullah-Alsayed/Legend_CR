@@ -23,6 +23,7 @@ namespace DicomApp.CommonDefinitions.DTO.AdvertisementDTOs
         public int Level { get; set; }
         public string Rank { get; set; }
         public int Price { get; set; }
+        public int OldPrice { get; set; }
 
         public DateTime CreatedAt { get; set; }
         public int CreatedBy { get; set; }

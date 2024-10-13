@@ -226,7 +226,7 @@
 									</div>
 									<div class="portfolio-content">			
 										<h3>@adv.UserName</h3>
-										<h5>@adv.Price $</h5>
+										<h3>@adv.Price $</h3>
 									</div>
 								</div>
 							</div>
@@ -481,7 +481,7 @@
                                 </div>    
                                  <div class="col-lg-12 pt-3">
 					<label>@Localizer["games"]</label>
-					@Html.DropDownList("GameId", new SelectList(Model.Games??new List<GameDTO>(), nameof(GameDTO.Id), language == SystemConstants.Languages.Arabic ? nameof(GameDTO.NameAr) : nameof(GameDTO.NameEn)), $"---{Localizer["pleaseSelect"]} {Localizer["games"]} ---", new { @class = "form-control ", @required = "required" })
+					@Html.DropDownList("GameId", new SelectList(Model.Games??new List<GameDTO>(), nameof(GameDTO.Id), language == SystemConstants.Languages.Arabic ? nameof(GameDTO.NameAr) : nameof(GameDTO.NameEn)), $"---{Localizer["pleaseSelect"]} {Localizer["games"]} ---", new { @class = "form-control ", @required = "required"})
                                     <div class="invalid-feedback">
 						@Localizer["pleaseSelect"] @Localizer["games"]
 					</div>
