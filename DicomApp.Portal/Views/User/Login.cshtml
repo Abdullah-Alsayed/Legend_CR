@@ -1,6 +1,9 @@
 ﻿
 @using DicomApp.CommonDefinitions.DTO;
+@using DicomApp.Portal.Controllers
+@using Microsoft.Extensions.Localization
 @model UserDTO
+@inject IStringLocalizer<UserController> _stringLocalizer
 @{
     Layout = null;
 }
@@ -11,7 +14,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Legend CR</title>
-    <link rel="shortcut icon" href="~/dist/images/favicon.ico" />
+    <link rel="shortcut icon" href="~/dist/images/logo.png" />
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <!-- START: Template CSS-->
     <link rel="stylesheet" href="~/dist/vendors/bootstrap/css/bootstrap.min.css">
@@ -40,24 +43,30 @@
             <div class="login-form col-12 col-sm-12 ">
                 <div class="mb-3">
                     <center><img src="~/dist/images/cub.png" /></center>
-                    <h1 class="text-center">Login</h1>
+                    <h1 class="text-center">@_stringLocalizer["login"]</h1>
                 </div>
                 <div class="form-group mb-3">
-                    <label for="emailaddress">Email</label>
-                    @Html.TextBoxFor(model => model.Email, new { @type = "email", @placeholder = "Enter your email", @id = "emailaddress", @class = "form-control"})
+                    <label for="emailaddress">@_stringLocalizer["email"]</label>
+                        @Html.TextBoxFor(model => model.Email, new
+                            {
+                                @type = "email",
+                                @placeholder = $"{@_stringLocalizer["pleaseEnter"]} {_stringLocalizer["email"]}", @id = "emailaddress", @class = "form-control"})
                     @Html.ValidationMessageFor(model => model.Email, "", new { @class = "validation-message" })
                 </div>
 
                 <div class="form-group mb-3">
-                    <label for="password">Password</label>
+                        <label for="password">@_stringLocalizer["password"]</label>
                     <span class="Forgot-Password">Forgot Password ?</span>
-                    @Html.PasswordFor(model => model.Password, new { @placeholder = "Enter your password", @class = "form-control", @id = "password" })
+                    @Html.PasswordFor(model => model.Password, new { @placeholder =$"{@_stringLocalizer["pleaseEnter"]} {_stringLocalizer["password"]}", @class = "form-control", @id = "password" })
                     @Html.ValidationMessageFor(model => model.Password, "", new { @class = "validation-message" })
                 </div>
-                    <a class="Regester" href="/User/Create"> Create new user </a>
+                <div class="d-flex justify-content-around">
+                    <a class="Regester" href="/User/Create">@_stringLocalizer["createNewUser"]</a>
+                    <a class="Regester" href="@Url.Action("ForgotPassword","User")">@_stringLocalizer["forgotPassword"]</a>
+                </div>
                  <div class="form-group mb-0">
                         <button class="login-button w-100" onclick="ShowSpiner()" type="submit">
-                            Log In
+                           @_stringLocalizer["login"]
                             <span class="Spinner spinner-border spinner-border-sm ml-2 mb-1 d-none" role="status" aria-hidden="true"></span>
                         </button>
                 </div>

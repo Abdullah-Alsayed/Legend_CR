@@ -72,5 +72,20 @@
   "clear": "Clear",
   "thereAreNoAccounts": "There Are No Accounts",
   "dashboard": "Dashboard",
-  "payUsingWallet": "pay Using Wallet"
+  "payUsingWallet": "pay Using Wallet",
+
+
+  "resetPasswordMessage": "Please reset your password by clicking",
+  "here": "here",
+  "resetPassword": "Reset Password",
+  "enterResetPassword": "Enter your email address, and we'll send you a link to reset your password",
+  "forgotPasswordConfirmation": "Forgot Password Confirmation",
+  "forgotPasswordConfirmationMessage": "If an account with the email exists, a password reset link has been sent. Please check your email.",
+  "createNewUser": "Create New User",
+  "forgotPassword": "forgot Password",
+  "forgotPasswordMessage": "Your password has been successfully reset. You can now log in with your new password.",
+  "create": "Create",
+  "haveAccount": "you have a account",
+  "confirmPassword": "Confirm Password",
+  "telegram": "Telegram"
 }

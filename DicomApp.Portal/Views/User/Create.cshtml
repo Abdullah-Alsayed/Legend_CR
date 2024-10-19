@@ -1,6 +1,9 @@
 ﻿@using DicomApp.CommonDefinitions.DTO;
 @using DicomApp.DAL.DB
+@using DicomApp.Portal.Controllers
+@using Microsoft.Extensions.Localization
 @model UserDTO
+@inject IStringLocalizer<UserController> _stringLocalizer
 @{
     Layout = null;
 }
@@ -11,7 +14,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Legend CR</title>
-    <link rel="shortcut icon" href="~/dist/images/favicon.ico" />
+    <link rel="shortcut icon" href="~/dist/images/logo.png" />
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <!-- START: Template CSS-->
     <link rel="stylesheet" href="~/dist/vendors/bootstrap/css/bootstrap.min.css">
@@ -39,63 +42,63 @@
                 <div class="login-form col-12 col-sm-12 ">
                 <div class="">
                     <center><img src="~/dist/images/cub.png" /></center>
-                    <h1 class="text-center">Register</h1>
+                        <h1 class="text-center">@_stringLocalizer["register"]</h1>
                 </div>
                     <div class="Register-Section">
                         <div class="form-group">
-                            <label for="Name">Name</label>
-                            @Html.TextBoxFor(model => model.Name, new { @placeholder = "Enter your Name", @id = "Name", @class = "form-control" })
+                            <label for="Name">@_stringLocalizer["name"]</label>
+                            @Html.TextBoxFor(model => model.Name, new { @placeholder = $"{@_stringLocalizer["pleaseEnter"]} {_stringLocalizer["name"]}", @id = "Name", @class = "form-control" })
                             @Html.ValidationMessageFor(model => model.Name, "", new { @class = "validation-message" })
                         </div>
 
                         <div class="form-group">
-                            <label for="Email">Email</label>
-                            @Html.TextBoxFor(model => model.Email, new { @type = "email", @placeholder = "Enter your email", @id = "emailaddress", @class = "form-control" })
+                            <label for="Email">@_stringLocalizer["email"]</label>
+                            @Html.TextBoxFor(model => model.Email, new { @type = "email",@placeholder = $"{@_stringLocalizer["pleaseEnter"]} {_stringLocalizer["email"]}", @id = "emailaddress", @class = "form-control" })
                             @Html.ValidationMessageFor(model => model.Email, "", new { @class = "validation-message" })
                         </div>
-                                                <div class="form-group">
-                            <label for="PhoneNumber">Phone Number</label>
-                            @Html.TextBoxFor(model => model.PhoneNumber, new { @placeholder = "Enter your Phone Number", @id = "PhoneNumber", @class = "form-control" })
+                        <div class="form-group">
+                            <label for="PhoneNumber">@_stringLocalizer["phoneNumber"]</label>
+                            @Html.TextBoxFor(model => model.PhoneNumber, new { @placeholder = $"{@_stringLocalizer["pleaseEnter"]} {_stringLocalizer["phoneNumber"]}", @class = "form-control" })
                             @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "validation-message" })
                         </div>
 
                         <div class="form-group">
-                            <label for="TelegramUserName">Telegram UserName</label>
-                            @Html.TextBoxFor(model => model.TelegramUserName, new { @placeholder = "Enter your Telegram UserName", @id = "TelegramUserName", @class = "form-control" })
+                            <label for="TelegramUserName">@_stringLocalizer["telegram"]</label>
+                            @Html.TextBoxFor(model => model.TelegramUserName, new { @placeholder = $"{@_stringLocalizer["pleaseEnter"]} {_stringLocalizer["telegram"]}", @id = "TelegramUserName", @class = "form-control" })
                             @Html.ValidationMessageFor(model => model.TelegramUserName, "", new { @class = "validation-message" })
                         </div>
 
                         <div class="form-group mb-3">
-                            <label for="password">Password</label>
-                            @Html.PasswordFor(model => model.Password, new { @placeholder = "Enter your password", @class = "form-control", @id = "password" })
+                            <label for="password">@_stringLocalizer["password"]</label>
+                            @Html.PasswordFor(model => model.Password, new { @placeholder = $"{@_stringLocalizer["pleaseEnter"]} {_stringLocalizer["password"]}", @class = "form-control", @id = "password" })
                             @Html.ValidationMessageFor(model => model.Password, "", new { @class = "validation-message" })
                         </div>
                         <div class="form-group mb-3">
-                            <label for="ConfirmPassword">Confirm Password</label>
-                            @Html.PasswordFor(model => model.ConfirmPassword, new { @placeholder = "Enter your Confirm Password", @class = "form-control", @id = "ConfirmPassword" })
+                            <label for="ConfirmPassword">@_stringLocalizer["confirmPassword"]</label>
+                            @Html.PasswordFor(model => model.ConfirmPassword, new { @placeholder = $"{@_stringLocalizer["pleaseEnter"]} {_stringLocalizer["confirmPassword"]}", @class = "form-control", @id = "ConfirmPassword" })
                             @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "validation-message" })
                         </div>
 
                         <div class="form-group">
-                            <label for="Gender">Gender</label>
+                            <label for="Gender">@_stringLocalizer["gender"]</label>
                             <select class="form-control" required id="@nameof(UserDTO.Gender)" name="@nameof(UserDTO.Gender)" placeholder="Gender">
-                                <option value="">--- Select Gender ---</option>
-                                <option value="@GenderEnum.Male">Male</option>
-                                <option value="@GenderEnum.Female">Female</option>
+                                <option value="">---@_stringLocalizer["pleaseSelect"] @_stringLocalizer["gender"]---</option>
+                                <option value="@GenderEnum.Male">@_stringLocalizer["male"]</option>
+                                <option value="@GenderEnum.Female">@_stringLocalizer["female"]</option>
                             </select>                      
                             @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "validation-message" })
                         </div>
 
                         <div class="form-group">
-                            <label for="Age">Age</label>
-                            @Html.TextBoxFor(model => model.Age, new { @type = "number", @placeholder = "Enter your Age", @id = "Age", @class = "form-control" })
+                            <label for="Age">@_stringLocalizer["age"]</label>
+                            @Html.TextBoxFor(model => model.Age, new { @type = "number", @placeholder = $"{@_stringLocalizer["pleaseEnter"]} {_stringLocalizer["age"]}", @id = "Age", @class = "form-control" })
                             @Html.ValidationMessageFor(model => model.Age, "", new { @class = "validation-message" })
                         </div>
                     </div>
-                    <a class="Regester" href="@Url.Action("Login")"> you have a account</a>
+                    <a class="Regester" href="@Url.Action("Login")">@_stringLocalizer["haveAccount"]</a>
                     <div class="form-group mb-0">
                         <button class="login-button w-100" onclick="Enter(event,'Register')" type="button">
-                            Create         
+                            @_stringLocalizer["create"]
                             <span class="Spinner spinner-border spinner-border-sm ml-2 mb-1 d-none" role="status" aria-hidden="true"></span>
                         </button>
                 </div>

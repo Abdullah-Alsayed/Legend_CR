@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using DicomApp.BL.Services;
 using DicomApp.BLL;
@@ -14,6 +15,7 @@ using DicomApp.Helpers;
 using DicomApp.Helpers.Services.GenrateAvatar;
 using DicomApp.Helpers.Services.GetCounter;
 using DicomApp.Portal.Helpers;
+using ECommerce.Core.Services.MailServices;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -21,6 +23,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using Telegram.Bot.Types;
 
 namespace DicomApp.Portal.Controllers
 {
@@ -31,15 +35,21 @@ namespace DicomApp.Portal.Controllers
         private readonly AvatarService _avatarService;
         private readonly IApiCountryService _countryService;
         private readonly IHostingEnvironment hosting;
+        private readonly IMailServices _emailSender;
+        private readonly IStringLocalizer<UserController> _stringLocalizer;
 
         public UserController(
             ShippingDBContext context,
             IHostingEnvironment hosting,
             AvatarService avatarService,
-            IApiCountryService countryService
+            IApiCountryService countryService,
+            IMailServices mailServices,
+            IStringLocalizer<UserController> stringLocalizer
         )
         {
             _context = context;
+            _stringLocalizer = stringLocalizer;
+            _emailSender = mailServices;
             this.hosting = hosting;
             _avatarService = avatarService;
             _countryService = countryService;
@@ -212,6 +222,115 @@ namespace DicomApp.Portal.Controllers
         {
             await HttpContext.SignOutAsync();
             return RedirectToAction("Main", "Gamer");
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordDTO model)
+        {
+            if (ModelState.IsValid)
+            {
+                var userResponse = UserService.GetUser(
+                    new UserRequest
+                    {
+                        context = _context,
+                        UserDTO = new UserDTO { Email = model.Email }
+                    }
+                );
+                if (userResponse.UserDTO == null)
+                    return RedirectToAction("ForgotPasswordConfirmation");
+
+                // Generate the token using a custom method
+                var token = GeneratePasswordResetToken();
+
+                // Build the reset URL
+                var callbackUrl = Url.Action(
+                    "ResetPassword",
+                    "User",
+                    new { token, email = userResponse.UserDTO.Email },
+                    protocol: Request.Scheme
+                );
+
+                // Send the email
+                var result = await _emailSender.SendAsync(
+                    new EmailDto
+                    {
+                        Body =
+                            $"{_stringLocalizer["resetPasswordMessage"]} <a href='{callbackUrl}'>{_stringLocalizer["here"]}</a>.",
+                        Email = model.Email,
+                        Subject = $"{_stringLocalizer["resetPassword"]}"
+                    }
+                );
+
+                return RedirectToAction("ForgotPasswordConfirmation");
+            }
+
+            return View(model);
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
+        public IActionResult ForgotPasswordConfirmation()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ResetPassword(string token = null)
+        {
+            if (token == null)
+            {
+                return BadRequest("A token must be supplied for password reset.");
+            }
+            var model = new ResetPasswordDTO { Token = token };
+            return View(model);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public IActionResult ResetPassword(ResetPasswordDTO model)
+        {
+            var userRespons = UserService.GetUser(
+                new UserRequest
+                {
+                    context = _context,
+                    UserDTO = new UserDTO { Email = model.EmailUser }
+                }
+            );
+            if (userRespons.UserDTO == null)
+                return RedirectToAction("ResetPasswordConfirmation");
+
+            // Update the user's password
+            var userRequest = new UserRequest
+            {
+                RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
+                UserID = AuthHelper.GetClaimValue(User, "UserID"),
+                context = _context,
+                UserDTO = new UserDTO
+                {
+                    Id = userRespons.UserDTO.Id,
+                    ConfirmPassword = model.Password,
+                    NewPassword = model.Password
+                },
+            };
+
+            var userResponse = UserService.ChangePassword(userRequest);
+            return RedirectToAction("ResetPasswordConfirmation");
+        }
+
+        [AllowAnonymous]
+        public IActionResult ResetPasswordConfirmation()
+        {
+            return View();
         }
 
         public IActionResult NotFound()
@@ -717,6 +836,17 @@ namespace DicomApp.Portal.Controllers
         public IActionResult Authorization()
         {
             return View();
+        }
+
+        public string GeneratePasswordResetToken()
+        {
+            // Generate a random token (you can use more secure methods like JWT if needed)
+            using (var rng = new RNGCryptoServiceProvider())
+            {
+                byte[] tokenData = new byte[32];
+                rng.GetBytes(tokenData);
+                return Convert.ToBase64String(tokenData);
+            }
         }
     }
 }

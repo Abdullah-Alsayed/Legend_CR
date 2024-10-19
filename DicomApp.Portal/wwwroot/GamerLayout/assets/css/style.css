@@ -2788,3 +2788,20 @@ border: 3px solid #0077e4;
 .form-control select{
     color:black !important;
 }
+.ForgotPassword {
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap :25px;
+}
+.ForgotPassword input{
+    background-color:white !important;
+    border : 2px solid black !important;
+    border-radius:20px !important;
+    color:black !important;
+}
+.ForgotPassword{
+    color:white;
+}

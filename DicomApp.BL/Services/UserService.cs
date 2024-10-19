@@ -206,10 +206,15 @@ namespace DicomApp.BL.Services
                 {
                     try
                     {
-                        var query = request
-                            .context.CommonUser.Where(c =>
-                                !c.IsDeleted && c.Id == request.UserDTO.Id
+                        var query = !string.IsNullOrEmpty(request.UserDTO.Email)
+                            ? request.context.CommonUser.Where(c =>
+                                !c.IsDeleted && c.Email == request.UserDTO.Email
                             )
+                            : request.context.CommonUser.Where(c =>
+                                !c.IsDeleted && c.Id == request.UserDTO.Id
+                            );
+
+                        var user = query
                             .Select(c => new UserDTO
                             {
                                 Id = c.Id,
@@ -254,10 +259,9 @@ namespace DicomApp.BL.Services
                                 ZoneId = c.ZoneId,
                                 IsDeleted = c.IsDeleted,
                                 TelegramUserName = c.TelegramUserName,
-                            });
-
-                        res.UserDTO = query.FirstOrDefault();
-
+                            })
+                            .FirstOrDefault();
+                        res.UserDTO = user;
                         res.Message = HttpStatusCode.OK.ToString();
                         res.Success = true;
                         res.StatusCode = HttpStatusCode.OK;

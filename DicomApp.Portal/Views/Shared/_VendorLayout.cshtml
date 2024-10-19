@@ -176,6 +176,7 @@
 							<input required="" class="input" type="email" name="Email" id="Email" placeholder="@Localizer["userNameOrEmail"]">
 							<input required="" class="input" type="password" name="Password" id="Password" placeholder="@Localizer["password"]">
 							<span class="forgot-password"><a href="@Url.Action("Create","User")">@Localizer["register"]</a></span>
+							<span class="forgot-password"><a href="@Url.Action("ForgotPassword","User")">@Localizer["forgotPassword"]</a></span>
 								<button class="login-button" type="submit">
 									<span id="login-text">@Localizer["login"]</span>
 									<span id="login-loader" class="loader" style="display:none;"></span>

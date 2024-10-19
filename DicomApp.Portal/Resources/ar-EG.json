@@ -71,6 +71,18 @@
   "clear": "مسح",
   "thereAreNoAccounts": "لا يوجد حسابات",
   "dashboard": "لوحه التحكم",
-  "payUsingWallet": "الدفع باستخدام المحفظة"
-
+  "payUsingWallet": "الدفع باستخدام المحفظة",
+  "resetPasswordMessage": "يرجى إعادة تعيين كلمة المرور الخاصة بك عن طريق النقر على",
+  "here": "هنا",
+  "resetPassword": "إعادة تعيين كلمة المرور",
+  "enterResetPassword": "أدخل عنوان بريدك الإلكتروني وسنرسل لك رابطًا لإعادة تعيين كلمة المرور",
+  "forgotPasswordConfirmation": "تأكيد نسيان كلمة المرور",
+  "forgotPasswordConfirmationMessage": "إذا كان هناك حساب مع البريد الإلكتروني، فقد تم إرسال رابط إعادة تعيين كلمة المرور. يرجى التحقق من بريدك الإلكتروني.",
+  "createNewUser": "إنشاء مستخدم جديد",
+  "forgotPassword": "نسيت كلمة المرور",
+  "forgotPasswordMessage": "تمت إعادة تعيين كلمة المرور الخاصة بك بنجاح. يمكنك الآن تسجيل الدخول باستخدام كلمة المرور الجديدة.",
+  "create": "إنشاء",
+  "haveAccount": "هل لديك حساب؟",
+  "confirmPassword": "تأكيد كلمة المرور",
+  "telegram": "تيليجرام"
 }
