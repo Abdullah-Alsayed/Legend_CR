@@ -326,6 +326,8 @@ function AddAdvertisement(ActionName, ControllerName, FormName) {
             $("#BtnSend").prop('disabled', true);
             $('#MainLoder').fadeIn(100);
             $("#MainView").hide();
+        $("#BtnAdvertisementLabel").addClass("d-none"); // Hide label
+        $(".loader").removeClass("d-none"); // Show loader
 
             // Create FormData object
             let formData = new FormData($(`#${FormName}`)[0]);
@@ -345,29 +347,17 @@ function AddAdvertisement(ActionName, ControllerName, FormName) {
                 data: formData,
                 processData: false, 
                 contentType: false, 
-                dataType: 'html',
+                dataType: 'json',
                 success: function (response) {
                     $(".buy-ticket").css("display", "none");
                     $(".Spinner").addClass("d-none");
-                    if (response.includes('successfully')) {
+                    if (response.success) {
                         validFiles = [];
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: response,
-                            showConfirmButton: false,
-                            timer: 5000
-                        });
+                        alertSuccess(response.message,5000)
                     }
-                    else {
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'error',
-                            title: response,
-                            showConfirmButton: false,
-                            timer: 5000
-                        });
-                    }
+                    else 
+                        alertError(response.message, 5000)
+                    
 
                     $("#MainView").fadeIn(1000);
                     $('#MainLoder').fadeOut(1000);
@@ -390,6 +380,10 @@ function AddAdvertisement(ActionName, ControllerName, FormName) {
                     $(".se-pre-con").css("display", "none");
                     $("#MainView").show();
                     $("#BtnSend").prop('disabled', false);
+                }, complete: function () {
+                    $(".loader").addClass("d-none"); // Hide loader on error
+                    $("#BtnSend").attr("disabled", false); // Enable button back
+                    $("#BtnAdvertisementLabel").removeClass("d-none"); // Show original label
                 }
             })
         }

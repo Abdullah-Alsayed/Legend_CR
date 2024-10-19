@@ -246,7 +246,7 @@
 				if (response) {
 
  					$('#Name').val(response.name);
-					$('#Email').val(response.email);
+					$('#Gamer-Form #Email').val(response.email);
 					$('#PhoneNumber').val(response.phoneNumber);
 					$('#TelegramUserName').val(response.telegramUserName);
 					$('#Age').val(response.age);
@@ -256,8 +256,9 @@
 					$('#Gamer-Form').removeClass('d-none');
 				}
 			},
-			error: function () {
+			error: function (ex) {
 				console.error('An error occurred while fetching user data.');
+				console.error(ex);
 
 				$('#UpdateUserLoader').hide();
 				$('#Gamer-Form').removeClass('d-none');

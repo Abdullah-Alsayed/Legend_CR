@@ -56,7 +56,6 @@
 
                 <div class="form-group mb-3">
                         <label for="password">@_stringLocalizer["password"]</label>
-                    <span class="Forgot-Password">Forgot Password ?</span>
                     @Html.PasswordFor(model => model.Password, new { @placeholder =$"{@_stringLocalizer["pleaseEnter"]} {_stringLocalizer["password"]}", @class = "form-control", @id = "password" })
                     @Html.ValidationMessageFor(model => model.Password, "", new { @class = "validation-message" })
                 </div>

@@ -89,7 +89,7 @@
 					<ul>
 						@if (User.Identity.IsAuthenticated)
 						{
-							<li class="cursor-pointer"><a data-toggle="modal" data-target="#UpdateUserData" href="#">@Localizer["welcome"]</a><a data-toggle="modal" id="UserNamelable" data-target="#UpdateUserData" href="#"> @AuthHelper.GetClaimStringValue(User)</a></li>
+							<li class="cursor-pointer"><a data-toggle="modal" data-target="#UpdateUserData" href="#">@Localizer["welcome"] </a><a data-toggle="modal" id="UserNamelable" data-target="#UpdateUserData" href="#"> @AuthHelper.GetClaimStringValue(User)</a></li>
 						}
 					</ul>
 				</div>
@@ -137,34 +137,6 @@
 		</div>
 	</header>
 
-@* 	<div class="login-area">
-		<div class="login-box">
-			<a href="#"><i class="icofont icofont-close"></i></a>
-			<h2>@Localizer["login"]</h2>
-			<form action="#">
-				<h6>@Localizer["userNameOrEmail"]</h6>
-				<input type="text" />
-				<h6>@Localizer["password"]</h6>
-				<input type="text" />
-				<div class="login-remember">
-					<input type="checkbox" />
-					<span>@Localizer["rememberMe"]</span>
-				</div>
-				<div class="login-signup">
-					<span>@Localizer["signUp"]</span>
-				</div>
-				<a href="#" class="theme-btn">@Localizer["login"]</a>
-				<span>@Localizer["viaSocial"]</span>
-				<div class="login-social">
-					<a href="#"><i class="icofont icofont-social-facebook"></i></a>
-					<a href="#"><i class="icofont icofont-social-twitter"></i></a>
-					<a href="#"><i class="icofont icofont-social-linkedin"></i></a>
-					<a href="#"><i class="icofont icofont-social-google-plus"></i></a>
-					<a href="#"><i class="icofont icofont-camera"></i></a>
-				</div>
-			</form>
-		</div>
-	</div> *@
 	<div>
 		<div class="modal fade" id="Login-PupUp-Modal" tabindex="-1" role="dialog" aria-labelledby="Login-PupUp-Modal-Label" aria-hidden="true">
 			<div class="modal-dialog" style="margin:revert-layer;" role="document">
@@ -307,8 +279,11 @@
 							</div>
 							<div class="col-lg-12 Buttons-Submit-Section">
 								<button onclick="AddAdvertisement('Add','Advertisement','AddAdvertisement')" type="button" id="BtnSend" class="Red-Btn">
+									<span id="BtnAdvertisementLabel">
 									@Localizer["add"] @Localizer["advertisement"]
-									<span class="Spinner spinner-border spinner-border-sm ml-2 mb-1 d-none" role="status" aria-hidden="true"></span></button>
+								</span> <!-- Original label -->
+								<span class="loader d-none" role="status" aria-hidden="true"></span> <!-- Loader -->
+								</button>
 							</div>
 						</div>
 					</div>
@@ -381,8 +356,8 @@
 									<div class="col-lg-12">
 										<div class="col-lg-12 Buttons-Submit-Section">
 											<button type="button" onclick="GamerForm('EditUserInfo',false)" id="BtnSend" class="Red-Btn">
-												@Localizer["save"]
-												<span class="Spinner spinner-border spinner-border-sm ml-2 mb-1 d-none" role="status" aria-hidden="true"></span>
+												<span id="BtnLabel">@Localizer["save"]</span> <!-- Original label -->
+												<span class="loader d-none" role="status" aria-hidden="true"></span> <!-- Loader -->
 											</button>
 										</div>
 									</div>

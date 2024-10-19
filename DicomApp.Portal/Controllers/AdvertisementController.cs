@@ -11,6 +11,7 @@ using DicomApp.Portal.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using Rotativa.AspNetCore;
 using Rotativa.AspNetCore.Options;
@@ -21,9 +22,15 @@ namespace DicomApp.Portal.Controllers
     {
         private readonly ShippingDBContext _context;
         private readonly IHostingEnvironment _hosting;
+        private readonly IStringLocalizer<AdvertisementController> _stringLocalizer;
 
-        public AdvertisementController(ShippingDBContext context, IHostingEnvironment hosting)
+        public AdvertisementController(
+            ShippingDBContext context,
+            IHostingEnvironment hosting,
+            IStringLocalizer<AdvertisementController> stringLocalizer
+        )
         {
+            _stringLocalizer = stringLocalizer;
             _context = context;
             _hosting = hosting;
         }
@@ -82,6 +89,7 @@ namespace DicomApp.Portal.Controllers
             request.UserID = AuthHelper.GetClaimValue(User, "UserID");
             request.AdsDTO = model;
             request.RoutPath = _hosting.WebRootPath;
+            request.Localizer = _stringLocalizer;
 
             if (request.RoleID == (int)EnumRole.Gamer)
                 model.GamerId = request.UserID;
@@ -92,7 +100,7 @@ namespace DicomApp.Portal.Controllers
             ViewBag.branch = _context.Branch.ToList();
             ViewBag.areas = _context.City.ToList();
 
-            return Json(response.Message);
+            return Json(new { message = response.Message, success = response.Success });
         }
 
         [AuthorizePerRole(SystemConstants.Permission.AddAdvertisement)]

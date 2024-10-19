@@ -108,8 +108,7 @@ namespace DicomApp.BL.Services
                         );
 
                         request.context.SaveChanges();
-                        response.Message =
-                            "New Advertisement " + ship.RefId + " successfully added";
+                        response.Message = request.Localizer["newAdvertisement"];
                         response.Success = true;
                         response.StatusCode = HttpStatusCode.OK;
                     }

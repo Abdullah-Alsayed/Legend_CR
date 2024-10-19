@@ -522,7 +522,9 @@ function GamerForm(actionName = "SaveGamer", navigation = true)
 {
     if ($('#Gamer-Form').valid()) {
         $("#BtnSend").attr("disabled", true);
-    $(".Spinner").removeClass("d-none");
+        $("#BtnLabel").addClass("d-none"); // Hide label
+        $(".loader").removeClass("d-none"); // Show loader
+
     var id = $('#Id').val();
     let formData = new FormData($(`#Gamer-Form`)[0]);
   
@@ -536,7 +538,6 @@ function GamerForm(actionName = "SaveGamer", navigation = true)
                 }
             }
         }
-
         $.ajax({
             url: `/User/${actionName}`,
             type: "POST",
@@ -552,19 +553,20 @@ function GamerForm(actionName = "SaveGamer", navigation = true)
                     alertSuccessTop(result.message,4000);
                     $("#UserNamelable").text(result.userDTO.name);
                     $("#UpdateUserData").modal('hide');
-                //   $(".swal2-backdrop-show").remove();
                     if (navigation) 
                         MenuNavigation(event, 'ListGamer', 'User');
-                    $("#BtnSend").attr("disabled", false);
                 }
                 else
                     alertError(result.message);
-
             },
             error: function (err) {
-                $(".Spinner").addClass("d-none");
                 alert("try again!")
                 console.log(err);
+            }, complete: function () {
+                $(".loader").addClass("d-none"); // Hide loader
+                $("#BtnSend").attr("disabled", false); // Enable button back
+                // Show button label back
+                $("#BtnLabel").removeClass("d-none"); // Show original label
             }
         });   
     }

@@ -87,5 +87,6 @@
   "create": "Create",
   "haveAccount": "you have a account",
   "confirmPassword": "Confirm Password",
-  "telegram": "Telegram"
-}
+  "telegram": "Telegram",
+  "newAdvertisement": "New Advertisement successfully added"
+} 
