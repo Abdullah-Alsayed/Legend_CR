@@ -4,9 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using DicomApp.BL.Services;
 using DicomApp.BL.Services.Helpers;
-using DicomApp.BLL;
 using DicomApp.CommonDefinitions.DTO;
-using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
 using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
 using DicomApp.CommonDefinitions.Requests;
 using DicomApp.DAL.DB;
@@ -21,22 +19,19 @@ using SystemConstants = DicomApp.Helpers.SystemConstants;
 namespace DicomApp.Portal.Controllers
 {
     [Authorize]
-    public class HomeController : Controller
+    public class DashboardController : Controller
     {
         private readonly ShippingDBContext _context;
 
-        public HomeController(ShippingDBContext context)
-        {
-            _context = context;
-        }
+        public DashboardController(ShippingDBContext context) => _context = context;
 
         public IActionResult Alerts()
         {
             var notificationRequest = new UserNotificationRequest
             {
                 context = _context,
-                RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
-                UserID = AuthHelper.GetClaimValue(User, "UserID"),
+                RoleID = AuthHelper.GetClaimValue(User, SystemConstants.Claims.RoleID),
+                UserID = AuthHelper.GetClaimValue(User, SystemConstants.Claims.UserID),
                 //GetMineOnly = true,
                 MarkAsSeen = true,
             };
@@ -47,15 +42,16 @@ namespace DicomApp.Portal.Controllers
             return View(notificationResponse.UserNotificationRecords);
         }
 
-        [AuthorizePerRole("RedDashboard")]
-        public IActionResult Index(DateTime? From, DateTime? To, string ActionType)
+        [AuthorizePerRole("Dashboard")]
+        public IActionResult Main(DateTime? From, DateTime? To, string ActionType)
         {
-            var roleID = AuthHelper.GetClaimValue(User, "RoleID");
-            if (roleID == (int)EnumRole.Gamer)
-                return RedirectToAction(nameof(AccountDashboard));
+            var roleName = AuthHelper.GetClaimStringValue(User, SystemConstants.Claims.RoleName);
+            var roleID = AuthHelper.GetClaimValue(User, SystemConstants.Claims.RoleID);
+            //if (roleName == EnumRole.Gamer.ToString())
+            //    return RedirectToAction(nameof(BayerDashboard));
 
             #region Filter Data
-            var filter = new AdsDTO();
+            var filter = new DashboardDTO();
             if (From.HasValue)
                 filter.DateFrom = From.Value;
 
@@ -65,13 +61,13 @@ namespace DicomApp.Portal.Controllers
             var Request = new DashboardRequest()
             {
                 RoleID = roleID,
-                UserID = AuthHelper.GetClaimValue(User, "UserID"),
+                UserID = AuthHelper.GetClaimValue(User, SystemConstants.Claims.UserID),
                 context = _context,
-                AdsDTO = filter,
-                TopAccount = 15,
-                PackagingStock = 15,
-                TopArea = 20,
+                DashboardDTO = filter,
+                TopBuyer = 15,
+                TopGames = 20,
                 TopDriver = 20,
+                PackagingStock = 15,
             };
 
             if (ActionType == SystemConstants.ActionType.PartialView)
@@ -80,59 +76,59 @@ namespace DicomApp.Portal.Controllers
                 return View(DashboardHelper.GenerateDashboard(Request));
         }
 
-        [AuthorizePerRole("AccountDashboard")]
-        public IActionResult AccountDashboard(
-            DateTime? From,
-            DateTime? To,
-            int VendorID,
-            string ActionType
-        )
-        {
-            int UserID = AuthHelper.GetClaimValue(User, "UserID");
-            int RolID = AuthHelper.GetClaimValue(User, "RoleID");
+        //[AuthorizePerRole("AccountDashboard")]
+        //public IActionResult BayerDashboard(
+        //    DateTime? From,
+        //    DateTime? To,
+        //    int VendorID,
+        //    string ActionType
+        //)
+        //{
+        //    int UserID = AuthHelper.GetClaimValue(User, "UserID");
+        //    int RolID = AuthHelper.GetClaimValue(User, "RoleID");
 
-            #region Filter Data
-            var ViewData = new ViewModel<DashboardDTO>();
-            var filter = new AdsDTO();
-            if (VendorID == 0)
-                filter.GamerId = UserID;
-            else
-                filter.GamerId = VendorID;
+        //    #region Filter Data
+        //    var ViewData = new ViewModel<DashboardDTO>();
+        //    var filter = new AdsDTO();
+        //    if (VendorID == 0)
+        //        filter.GamerId = UserID;
+        //    else
+        //        filter.GamerId = VendorID;
 
-            if (From.HasValue)
-                filter.DateFrom = From.Value;
+        //    if (From.HasValue)
+        //        filter.DateFrom = From.Value;
 
-            if (To.HasValue)
-                filter.DateTo = To.Value;
-            #endregion
+        //    if (To.HasValue)
+        //        filter.DateTo = To.Value;
+        //    #endregion
 
-            if (RolID != (int)EnumRole.Gamer)
-                ViewData.Lookup = BaseHelper.GetLookup(
-                    new List<byte> { (byte)EnumSelectListType.Vendor, },
-                    _context
-                );
+        //    if (RolID != (int)EnumRole.Gamer)
+        //        ViewData.Lookup = BaseHelper.GetLookup(
+        //            new List<byte> { (byte)EnumSelectListType.Vendor, },
+        //            _context
+        //        );
 
-            var Request = new DashboardRequest()
-            {
-                RoleID = RolID,
-                UserID = UserID,
-                context = _context,
-                AdsDTO = filter,
-                TopAccount = 15,
-                PackagingStock = 15,
-                TopArea = 20,
-                TopDriver = 20
-            };
+        //    var Request = new DashboardRequest()
+        //    {
+        //        RoleID = RolID,
+        //        UserID = UserID,
+        //        context = _context,
+        //        DashboardDTO = filter,
+        //        TopAccount = 15,
+        //        PackagingStock = 15,
+        //        TopArea = 20,
+        //        TopDriver = 20
+        //    };
 
-            ViewData.ObjDTO = DashboardHelper.GenerateAccountDashboard(Request, VendorID);
+        //    ViewData.ObjDTO = DashboardHelper.GenerateAccountDashboard(Request, VendorID);
 
-            if (ActionType == SystemConstants.ActionType.PartialView)
-                return PartialView("_AccountDashboard", ViewData);
-            else
-                return View(ViewData);
-        }
+        //    if (ActionType == SystemConstants.ActionType.PartialView)
+        //        return PartialView("_AccountDashboard", ViewData);
+        //    else
+        //        return View(ViewData);
+        //}
 
-        [AuthorizePerRole("RedDashboard")]
+        [AuthorizePerRole("Dashboard")]
         public IActionResult IndexPartial(DateTime? From, DateTime? To)
         {
             ViewBag.dateFrom = null;
@@ -262,7 +258,7 @@ namespace DicomApp.Portal.Controllers
             return PartialView("_IndexPartial", record);
         }
 
-        [AuthorizePerRole("RedDashboard")]
+        [AuthorizePerRole("Dashboard")]
         public IActionResult AllOrdersIncome(DateTime? From, DateTime? To)
         {
             #region Get Data
@@ -314,7 +310,7 @@ namespace DicomApp.Portal.Controllers
             return Json(record);
         }
 
-        [AuthorizePerRole("RedDashboard")]
+        [AuthorizePerRole("Dashboard")]
         public IActionResult TodayOrdersIncome(DateTime? From, DateTime? To)
         {
             #region Get Data
@@ -369,7 +365,7 @@ namespace DicomApp.Portal.Controllers
             return Json(record);
         }
 
-        [AuthorizePerRole("RedDashboard")]
+        [AuthorizePerRole("Dashboard")]
         public IActionResult AllOrdersCount(DateTime? From, DateTime? To)
         {
             //#region Get Data

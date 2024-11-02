@@ -74,7 +74,7 @@
 							<li><a class="active" href="@Url.Action("Main","Gamer")">@Localizer["home"]</a></li>
 							@if (User.Identity.IsAuthenticated && roleName != SystemConstants.Role.Gamer)
 							{
-							   <li><a class="active" href="@Url.Action("index","Home")">@Localizer["dashboard"]</a></li>	
+								<li><a class="active" href="@Url.Action("main","Dashboard")">@Localizer["dashboard"]</a></li>
 							}
 						</ul>
 					</div>

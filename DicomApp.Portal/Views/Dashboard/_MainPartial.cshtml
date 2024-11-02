@@ -269,7 +269,7 @@
         chart.render();
     }
     if ($("#chart_Top10AccountPartial").length > 0) {
-        var modelNew = @Html.Raw(Json.Serialize(Model.Chart_TopAccount));
+        var modelNew = @Html.Raw(Json.Serialize(Model.Chart_TopBuyer));
         var dmodelNew = [];
         var cmodelNew = [];
         var cmodelDeliverd = [];
@@ -330,7 +330,7 @@
         chart.render();
     }
     if ($("#chart_Top10AreaPartial").length > 0) {
-        var modelNew = @Html.Raw(Json.Serialize(Model.Chart_TopArea));
+        var modelNew = @Html.Raw(Json.Serialize(Model.Chart_TopGames));
         var dmodelNew = [];
         var cmodelNew = [];
         var cmodelDeliverd = [];

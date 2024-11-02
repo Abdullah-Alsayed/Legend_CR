@@ -48,13 +48,13 @@
                         @if (BaseService.CheckRoleAccessability(roleID, "Menu_RedDashboard", connectionString: connectionString))
                         {
                             <li id="Dashboard-li" class="cursor-pointer" onclick="NavActive('Dashboard-li')">
-                                <a href="/Home/Index" class="Navigation">
+                                <a href="/Dashboard/Main" class="Navigation">
                                     <img class="Img-Ul" src="~/dist/images/Icons/Dashboard.png" />
                                     Dashboard
                                 </a>
                             </li>
                         }
-                        @if (roleID == (int)EnumRole.Admin || roleID == (int)EnumRole.SuperAdmin || roleID == (int)EnumRole.AccountManager)
+@*                         @if (roleID == (int)EnumRole.Admin || roleID == (int)EnumRole.SuperAdmin || roleID == (int)EnumRole.AccountManager)
                         {
                             if (BaseService.CheckRoleAccessability(roleID, "Menu_AccountDashboard", connectionString: connectionString))
                             {
@@ -65,7 +65,7 @@
                                     </a>
                                 </li>
                             }
-                        }
+                        } *@
                         <li class="cursor-pointer" onclick="OpenSection('REDManagement-Ul')">
                             <a><img class="Img-Ul" src="~/dist/images/Icons/REDManagement.png" />Management</a>
                             <ul id="REDManagement-Ul" class="d-none Nested-sidebar-menu">

@@ -176,7 +176,7 @@
     var bordercolor = getComputedStyle(document.body).getPropertyValue('--bordercolor');
     var bodycolor = getComputedStyle(document.body).getPropertyValue('--bodycolor');
     if ($("#apex_bar_chart").length > 0) {
-        var modelNew = @Html.Raw(Json.Serialize(Model.Chart_TopArea));
+        var modelNew = @Html.Raw(Json.Serialize(Model.Chart_TopGames));
         var dmodelNew = [];
         var cmodelNew = [];
         var cmodelDeliverd = [];
@@ -299,7 +299,7 @@
         chart.render();
     }
     if ($("#apex_bar_chartxx").length > 0) {
-        var modelNew = @Html.Raw(Json.Serialize(Model.Chart_TopAccount));
+        var modelNew = @Html.Raw(Json.Serialize(Model.Chart_TopBuyer));
         var dmodelNew = [];
         var cmodelNew = [];
         var cmodelDeliverd = [];

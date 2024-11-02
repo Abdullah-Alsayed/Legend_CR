@@ -149,7 +149,7 @@ namespace DicomApp.Portal.Controllers
                 if (user.RoleName == SystemConstants.Role.Gamer)
                     return RedirectToAction("Main", "Gamer");
                 else
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("main", "Dashboard");
             }
             ViewBag.error = loginResponse.Message;
             return View(model);

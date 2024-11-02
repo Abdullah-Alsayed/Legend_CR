@@ -43,27 +43,23 @@
                 <div class="Shipments-Info-section">
                     <div class="Shipments-Info">
                         <p>Total Shipment</p>
-                        <span><i class="ion-cube"></i> @Model.ObjDTO.AllOrders_Count</span>
-                        <span><i class="ion-card"></i> @Model.ObjDTO.AllOrders_Total<sub>EGP</sub></span>
-                        <span class="Shipments-Info-Active"><img src="~/dist/images/Icons/@Model.ObjDTO.AllOrders_Arow"> @Model.ObjDTO.AllOrders_Percentchanged%</span>
+                        <span><i class="ion-cube"></i> @Model.ObjDTO.AllAdvertisements_Count</span>
+                        <span><i class="ion-card"></i> @Model.ObjDTO.AllAdvertisements_Count<sub>EGP</sub></span>
                     </div>
                     <div class="Shipments-Info">
                         <p>Delivered Shipments</p>
-                        <span><i class="ion-cube"></i> @Model.ObjDTO.DeliveredOrders_Count</span>
-                        <span><i class="ion-card"></i> @Model.ObjDTO.DeliveredOrders_Total<sub>EGP</sub></span>
-                        <span class="Shipments-Info-Active"><img src="~/dist/images/Icons/@Model.ObjDTO.DeliveredOrders_Arow"> @Model.ObjDTO.DeliveredOrders_Percentchanged%</span>
+                        <span><i class="ion-cube"></i> @Model.ObjDTO.RejectAdvertisements_Count</span>
+                        <span><i class="ion-card"></i> @Model.ObjDTO.RejectAdvertisements_Total<sub>EGP</sub></span>
                     </div>
                     <div class="Shipments-Info">
                         <p>Pending Shipments</p>
-                        <span><i class="ion-cube"></i> @Model.ObjDTO.PendingOrders_Count</span>
-                        <span><i class="ion-card"></i> @Model.ObjDTO.PendingOrders_Total<sub>EGP</sub></span>
-                        <span class="Shipments-Info-Active"><img src="~/dist/images/Icons/@Model.ObjDTO.PendingOrders_Arow"> @Model.ObjDTO.PendingOrders_Percentchanged%</span>
+                        <span><i class="ion-cube"></i> @Model.ObjDTO.PendingAdvertisements_Count</span>
+                        <span><i class="ion-card"></i> @Model.ObjDTO.PendingAdvertisements_Total<sub>EGP</sub></span>
                     </div>
                     <div class="Shipments-Info">
                         <p>Cancelled Shipments</p>
-                        <span><i class="ion-cube"></i> @Model.ObjDTO.CanceledOrders_Count</span>
-                        <span><i class="ion-card"></i> @Model.ObjDTO.CanceledOrders_Total<sub>EGP</sub></span>
-                        <span class="Shipments-Info-Active"><img src="~/dist/images/Icons/@Model.ObjDTO.CanceledOrders_Arow"> @Model.ObjDTO.CanceledOrders_Percentchanged%</span>
+                        <span><i class="ion-cube"></i> @Model.ObjDTO.RejectAdvertisements_Count</span>
+                        <span><i class="ion-card"></i> @Model.ObjDTO.RejectAdvertisements_Total<sub>EGP</sub></span>
                     </div>
                 </div>
             </div>
@@ -76,12 +72,12 @@
                         <div class="status">
                             <div class="Unsuccessful">
                                 <div></div>
-                                <p class="Delivery-Success-number Unsuccess">@Model.ObjDTO.CanceledOrders_Count</p>
+                                <p class="Delivery-Success-number Unsuccess">@Model.ObjDTO.RejectAdvertisements_Count</p>
                                 <p class="Delivery-Success-Name">Unsuccessful</p>
                             </div>
                             <div class="Successful">
                                 <div></div>
-                                <p class="Delivery-Success-number Success">@Model.ObjDTO.DeliveredOrders_Count</p>
+                                <p class="Delivery-Success-number Success">@Model.ObjDTO.SoldAdvertisements_Count</p>
                                 <p class="Delivery-Success-Name">Successful</p>
                             </div>
                         </div>
@@ -115,8 +111,7 @@
             <div class="col-12 col-sm-6 col-xl-4">
                 <div class="Total-Earning">
                     <p class="Total-Earning-p">Total Earning</p>
-                    <span>@Model.ObjDTO.TotalEarning_Percentchanged% <i class="@(Model.ObjDTO.TotalEarning_Arow == SystemConstants.ArrowType.Up ? "ion-ios-arrow-up" : "ion-ios-arrow-down")"></i></span>
-                    <p class="Earning">@Model.ObjDTO.DeliveredOrders_Total <sub>EGP</sub></p>
+                    <p class="Earning">@Model.ObjDTO.SoldAdvertisements_Total <sub>EGP</sub></p>
                     <div id="Total-Earning-chart"></div>
                     <ul>
                         <li>
@@ -182,7 +177,7 @@
                 }
             },
             colors: ['#FFCD1C', '#02C94F', '#1755E7'],
-            series: [@Math.Round(Model.ObjDTO.Packaging), @Math.Round(Model.ObjDTO.Shipping), @Math.Round(Model.ObjDTO.Storage)],
+            series: [@Math.Round(Model.ObjDTO.Account), @Math.Round(Model.ObjDTO.Push), @Math.Round(Model.ObjDTO.Change)],
             labels: ['Packaging', 'Shipping', 'Storage'],
             stroke: {
                 lineCap: "round",
@@ -276,7 +271,7 @@
         monthlyPerformance.render();
         ////////////////////////////Top-Areas//////////////////////////
         if ($("#Top-Areas").length > 0) {
-            let ModelData = @Html.Raw(Json.Serialize(Model.ObjDTO.Chart_TopArea.Take(10)));
+            let ModelData = @Html.Raw(Json.Serialize(Model.ObjDTO.Chart_TopGames.Take(10)));
             let DeliveredCount = [], AreaName = [];
             for (let i = 0; i < ModelData.length; i++) {
                 AreaName.push(ModelData[i].key);

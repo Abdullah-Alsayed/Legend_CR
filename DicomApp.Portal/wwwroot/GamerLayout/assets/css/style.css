@@ -1914,7 +1914,7 @@ border: 3px solid #0077e4;
     align-items: flex-start;
 }
 .comment-Section textarea {
-    color: black;
+    color: black !important;
     font-size: 14px;
     width: 500px;
     height: 100px;

@@ -430,7 +430,7 @@
     font-family: var(--Font);
     font-style: normal;
     font-weight: 500;
-    font-size: 14px;
+    font-size: 20px;
     line-height: 21px;
     display: flex;
     align-items: center;
@@ -471,7 +471,7 @@
     font-family: var(--Font);
     font-style: normal;
     font-weight: 500;
-    font-size: 17px;
+    font-size: 20px;
     line-height: 21px;
     display: flex;
     align-items: center;
@@ -812,7 +812,7 @@ body {
         height: 21px;
         font-style: normal;
         font-weight: 500;
-        font-size: 14px;
+        font-size: 18px;
         line-height: 21px;
         display: flex;
         align-items: center;
@@ -891,6 +891,24 @@ body {
         float: left;
         margin: 0px 0px 0px -23px;
     }
+
+.RatingAverage {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 330px;
+    gap:15px;
+}
+.RatingAverage p{
+
+    font-size:70px;
+    color:gold;
+    margin:20px;
+}
+.RatingAverage img{
+    width:250px;
+}
 
 .Delivery-Success-Name {
     font-family: 'Poppins';

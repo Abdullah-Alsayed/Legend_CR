@@ -620,6 +620,7 @@ namespace DicomApp.BL.Services
                             GamerId = s.GamerId,
                             LastModifiedAt = s.LastModifiedAt,
                             LastModifiedBy = s.LastModifiedBy,
+                            StatusType = s.Status.StatusType,
                             Status = new StatusDTO
                             {
                                 Id = s.Status.Id,
