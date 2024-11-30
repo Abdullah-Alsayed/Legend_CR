@@ -5,7 +5,6 @@ using System.Text;
 
 namespace DicomApp.CommonDefinitions.Responses
 {
-    
     public class BaseResponse
     {
         public string Message { get; set; }

@@ -1,0 +1,79 @@
+﻿@using DicomApp.CommonDefinitions.DTO
+@using DicomApp.DAL.DB
+@using DicomApp.Helpers
+@model List<InvoiceDTO>
+<thead>
+    <tr>
+        <th class="Sort-Column text-center">Code</th>
+        <th class="Sort-Column text-center">RefId</th>
+        <th class="Sort-Column text-center">Price</th>
+        <th class="Sort-Column text-center">Refund</th>
+        <th class="Sort-Column text-center">Invoice Type</th>
+        <th class="Sort-Column text-center">Service Type</th>
+        <th class="Sort-Column text-center">Date</th>
+        <th class="Sort-Column text-center">Actions</th>
+    </tr>
+</thead>
+<tbody id="TableBody">
+    @if (Model != null && Model.Count > 0)
+    {
+        foreach (var inv in Model)
+        {
+            <tr id="Invoice_@inv.InvoiceId">
+                <td class="td-small text-center text-nowrap pl-1 pr-1"><b>@inv.RefId</b></td>
+                <td class="td-small text-center text-nowrap pl-1 pr-1"><b>@inv.GamerService?.RefId</b></td>
+                <td class="td-small text-center text-nowrap pl-1 pr-1">@inv.Price EGP</td>
+                <td class="td-small text-center pl-1 pr-1">@inv.IsRefund</td>
+                <td class="td-small text-center pl-1 pr-1">@(inv.InvoiceType == (int)InvoiceTypeEnum.Advertisement ? "Advertisement":"Service") </td>
+                <td class="td-small text-center pl-1 pr-1">@(inv.GamerService.GameServiceType == GameServiceType.Charge ? "Charge" : "Push") </td>
+                <td class="td-small text-center text-nowrap pl-1 pr-1 Date-Table">@inv.CreatedAt.ToString("dd MMM yyyy")</td>
+                <td>
+                    <div class="Actions-Buttons">
+                        <ul class="">
+                            <li data-toggle="modal" data-target="#RefundInvoice-Model_@inv.InvoiceId" class="Red-Bg"><i class="fa fa-undo F-Medium"></i></li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            <div class="modal fade" id="RefundInvoice-Model_@inv.InvoiceId" tabindex="-1" role="dialog" aria-labelledby="RefundInvoiceLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div>
+                            <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <h2 class="Model-Titel w-50">are you sure you want to Refund this Game?</h2>
+                            <h5 class="Model-Contetn"> Deleting the selected Game is permanent. You won’t be able to undo this action.</h5>
+                            <input type="hidden" id="EntityId" />
+                            <div class="col-lg-12">
+                                <button class="Red-Btn-OutLine OutLine-Red ml-3 Btn-Model" type="button" data-dismiss="modal"> Close </button>
+                                <button class="Red-Btn-OutLine OutLine-White Btn-Model" type="button" onclick="DeleteEntity('Invoice','Refund','Invoice_' , @inv.InvoiceId)" id="BtnRefund_@inv.InvoiceId">
+                                    Refund <span class="Spinner spinner-border spinner-border-sm ml-2 mb-1 d-none" role="status" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <tr>
+            <td colspan="13" class="text-danger text-center"><h3>No data available in table</h3></td>
+        </tr>
+    }
+</tbody>
+<tfoot>
+    <tr>
+        <td colspan="13">
+            @{
+                await Html.RenderPartialAsync("_Pagination", new OptionDTO { Action = "All", Controller = "Invoice", Count = Model.Count, StatusType = (int)InvoiceTypeEnum.GamerService });
+            }
+        </td>
+    </tr>
+</tfoot>
+<input type="hidden" value="@Model.Count" id="DataCount" />
+

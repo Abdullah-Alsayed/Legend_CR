@@ -21,8 +21,8 @@ namespace DicomApp.DAL.DB
         public int? ModifiedBy { get; set; }
         public string Name { get; set; }
         public bool Editable { get; set; }
-        public int DeleteBy { get; set; }
-        public DateTime DeleteAt { get; set; }
+        public int? DeleteBy { get; set; }
+        public DateTime? DeleteAt { get; set; }
 
         public virtual ICollection<Account> Account { get; set; }
         public virtual ICollection<CommonUser> CommonUser { get; set; }

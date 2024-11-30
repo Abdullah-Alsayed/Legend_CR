@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using DicomApp.CommonDefinitions.DTO;
-using DicomApp.CommonDefinitions.DTO.ShipmentDTOs;
+using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
+using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
 using DicomApp.CommonDefinitions.Requests;
 using DicomApp.CommonDefinitions.Responses;
 using DicomApp.DAL.DB;
@@ -36,9 +37,9 @@ namespace DicomApp.BL.Services
                                 CategoryId = p.CategoryId,
                                 CategoryName = p.Category.NameEn,
                                 Description = p.Description,
-                                ShipDTOs = p.ShipmentWarehouseGame.Select(s => new ShipDTO
+                                ShipDTOs = p.ShipmentWarehouseGame.Select(s => new AdsDTO
                                 {
-                                    ShipmentId = s.ShipmentId
+                                    AdvertisementId = s.AdvertisementId
                                 })
                             });
 
@@ -140,6 +141,16 @@ namespace DicomApp.BL.Services
                                 CategoryId = p.CategoryId,
                                 CategoryName = p.Category.NameEn,
                                 Description = p.Description,
+                                GameChargesDto = p
+                                    .GameCharges.Select(x => new GameChargeDTO
+                                    {
+                                        Count = x.Count,
+                                        Id = x.Id,
+                                        Discount = x.Discount,
+                                        Price = x.Price,
+                                        Img = x.Img,
+                                    })
+                                    .ToList()
                             });
 
                         res.TotalCount = 1;
@@ -302,13 +313,13 @@ namespace DicomApp.BL.Services
                                     CreatedBy = game.CreatedBy,
                                 }
                             };
-                            res.Message = MessageKey.DeletedSuccessfully.ToString();
+                            res.Message = SystemEnums.DeletedSuccessfully.ToString();
                             res.Success = true;
                             res.StatusCode = HttpStatusCode.OK;
                         }
                         else
                         {
-                            res.Message = MessageKey.InvalidData.ToString();
+                            res.Message = SystemEnums.InvalidData.ToString();
                             res.Success = false;
                         }
                     }

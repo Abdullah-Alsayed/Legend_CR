@@ -1,0 +1,35 @@
+﻿
+@using DicomApp.CommonDefinitions.DTO
+@using DicomApp.Helpers
+@model List<ServiceDTO>
+<thead>
+    <tr>
+        <th class="Sort-Column text-center">Code</th>
+        <th class="Sort-Column text-center">UserName</th>
+        <th class="Sort-Column text-center">Password</th>
+        <th class="Sort-Column text-center">Date</th>
+        <th class="text-center">Game</th>
+        <th class="text-center">Gamer</th>
+        <th class="text-center">Description</th>
+        <th class="text-center">Service Type</th>
+        <th class="Sort-Column text-center">Price</th>
+        <th class="Sort-Column text-center">Level</th>
+        <th class="Sort-Column text-center">Rank</th>
+        <th class="text-center">Status</th>
+        <th class="text-center">Action</th>
+    </tr>
+</thead>
+<tbody id="TableBody">
+    <partial name="_Table" model="@Model" />
+</tbody>
+<tfoot>
+    <tr>
+        <td colspan="13">
+            @{
+                await Html.RenderPartialAsync("_Pagination", new OptionDTO { Action = "All", Controller = "GamerService", Count = Model.Count, StatusType = (int)StatusTypeEnum.InProgress });
+            }
+        </td>
+    </tr>
+</tfoot>
+<input type="hidden" value="@Model.Count" id="DataCount" />
+

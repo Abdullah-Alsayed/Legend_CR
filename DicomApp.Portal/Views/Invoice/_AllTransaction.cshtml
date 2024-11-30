@@ -1,0 +1,56 @@
+﻿@using DicomApp.CommonDefinitions.DTO;
+@using DicomApp.CommonDefinitions.DTO;
+@using DicomApp.CommonDefinitions.DTO.CashDTOs;
+@using DicomApp.DAL.DB
+@model List<TransactionDTO>
+
+@if (Model != null && Model.Count > 0)
+{
+    foreach (var item in Model)
+    {
+        <tr id="Transaction_@item.TransactionId" data-AdvertisementId="@item.AdvertisementId">
+            <td id="RefId">@item.RefId</td>
+            <td id="RefId"># @item.Advertisement?.RefId <br /> <span>@item.Advertisement?.Price</span></td>
+            <td id="IsSuccess">@item.IsSuccess</td>
+            <td id="Amount">@item.Amount</td>
+            <td id="PaymentId">@item.PaymentId</td>
+            <td id="TransactionSource">@item.TransactionSource</td>
+            <td id="TransactionType">@item.TransactionType</td>
+            <td id="CreatedAt"><b>@item.CreatedAt</b></td>
+            <td id="Attachment"><img src="/dist/images/@item.Attachment" width="150" /></td>
+            <td>
+                <div class="Actions-Buttons">
+                    @if (!item.IsSuccess && item.TransactionSource == TransactionSourceEnum.Attachments)
+                    {
+                        <ul class="">
+                            <li class="Green-Bg" data-toggle="modal" data-target="#ConfirmTransaction-Model_@item.TransactionId"><a href="javascript:;"><i class="icon-check F-Medium text-white"></i></a></li>
+                            <!-- Confirm Transaction Model -->
+                            <div class="modal fade" id="ConfirmTransaction-Model_@item.TransactionId" tabindex="-1" role="dialog" aria-labelledby="ConfirmTransactionLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div>
+                                            <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h2 class="Model-Titel w-50">are you sure you want to Confirm this Transaction?</h2>
+                                            <h5 class="Model-Contetn"> Confirm Transaction.</h5>
+                                            <input type="hidden" id="@item.TransactionId" />
+                                            <div class="col-lg-12">
+                                                <button class="Red-Btn-OutLine OutLine-Red ml-3 Btn-Model" type="button" data-dismiss="modal"> Cancel</button>
+                                                <button class="Red-Btn-OutLine OutLine-White Btn-Model" type="button" onclick="ConfirmTransaction('@item.TransactionId','@item.AdvertisementId')" data-dismiss="modal" id="BtnConfirm_@item.TransactionId">Confirm<span class="Spinner spinner-border spinner-border-sm ml-2 mb-1 d-none" role="status" aria-hidden="true"></span> </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ul>
+                    }
+                </div>
+            </td>
+        </tr>
+    }
+}
+<input type="hidden" value="@(Model != null ? Model.Count : 0)" id="DataCount" />
+

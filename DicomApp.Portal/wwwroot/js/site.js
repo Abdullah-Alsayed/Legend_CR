@@ -1,8 +1,7 @@
-﻿let PageIndex = 0;
-
-//Sort Clint-Side
+﻿
+let PageIndex = 0;
 function ResetTdSort() {
-    $(`.Sort-Column`).css("color", "#000");
+    $(`.Sort-Column`).css("color", "#EEF0F4");
 }
 
 function SortClintSide() {
@@ -19,13 +18,13 @@ function SortClintSide() {
             } else {
                 $(this).addClass('asc selected');
                 $(this).removeClass('desc');
-                $(this).css("color", "#000");
+                $(this).css("color", "#EEF0F4");
 
                 sortOrder = 1;
             }
             $(this).siblings().removeClass('asc selected');
             $(this).siblings().removeClass('desc selected');
-            $(this).siblings().css("color", "#000");
+            $(this).siblings().css("color", "#EEF0F4");
 
             var arrData = $('table').find('tbody >tr:has(td)').get();
             arrData.sort(function (a, b) {
@@ -56,10 +55,7 @@ function NextPage(ControllerName, ActionName, Filter) {
         url: `/${ControllerName}/${ActionName}?ActionType=Table&StatusId=${Filter}&PageIndex=${Page}`,
         type: "GET",
         success: function (result) {
-            if ((ControllerName == "Warehouse" && ActionName == "Shipments")
-                || (ControllerName == "Warehouse" && ActionName == "Courier")
-                || (ControllerName == "PickUpRequest" && ActionName == "All")
-                || (ControllerName == "Shipment" && ActionName == "All")) {
+            if (ActionName == "All") {
                 $("#Table").html(result);
             }
             else {
@@ -95,10 +91,7 @@ function PreviousPage(ControllerName, ActionName, Filter) {
         url: `/${ControllerName}/${ActionName}?ActionType=Table&StatusId=${Filter}&PageIndex=${Page}`,
         type: "GET",
         success: function (result) {
-            if ((ControllerName == "Warehouse" && ActionName == "Shipments")
-                || (ControllerName == "Warehouse" && ActionName == "Courier")
-                || (ControllerName == "PickUpRequest" && ActionName == "All")
-                || (ControllerName == "Shipment" && ActionName == "All")) {
+            if (ActionName == "All") {
                 $("#Table").html(result);
             }
             else {
@@ -115,25 +108,35 @@ function PreviousPage(ControllerName, ActionName, Filter) {
 
 function Filter(ActionName, ControllerName) {
     PageIndex = 0;
-    var Url = GetPramter(ControllerName, ActionName, 'Table');
-    $("#Ajaxloader").css("display", "inline-block").fadeIn(20000)
-    $("#Ajaxloader").removeClass("d-none");
+    var Url = GetPramter(ControllerName, ActionName, ControllerName == "Gamer" && ActionName == "All" ? 'PartialView' :'Table' );
+    if (ControllerName != "Gamer" && ActionName != "All")
+     {
+        $("#Ajaxloader").css("display", "inline-block").fadeIn(500)
+        $("#Ajaxloader").removeClass("d-none");
+    } else {
+        $("#AllAccountsList-Section").fadeOut(500);
+        $(".Account-Spinner").css("display", "inline-block").fadeIn(500);
+        $(".Account-Spinner").removeClass("d-none");
+    }
     $.ajax({
         url: Url,
         type: "GET",
         contentType: "application/json; charset=utf-8",
         success: function (result) {
-            if ((ControllerName == "Warehouse" && ActionName == "Shipments")
-                || (ControllerName == "Warehouse" && ActionName == "Courier")
-                || (ControllerName == "PickUpRequest" && ActionName == "All")
-                || (ControllerName == "Shipment" && ActionName == "All")) {
+            if (ControllerName == "Gamer" && ActionName == "All")
+            {
+                $("#AllAccountsList-Section").fadeIn(500);
+                $("#AllAccountsList-Section").html(result);
+            }
+            else if  (ActionName == "All") {
                 $("#Table").html(result);
             }
             else {
                 $("tbody").html(result);
             }
             ResetTdSort();
-            $("#Ajaxloader").fadeOut(1000);
+            $("#Ajaxloader").fadeOut(500);
+            $(".Account-Spinner").fadeOut(500);
             var DataCount = $(`#DataCount`).val();
             $(`#DataCount-Span`).text(`Showing : ${DataCount}`);
         },
@@ -150,13 +153,10 @@ function FilterByStatus(ActionName, ControllerName, ID, Filter) {
     $("#Ajaxloader").removeClass("d-none");
 
     $.ajax({
-        url: `/${ControllerName}/${ActionName}?ActionType=Table&Search=${Search}&StatusId=${Filter}`,
+        url: `/${ControllerName}/${ActionName}?ActionType=Table&Search=${Search}&StatusType=${Filter}`,
         type: "GET",
         success: function (result) {
-            if ((ControllerName == "Warehouse" && ActionName == "Shipments")
-                || (ControllerName == "Warehouse" && ActionName == "Courier")
-                || (ControllerName == "PickUpRequest" && ActionName == "All")
-                || (ControllerName == "Shipment" && ActionName == "All")) {
+            if  (ActionName == "All") {
                 $("#Table").html(result);
             }
             else {
@@ -178,7 +178,7 @@ function Sort(ControllerName, ActionName) {
     Url += `&IsDesc=${SortBy}`;
     $("#Ajaxloader").css("display", "inline-block").fadeIn(20000)
     $("#Ajaxloader").removeClass("d-none");
-    $("td").css("color", "#000000");
+    $("td").css("color", "##EEF0F4");
     if (SortBy) {
         $("#Sort-Btn").data('isdesc', false);
         $("#Sort-Btn").css("background", "#FFFFFF");
@@ -210,7 +210,7 @@ function SortColumn(Td, SortByCoulmn, ControllerName, ActionName) {
     console.log(Url)
     $("#Ajaxloader").css("display", "inline-block").fadeIn(20000)
     $("#Ajaxloader").removeClass("d-none");
-    $("td").css("color", "#000000");
+    $("td").css("color", "##EEF0F4");
     $("#Sort-Btn").css("background", "#FFFFFF");
     if (SortBy) {
         $(`#${Td}`).data('isdesc', false);
@@ -218,16 +218,13 @@ function SortColumn(Td, SortByCoulmn, ControllerName, ActionName) {
     }
     else {
         $(`#${Td}`).data('isdesc', true);
-        $(`#${Td}`).css("color", "#000000");
+        $(`#${Td}`).css("color", "##EEF0F4");
     }
     $.ajax({
         url: Url,
         type: "GET",
         success: function (result) {
-            if ((ControllerName == "Warehouse" && ActionName == "Shipments")
-                || (ControllerName == "Warehouse" && ActionName == "Courier")
-                || (ControllerName == "PickUpRequest" && ActionName == "All")
-                || (ControllerName == "Shipment" && ActionName == "All")) {
+            if (ActionName == "All") {
                 $("#Table").html(result);
             }
             else {
@@ -255,10 +252,7 @@ function Search(ControllerName, ActionName) {
             url: `/${ControllerName}/${ActionName}?ActionType=Table&StatusId=${Status}&Search=${Value}`,
             type: "GET",
             success: function (result) {
-                if ((ControllerName == "Warehouse" && ActionName == "Shipments")
-                    || (ControllerName == "Warehouse" && ActionName == "Courier")
-                    || (ControllerName == "PickUpRequest" && ActionName == "All")
-                    || (ControllerName == "Shipment" && ActionName == "All")) {
+                if (ActionName == "All") {
                     $("#Table").html(result);
                 }
                 else {
@@ -290,40 +284,49 @@ function displayPermissions(className) {
 
 
 function MenuNavigation(event, ActionName, ControllerName, paramters = "") {
-    event.preventDefault();
-    if (event.target.tagName === "A") {
-        ControllerName = event.target.href.split('/')[3];
-        ActionName = event.target.href.split('/')[4];
-    }
-    else if (event.target.tagName === "IMG") {
-        ControllerName = event.target.baseURI.split('/')[3];
-        ActionName = event.target.baseURI.split('/')[4];
-    }
-    window.history.pushState(null, null, `/${ControllerName}/${ActionName}`);
-    $('#MainLoder').fadeIn(100);
-    $('#Footer').hide();
-    $("#MainView").hide();
-    $.ajax({
-        type: "GET",
-        url: `/${ControllerName}/${ActionName}?${paramters}`,
-        contentType: 'application/html; charset=utf-8',
-        data: { ActionType: "PartialView" },
-        dataType: 'html',
-        success: function (result) {
-            $(".Nested-sidebar-menu").addClass("d-none");
-            $('.cursor-pointer').removeClass('active');
-            SelectNavActive();
-            $('#MainView').html(result);
-            $("#MainView").fadeIn(1000);
-            $('#MainLoder').fadeOut(1000);
-            $(".se-pre-con").css("display", "none")
-            ValidationForm();
-            SortClintSide();
-        },
-        error: function (Error) {
-            alert(Error)
+    if (ControllerName == "User" && ActionName == "Authorization")
+        window.location.href = '/User/Authorization';
+    else {
+
+        event.preventDefault();
+        if (event.target.tagName === "A") {
+            ControllerName = event.target.href.split('/')[3];
+            ActionName = event.target.href.split('/')[4];
         }
-    });
+        else if (event.target.tagName === "IMG") {
+            ControllerName = event.target.baseURI.split('/')[3];
+            ActionName = event.target.baseURI.split('/')[4];
+        }
+        if (paramters != "")
+            window.history.pushState(null, null, `/${ControllerName}/${ActionName}?${paramters}`);
+        else
+            window.history.pushState(null, null, `/${ControllerName}/${ActionName}`);
+
+        $('#MainLoder').fadeIn(100);
+        $('#Footer').hide();
+        $("#MainView").hide();
+        $.ajax({
+            type: "GET",
+            url: `/${ControllerName}/${ActionName}?${paramters}`,
+            contentType: 'application/html; charset=utf-8',
+            data: { ActionType: "PartialView" },
+            dataType: 'html',
+            success: function (result) {
+                $(".Nested-sidebar-menu").addClass("d-none");
+                $('.cursor-pointer').removeClass('active');
+                SelectNavActive();
+                $('#MainView').html(result);
+                $("#MainView").fadeIn(1000);
+                $('#MainLoder').fadeOut(1000);
+                $(".se-pre-con").css("display", "none")
+                ValidationForm();
+                SortClintSide();
+            },
+            error: function (Error) {
+                alert(Error)
+            }
+        });
+    }
 }
 
 $(document).ready(function () {
@@ -400,34 +403,37 @@ $("form , main").keyup(function (e) {
 });
 
 function GetPramter(ControllerName, ActionName, ActionType) {
-    var Search = $("#Search-Input").val();
-    var From = $("#From").val();
-    var To = $("#To").val();
-    var AreaId = $("#AreaId").val();
-    var areadIDs = $("#areadIDs").val();
-    var ZoneId = $("#ZoneId").val();
-    var VendorID = $("#VendorID").val();
-    var StatusId = $("#StatusId").val();
-    var CategoryId = $("#CategoryId").val();
-    var Quantity = $("#Quantity").val();
-    var Status = $(".Active").data('status');
-    var DeliveryManId = $(`#DeliveryManId`).val();
-    var RoleId = $(`#RoleId`).val();
-    var Department = $(`#FilterForm [name="Department"]`).val();
-    var EmployeeId = $(`#EmployeeId`).val();
-    var Solved = $(`#Solved`).val();
-    var url = `/${ControllerName}/${ActionName}?ActionType=${ActionType}&Search=${Search}&From=${From}
-                &To=${To}&AreaId=${AreaId}&ZoneId=${ZoneId}&VendorID=${VendorID}&areadIDs=${areadIDs}
-                &StatusId=${StatusId}&Status=${Status}&DeliveryManId=${DeliveryManId}&CategoryId=${CategoryId}   
-                &Quantity=${Quantity}&RoleId=${RoleId}&Department=${Department}&EmployeeId=${EmployeeId}&Solved=${Solved}`;
+    // Collect all input values
+    var params = {
+        Search: $("#Search-Input").val(),
+        From: $("#From").val(),
+        To: $("#To").val(),
+        AreaId: $("#AreaId").val(),
+        areadIDs: $("#areadIDs").val(),
+        ZoneId: $("#ZoneId").val(),
+        VendorID: $("#VendorID").val(),
+        StatusId: $("#StatusId").val(),
+        CategoryId: $("#CategoryId").val(),
+        Quantity: $("#Quantity").val(),
+        Status: $(".Active").data('status'),
+        DeliveryManId: $("#DeliveryManId").val(),
+        RoleId: $("#RoleId").val(),
+        Department: $("#FilterForm [name='Department']").val(),
+        EmployeeId: $("#EmployeeId").val(),
+        Solved: $("#Solved").val(),
+        GameId: $("#GameId").val(),
+        GamerId: $("#GamerId").val(),
+        LessLevel: $("#LessLevel").val(),
+        GreeterLevel: $("#GreeterLevel").val(),
+        LessPrice: $("#LessPrice").val(),
+        GreeterPrice: $("#GreeterPrice").val(),
+        GameServiceType: $("#GameServiceType").val()
+    };
+
+    var queryString = $.param(params);
+    var url = `/${ControllerName}/${ActionName}?ActionType=${ActionType}&${queryString}`;
     return url;
-};
-
-
-
-
-
-
+}
 
 function DashbordFilter(ActionName, ControllerName) {
     var Url = GetPramter(ControllerName, ActionName, 'PartialView');
@@ -449,11 +455,9 @@ function DashbordFilter(ActionName, ControllerName) {
     });
 }
 
-
-
-function ShipmentDetails(ControllerName, ShipmentID) {
+function AdvertisementDetails(ControllerName, AdvertisementId) {
     $.ajax({
-        url: `/Shipment/ShipmentDetails/${ShipmentID}`,
+        url: `/${ControllerName}/AdvertisementDetails/${AdvertisementId}`,
         type: "GET",
         success: function (result) {
             $("#ShipmentDetails-Body").html(result);
@@ -491,6 +495,7 @@ function Category(ID) {
 
 
 function ChangeUserPassword(Id) {
+    $(".Spinner").removeClass("d-none");
     var NewPassword = $(`#NewPassword_${Id}`).val();
     var ConfirmNewPassword = $(`#ConfirmPassword_${Id}`).val();
     if (NewPassword != ConfirmNewPassword) {
@@ -498,10 +503,17 @@ function ChangeUserPassword(Id) {
     }
     else {
         $.ajax({
-            url: `/User/ChangePassword?u=${Id}&newPass=${NewPassword}&confirmPass=${ConfirmNewPassword}`,
+            url: `/User/ChangePassword?id=${Id}&newPass=${NewPassword}&confirmPass=${ConfirmNewPassword}`,
             type: "POST",
             success: function (result) {
-                
+                $(".Spinner").addClass("d-none");
+                $(".modal").hide();
+                $(".modal-backdrop").remove();
+                if (result.success) 
+                alertSuccess(result.message);
+                else
+                    alertError(result.message);
+
             },
             error: function () {
                 alert("Error")
@@ -510,40 +522,63 @@ function ChangeUserPassword(Id) {
     }
 }
 
-//function Changepassword() {
-//    if ($("#ChangePassword-Form").valid()) {
-//        var Password = $("#ChangePassword-Form #Password").val();
-//        var NewPassword = $("#NewPassword").val();
-//        var ConfirmNewPassword = $("#ConfirmNewPassword").val();
-//        let id = $(`#EntityId`).val();
-//        $.ajax({
-//            url: `/Vendor/ChangePassword?ConfirmNewPassword=${ConfirmNewPassword}&NewPassword=${NewPassword}&Password=${Password}&UserID=${id}`,
-//            type: "POST",
-//            success: function (result) {
-//                switch (result) {
-//                    case "Password has been changed successfully":
-//                        alertSuccess(result);
-//                        $("#Password").val("");
-//                        $("#NewPassword").val("");
-//                        $("#ConfirmNewPassword").val("");
-//                        break;
-//                    case "New password does not match":
-//                        alertError(result);
-//                        break;
-//                    case "Old password is incorrect":
-//                        alertError(result);
-//                        break;
-//                    default:
-//                }
-//            },
-//            error: function () {
-//                alert("Error")
-//            }
-//        })
-//    } else {
-//        $('#ChangePassword-Form').submit();
-//    }
-//}
+
+function GamerForm(actionName = "SaveGamer", navigation = true)
+{
+    if ($('#Gamer-Form').valid()) {
+        $("#BtnSend").attr("disabled", true);
+        $("#BtnLabel").addClass("d-none"); // Hide label
+        $(".loader").removeClass("d-none"); // Show loader
+
+    var id = $('#Id').val();
+    let formData = new FormData($(`#Gamer-Form`)[0]);
+  
+        let fileInput = $(`#Gamer-Form input[type='file']`);
+        if (fileInput.length > 0) {
+            let files = fileInput[0].files;
+
+            if (files.length > 0) {
+                for (let i = 0; i < files.length; i++) {
+                    formData.append('files', files[i]);
+                }
+            }
+        }
+        $.ajax({
+            url: `/User/${actionName}`,
+            type: "POST",
+            data: formData,
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            processData: false, 
+            contentType: false, 
+            dataType: 'json',
+            success: function (result) {
+                $(".Spinner").addClass("d-none");
+                if (result.success)
+                {
+                    alertSuccessTop(result.message,4000);
+                    $("#UserNamelable").text(result.userDTO.name);
+                    $("#UpdateUserData").modal('hide');
+                    if (navigation) 
+                        MenuNavigation(event, 'ListGamer', 'User');
+                }
+                else
+                    alertError(result.message);
+            },
+            error: function (err) {
+                alert("try again!")
+                console.log(err);
+            }, complete: function () {
+                $(".loader").addClass("d-none"); // Hide loader
+                $("#BtnSend").attr("disabled", false); // Enable button back
+                // Show button label back
+                $("#BtnLabel").removeClass("d-none"); // Show original label
+            }
+        });   
+    }
+}
+
+
+
 
 function EditInfo() {
     let Data = $("#EditUser-Form").serialize();
@@ -641,10 +676,13 @@ function ComparePassword() {
     }
 }
 
-function AddEntity(ControllerName, ActionName, FormID) {
+function AddEntity(ControllerName, ActionName, FormID, Navigation = true) {
     if ($(`#${FormID}`).valid()) {
+        let Count = $(`tbody tr`).length;
         $("#BtnSend").prop('disabled', true);
         $(".Spinner").removeClass("d-none");
+        $(".custom-loader").removeClass("d-none");
+
         let formData = formSerialize(FormID);
         $.ajax({
             url: `/${ControllerName}/${ActionName}`,
@@ -657,12 +695,31 @@ function AddEntity(ControllerName, ActionName, FormID) {
                     alertError(result.message);
                     $("#BtnSend").prop('disabled', false);
                     $(".Spinner").addClass("d-none");
+                    $(".custom-loader").addClass("d-none");
                 }
                 else {
                     ResetForm(FormID);
-                    $(`tbody`).prepend(result);
-                    $(`#${FormID} img`).attr('src','');
-                    alertSuccess()
+                    if ((ControllerName == "GamerService" || ControllerName=="Invoice") && ActionName == "Add")
+                    {
+                        if (ControllerName == "GamerService") 
+                          $('#AddService-Model').modal('hide');
+                       else
+                        $('#AddInvoice-Model').modal('hide');
+
+                        if (Navigation) {
+                        $(".modal-backdrop").remove();
+                        MenuNavigation(event, "All", ControllerName);
+                        }
+                    }
+                     else
+                        $(`tbody`).prepend(result);
+
+                    $(`#${FormID} img`).attr('src', '');
+                    $(`#DataCount-Span`).text(`Showing : ${+(++Count)}`);
+                    $(".custom-loader").addClass("d-none");
+
+                    alertSuccess();
+                    $(".form-container").fadeOut();
                 }
             },
             complete: function () {
@@ -671,6 +728,7 @@ function AddEntity(ControllerName, ActionName, FormID) {
                 alertError();
                 $("#BtnSend").prop('disabled', false);
                 $(".Spinner").addClass("d-none");
+                $(".custom-loader").addClass("d-none");
             }
         })
     } else {
@@ -715,52 +773,41 @@ function EditEntity(ControllerName, ActionName, FormID, Tr) {
     }
 }
 
-//function EditEntity(ControllerName, ActionName, FormID, Tr) {
-//    if ($(`#${FormID}`).valid()) {
-//        $(`${FormID} #BtnSend`).prop('disabled', true);
-//        $(".Spinner").removeClass("d-none");
-//        let formData = $(`#${FormID}`).serializeArray();
-//        $.ajax({
-//            url: `/${ControllerName}/${ActionName}`,
-//            type: 'POST',
-//            data: formData,
-//            success: function (result) {
-//                if (result.success == false) {
-//                    alertError();
-//                    $(`${FormID} #BtnSend`).prop('disabled', false);
-//                    $(".Spinner").addClass("d-none");
-//                }
-//                else {
-//                    alertSuccess(result.message);
-//                    for (let ProblemType of formData)
-//                        if (ProblemType.name == "Type")
-//                            $(`#${Tr} #${ProblemType.name}`).text(ProblemType.value == 0 ? 'Problem' : 'Reason');
-//                        else
-//                            $(`#${Tr} #${ProblemType.name}`).text(ProblemType.value);
-
-//                    $(`${FormID} #BtnSend`).prop('disabled', false);
-//                    $(".Spinner").addClass("d-none");
-//                }
-
-//            },
-//            error: function (error) {
-//                alertError();
-//                $("#BtnSend").prop('disabled', false);
-//            }
-//        })
-//    }
-//    else {
-//        $(`#${FormID}`).submit();
-//    }
-//}
-
 function DeleteEntity(ControllerName, ActionName, Tr, id = 0) {
     if (id == 0)
         id = $("#EntityId").val();
 
+    $(".Spinner").removeClass("d-none");
+
     $.ajax({
-        type: "GET",
+        type: "PUT",
         url: `/${ControllerName}/${ActionName}/?ID=${id}`,
+        success: function (result) {
+            if (result.success == false) {
+                alertError(result.message);
+            }
+            else {
+                let Count = $(`#DataCount`).val();
+                $(".Spinner").addClass("d-none");
+                $(`#DataCount-Span`).text(`Showing : ${+(--Count)}`);
+                $(`#${Tr}${id}`).fadeOut(800);
+                $(`.modal`).hide();
+                $('.modal-backdrop').remove();
+                alertSuccess(result.message);
+            }
+
+        }
+    })
+}
+
+function UpdateStatus(ControllerName, ActionName, Tr, id = 0, status = 0) {
+    if (id == 0)
+        id = $("#EntityId").val();
+
+    let price = $(`#Price_${id}`).val();
+    $.ajax({
+        type: "PUT",
+        url: `/${ControllerName}/${ActionName}/?ID=${id}&status=${status}&price=${price}`,
         success: function (result) {
             if (result.success == false) {
                 alertError(result.message);
@@ -830,8 +877,8 @@ function UpdateRoleAppService(ControllerName, ActionName, FormID) {
             if (result.success == false)
                 alertError();
 
-            else
-                alertSuccess('Saved Successfully');
+            else alertSuccess('Saved Successfully');
+           
         },
         error: function (error) {
             alertError();
@@ -885,10 +932,10 @@ function formSerialize(FormID, GetShipments = false) {
             formData.append("File", $(`#${FormID} #ImgFile`)[0].files[0]);
 
     if (GetShipments) {
-        let ShipmentIDs = $("input:checkbox:checked").map(function () {
+        let AdvertisementIds = $("input:checkbox:checked").map(function () {
             return $(this).val();
         }).get()
-        formData.append("ShipmentIDs", ShipmentIDs);
+        formData.append("AdvertisementIds", AdvertisementIds);
     }
     for (let data of form)
         formData.append(data.name, data.value);
@@ -1183,7 +1230,33 @@ function OpenEditGameModel(id, Modal) {
         }
     });
 }
-
+function OpenEditGameChargeModel(id, Model) {
+    $.ajax({
+        type: "GET",
+        url: `/GameCharge/EditGameCharge/${id}`,
+        success: function (result) {
+            if (!result) {
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'failed try again',
+                    showConfirmButton: false,
+                    timer: 4000
+                });
+            }
+            else {
+                $(`#${Model} #Id`).val(result.id);
+                $(`#${Model} #Price`).val(result.price);
+                $(`#${Model} #Count`).val(result.count);
+                $(`#${Model} #Discount`).val(result.discount);
+                $(`#${Model} #GameId`).val(result.gameId);
+                $(`#${Model} #Img`).val(result.img);
+                $(`#${Model} #EditGameChargeImg`).attr("src", `/dist/images/${result.img}`);
+                $(`#${Model}`).modal('show');
+            }
+        }
+    });
+}
 function EditGame(Modal, FormID) {
     if ($(`#${FormID}`).valid()) {
         $("#BtnSend").prop('disabled', true);
@@ -1227,6 +1300,62 @@ function EditGame(Modal, FormID) {
                         $(`#${Tr} #ImgUrl img`).attr('src', `/dist/images/Fake-Img2.png`);
                     else
                         $(`#${Tr} #ImgUrl img`).attr('src', `/dist/images/${result.model.imgUrl}`);
+
+                    $(`#${Modal}`).modal('hide');
+                    $("#BtnSend").prop('disabled', false);
+                    $(".Spinner").addClass("d-none");
+                    alertSuccess();
+                }
+
+            }
+        })
+    }
+    else {
+        $(`#${FormID}`).submit();
+        $("label:contains('This field is required.')").css("display", "none");
+        $(".Spinner").addClass("d-none");
+    }
+}
+
+function EditChargeGame(Modal, FormID) {
+    if ($(`#${FormID}`).valid()) {
+        $("#BtnSend").prop('disabled', true);
+        $(".Spinner").removeClass("d-none");
+        let GameId = $(`#${Modal} #Id`).val();
+        let Tr = `Tr_${GameId}`
+        let formData = formSerialize(FormID);
+        $.ajax({
+            type: "POST",
+            url: `/GameCharge/EditGameCharge`,
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (result) {
+                if (!result.success) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        title: 'failed try again',
+                        showConfirmButton: false,
+                        timer: 4000
+                    });
+                    $(".Spinner").addClass("d-none");
+                }
+                else {
+                    let file = document.querySelector(`#${FormID} #ImgFile`);
+
+                    $(`#${Tr} #Price`).text(result.model.price);
+                    $(`#${Tr} #Count`).text(result.model.count);
+                    $(`#${Tr} #Discount`).text(result.model.discount);
+                    $(`#${Tr} #Game`).html(`<b>${result.model.game.nameEn}</b> <img src="/dist/images/${result.model.game.imgUrl}" width="50px"></img>`);
+
+                    if (file.files.length > 0)
+                        $(`#${Tr} #ImgUrl img`).attr('src', URL.createObjectURL(file.files[0]));
+
+                    else if (result.model.img == null)
+                        $(`#${Tr} #ImgUrl img`).attr('src', `/dist/images/Fake-Img2.png`);
+                    else
+                        $(`#${Tr} #ImgUrl img`).attr('src', `/dist/images/${result.model.img}`);
 
                     $(`#${Modal}`).modal('hide');
                     $("#BtnSend").prop('disabled', false);
@@ -1543,12 +1672,12 @@ function GetAreasByZone(event) {
     });
 }
 
-function StockItems(ControlerName, ShipmentID) {
+function StockItems(ControlerName, AdvertisementId) {
     $(`#ItemsModal-body-bod`).html(`<div class="spinner-border text-danger d-block m-auto" role="status">
                                         <span class="sr-only">Loading...</span>
                                     </div>`);
     $.ajax({
-        url: `/Shipment/StockItems/${ShipmentID}`,
+        url: `/Shipment/StockItems/${AdvertisementId}`,
         type: "GET",
         success: function (result) {
             $("#ItemsModal-body").html(result);
@@ -1558,12 +1687,12 @@ function StockItems(ControlerName, ShipmentID) {
     })
 }
 
-function PartialItems(ControlerName, ShipmentID) {
+function PartialItems(ControlerName, AdvertisementId) {
     $(`#PartialItemsModal-bod`).html(`<div class="spinner-border text-danger d-block m-auto" role="status">
                                           <span class="sr-only">Loading...</span>
                                       </div>`);
     $.ajax({
-        url: `/Shipment/PartialItems/${ShipmentID}`,
+        url: `/Shipment/PartialItems/${AdvertisementId}`,
         type: "GET",
         success: function (result) {
             $("#PartialItemsModal-body").html(result);
@@ -1733,7 +1862,7 @@ function ReceiveReturn() {
                 $.ajax({
                     url: `/Warehouse/ReceiveReturn`,
                     type: "POST",
-                    data: { shipmentIDs: selectedCheckboxes.toString() },
+                    data: { AdvertisementIds: selectedCheckboxes.toString() },
                     success: function (response) {
                         if (response.success == false) {
                             Swal.fire({
@@ -1859,15 +1988,15 @@ function ChangeToReadyMany() {
 }
 
 function PrintMany() {
-    var ShipmentiDs = $("#PendingShipments-Body input:checkbox:checked").map(function () {
+    var AdvertisementIds = $("#PendingShipments-Body input:checkbox:checked").map(function () {
         return $(this).val();
     }).get();
-    var Url = `/Shipment/PrintAll?ShipmentsIds=${ShipmentiDs}`;
+    var Url = `/Shipment/PrintAll?ShipmentsIds=${AdvertisementIds}`;
     window.open(Url, "_blank");
 }
 
-function EditWarehouseGame(ShipmentID) {
-    let DataForm = $(`#VerifyGame-Form_${ShipmentID}`).serialize();
+function EditWarehouseGame(AdvertisementId) {
+    let DataForm = $(`#VerifyGame-Form_${AdvertisementId}`).serialize();
     $.ajax({
         url: "/Warehouse/EditGame",
         type: "GET",
@@ -1944,11 +2073,11 @@ function BackToWarehouse(shipId) {
 }
 
 function PendingShipmentsSelect() {
-    var ShipmentiDs = $("#PendingShipments-Body input:checkbox:checked").map(function () {
+    var AdvertisementIds = $("#PendingShipments-Body input:checkbox:checked").map(function () {
         return $(this).val();
     }).get();
-    $(`#Policy-Count`).text(`(${ShipmentiDs.length})`);
-    $(`#Ready-Count`).text(`(${ShipmentiDs.length})`);
+    $(`#Policy-Count`).text(`(${AdvertisementIds.length})`);
+    $(`#Ready-Count`).text(`(${AdvertisementIds.length})`);
 }
 //////////////////// END : WearHouse Section ////////////////
 
@@ -1975,11 +2104,11 @@ function GetDeliveryPickups(id) {
     });
 }
 
-function ValidateShipmentPickupRequest(ShipmentiDs) {
-    const Vendor = $(`#${ShipmentiDs[0]}`).data('vendor');
+function ValidateShipmentPickupRequest(AdvertisementIds) {
+    const Vendor = $(`#${AdvertisementIds[0]}`).data('vendor');
     let VaildFlag = true;
-    for (var i = 0; i < ShipmentiDs.length; i++) {
-        const VendorLope = $(`#${ShipmentiDs[i]}`).data('vendor');
+    for (var i = 0; i < AdvertisementIds.length; i++) {
+        const VendorLope = $(`#${AdvertisementIds[i]}`).data('vendor');
         if (Vendor != VendorLope) {
             VaildFlag = false;
             break;
@@ -2284,6 +2413,37 @@ function GetAreasList(id) {
     $(`#AssignZone-Input`).val(id);
 }
 
+function ChangeInvoiceType(event) {
+    $.ajax({
+        url: `/invoice/GetItemIds`,
+        type: "GET",
+        data: { invoiceType: event.target.value },
+        success: function (result) {
+            $(`#ItemId`).removeAttr("disabled");
+            if (result) {
+                // Clear the existing options
+                $(`#ItemId`).html('<option value="">--- Select ---</option>');
+                result.forEach(function (item) {
+                    const option = `<option value="${item.value}">${item.key}</option>`;
+                    $(`#ItemId`).append(option);
+                });
+            }
+            else {
+                $(`#ItemId`).html('<option value="">--- Select ---</option>');
+            }
+        },
+        error: function () {
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'error',
+                showConfirmButton: false,
+                timer: 5000
+            });
+        }
+    });
+}
+
 function AssignArea() {
     var Description = "";
     let AreaList = $("#Areas-Modal input:checkbox:checked").map(function () {
@@ -2342,7 +2502,7 @@ function ResetForm(FormID) {
 }
 
 // Sweet Alert PopUp Messege
-function alertSuccess(title = 'Success', timer = 3000) {
+function alertSuccess(title = 'Success', timer = 3000 ) {
     Swal.fire({
         position: 'center',
         icon: 'success',
@@ -2351,7 +2511,15 @@ function alertSuccess(title = 'Success', timer = 3000) {
         timer: timer
     });
 }
-
+function alertSuccessTop(title = 'Success', timer = 3000) {
+    Swal.fire({
+        position: 'top',
+        icon: 'success',
+        title: title,
+        showConfirmButton: false,
+        timer: timer
+    });
+}
 function alertError(title = 'Failed, try again', timer = 3000) {
     Swal.fire({
         position: 'center',
@@ -2361,5 +2529,51 @@ function alertError(title = 'Failed, try again', timer = 3000) {
         timer: timer
     });
 }
+function ToastSuccess(title = 'Success', timer = 3000)
+{
+    const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: timer,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+        }
+    });
+    Toast.fire({
+        icon: "success",
+        title: title
+    });
+}
+function ToastError(title = 'Error', timer = 3000) {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: timer,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+        }
+    });
+    Toast.fire({
+        icon: "error",
+        title: title
+    });
+}
 
-function showConfirmationDialog(n, t, i) { $("#modal-dialog-confirmation-messageTitle").text(n); $("#modal-dialog-confirmation-messageText").html(t); $("#modal-dialog-confirmation-aConfirm").unbind("click"); $("#modal-dialog-confirmation-aConfirm").click(function () { $("#modal-dialog-confirmation").modal("hide"); i() }); $("#modal-dialog-confirmation").modal("show") } $(document).ready(function () { $(".date-popup").datepicker({ keyboardNavigation: !1, forceParse: !1, todayHighlight: !0 }) });
+function authenticatedCheck(isAuthenticated, modal = null) {
+    if (isAuthenticated == 'false') {
+        $('#Login-PupUp-Modal').modal('show');
+        if (modal != null) {
+        $(`#${modal}`).modal('hide');
+        }
+        return false;
+    } else return true;
+}
+
+
+//function showConfirmationDialog(n, t, i) { $("#modal-dialog-confirmation-messageTitle").text(n); $("#modal-dialog-confirmation-messageText").html(t); $("#modal-dialog-confirmation-aConfirm").unbind("click"); $("#modal-dialog-confirmation-aConfirm").click(function () { $("#modal-dialog-confirmation").modal("hide"); i() }); $("#modal-dialog-confirmation").modal("show") } $(document).ready(function () { $(".date-popup").datepicker({ keyboardNavigation: !1, forceParse: !1, todayHighlight: !0 }) });

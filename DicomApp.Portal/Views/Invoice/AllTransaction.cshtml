@@ -1,0 +1,68 @@
+﻿@using DicomApp.CommonDefinitions.DTO;
+@using DicomApp.CommonDefinitions.DTO;
+@using DicomApp.CommonDefinitions.DTO.CashDTOs
+@using DicomApp.Helpers;
+@using DicomApp.BL.Services;
+@model ViewModel<TransactionDTO>
+<main>
+    <div class="container-fluid site-width">
+        <!-- START: Filter-->
+        <div class="row Red-Row">
+            <div class="col-12 col-lg-12 col-xl-12 col-sm-12">
+                <div class="sub-header mb-3">
+                    <span class="Header-Titel">Transction List</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="Shipment-container">
+        <!-- Start: Filter-->
+        <div class="row Red-Row">
+            @{
+                await Html.RenderPartialAsync("_ToolsRow",
+                new OptionDTO
+            {
+                Action = "AllTransaction",
+                Controller = "Invoice",
+                Lookup = Model.Lookup,
+                SelectListType = new byte[] { }
+            });
+            }
+        </div>
+        <!-- END  : Filter-->
+        <div class="col-12">
+            <span id="Ajaxloader" class="Ajaxloader d-none"></span>
+        </div>
+        <div class="Table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td>RefId</td>
+                        <td>Advertisement</td>
+                        <td>Is Success</td>
+                        <td>Amount</td>
+                        <td>PaymentId</td>
+                        <td>TransactionSource</td>
+                        <td>TransactionType</td>
+                        <td>CreatedAt</td>
+                        <td>Attachment</td>
+                        <td class="text-center">Actions</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <partial name="_AllTransaction" model="Model.ObjDTOs" />
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="10">
+                            @{
+                                await Html.RenderPartialAsync("_Pagination", new OptionDTO { Action = "AllTransaction", Controller = "Invoice", Count = Model.ObjDTOs != null ? Model.ObjDTOs.Count : 0 });
+                            }
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</main>
+

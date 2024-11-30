@@ -1,0 +1,59 @@
+﻿@using DicomApp.CommonDefinitions.DTO
+@using DicomApp.Helpers
+@model List<ServiceDTO>
+<thead>
+    <tr>
+        <th class="Sort-Column text-center">Code</th>
+        <th class="Sort-Column text-center">UserName</th>
+        <th class="Sort-Column text-center">Password</th>
+        <th class="Sort-Column text-center">Date</th>
+        <th class="text-center">Game</th>
+        <th class="text-center">Gamer</th>
+        <th class="text-center">Description</th>
+        <th class="text-center">Service Type</th>
+        <th class="Sort-Column text-center">Price</th>
+        <th class="Sort-Column text-center">Level</th>
+        <th class="Sort-Column text-center">Rank</th>
+        <th class="text-center">Status</th>
+    </tr>
+</thead>
+<tbody id="TableBody">
+    @if (Model != null && Model.Count > 0)
+    {
+        foreach (var ads in Model)
+        {
+            double REDFees = 0;
+
+            <tr id="TableRow_@ads.GamerServiceId">
+                <td class="td-small text-center text-nowrap pl-1 pr-1" onclick="GamerServiceDetails('GamerService',@ads.GamerServiceId)" data-toggle="modal" data-target="#GamerServiceDetails"><b>@ads.RefId</b></td>
+                <td class="td-small text-center pl-1 pr-1" style="min-width:100px;">@ads.UserName</td>
+                <td class="td-small text-center pl-1 pr-1" style="min-width:100px;">@ads.Password</td>
+                <td class="td-small text-center text-nowrap pl-1 pr-1 Date-Table">@ads.CreatedAt.ToString("dd MMM yyyy")</td>
+                <td class="td-small text-center pl-1 pr-1">@ads.Game?.NameEn</td>
+                <td class="td-small text-center pl-1 pr-1">@ads.Gamer?.Name</td>
+                <td class="td-small text-center pl-1 pr-1">@ads.Description</td>
+                <td class="td-small text-center pl-1 pr-1">@ads.GameServiceType</td>
+                <td class="td-small text-center text-nowrap pl-1 pr-1">@ads.Price EGP</td>
+                <td class="td-small text-center text-nowrap pl-1 pr-1">@ads.Level</td>
+                <td class="td-small text-center text-nowrap pl-1 pr-1">@ads.CurrentLevel</td>
+                <partial name="~/Views/Shared/Advertisement/_StatusSwitch.cshtml" model="@ads.Status"></partial>
+            </tr>
+        }
+    }
+    else
+    {
+        <tr>
+            <td colspan="13" class="text-danger text-center"><h3>No data available in table</h3></td>
+        </tr>
+    }
+</tbody>
+<tfoot>
+    <tr>
+        <td colspan="13">
+            @{
+                await Html.RenderPartialAsync("_Pagination", new OptionDTO { Action = "All", Controller = "GamerService", Count = Model?.Count??0, StatusId = (int)EnumStatus.All });
+            }
+        </td>
+    </tr>
+</tfoot>
+<input type="hidden" value="@Model?.Count??0" id="DataCount" />

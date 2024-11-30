@@ -1,10 +1,12 @@
 ﻿using DicomApp.DAL.DB;
+using Microsoft.Extensions.Localization;
 
 namespace DicomApp.CommonDefinitions.Requests
 {
     public class BaseRequest
     {
         public ShippingDBContext context;
+        public IStringLocalizer Localizer { get; set; }
 
         public const int DefaultPageSize = 20;
         public bool IsDesc { get; set; } = true;

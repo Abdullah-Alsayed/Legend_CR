@@ -1,0 +1,506 @@
+﻿@using DicomApp.CommonDefinitions.DTO
+@using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs
+@using DicomApp.CommonDefinitions.Responses
+@using DicomApp.DAL.DB
+@using DicomApp.Helpers
+@using DicomApp.Portal.Controllers
+@using Microsoft.Extensions.Localization
+@model MainResponse
+@inject IStringLocalizer<GamerController> Localizer
+
+@{
+    ViewData["Title"] = "Main";
+    Layout = "~/Views/Shared/_VendorLayout.cshtml";
+	var language = AuthHelper.GetLanguageValue(User, Context);
+
+}
+
+<!-- hero area start -->
+<section class="hero-area" id="home">
+	<div class="container">
+		<div class="hero-area-slider">
+			@if (Model!= null && Model.TopAdvertisements != null && Model.TopAdvertisements.Count > 1)
+			{				
+				foreach (var adv in Model.TopAdvertisements)
+				{
+				 <div class="row hero-area-slide">
+					<div class="col-lg-6 col-md-5 col-xs-12 col-12">
+						<div class="hero-area-content">
+							<img src="/dist/images/@adv.AdvertisementPhotos.FirstOrDefault()" alt="about" />
+						</div>
+					</div>
+					<div class="col-lg-6 col-md-7">
+						<div class="hero-area-content pr-50">
+							<h2>@adv.UserName</h2>
+							<div class="review">
+								<div class="author-review">
+									<i class="icofont icofont-star"></i>
+									<i class="icofont icofont-star"></i>
+									<i class="icofont icofont-star"></i>
+									<i class="icofont icofont-star"></i>
+									<i class="icofont icofont-star"></i>
+								</div>
+								<h4>@adv.Price $</h4>
+							</div>
+							<p>@adv.Description</p>
+@* 							<h3>Photos:</h3>
+ *@							<div class="slide-cast">
+								@foreach (var photo in adv.AdvertisementPhotos)
+									{
+										if (adv.AdvertisementPhotos.FirstOrDefault() != photo)
+										{
+											<div class="single-slide-cast">
+												<img src="/dist/images/@photo" alt="about" />
+											</div>
+										}
+									}
+							</div>
+							<div class="slide-trailor">
+								<h3>@(language == SystemConstants.Languages.Arabic ? adv.Game.NameAr:adv.Game.NameEn)</h3>
+									<img src="/dist/images/@adv.Game.ImgUrl"/>
+							</div>
+								<a onclick="OpenPurchasePopUp(@adv.AdvertisementId)" class="theme-btn" href="javascript:;"><i class="icofont icofont-money"></i> @Localizer["purchase"]</a>
+						</div>
+					</div>
+					</div>
+				}
+			}
+			else
+			{
+				<div class="row hero-area-slide">
+					<div class="col-lg-6 col-md-5">
+						<div class="hero-area-content">
+							<img src="/GamerLayout/assets/img/slide1.png" alt="about" />
+						</div>
+					</div>
+					<div class="col-lg-6 col-md-7">
+						<h2>@Localizer["notFound"] @Localizer["advertisements"]</h2>
+					</div>
+				</div>
+
+				<div class="row hero-area-slide">
+					<div class="col-lg-6 col-md-5">
+						<div class="hero-area-content">
+							<img src="/GamerLayout/assets/img/slide1.png" alt="about" />
+						</div>
+					</div>
+					<div class="col-lg-6 col-md-7">
+						<h2>@Localizer["notFound"] @Localizer["advertisements"]</h2>
+					</div>
+				</div>
+			}
+		</div>
+
+		<div class="hero-area-thumb">
+			<div class="thumb-prev">
+				<div class="row hero-area-slide">
+					<div class="col-lg-6">
+						<div class="hero-area-content">
+							<img src="/GamerLayout/assets/img/slide3.png" alt="about" />
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<div class="hero-area-content pr-50">
+							<h2></h2>
+							<div class="review">
+								<div class="author-review">
+									<i class="icofont icofont-star"></i>
+									<i class="icofont icofont-star"></i>
+									<i class="icofont icofont-star"></i>
+									<i class="icofont icofont-star"></i>
+									<i class="icofont icofont-star"></i>
+								</div>
+								<h4></h4>
+							</div>
+							<h3></h3>
+							<div class="slide-cast">
+								<div class="single-slide-cast">
+									<img src="/GamerLayout/assets/img/cast/cast1.png" alt="about" />
+								</div>
+								<div class="single-slide-cast">
+									<img src="/GamerLayout/assets/img/cast/cast2.html" alt="about" />
+								</div>
+								<div class="single-slide-cast">
+									<img src="/GamerLayout/assets/img/cast/cast3.png" alt="about" />
+								</div>
+								<div class="single-slide-cast">
+									<img src="/GamerLayout/assets/img/cast/cast4.png" alt="about" />
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="thumb-next">
+				<div class="row hero-area-slide">
+					<div class="col-lg-6">
+						<div class="hero-area-content">
+							<img src="/dist/images/next.jpg" alt="about" />
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<div class="hero-area-content pr-50">
+							<h2></h2>
+							<div class="review">
+								<div class="author-review">
+									<i class="icofont icofont-star"></i>
+									<i class="icofont icofont-star"></i>
+									<i class="icofont icofont-star"></i>
+									<i class="icofont icofont-star"></i>
+									<i class="icofont icofont-star"></i>
+								</div>
+								<h4></h4>
+							</div>
+							<h3>Cast:</h3>
+							<div class="slide-cast">
+								<div class="single-slide-cast">
+									<img src="/GamerLayout/assets/img/cast/cast1.png" alt="about" />
+								</div>
+								<div class="single-slide-cast">
+									<img src="/GamerLayout/assets/img/cast/cast2.html" alt="about" />
+								</div>
+								<div class="single-slide-cast">
+									<img src="/GamerLayout/assets/img/cast/cast3.png" alt="about" />
+								</div>
+								<div class="single-slide-cast">
+									<img src="/GamerLayout/assets/img/cast/cast4.png" alt="about" />
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</section>
+<!-- hero area end -->
+<!-- portfolio section start -->
+<section class="portfolio-area pt-60" data-aos="zoom-in-up" data-aos-duration="500">
+	<div class="container">
+		<div class="row flexbox-center">
+			<div class="col-lg-6 text-center text-lg-left">
+				<div class="section-title">
+					<h1><img src="/dist/images/Cub.png" width="120"></img>@Localizer["latestAccounts"]</h1>
+				</div>
+			</div>
+			<div class="col-lg-6 text-center text-lg-right">
+				<div class="portfolio-menu">
+					<ul>
+						<li data-filter="*" class="active">@Localizer["all"]</li>
+						@if (Model != null && Model.Games != null && Model.Games.Any())
+						{
+
+							foreach (var game in Model.Games)
+							{
+								if (language == SystemConstants.Languages.Arabic)
+								{
+
+									<li data-filter=".@game.NameEn.RemoveWhiteSpace()">@game.NameAr</li>
+								}else
+								{
+									<li data-filter=".@game.NameEn.RemoveWhiteSpace()">@game.NameEn</li>
+								}
+							}
+						}
+					</ul>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="row portfolio-item">
+					@if (Model != null && Model.AllAdvertisements != null)
+					{
+						foreach (var adv in Model.AllAdvertisements)
+						{
+							<div class="col-md-3 col-sm-6 @adv.Game.NameEn.RemoveWhiteSpace()">
+								<div class="single-portfolio">
+									<div class="single-portfolio-img">
+										<img src="/dist/images/@(adv.AdvertisementPhotos?.FirstOrDefault() ?? "portfolio1.png")" alt="portfolio" />
+										<a href="javascript:;" onclick="OpenPurchasePopUp(@adv.AdvertisementId)" class="popup-youtube">
+											<i class="icofont icofont-game-control"></i>
+										</a>
+									</div>
+									<div class="portfolio-content">			
+										<h3>@adv.UserName</h3>
+										<h3>@adv.Price $</h3>
+									</div>
+								</div>
+							</div>
+						}
+
+					}
+				</div>
+			</div>
+			<div class="col-lg-12 mt-5">
+				<a  href="@Url.Action("All")" target="_blank" class="theme-btn w-100">@Localizer["more"]</a>
+			</div>
+		</div>
+	</div>
+</section>
+<!-- portfolio section end -->
+<!-- video section start -->
+<section class="services" data-aos="zoom-in-up" data-aos-duration="700">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12 text-center text-lg-left mb-4">
+				<div class="section-title">
+					<h1><img src="/dist/images/King.png" width="120" /> @Localizer["games"]</h1>
+				</div>
+			<hr />
+			</div>
+		</div>
+		<div class="row">
+			@if(Model != null && Model.Games!=null &&Model.Games.Any()){
+				foreach (var game in Model.Games)
+				{
+					<div class="col-lg-6 services-Card" data-aos="flip-up">
+						<a href="@Url.Action("Details","Game",new {Id = game.Id})" target="_blank">
+							<article class="card">
+								<img class="card__background"
+										src="/dist/images/@game.ImgUrl"
+										alt="Photo of Cartagena's cathedral at the background and some colonial style houses"
+										width="1920"
+										height="2193" />
+							</article>
+						</a>
+					</div>
+				}
+			}
+		</div>
+    </div>
+</section>
+
+<!-- news section start -->
+<section class="news" data-aos="fade-up-right" data-aos-duration="900">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="section-title pb-20">
+					<h1><img src="/dist/images/Stars.png" width="120"></img> @Localizer["testimonial"]</h1>
+				</div>
+			</div>
+		</div>
+		<hr />
+	</div>
+
+	<div class="news-slide-area">
+		<div class="news-slider">
+			@if(Model!= null && Model.Testimonials != null && Model.Testimonials.Count>1){
+				foreach (var testimonial in Model.Testimonials)
+				{
+		     <div class="single-news">
+				<div class="testimonial-Bg"></div>
+				<div class="news-date">
+				<h2><span>@testimonial.CreatedAt.ToString("MMM")</span> @testimonial.CreatedAt.Day</h2>
+					<h1>@testimonial.CreatedAt.Year</h1>
+				</div>
+				<div class="news-content">
+					<h2>@testimonial.UserDTO.Name</h2>
+					<p>@testimonial.Comment</p>
+					<div class="review">
+						<div class="author-review">
+							@for (int i = 0; i < testimonial.Rate; i++)
+							{
+								<i class="icofont icofont-star"></i>
+							}
+						</div>
+					</div>
+				</div>
+				@if (Model.CanAddFeedBack)
+				{
+					<a href="javascript:;"><i class="icofont icofont-ui-rate-add open-feedback"></i></a>
+				}
+			</div>
+				}
+			}
+			else
+			{
+				<div class="single-news">
+					<div class="testimonial-Bg"></div>
+					<div class="news-content">
+						<h3>@Localizer["keepYouFeedback"]</h3>
+					</div>
+						@if (Model.CanAddFeedBack)
+						{
+							<a href="javascript:;"><i class="icofont icofont-ui-rate-add open-feedback"></i></a>
+						}
+				</div>
+				<div class="single-news">
+					<div class="testimonial-Bg"></div>
+					<div class="news-content">
+						<h3>@Localizer["keepYouFeedback"]</h3>
+					</div>
+						@if (Model.CanAddFeedBack)
+						{
+							<a href="javascript:;"><i class="icofont icofont-ui-rate-add open-feedback"></i></a>
+						}
+				</div>
+				<div class="single-news">
+					<div class="testimonial-Bg"></div>
+					<div class="news-content">
+						<h3>@Localizer["keepYouFeedback"]</h3>
+					</div>
+					@if (Model.CanAddFeedBack)
+					{
+					<a href="javascript:;"><i class="icofont icofont-ui-rate-add open-feedback"></i></a>
+					}
+				</div>
+			}
+		</div>
+	</div>
+</section>
+<!-- news section end -->
+
+
+<section class="Push-section" data-aos="fade-up-right" data-aos-duration="900">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="section-title pb-20">
+					<h1><img src="/dist/images/levelUp2.png" width="120"></img> @Localizer["push"]</h1>
+				</div>
+			</div>
+		</div>
+		<hr />
+	</div>
+
+	<div class="Push-Box">
+		<div class="Push-Content">
+			<p>@Localizer["pushYourLevel"]</p>
+			<button class="theme-btn" type="button" id="Push-Btn"> @Localizer["push"] </button>
+		</div>
+	</div>
+</section>
+
+
+<!-- feedback -->
+<div class="rating-container">
+	<i class="icofont icofont-close close-Icon"></i>
+<div class="rating-card">
+	<div class="text-wrapper">
+			<h2 class="">@Localizer["pleaseRateYourExperience"]</h2>
+			<h3 class="text-secondary">@Localizer["helpServeBetter"]</h3>
+	</div>
+	<form>
+		<div class="comment-Section">
+
+			<div>
+				<p class="additional-comments">@Localizer["comment"]</p>
+				<textarea rows="10" id="Comment" name="Comment" placeholder="@Localizer["comment"]"></textarea>
+			</div>
+				<span class="error-message" id="comment-error"></span>
+		</div>
+		<div class="rating-stars-container">
+			<input value="5" name="star" id="star-5" type="radio" />
+			<label for="star-5" class="star-label">
+				<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+					<path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"
+						  pathLength="360"></path>
+				</svg>
+			</label>
+			<input value="4" name="star" id="star-4" type="radio" />
+			<label for="star-4" class="star-label">
+				<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+					<path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"
+						  pathLength="360"></path>
+				</svg>
+			</label>
+			<input value="3" name="star" id="star-3" type="radio" />
+			<label for="star-3" class="star-label">
+				<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+					<path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"
+						  pathLength="360"></path>
+				</svg>
+			</label>
+			<input value="2" name="star" id="star-2" type="radio" />
+			<label for="star-2" class="star-label">
+				<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+					<path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"
+						  pathLength="360"></path>
+				</svg>
+			</label>
+			<input value="1" name="star" id="star-1" type="radio" />
+			<label for="star-1" class="star-label">
+				<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+					<path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"
+						  pathLength="360"></path>
+				</svg>
+			</label>		
+		</div>
+		  <span class="error-message" id="rating-error"></span>
+   </form>
+	<div>
+		<button class="theme-btn" id="AddTestimonial" type="button">
+			@Localizer["save"]
+		</button>
+	</div>
+</div>
+</div>
+
+<!-- Push Model -->
+<div class="form-container">
+	<i class="icofont icofont-close closePush-Icon"></i>
+	                    <form asp-action="Add" asp-controller="GamerService" class="needs-validation Push-form" enctype="multipart/form-data" id="AddPush-form">
+                        <div class="container-fluid">
+                            <div class="row pt-1">
+                                <div class="col-lg-6 pt-3">
+                                    <label>@Localizer["userName"]</label>
+					<input class="input-Model" required id="UserName" name="UserName" placeholder="@Localizer["userName"]" />
+                                    <div class="invalid-feedback">
+                                       @Localizer["pleaseEnter"] @Localizer["userName"]
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6 pt-3">
+					<label> @Localizer["password"]</label>
+					<input class="input-Model" required id="Password" name="Password" placeholder="@Localizer["password"]" />
+                                    <div class="invalid-feedback">
+						@Localizer["pleaseEnter"] @Localizer["password"]
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6 pt-3">
+					<label>@Localizer["level"]</label>
+					<input class="input-Model" type="text" required id="Level" name="Level" placeholder="@Localizer["level"]" />
+                                    <div class="invalid-feedback">
+						@Localizer["pleaseEnter"] @Localizer["level"]
+					</div>
+                                </div>                                                    
+
+								 <div class="col-lg-6 pt-3">
+					<label>@Localizer["currentLevel"]</label>
+					<input class="input-Model" type="text" required id="CurrentLevel" name="CurrentLevel" placeholder="@Localizer["currentLevel"]" />
+                                    <div class="invalid-feedback">
+						@Localizer["pleaseEnter"] @Localizer["currentLevel"]
+					</div>
+
+                                </div>    
+                                 <div class="col-lg-12 pt-3">
+					<label>@Localizer["games"]</label>
+					@Html.DropDownList("GameId", new SelectList(Model.Games??new List<GameDTO>(), nameof(GameDTO.Id), language == SystemConstants.Languages.Arabic ? nameof(GameDTO.NameAr) : nameof(GameDTO.NameEn)), $"---{Localizer["pleaseSelect"]} {Localizer["games"]} ---", new { @class = "form-control ", @required = "required"})
+                                    <div class="invalid-feedback">
+						@Localizer["pleaseSelect"] @Localizer["games"]
+					</div>
+                                </div>
+
+                                <div class="col-lg-12 pt-3">
+					<label>@Localizer["description"]</label>
+					<textarea class="input-Model" rows="5" id="Description" name="Description" placeholder="@Localizer["description"]"></textarea>
+                                </div>
+
+								<input type="hidden" id="GamerId" name="GamerId"value="@AuthHelper.GetClaimValue(User, SystemConstants.Claims.UserID)">
+								<input type="hidden" id="GameServiceType" name="GameServiceType"value="@GameServiceType.Push">
+                                <div class="col-lg-12">
+									<button class="form-submit-btn" onclick="AddEntity('GamerService','Add','AddPush-form',false)" type="button" id="BtnSend">
+                                       @Localizer["save"]
+                                     <div class="custom-loader d-none"></div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+</div>

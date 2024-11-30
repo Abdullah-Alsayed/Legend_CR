@@ -1,9 +1,10 @@
-﻿using DicomApp.CommonDefinitions.DTO.ShipmentDTOs;
-using Microsoft.AspNetCore.Http;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
+using System.Security.Claims;
+using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
+using DicomApp.DAL.DB;
+using Microsoft.AspNetCore.Http;
 
 namespace DicomApp.CommonDefinitions.DTO
 {
@@ -18,7 +19,6 @@ namespace DicomApp.CommonDefinitions.DTO
 
         [Required(ErrorMessage = "Required")]
         public string Name { get; set; }
-
 
         [Required(ErrorMessage = " Please Enter a Email")]
         [EmailAddress(ErrorMessage = "Please Enter a valid Email")]
@@ -43,12 +43,20 @@ namespace DicomApp.CommonDefinitions.DTO
 
         public string RoleName { get; set; }
 
-        public DateTime LastLoginDate { get; set; }
+        public DateTime? LastLoginDate { get; set; }
 
         [Required(ErrorMessage = "Required")]
         [RegularExpression(@"\d{10,15}$", ErrorMessage = "Not a valid phone number 10-15 digits")]
         public string PhoneNumber { get; set; }
 
+        public string TelegramUserName { get; set; }
+        public int? CountryId { get; set; }
+
+        [Required(ErrorMessage = "Please enter a Age.")]
+        [Range(6, 100)]
+        public int Age { get; set; }
+
+        public GenderEnum Gender { get; set; } = GenderEnum.Male;
         public bool IsLoggedIn { get; set; }
 
         [Required(ErrorMessage = "Required")]
@@ -81,17 +89,18 @@ namespace DicomApp.CommonDefinitions.DTO
         public string Search { get; set; }
         public string LocationUrl { get; set; }
         public string Landmark { get; set; }
+        public string Language { get; set; }
+
         public int? Floor { get; set; }
         public int? Apartment { get; set; }
         public DateTime CreationDate { get; set; }
 
-        public IEnumerable<ShipDTO> CourierShipments { get; set; }
         public bool HasCourierShipments { get; set; }
         public string Bank { get; set; }
         public string AccountName { get; set; }
         public int? AccountNumber { get; set; }
         public int? IBANNumber { get; set; }
-        public int? VodafoneCashNumber { get; set; }
+        public int? WalletNumber { get; set; }
         public string InstaPayAccountName { get; set; }
         public string ImgUrl { get; set; }
         public int? ZoneId { get; set; }
@@ -101,5 +110,11 @@ namespace DicomApp.CommonDefinitions.DTO
         public bool IsDeleted { get; set; }
 
         public string HashedPassword { get; set; }
+
+        public CountryDTO Country { get; set; }
+        public IEnumerable<AdsDTO> Advertisement { get; set; }
+
+        //Filter
+        public bool IsEmployee { get; set; }
     }
 }

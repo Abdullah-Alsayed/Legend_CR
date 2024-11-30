@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Reflection;
 
 namespace DicomApp.DAL.DB
 {
@@ -10,30 +12,18 @@ namespace DicomApp.DAL.DB
         {
             AccountCreatedByNavigation = new HashSet<Account>();
             AccountLastModifiedByNavigation = new HashSet<Account>();
-            AccountTransactionCreatedByNavigation = new HashSet<AccountTransaction>();
-            AccountTransactionLastModifiedByNavigation = new HashSet<AccountTransaction>();
+            AccountTransactionCreatedByNavigation = new HashSet<Transaction>();
+            AccountTransactionLastModifiedByNavigation = new HashSet<Transaction>();
             AccountUser = new HashSet<Account>();
-            CashTransferCreatedByNavigation = new HashSet<CashTransfer>();
-            CashTransferLastModifiedByNavigation = new HashSet<CashTransfer>();
+
             CommonUserDevice = new HashSet<CommonUserDevice>();
-            ComplainActionByNavigation = new HashSet<Complain>();
-            ComplainEmployee = new HashSet<Complain>();
-            ComplainVendor = new HashSet<Complain>();
+
             ContactUs = new HashSet<ContactUs>();
             FollowUp = new HashSet<FollowUp>();
             Notification = new HashSet<Notification>();
-            PickupRequestDeliveryMan = new HashSet<PickupRequest>();
-            PickupRequestVendor = new HashSet<PickupRequest>();
-            ShipmentCustomer = new HashSet<Shipment>();
-            ShipmentCustomerFollowUp = new HashSet<ShipmentCustomerFollowUp>();
-            ShipmentDeliveryMan = new HashSet<Shipment>();
-            ShipmentLastModifiedByNavigation = new HashSet<Shipment>();
-            ShipmentProblem = new HashSet<ShipmentProblem>();
-            ShipmentVendor = new HashSet<Shipment>();
+            ShipmentCustomer = new HashSet<Advertisement>();
             UserLocation = new HashSet<UserLocation>();
-            VendorProduct = new HashSet<VendorProduct>();
-            ZoneCreatedByNavigation = new HashSet<Zone>();
-            ZoneLastModifiedByNavigation = new HashSet<Zone>();
+            GamerServices = new HashSet<GamerService>();
         }
 
         public int Id { get; set; }
@@ -44,11 +34,16 @@ namespace DicomApp.DAL.DB
         public int? ModifiedBy { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
+        public bool ConfirmEmail { get; set; } = false;
         public DateTime? LastLoginDate { get; set; }
         public string Password { get; set; }
         public int RoleId { get; set; }
         public string PhoneNumber { get; set; }
         public bool IsLoggedIn { get; set; }
+        public string TelegramUserName { get; set; }
+
+        public int Age { get; set; }
+        public GenderEnum Gender { get; set; }
 
         [Required(AllowEmptyStrings = true)]
         public string NationalId { get; set; }
@@ -75,41 +70,40 @@ namespace DicomApp.DAL.DB
         public int? BranchId { get; set; }
         public string Bank { get; set; }
         public string AccountName { get; set; }
+        public string Language { get; set; }
         public int? AccountNumber { get; set; }
         public int? IbanNumber { get; set; }
-        public int? VodafoneCashNumber { get; set; }
+        public int? WalletNumber { get; set; }
         public string InstaPayAccountName { get; set; }
         public int? ZoneId { get; set; }
         public string ImgUrl { get; set; }
         public string HashedPassword { get; set; }
 
-        public virtual Branch Branch { get; set; }
         public virtual Role Role { get; set; }
+        public virtual Country Country { get; set; }
+
         public virtual ICollection<Account> AccountCreatedByNavigation { get; set; }
         public virtual ICollection<Account> AccountLastModifiedByNavigation { get; set; }
-        public virtual ICollection<AccountTransaction> AccountTransactionCreatedByNavigation { get; set; }
-        public virtual ICollection<AccountTransaction> AccountTransactionLastModifiedByNavigation { get; set; }
+        public virtual ICollection<Transaction> AccountTransactionCreatedByNavigation { get; set; }
+        public virtual ICollection<Transaction> AccountTransactionLastModifiedByNavigation { get; set; }
         public virtual ICollection<Account> AccountUser { get; set; }
-        public virtual ICollection<CashTransfer> CashTransferCreatedByNavigation { get; set; }
-        public virtual ICollection<CashTransfer> CashTransferLastModifiedByNavigation { get; set; }
         public virtual ICollection<CommonUserDevice> CommonUserDevice { get; set; }
-        public virtual ICollection<Complain> ComplainActionByNavigation { get; set; }
-        public virtual ICollection<Complain> ComplainEmployee { get; set; }
-        public virtual ICollection<Complain> ComplainVendor { get; set; }
         public virtual ICollection<ContactUs> ContactUs { get; set; }
         public virtual ICollection<FollowUp> FollowUp { get; set; }
         public virtual ICollection<Notification> Notification { get; set; }
-        public virtual ICollection<PickupRequest> PickupRequestDeliveryMan { get; set; }
-        public virtual ICollection<PickupRequest> PickupRequestVendor { get; set; }
-        public virtual ICollection<Shipment> ShipmentCustomer { get; set; }
-        public virtual ICollection<ShipmentCustomerFollowUp> ShipmentCustomerFollowUp { get; set; }
-        public virtual ICollection<Shipment> ShipmentDeliveryMan { get; set; }
-        public virtual ICollection<Shipment> ShipmentLastModifiedByNavigation { get; set; }
-        public virtual ICollection<ShipmentProblem> ShipmentProblem { get; set; }
-        public virtual ICollection<Shipment> ShipmentVendor { get; set; }
+        public virtual ICollection<Advertisement> ShipmentCustomer { get; set; }
         public virtual ICollection<UserLocation> UserLocation { get; set; }
-        public virtual ICollection<VendorProduct> VendorProduct { get; set; }
-        public virtual ICollection<Zone> ZoneCreatedByNavigation { get; set; }
-        public virtual ICollection<Zone> ZoneLastModifiedByNavigation { get; set; }
+
+        public virtual ICollection<GamerService> GamerServices { get; set; }
+
+        [InverseProperty("CreatedByNavigation")]
+        public virtual ICollection<Testimonial> Testimonials { get; set; }
+
+        [InverseProperty("Gamer")]
+        public virtual ICollection<Advertisement> AdvertisementsGamer { get; set; }
+
+        [InverseProperty("Buyer")]
+        public virtual ICollection<Advertisement> AdvertisementsBuyer { get; set; }
+        public int? CountryId { get; set; }
     }
 }

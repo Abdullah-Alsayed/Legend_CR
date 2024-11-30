@@ -2,9 +2,8 @@
 
 namespace DicomApp.CommonDefinitions.Requests
 {
-    public class AccountTransactionRequest : BaseRequest
+    public class TransactionRequest : BaseRequest
     {
-        public AccountTransactionDTO AccountTransactionDTO { get; set; }
+        public TransactionDTO TransactionDTO { get; set; }
     }
 }
-

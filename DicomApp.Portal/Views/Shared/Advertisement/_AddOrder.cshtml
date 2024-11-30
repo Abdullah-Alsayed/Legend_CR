@@ -1,0 +1,148 @@
+﻿
+@using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs
+@using DicomApp.CommonDefinitions.DTO;
+@using DicomApp.DAL.DB
+@using DicomApp.Helpers
+@model AdsDTO
+@{
+    var RoleID = AuthHelper.GetClaimValue(User, "RoleID");
+}
+<main>
+    <div class="container-fluid site-width">
+        <div class="row Red-Row">
+            <div class="col-12 col-lg-12 col-xl-12 col-sm-12">
+                <div class="sub-header">
+                    <div class="mb-3">
+                        <span class="Header-Titel">Add New Advertisement</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="Shipment-container">
+        <form style="width:95%" class="needs-validation" method="post" id="AddAdvertisement" action="@Url.Action("Add","Advertisement")" novalidate>
+            <div class="row Red-Row w-100">
+                <div class="col-lg-4">
+                    <div style="" class="Shipment-Details-Section">
+                        <div class="col-lg-12">
+                            <label class="Shipment-Details-label">UserName</label>
+                            <input type="text" placeholder="Name" asp-for="UserName" required />
+                            <div class="invalid-feedback">
+                                Please enter customer UserName.
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-3">
+                            <label class="Shipment-Details-label">Password</label>
+                            <input type="text" placeholder="Password" asp-for="Password" required>
+                            <div class="invalid-feedback">
+                                Please enter Password.
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-3">
+                            <label class="Shipment-Details-label">Level</label>
+                            <input type="number" min="0" class="input-Number" asp-for="Level" placeholder="Level" required />
+                            <div class="invalid-feedback">
+                                Please enter Level.
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-3">
+                            <label class="Shipment-Details-label">Rank</label>
+                            <input type="text" asp-for="Rank" placeholder="Rank" />
+                            <div class="invalid-feedback">
+                                Please enter Rank.
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-3">
+                            <label class="Shipment-Details-label">Gamer</label>
+                            @Html.DropDownListFor(model => model.GamerId, new SelectList(ViewBag.Gamers, nameof(CommonUser.Id), nameof(CommonUser.Name)), "--- Select Gamer ---", new { @class = "form-control", @required = "required" })
+                            <div class="invalid-feedback">
+                                Please select Gamer.
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mt-3">
+                            <label class="Shipment-Details-label">Price</label>
+                            <input type="number" min="1" max="1000000" class="input-Number" asp-for="Price" placeholder="Price" required />
+                            <div class="invalid-feedback">
+                                Please enter Price
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mt-3">
+                            <label class="Shipment-Details-label">Game</label>
+                            @Html.DropDownListFor(model => model.GameId, new SelectList(ViewBag.GameList, nameof(GameDTO.Id), nameof(GameDTO.NameEn)), "--- Select Game ---", new { @class = "form-control", @required = "required" })
+                             <div class="invalid-feedback">
+                                Please select Game.
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-3">
+                            <div class="row Red-Row justify-content-center pt-3 Game-Options">
+                                <div class="files-container">
+                                    <div class="files-header">
+                                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                            <g id="SVGRepo_iconCarrier">
+                                                <path d="M7 10V9C7 6.23858 9.23858 4 12 4C14.7614 4 17 6.23858 17 9V10C19.2091 10 21 11.7909 21 14C21 15.4806 20.1956 16.8084 19 17.5M7 10C4.79086 10 3 11.7909 3 14C3 15.4806 3.8044 16.8084 5 17.5M7 10C7.43285 10 7.84965 10.0688 8.24006 10.1959M12 12V21M12 12L15 15M12 12L9 15" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            </g>
+                                        </svg> 
+                                        <label for="Advertisement-files">Browse File to upload!</label>
+                                    </div>
+                                    <label class="files-footer">
+                                        <svg fill="#000000" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M15.331 6H8.5v20h15V14.154h-8.169z"></path><path d="M18.153 6h-.009v5.342H23.5v-.002z"></path></g></svg>
+                                        <p id="Advertisement-files-Lable">Not selected file</p>
+                                        <svg onclick="deleteAllFiles()" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5.16565 10.1534C5.07629 8.99181 5.99473 8 7.15975 8H16.8402C18.0053 8 18.9237 8.9918 18.8344 10.1534L18.142 19.1534C18.0619 20.1954 17.193 21 16.1479 21H7.85206C6.80699 21 5.93811 20.1954 5.85795 19.1534L5.16565 10.1534Z" stroke="#000000" stroke-width="2"></path> <path d="M19.5 5H4.5" stroke="#000000" stroke-width="2" stroke-linecap="round"></path> <path d="M10 3C10 2.44772 10.4477 2 11 2H13C13.5523 2 14 2.44772 14 3V5H10V3Z" stroke="#000000" stroke-width="2"></path> </g></svg>
+                                    </label>
+                                    <input id="Advertisement-files" asp-for="Files" type="file" onchange="updateAdvertisementFiles()" accept="image/*" multiple>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8 w-100">
+                    <div class="Shipment-Details-Section">
+                        <div class="col-lg-12">
+                            <div class="col-lg-12 col-12 Game-Type-Section">
+                                <div class="row Red-Row" id="DivOrderDescription">
+                                    <p class="additional-comments">Description</p>
+                                    <textarea class="h-auto" rows="10" asp-for="Description" placeholder="Description"></textarea>
+                                </div>
+                            </div>
+                            <hr class="pt-1" />
+                        </div>
+                        <div class="col-lg-12" id="Advertisement-Imgs">
+
+                        </div>
+                    </div>
+                    <div class="col-lg-12 Buttons-Submit-Section">
+                        <button onclick="AddAdvertisement('Add','Advertisement','AddAdvertisement')" type="button" id="BtnSend" class="Red-Btn">Submit Advertisement</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Stock Items Modal -->
+    <div class="modal fade" id="STOCKModel" tabindex="-1" role="dialog" aria-labelledby="STOCKModel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content" style="width: 108%;">
+                <div>
+                    <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="StockModalBody">
+                    <div class="spinner-border text-danger" role="status" style="margin-left: 43%;margin-bottom: 1pc;">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+<script src="~/dist/vendors/select2/js/select2.full.min.js"></script>
+<script src="~/dist/js/select2.script.js"></script>
+<script src="~/dist/js/jquery.validate.min.js"></script>
+<script src="~/dist/js/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/dist/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/Shipment/AddShipment.js"></script>

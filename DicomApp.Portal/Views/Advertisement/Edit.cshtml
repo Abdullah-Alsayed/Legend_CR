@@ -1,0 +1,16 @@
+﻿
+@using DicomApp.CommonDefinitions.DTO
+@using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs
+@using DicomApp.DAL.DB
+@using DicomApp.Helpers
+@model AdsDTO
+@{
+    var RoleID = AuthHelper.GetClaimValue(User, "RoleID");
+}
+ <partial name="_Edit" model="Model"></partial>
+<script src="~/dist/vendors/select2/js/select2.full.min.js"></script>
+<script src="~/dist/js/select2.script.js"></script>
+<script src="~/dist/js/jquery.validate.min.js"></script>
+<script src="~/dist/js/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/dist/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/Shipment/AddShipment.js"></script>

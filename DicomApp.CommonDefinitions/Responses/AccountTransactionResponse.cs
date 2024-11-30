@@ -1,12 +1,11 @@
-﻿using DicomApp.CommonDefinitions.DTO.CashDTOs;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using DicomApp.CommonDefinitions.DTO.CashDTOs;
 
 namespace DicomApp.CommonDefinitions.Responses
 {
-    public class AccountTransactionResponse : BaseResponse
+    public class TransactionResponse : BaseResponse
     {
-        public AccountTransactionDTO AccountTransactionDTO { get; set; }
-        public List<AccountTransactionDTO> AccountTransactionDTOs { get; set; }
+        public TransactionDTO TransactionDTO { get; set; }
+        public List<TransactionDTO> TransactionDTOs { get; set; }
     }
 }
-

@@ -1,0 +1,451 @@
+﻿
+@using DicomApp.CommonDefinitions.DTO;
+@model DashboardDTO
+<main>
+    <div class="container-fluid site-width">
+        <!-- START: Breadcrumbs-->
+        <div class="row">
+            <div class="col-12  align-self-center">
+                <div class="sub-header mt-3 py-3 align-self-center d-sm-flex w-100 rounded">
+                    <div class="w-sm-100 mr-auto"><h4 class="mb-0">Dashboard</h4> <p>Welcome to Red-Express</p></div>
+                    <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Dashboard</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <!-- END: Breadcrumbs-->
+        <!-- START: Card Data-->
+        <div class="card">
+            <div class="card-content">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-5 align-self-center">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">From</span>
+                                </div>
+                                <input type="text" id="dateFrom" class="form-control datepicker" value="@(ViewBag.dateFrom != null ? ViewBag.dateFrom : null)">
+                            </div>
+                        </div>
+                        <div class="col-md-5 align-self-center">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">To</span>
+                                </div>
+                                <input type="text" id="dateTo" class="form-control datepicker" value="@(ViewBag.dateTo != null ? ViewBag.dateTo : null)">
+                            </div>
+                        </div>
+                        <div class="col-md-2 align-self-center">
+                            <input style="width:100%" class="btn btn-success btn-block" type="button" value="Filter" onclick="loadIndicators('@Url.Action("Index3", "Home")')" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-lg-12  mt-3">
+                <div class="row">
+                    <div class="col-12 col-lg-6">
+                        <div class="row">
+                            <div class="col-12 col-sm-6 mt-3">
+                                <div class="card bg-primary">
+                                    <div class="card-body">
+                                        <div class='d-flex px-0 px-lg-2 py-2 align-self-center'>
+                                            <i class="icon-basket icons card-liner-icon mt-2 text-white"></i>
+                                            <div class='card-liner-content'>
+                                                @*<h2 class="card-liner-title text-white">@Model.Orders</h2>*@
+                                                <h6 class="card-liner-subtitle text-white">Orders</h6>
+                                            </div>
+                                        </div>
+                                        <div id="apex_primary_chart"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6 mt-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class='d-flex px-0 px-lg-2 py-2 align-self-center'>
+                                            <i class="icon-user icons card-liner-icon mt-2"></i>
+                                            <div class='card-liner-content'>
+                                                @*<h2 class="card-liner-title">@Model.Accounts</h2>*@
+                                                <h6 class="card-liner-subtitle">Accounts</h6>
+                                            </div>
+                                        </div>
+                                        <div id="apex_today_visitors"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6  mt-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class='d-flex px-0 px-lg-2 py-2 align-self-center'>
+                                            <i class="icon-bag icons card-liner-icon mt-2"></i>
+                                            <div class='card-liner-content'>
+                                                <@*h2 class="card-liner-title">@Model.New</h2>*@
+                                                <h6 class="card-liner-subtitle">New Orders</h6>
+                                            </div>
+                                        </div>
+                                        <div id="apex_today_sale"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6 mt-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class='d-flex px-0 px-lg-2 py-2 align-self-center'>
+                                            <span class="card-liner-icon mt-1"><i class="fa fa-check-circle-o text-success"></i></span>
+                                            <div class='card-liner-content'>
+                                                @*<h2 class="card-liner-title">@Model.Delivered</h2>*@
+                                                <h6 class="card-liner-subtitle">Delivered Orders</h6>
+                                            </div>
+                                        </div>
+                                        <div id="apex_today_profit"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 mt-3">
+                        <div class="card">
+                            <div class="card-content">
+                                <div class="card-body">
+
+                                    <div id="apex_bar_chart" class="height-500"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-12 col-lg-12 mt-3">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="media-body align-self-center ">
+                                    <span class="mb-0 h5 font-w-600">Top 10 Account Progress</span><br>
+                                    <p class="mb-0 font-w-500 tx-s-12">Account Report</p>
+                                </div>
+                            </div>
+                            <div id="apex_bar_chartxx" class="height-500"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-12 col-lg-12 mt-3">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="media-body align-self-center ">
+                                    <span class="mb-0 h5 font-w-600">Top 10 Delivery Progress</span><br>
+                                    <p class="mb-0 font-w-500 tx-s-12">Driver Report</p>
+                                </div>
+                            </div>
+                            <div id="apex_bar_chartx" class="height-500"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-12 col-lg-12 mt-3">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="media-body align-self-center ">
+                                    <span class="mb-0 h5 font-w-600">Daily Progress</span><br>
+                                    <p class="mb-0 font-w-500 tx-s-12">Daily Report</p>
+                                </div>
+                            </div>
+                            <div id="apex_bar_chartxxx" class="height-500"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END: Card DATA-->
+    </div>
+</main>
+<script>
+    var theme = 'light';
+    var primarycolor = getComputedStyle(document.body).getPropertyValue('--primarycolor');
+    var bordercolor = getComputedStyle(document.body).getPropertyValue('--bordercolor');
+    var bodycolor = getComputedStyle(document.body).getPropertyValue('--bodycolor');
+    if ($("#apex_bar_chart").length > 0) {
+        var modelNew = @Html.Raw(Json.Serialize(Model.Chart_TopGames));
+        var dmodelNew = [];
+        var cmodelNew = [];
+        var cmodelDeliverd = [];
+        var cmodelCancelled = [];
+        for (var i = 0; i < modelNew.length; i++) {
+            dmodelNew.push(modelNew[i].key);
+            cmodelNew.push(modelNew[i].value1);
+            cmodelDeliverd.push(modelNew[i].value2);
+            cmodelCancelled.push(modelNew[i].value3);
+        }
+        options = {
+            theme: {
+                mode: theme
+            },
+            grid: {
+
+                yaxis: {
+                    lines: {
+                        show: false
+                    }
+                }
+            },
+            chart: {
+                height: 318,
+                type: 'bar',
+                stacked: true,
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: true,
+                    columnWidth: '10',
+                }
+            },
+            dataLabels: {
+                enabled: true
+            },
+            colors: ['#d6d8d9','#1ee0ac', '#f75d6e'],
+            series: [
+                {
+                data: cmodelNew,
+                name: 'New',
+                }
+                ,{
+                data: cmodelDeliverd,
+                    name: 'Delivered'
+                }
+                ,{
+                data: cmodelCancelled,
+                    name: 'Cancelled'
+                }],
+            xaxis: {
+                categories: dmodelNew
+
+            }
+        }
+
+        var chart = new ApexCharts(
+            document.querySelector("#apex_bar_chart"),
+            options
+        );
+        chart.render();
+    }
+    if ($("#apex_bar_chartx").length > 0) {
+        var modelNew = @Html.Raw(Json.Serialize(Model.Chart_TopDriver));
+        var dmodelNew = [];
+        var cmodelNew = [];
+        var cmodelPaid = [];
+        var cmodelDeliverd = [];
+        var cmodelCancelled = [];
+        for (var i = 0; i < modelNew.length; i++) {
+            dmodelNew.push(modelNew[i].key);
+            cmodelNew.push(modelNew[i].value1);
+            cmodelDeliverd.push(modelNew[i].value2);
+            cmodelCancelled.push(modelNew[i].value3);
+        }
+        options = {
+            theme: {
+                mode: theme
+            },
+            grid: {
+
+                yaxis: {
+                    lines: {
+                        show: false
+                    }
+                }
+            },
+            chart: {
+                height: 318,
+                type: 'bar',
+                stacked: false,
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    columnWidth: '50',
+                }
+            },
+            dataLabels: {
+                enabled: true
+            },
+            colors: ['#1ee0ac', '#f75d6e'],
+            series: [ {
+                data: cmodelDeliverd,
+                    name: 'Delivered'
+                }, {
+                data: cmodelCancelled,
+                    name: 'Cancelled'
+                }],
+            xaxis: {
+                categories: dmodelNew
+
+            }
+        }
+
+        var chart = new ApexCharts(
+            document.querySelector("#apex_bar_chartx"),
+            options
+        );
+        chart.render();
+    }
+    if ($("#apex_bar_chartxx").length > 0) {
+        var modelNew = @Html.Raw(Json.Serialize(Model.Chart_TopBuyer));
+        var dmodelNew = [];
+        var cmodelNew = [];
+        var cmodelDeliverd = [];
+        var cmodelCancelled = [];
+        for (var i = 0; i < modelNew.length; i++) {
+            dmodelNew.push(modelNew[i].key);
+            cmodelNew.push(modelNew[i].value1);
+            cmodelDeliverd.push(modelNew[i].value2);
+            cmodelCancelled.push(modelNew[i].value3);
+        }
+        options = {
+            theme: {
+                mode: theme
+            },
+            grid: {
+
+                yaxis: {
+                    lines: {
+                        show: false
+                    }
+                }
+            },
+            chart: {
+                height: 318,
+                type: 'bar',
+                stacked: true,
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    columnWidth: '50',
+                }
+            },
+            dataLabels: {
+                enabled: true
+            },
+            colors: ['#d6d8d9', '#1ee0ac', '#f75d6e'],
+            series: [{
+                data: cmodelNew,
+                name: 'New',
+            }
+                , {
+                data: cmodelDeliverd,
+                    name: 'Delivered'
+                }, {
+                data: cmodelCancelled,
+                    name: 'Cancelled'
+                }],
+            xaxis: {
+                categories: dmodelNew
+
+            }
+        }
+
+        var chart = new ApexCharts(
+            document.querySelector("#apex_bar_chartxx"),
+            options
+        );
+        chart.render();
+    }
+    if ($("#apex_bar_chartxxx").length > 0) {
+        var modelNew = @Html.Raw(Json.Serialize(Model.AreaChartDate));
+        let dmodelNew = [];
+            let cmodelNew = [];
+            let cmodelDeliverd = [];
+            let cmodelCancelled = [];
+        for (var i = 0; i < modelNew.length; i++) {
+            dmodelNew.push(modelNew[i].key);
+            var ob1 = {};
+            ob1.x = modelNew[i].key;
+            ob1.y = modelNew[i].value1;
+            cmodelNew.push(ob1);
+
+
+            var ob2 = {};
+            ob2.x = modelNew[i].key;
+            ob2.y = modelNew[i].value2;
+            cmodelDeliverd.push(ob2);
+
+            var ob3 = {};
+            ob3.x = modelNew[i].key;
+            ob3.y = modelNew[i].value3;
+            cmodelCancelled.push(ob3);
+
+            }
+            options = {
+                theme: {
+                    mode: theme
+                },
+                chart: {
+                    height: 350,
+                    type: 'bar',
+                    dropShadow: {
+                        enabled: true,
+                        color: '#000',
+                        top: 18,
+                        left: 7,
+                        blur: 10,
+                        opacity: 0.2
+                    }
+                },
+                plotOptions: {
+                    bar: {
+                        horizontal: false,
+                        columnWidth: '50',
+                        endingShape: 'rounded'
+                    },
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    show: true,
+                    width: 1,
+                    colors: ['transparent']
+                },
+                colors: ['#d6d8d9', '#1ee0ac',  '#f75d6e'],
+                series: [{
+                    name: "New",
+                    data: cmodelNew,
+                }
+                ,{
+                        name: "Delivered",
+                        data: cmodelDeliverd,
+                 }
+                    ,
+                    {
+                        name:"Cancelled",
+                        data: cmodelCancelled,
+                    }],
+                xaxis: {
+                    type: 'datetime',
+                }
+            }
+
+        var chart = new ApexCharts(
+            document.querySelector("#apex_bar_chartxxx"),
+            options
+        );
+        chart.render();
+    }
+</script>
+<script>
+    function loadIndicators(url) {
+        var dateFrom = $("#dateFrom").val();
+        var dateTo = $("#dateTo").val();
+        window.location.href = url + "?" + "dateFrom=" + dateFrom + "&dateTo=" + dateTo;
+    }
+</script>

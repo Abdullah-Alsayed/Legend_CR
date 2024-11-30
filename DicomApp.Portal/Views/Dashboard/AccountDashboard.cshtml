@@ -1,0 +1,10 @@
+﻿
+@using DicomApp.CommonDefinitions.DTO;
+@using DicomApp.Helpers;
+@{
+    @if (AuthHelper.GetClaimValue(User, "RoleID") == (int)EnumRole.Gamer)
+    {
+        Layout = "~/Views/Shared/_VendorLayout.cshtml";
+    }
+}
+<partial name="_AccountDashboard" />

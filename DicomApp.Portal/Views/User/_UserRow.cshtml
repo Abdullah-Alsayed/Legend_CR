@@ -1,7 +1,7 @@
 ﻿
 @using DicomApp.CommonDefinitions.DTO;
 @model UserDTO
-@if (Model.RoleID != (int)EnumRole.Vendor)
+@if (Model.RoleID != (int)EnumRole.Gamer)
 {
     <tr id="User_@Model.Id">
         <td class="text-nowrap" id="Td-Name">@Model.Name</td>
@@ -25,7 +25,7 @@
         </td>
     </tr>
 }
-else if (Model.RoleID == (int)EnumRole.Vendor)
+else if (Model.RoleID == (int)EnumRole.Gamer)
 {
     <tr id="User_@Model.Id">
         <td id="Td-VendorInfo">

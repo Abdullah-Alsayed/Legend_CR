@@ -79,15 +79,19 @@ namespace DicomApp.DAL.Migrations
                     b.ToTable("Account");
                 });
 
-            modelBuilder.Entity("DicomApp.DAL.DB.AccountTransaction", b =>
+            modelBuilder.Entity("DicomApp.DAL.DB.Advertisement", b =>
                 {
-                    b.Property<int>("AccountTransactionId")
+                    b.Property<int>("AdvertisementId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<double>("CancelFees");
+                    b.Property<int?>("AdvertisementRequestId");
+
+                    b.Property<int?>("BuyerId");
 
                     b.Property<int?>("CashTransferId");
+
+                    b.Property<int?>("CommonUserId");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -96,75 +100,77 @@ namespace DicomApp.DAL.Migrations
 
                     b.Property<int>("CreatedBy");
 
-                    b.Property<double>("GameFees");
+                    b.Property<string>("Description")
+                        .HasMaxLength(500);
+
+                    b.Property<int>("GameId");
+
+                    b.Property<int?>("GameId1");
+
+                    b.Property<int>("GamerId");
 
                     b.Property<bool>("IsDeleted");
 
-                    b.Property<DateTime>("LastModifiedAt")
+                    b.Property<bool>("IsRefund");
+
+                    b.Property<DateTime?>("LastModifiedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("(getdate())");
 
-                    b.Property<int>("LastModifiedBy");
+                    b.Property<int?>("LastModifiedBy");
 
-                    b.Property<double>("PartialDeliveryFees");
+                    b.Property<int>("Level");
 
-                    b.Property<double>("PickupFees");
+                    b.Property<int>("OldPrice");
 
-                    b.Property<int?>("PickupRequestId");
+                    b.Property<string>("Password")
+                        .HasMaxLength(250);
 
-                    b.Property<int>("ReceiverId");
+                    b.Property<int>("Price");
+
+                    b.Property<string>("Rank");
 
                     b.Property<string>("RefId")
-                        .HasMaxLength(100);
+                        .HasMaxLength(255);
 
-                    b.Property<double?>("RefundCash");
+                    b.Property<int>("StatusId");
 
-                    b.Property<double?>("RefundFees");
+                    b.Property<string>("UserName")
+                        .HasMaxLength(500);
 
-                    b.Property<int?>("SenderId");
+                    b.HasKey("AdvertisementId");
 
-                    b.Property<int?>("ShipmentId");
+                    b.HasIndex("BuyerId");
 
-                    b.Property<double>("ShippingFees");
+                    b.HasIndex("CommonUserId");
 
-                    b.Property<double?>("ShippingFeesPaid");
+                    b.HasIndex("GameId");
 
-                    b.Property<double>("SizeFees");
+                    b.HasIndex("GameId1");
 
-                    b.Property<int?>("StatusId");
-
-                    b.Property<double>("Total");
-
-                    b.Property<byte>("TypeId");
-
-                    b.Property<double>("VendorCash");
-
-                    b.Property<int?>("VendorId");
-
-                    b.Property<double>("WeightFees");
-
-                    b.HasKey("AccountTransactionId");
-
-                    b.HasIndex("CashTransferId");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("LastModifiedBy");
-
-                    b.HasIndex("PickupRequestId");
-
-                    b.HasIndex("ReceiverId");
-
-                    b.HasIndex("SenderId");
-
-                    b.HasIndex("ShipmentId");
+                    b.HasIndex("GamerId");
 
                     b.HasIndex("StatusId");
 
-                    b.HasIndex("VendorId");
+                    b.ToTable("Advertisement");
+                });
 
-                    b.ToTable("AccountTransaction");
+            modelBuilder.Entity("DicomApp.DAL.DB.AdvertisementPhotos", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AdvertisementId");
+
+                    b.Property<string>("Url");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdvertisementId");
+
+                    b.ToTable("AdvertisementPhotos");
                 });
 
             modelBuilder.Entity("DicomApp.DAL.DB.AppService", b =>
@@ -222,116 +228,6 @@ namespace DicomApp.DAL.Migrations
                     b.ToTable("AppService");
                 });
 
-            modelBuilder.Entity("DicomApp.DAL.DB.Branch", b =>
-                {
-                    b.Property<int>("BranchId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Address");
-
-                    b.Property<string>("BranchName")
-                        .IsRequired();
-
-                    b.Property<string>("City");
-
-                    b.Property<string>("ContactPerson");
-
-                    b.Property<int>("CurrencyId");
-
-                    b.Property<string>("Description");
-
-                    b.Property<string>("Email");
-
-                    b.Property<bool?>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("((0))");
-
-                    b.Property<string>("Phone");
-
-                    b.Property<string>("State");
-
-                    b.Property<string>("ZipCode");
-
-                    b.HasKey("BranchId");
-
-                    b.ToTable("Branch");
-                });
-
-            modelBuilder.Entity("DicomApp.DAL.DB.CashTransfer", b =>
-                {
-                    b.Property<int>("CashTransferId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Address");
-
-                    b.Property<double>("Amount");
-
-                    b.Property<int?>("Apartment");
-
-                    b.Property<int?>("AreaId");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())");
-
-                    b.Property<int>("CreatedBy");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(150);
-
-                    b.Property<int?>("Floor");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<bool>("IsReceived");
-
-                    b.Property<string>("Landmark");
-
-                    b.Property<DateTime>("LastModifiedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())");
-
-                    b.Property<int>("LastModifiedBy");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(250);
-
-                    b.Property<string>("Otp")
-                        .HasColumnName("OTP")
-                        .HasMaxLength(100);
-
-                    b.Property<string>("Phone")
-                        .HasMaxLength(100);
-
-                    b.Property<int>("ReceiverId");
-
-                    b.Property<string>("RefId")
-                        .HasMaxLength(100);
-
-                    b.Property<byte>("TypeId");
-
-                    b.Property<int?>("ZoneId");
-
-                    b.HasKey("CashTransferId");
-
-                    b.HasIndex("AreaId");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("LastModifiedBy");
-
-                    b.HasIndex("ReceiverId");
-
-                    b.HasIndex("ZoneId");
-
-                    b.ToTable("CashTransfer");
-                });
-
             modelBuilder.Entity("DicomApp.DAL.DB.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -346,13 +242,13 @@ namespace DicomApp.DAL.Migrations
 
                     b.Property<int?>("CreatedBy");
 
-                    b.Property<int>("DeleteBy");
+                    b.Property<int?>("DeleteBy");
 
-                    b.Property<DateTime>("DeletedOn");
+                    b.Property<DateTime?>("DeletedOn");
 
                     b.Property<bool>("IsDeleted");
 
-                    b.Property<DateTime>("LastModifiedAt")
+                    b.Property<DateTime?>("LastModifiedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("(getdate())");
@@ -372,72 +268,6 @@ namespace DicomApp.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Category");
-                });
-
-            modelBuilder.Entity("DicomApp.DAL.DB.City", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("ID")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Address")
-                        .HasMaxLength(150);
-
-                    b.Property<int?>("BranchId");
-
-                    b.Property<string>("CityName")
-                        .HasColumnName("City_Name")
-                        .HasMaxLength(150);
-
-                    b.Property<string>("CityNameAr")
-                        .IsRequired()
-                        .HasColumnName("City_Name_AR")
-                        .HasMaxLength(150);
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(100);
-
-                    b.Property<bool?>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("((0))");
-
-                    b.Property<DateTime>("LastModifiedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())");
-
-                    b.Property<string>("LastModifiedBy")
-                        .IsRequired()
-                        .HasMaxLength(100);
-
-                    b.Property<string>("Lat")
-                        .HasMaxLength(50);
-
-                    b.Property<string>("Lng")
-                        .HasMaxLength(50);
-
-                    b.Property<int>("StateId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("State_ID")
-                        .HasDefaultValueSql("((1))");
-
-                    b.Property<int?>("ZoneId")
-                        .HasColumnName("ZoneID");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BranchId");
-
-                    b.HasIndex("ZoneId");
-
-                    b.ToTable("City");
                 });
 
             modelBuilder.Entity("DicomApp.DAL.DB.CommonResource", b =>
@@ -509,6 +339,8 @@ namespace DicomApp.DAL.Migrations
                     b.Property<string>("AddressDetails")
                         .HasMaxLength(150);
 
+                    b.Property<int>("Age");
+
                     b.Property<int?>("Apartment");
 
                     b.Property<int?>("AreaId");
@@ -522,6 +354,10 @@ namespace DicomApp.DAL.Migrations
 
                     b.Property<string>("Code")
                         .HasMaxLength(50);
+
+                    b.Property<bool>("ConfirmEmail");
+
+                    b.Property<int?>("CountryId");
 
                     b.Property<int?>("CreatedBy");
 
@@ -538,6 +374,8 @@ namespace DicomApp.DAL.Migrations
 
                     b.Property<string>("FullName")
                         .HasMaxLength(100);
+
+                    b.Property<int>("Gender");
 
                     b.Property<string>("HashedPassword");
 
@@ -558,6 +396,8 @@ namespace DicomApp.DAL.Migrations
                         .HasDefaultValueSql("((0))");
 
                     b.Property<string>("Landmark");
+
+                    b.Property<string>("Language");
 
                     b.Property<DateTime?>("LastLocationDate")
                         .HasColumnType("datetime");
@@ -609,17 +449,19 @@ namespace DicomApp.DAL.Migrations
                     b.Property<int>("RoleId")
                         .HasColumnName("RoleID");
 
+                    b.Property<string>("TelegramUserName");
+
                     b.Property<long?>("VerificationCode");
 
                     b.Property<bool?>("VisaPayment");
 
-                    b.Property<int?>("VodafoneCashNumber");
+                    b.Property<int?>("WalletNumber");
 
                     b.Property<int?>("ZoneId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BranchId");
+                    b.HasIndex("CountryId");
 
                     b.HasIndex("RoleId");
 
@@ -716,48 +558,6 @@ namespace DicomApp.DAL.Migrations
                     b.ToTable("Common_UserDevice");
                 });
 
-            modelBuilder.Entity("DicomApp.DAL.DB.Complain", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("ID")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ActionBy");
-
-                    b.Property<string>("Comments");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("Department")
-                        .HasMaxLength(150);
-
-                    b.Property<string>("Description");
-
-                    b.Property<int?>("EmployeeId");
-
-                    b.Property<bool?>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("((0))");
-
-                    b.Property<bool?>("IsSolved")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("((0))");
-
-                    b.Property<int?>("VendorId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ActionBy");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.HasIndex("VendorId");
-
-                    b.ToTable("Complain");
-                });
-
             modelBuilder.Entity("DicomApp.DAL.DB.ContactUs", b =>
                 {
                     b.Property<int>("Id")
@@ -804,6 +604,25 @@ namespace DicomApp.DAL.Migrations
                     b.ToTable("ContactUs");
                 });
 
+            modelBuilder.Entity("DicomApp.DAL.DB.Country", b =>
+                {
+                    b.Property<int>("CountryId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CountryCode");
+
+                    b.Property<string>("FlagUrl");
+
+                    b.Property<string>("NameAr");
+
+                    b.Property<string>("NameEn");
+
+                    b.HasKey("CountryId");
+
+                    b.ToTable("Countries");
+                });
+
             modelBuilder.Entity("DicomApp.DAL.DB.FollowUp", b =>
                 {
                     b.Property<int>("Id")
@@ -811,8 +630,9 @@ namespace DicomApp.DAL.Migrations
                         .HasColumnName("ID")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Comment")
-                        .HasMaxLength(500);
+                    b.Property<int>("ActionType");
+
+                    b.Property<int?>("AdvertisementId");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -821,57 +641,21 @@ namespace DicomApp.DAL.Migrations
 
                     b.Property<int>("CreatedBy");
 
-                    b.Property<int?>("FollowUpTypeId")
-                        .HasColumnName("FollowUpTypeID");
+                    b.Property<int>("EntityType");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<int?>("GamerServiceId");
 
-                    b.Property<DateTime>("LastModifiedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())");
-
-                    b.Property<int>("LastModifiedBy");
-
-                    b.Property<string>("Lat")
-                        .HasMaxLength(50);
-
-                    b.Property<string>("Lng")
-                        .HasMaxLength(50);
-
-                    b.Property<int?>("ShipmentId");
-
-                    b.Property<int?>("StatusId")
-                        .HasColumnName("StatusID");
-
-                    b.Property<string>("Title")
-                        .HasMaxLength(100);
+                    b.Property<string>("Message");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AdvertisementId");
+
                     b.HasIndex("CreatedBy");
 
-                    b.HasIndex("FollowUpTypeId");
-
-                    b.HasIndex("ShipmentId");
+                    b.HasIndex("GamerServiceId");
 
                     b.ToTable("FollowUp");
-                });
-
-            modelBuilder.Entity("DicomApp.DAL.DB.FollowUpType", b =>
-                {
-                    b.Property<int>("FollowUpTypeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("FollowUpTypeID")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("TypeName")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.HasKey("FollowUpTypeId");
-
-                    b.ToTable("FollowUpType");
                 });
 
             modelBuilder.Entity("DicomApp.DAL.DB.Game", b =>
@@ -890,9 +674,9 @@ namespace DicomApp.DAL.Migrations
 
                     b.Property<int?>("CreatedBy");
 
-                    b.Property<int>("DeleteBy");
+                    b.Property<int?>("DeleteBy");
 
-                    b.Property<DateTime>("DeletedOn");
+                    b.Property<DateTime?>("DeletedOn");
 
                     b.Property<string>("Description")
                         .HasMaxLength(250);
@@ -902,7 +686,7 @@ namespace DicomApp.DAL.Migrations
 
                     b.Property<bool>("IsDeleted");
 
-                    b.Property<DateTime>("LastModifiedAt")
+                    b.Property<DateTime?>("LastModifiedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("(getdate())");
@@ -924,6 +708,137 @@ namespace DicomApp.DAL.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Game");
+                });
+
+            modelBuilder.Entity("DicomApp.DAL.DB.GameCharge", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Count");
+
+                    b.Property<DateTime>("CreatedAt");
+
+                    b.Property<int?>("CreatedBy");
+
+                    b.Property<int?>("DeleteBy");
+
+                    b.Property<DateTime?>("DeletedOn");
+
+                    b.Property<int>("Discount");
+
+                    b.Property<int>("GameId");
+
+                    b.Property<string>("Img");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("LastModifiedAt");
+
+                    b.Property<int?>("LastModifiedBy");
+
+                    b.Property<int>("Price");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameId");
+
+                    b.ToTable("GameCharges");
+                });
+
+            modelBuilder.Entity("DicomApp.DAL.DB.GamerService", b =>
+                {
+                    b.Property<int>("GamerServiceId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedAt");
+
+                    b.Property<int>("CreatedBy");
+
+                    b.Property<string>("CurrentLevel");
+
+                    b.Property<string>("Description");
+
+                    b.Property<int?>("GameChargeId");
+
+                    b.Property<int>("GameId");
+
+                    b.Property<int>("GameServiceType");
+
+                    b.Property<int>("GamerId");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("LastModifiedAt");
+
+                    b.Property<int?>("LastModifiedBy");
+
+                    b.Property<string>("Level");
+
+                    b.Property<string>("Password");
+
+                    b.Property<int>("Price");
+
+                    b.Property<string>("RefId");
+
+                    b.Property<int>("StatusId");
+
+                    b.Property<string>("UserName");
+
+                    b.HasKey("GamerServiceId");
+
+                    b.HasIndex("GameChargeId");
+
+                    b.HasIndex("GameId");
+
+                    b.HasIndex("GamerId");
+
+                    b.HasIndex("StatusId");
+
+                    b.ToTable("GamerService");
+                });
+
+            modelBuilder.Entity("DicomApp.DAL.DB.Invoice", b =>
+                {
+                    b.Property<int>("InvoiceId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("AdvertisementId");
+
+                    b.Property<DateTime>("CreatedAt");
+
+                    b.Property<int>("CreatedBy");
+
+                    b.Property<int?>("GamerServiceId");
+
+                    b.Property<int>("InvoiceType");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<bool>("IsRefund");
+
+                    b.Property<DateTime?>("LastModifiedAt");
+
+                    b.Property<int?>("LastModifiedBy");
+
+                    b.Property<int>("Price");
+
+                    b.Property<string>("RefId");
+
+                    b.HasKey("InvoiceId");
+
+                    b.HasIndex("AdvertisementId")
+                        .IsUnique()
+                        .HasFilter("[AdvertisementId] IS NOT NULL");
+
+                    b.HasIndex("GamerServiceId")
+                        .IsUnique()
+                        .HasFilter("[GamerServiceId] IS NOT NULL");
+
+                    b.ToTable("Invoices");
                 });
 
             modelBuilder.Entity("DicomApp.DAL.DB.Notification", b =>
@@ -979,171 +894,6 @@ namespace DicomApp.DAL.Migrations
                     b.ToTable("Notification");
                 });
 
-            modelBuilder.Entity("DicomApp.DAL.DB.PickupRequest", b =>
-                {
-                    b.Property<int>("PickupRequestId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AreaId");
-
-                    b.Property<int?>("BranchId");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())");
-
-                    b.Property<int>("CreatedBy");
-
-                    b.Property<int?>("DeliveryManId");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<string>("Notes");
-
-                    b.Property<DateTime>("PickupDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())");
-
-                    b.Property<double>("PickupFees");
-
-                    b.Property<int>("PickupRequestTypeId");
-
-                    b.Property<string>("RefId")
-                        .HasColumnName("RefID");
-
-                    b.Property<int>("StatusId");
-
-                    b.Property<DateTime>("TimeFrom")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())");
-
-                    b.Property<DateTime>("TimeTo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())");
-
-                    b.Property<string>("VendorAddress");
-
-                    b.Property<int?>("VendorApartment");
-
-                    b.Property<int>("VendorFloor");
-
-                    b.Property<int>("VendorId");
-
-                    b.Property<string>("VendorLandmark");
-
-                    b.Property<string>("VendorLocation");
-
-                    b.Property<string>("VendorName")
-                        .IsRequired();
-
-                    b.Property<string>("VendorPhone")
-                        .IsRequired()
-                        .HasMaxLength(250);
-
-                    b.Property<int>("ZoneId");
-
-                    b.HasKey("PickupRequestId");
-
-                    b.HasIndex("AreaId");
-
-                    b.HasIndex("BranchId");
-
-                    b.HasIndex("DeliveryManId");
-
-                    b.HasIndex("PickupRequestTypeId");
-
-                    b.HasIndex("StatusId");
-
-                    b.HasIndex("VendorId");
-
-                    b.HasIndex("ZoneId");
-
-                    b.ToTable("PickupRequest");
-                });
-
-            modelBuilder.Entity("DicomApp.DAL.DB.PickupRequestItem", b =>
-                {
-                    b.Property<int>("PickupRequestItemId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())");
-
-                    b.Property<int>("CreatedBy");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<int>("PickupRequestId");
-
-                    b.Property<double?>("Price");
-
-                    b.Property<int?>("Quantity");
-
-                    b.Property<int?>("ShipmentId");
-
-                    b.Property<int>("StatusId");
-
-                    b.Property<int?>("VendorProductId");
-
-                    b.HasKey("PickupRequestItemId");
-
-                    b.HasIndex("PickupRequestId");
-
-                    b.HasIndex("ShipmentId");
-
-                    b.HasIndex("StatusId");
-
-                    b.HasIndex("VendorProductId");
-
-                    b.ToTable("PickupRequestItem");
-                });
-
-            modelBuilder.Entity("DicomApp.DAL.DB.PickupRequestType", b =>
-                {
-                    b.Property<int>("PickupRequestTypeId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(500);
-
-                    b.HasKey("PickupRequestTypeId");
-
-                    b.ToTable("PickupRequestType");
-                });
-
-            modelBuilder.Entity("DicomApp.DAL.DB.ProblemType", b =>
-                {
-                    b.Property<int>("ProblemTypeId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool?>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("((0))");
-
-                    b.Property<string>("NameAr")
-                        .HasMaxLength(150);
-
-                    b.Property<string>("NameEn")
-                        .HasMaxLength(150);
-
-                    b.Property<int?>("Type");
-
-                    b.HasKey("ProblemTypeId");
-
-                    b.ToTable("ProblemType");
-                });
-
             modelBuilder.Entity("DicomApp.DAL.DB.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -1158,9 +908,9 @@ namespace DicomApp.DAL.Migrations
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("(getdate())");
 
-                    b.Property<DateTime>("DeleteAt");
+                    b.Property<DateTime?>("DeleteAt");
 
-                    b.Property<int>("DeleteBy");
+                    b.Property<int?>("DeleteBy");
 
                     b.Property<bool>("Editable")
                         .ValueGeneratedOnAdd()
@@ -1226,346 +976,6 @@ namespace DicomApp.DAL.Migrations
                     b.ToTable("RoleAppService");
                 });
 
-            modelBuilder.Entity("DicomApp.DAL.DB.Shipment", b =>
-                {
-                    b.Property<int>("ShipmentId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("Apartment");
-
-                    b.Property<int>("AreaId")
-                        .HasColumnName("AreaID");
-
-                    b.Property<int>("BranchId");
-
-                    b.Property<int>("CallAnswerCount");
-
-                    b.Property<int>("CallNotAnswerCount");
-
-                    b.Property<string>("CancelComment")
-                        .HasMaxLength(500);
-
-                    b.Property<double>("CancelFees");
-
-                    b.Property<int?>("CashTransferId");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())");
-
-                    b.Property<int>("CreatedBy");
-
-                    b.Property<string>("CustomerAddress")
-                        .HasMaxLength(500);
-
-                    b.Property<int?>("CustomerId");
-
-                    b.Property<string>("CustomerName")
-                        .HasMaxLength(250);
-
-                    b.Property<string>("CustomerPhone")
-                        .HasMaxLength(250);
-
-                    b.Property<string>("CustomerPhone2")
-                        .HasMaxLength(250);
-
-                    b.Property<int?>("DeliveryManId");
-
-                    b.Property<string>("Description");
-
-                    b.Property<int>("Floor");
-
-                    b.Property<double>("GameFees");
-
-                    b.Property<int?>("GameId");
-
-                    b.Property<bool?>("IsAfford");
-
-                    b.Property<bool>("IsCashReceived");
-
-                    b.Property<bool>("IsCourierReturned");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<bool>("IsFragilePackage");
-
-                    b.Property<bool>("IsOpenPackage");
-
-                    b.Property<bool>("IsPaidToVendor");
-
-                    b.Property<bool>("IsPartialDelivery");
-
-                    b.Property<bool>("IsStock");
-
-                    b.Property<bool>("IsTripCompleted");
-
-                    b.Property<string>("Landmark")
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("LastModifiedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())");
-
-                    b.Property<int>("LastModifiedBy");
-
-                    b.Property<string>("Location");
-
-                    b.Property<int>("NoOfItems");
-
-                    b.Property<DateTime?>("PaidToVendorAt")
-                        .HasColumnType("datetime");
-
-                    b.Property<double>("PartialDeliveryFees");
-
-                    b.Property<int?>("PickupRequestId");
-
-                    b.Property<string>("RefId")
-                        .HasMaxLength(255);
-
-                    b.Property<double?>("RefundCash");
-
-                    b.Property<double?>("RefundFees");
-
-                    b.Property<int>("ReturnCount");
-
-                    b.Property<int?>("ShipToRefundId");
-
-                    b.Property<int>("ShipmentServiceId");
-
-                    b.Property<int>("ShipmentTypeId");
-
-                    b.Property<double>("ShippingFees");
-
-                    b.Property<double>("ShippingFeesPaid");
-
-                    b.Property<string>("Size")
-                        .HasMaxLength(100);
-
-                    b.Property<double>("SizeFees");
-
-                    b.Property<int>("StatusId");
-
-                    b.Property<double>("Total");
-
-                    b.Property<double>("VendorCash");
-
-                    b.Property<int>("VendorId");
-
-                    b.Property<string>("VendorName")
-                        .IsRequired()
-                        .HasMaxLength(250);
-
-                    b.Property<string>("VendorPhone")
-                        .IsRequired()
-                        .HasMaxLength(250);
-
-                    b.Property<int?>("WarehouseGameId");
-
-                    b.Property<string>("WarehouseSize")
-                        .HasMaxLength(100);
-
-                    b.Property<int>("WarehouseWeight");
-
-                    b.Property<int>("Weight");
-
-                    b.Property<double>("WeightFees");
-
-                    b.Property<int>("ZoneId")
-                        .HasColumnName("ZoneID");
-
-                    b.HasKey("ShipmentId");
-
-                    b.HasIndex("AreaId");
-
-                    b.HasIndex("BranchId");
-
-                    b.HasIndex("CashTransferId");
-
-                    b.HasIndex("CustomerId");
-
-                    b.HasIndex("DeliveryManId");
-
-                    b.HasIndex("GameId");
-
-                    b.HasIndex("LastModifiedBy");
-
-                    b.HasIndex("PickupRequestId");
-
-                    b.HasIndex("ShipmentServiceId");
-
-                    b.HasIndex("ShipmentTypeId");
-
-                    b.HasIndex("StatusId");
-
-                    b.HasIndex("VendorId");
-
-                    b.HasIndex("WarehouseGameId");
-
-                    b.HasIndex("ZoneId");
-
-                    b.ToTable("Shipment");
-                });
-
-            modelBuilder.Entity("DicomApp.DAL.DB.ShipmentCustomerFollowUp", b =>
-                {
-                    b.Property<int>("ShipmentCustomerFollowUpId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())");
-
-                    b.Property<int>("CreatedBy");
-
-                    b.Property<bool?>("IsCallAnswered");
-
-                    b.Property<bool?>("IsConfirmed");
-
-                    b.Property<DateTime?>("NextCallOn")
-                        .HasColumnType("datetime");
-
-                    b.Property<DateTime?>("NextCallTimeFrom")
-                        .HasColumnType("datetime");
-
-                    b.Property<DateTime?>("NextCallTimeTo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())");
-
-                    b.Property<string>("Note");
-
-                    b.Property<int>("ShipmentId");
-
-                    b.HasKey("ShipmentCustomerFollowUpId");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("ShipmentId");
-
-                    b.ToTable("ShipmentCustomerFollowUp");
-                });
-
-            modelBuilder.Entity("DicomApp.DAL.DB.ShipmentItem", b =>
-                {
-                    b.Property<int>("ShipmentItemId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("CourierQuantityDelivered");
-
-                    b.Property<int>("CourierQuantityReturned");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())");
-
-                    b.Property<int>("CreatedBy");
-
-                    b.Property<string>("ImageUrl");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<string>("Name");
-
-                    b.Property<double>("Price");
-
-                    b.Property<int>("Quantity");
-
-                    b.Property<int>("ShipmentId");
-
-                    b.Property<string>("Size")
-                        .HasMaxLength(100);
-
-                    b.Property<int>("StatusId");
-
-                    b.Property<int?>("VendorProductId");
-
-                    b.HasKey("ShipmentItemId");
-
-                    b.HasIndex("ShipmentId");
-
-                    b.HasIndex("StatusId");
-
-                    b.HasIndex("VendorProductId");
-
-                    b.ToTable("ShipmentItem");
-                });
-
-            modelBuilder.Entity("DicomApp.DAL.DB.ShipmentProblem", b =>
-                {
-                    b.Property<int>("ShipmentProblemId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())");
-
-                    b.Property<int>("CreatedBy");
-
-                    b.Property<bool>("IsCourierProblem");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<bool>("IsReportToVendor");
-
-                    b.Property<bool>("IsSolved");
-
-                    b.Property<string>("Note");
-
-                    b.Property<int>("ProblemTypeId");
-
-                    b.Property<int>("ShipmentId");
-
-                    b.Property<string>("Solution");
-
-                    b.HasKey("ShipmentProblemId");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("ProblemTypeId");
-
-                    b.HasIndex("ShipmentId");
-
-                    b.ToTable("ShipmentProblem");
-                });
-
-            modelBuilder.Entity("DicomApp.DAL.DB.ShipmentService", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ServiceName")
-                        .IsRequired()
-                        .HasMaxLength(150);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ShipmentService");
-                });
-
-            modelBuilder.Entity("DicomApp.DAL.DB.ShipmentType", b =>
-                {
-                    b.Property<int>("ShipmentTypeId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .IsRequired();
-
-                    b.HasKey("ShipmentTypeId");
-
-                    b.ToTable("ShipmentType");
-                });
-
             modelBuilder.Entity("DicomApp.DAL.DB.Status", b =>
                 {
                     b.Property<int>("Id")
@@ -1584,6 +994,111 @@ namespace DicomApp.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Status");
+                });
+
+            modelBuilder.Entity("DicomApp.DAL.DB.Testimonial", b =>
+                {
+                    b.Property<int>("TestimonialId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Comment");
+
+                    b.Property<DateTime>("CreatedAt");
+
+                    b.Property<int>("CreatedBy");
+
+                    b.Property<int?>("DeleteBy");
+
+                    b.Property<DateTime?>("DeletedOn");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime>("LastModifiedAt");
+
+                    b.Property<int?>("LastModifiedBy");
+
+                    b.Property<int?>("LastModifiedByNavigationId");
+
+                    b.Property<int>("Rate");
+
+                    b.HasKey("TestimonialId");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("LastModifiedByNavigationId");
+
+                    b.ToTable("Testimonial");
+                });
+
+            modelBuilder.Entity("DicomApp.DAL.DB.Transaction", b =>
+                {
+                    b.Property<int>("TransactionId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("AccountId");
+
+                    b.Property<int?>("AccountId1");
+
+                    b.Property<int?>("AccountId2");
+
+                    b.Property<int?>("AdvertisementId");
+
+                    b.Property<int>("Amount");
+
+                    b.Property<string>("Attachment");
+
+                    b.Property<int>("BuyerId");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime")
+                        .HasDefaultValueSql("(getdate())");
+
+                    b.Property<int>("CreatedBy");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<bool>("IsSuccess");
+
+                    b.Property<DateTime>("LastModifiedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime")
+                        .HasDefaultValueSql("(getdate())");
+
+                    b.Property<int?>("LastModifiedBy");
+
+                    b.Property<string>("PaymentId");
+
+                    b.Property<string>("RefId")
+                        .HasMaxLength(100);
+
+                    b.Property<int?>("ServiceId");
+
+                    b.Property<int>("TransactionSource");
+
+                    b.Property<int>("TransactionType");
+
+                    b.HasKey("TransactionId");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("AccountId1");
+
+                    b.HasIndex("AccountId2");
+
+                    b.HasIndex("AdvertisementId");
+
+                    b.HasIndex("BuyerId");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("LastModifiedBy");
+
+                    b.HasIndex("ServiceId");
+
+                    b.ToTable("Transaction");
                 });
 
             modelBuilder.Entity("DicomApp.DAL.DB.UserLocation", b =>
@@ -1691,148 +1206,11 @@ namespace DicomApp.DAL.Migrations
 
                     b.Property<int?>("ModifiedBy");
 
+                    b.Property<string>("UserId");
+
                     b.HasKey("Id");
 
                     b.ToTable("Userhubconnection");
-                });
-
-            modelBuilder.Entity("DicomApp.DAL.DB.VendorProduct", b =>
-                {
-                    b.Property<int>("VendorProductId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AvailableStock");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())");
-
-                    b.Property<int>("CreatedBy");
-
-                    b.Property<string>("Description");
-
-                    b.Property<string>("ImageUrl");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<string>("Name")
-                        .IsRequired();
-
-                    b.Property<double>("OriginalPrice");
-
-                    b.Property<string>("Size")
-                        .HasMaxLength(150);
-
-                    b.Property<double>("StockPrice");
-
-                    b.Property<int>("VendorId");
-
-                    b.HasKey("VendorProductId");
-
-                    b.HasIndex("VendorId");
-
-                    b.ToTable("VendorProduct");
-                });
-
-            modelBuilder.Entity("DicomApp.DAL.DB.Warehouse", b =>
-                {
-                    b.Property<int>("WarehouseId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("BranchId");
-
-                    b.Property<string>("Description");
-
-                    b.Property<string>("WarehouseName")
-                        .IsRequired();
-
-                    b.HasKey("WarehouseId");
-
-                    b.ToTable("Warehouse");
-                });
-
-            modelBuilder.Entity("DicomApp.DAL.DB.Zone", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("ID")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("BranchId");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())");
-
-                    b.Property<int>("CreatedBy");
-
-                    b.Property<string>("Description");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<DateTime>("LastModifiedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())");
-
-                    b.Property<int>("LastModifiedBy");
-
-                    b.Property<string>("NameAr")
-                        .HasColumnName("Name_Ar")
-                        .HasMaxLength(150);
-
-                    b.Property<string>("NameEn")
-                        .HasColumnName("Name_En")
-                        .HasMaxLength(150);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BranchId");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("LastModifiedBy");
-
-                    b.ToTable("Zone");
-                });
-
-            modelBuilder.Entity("DicomApp.DAL.DB.ZoneTax", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("ID")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())");
-
-                    b.Property<int>("CreatedBy");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<DateTime>("LastModifiedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())");
-
-                    b.Property<int>("LastModifiedBy");
-
-                    b.Property<double>("Tax");
-
-                    b.Property<int>("ZoneId")
-                        .HasColumnName("ZoneID");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ZoneId");
-
-                    b.ToTable("ZoneTax");
                 });
 
             modelBuilder.Entity("DicomApp.DAL.DB.Account", b =>
@@ -1858,101 +1236,50 @@ namespace DicomApp.DAL.Migrations
                         .HasConstraintName("FK_Account_CommonUser");
                 });
 
-            modelBuilder.Entity("DicomApp.DAL.DB.AccountTransaction", b =>
+            modelBuilder.Entity("DicomApp.DAL.DB.Advertisement", b =>
                 {
-                    b.HasOne("DicomApp.DAL.DB.CashTransfer", "CashTransfer")
-                        .WithMany("AccountTransaction")
-                        .HasForeignKey("CashTransferId")
-                        .HasConstraintName("FK_AccountTransaction_CashTransfer");
+                    b.HasOne("DicomApp.DAL.DB.CommonUser", "Buyer")
+                        .WithMany("AdvertisementsBuyer")
+                        .HasForeignKey("BuyerId");
 
-                    b.HasOne("DicomApp.DAL.DB.CommonUser", "CreatedByNavigation")
-                        .WithMany("AccountTransactionCreatedByNavigation")
-                        .HasForeignKey("CreatedBy")
-                        .HasConstraintName("FK_AccountTransaction_CommonUser");
+                    b.HasOne("DicomApp.DAL.DB.CommonUser")
+                        .WithMany("ShipmentCustomer")
+                        .HasForeignKey("CommonUserId");
 
-                    b.HasOne("DicomApp.DAL.DB.CommonUser", "LastModifiedByNavigation")
-                        .WithMany("AccountTransactionLastModifiedByNavigation")
-                        .HasForeignKey("LastModifiedBy")
-                        .HasConstraintName("FK_AccountTransaction_CommonUser1");
+                    b.HasOne("DicomApp.DAL.DB.Game", "Game")
+                        .WithMany("Advertisements")
+                        .HasForeignKey("GameId")
+                        .HasConstraintName("FK_Shipment_Game")
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("DicomApp.DAL.DB.PickupRequest", "PickupRequest")
-                        .WithMany("AccountTransaction")
-                        .HasForeignKey("PickupRequestId")
-                        .HasConstraintName("FK_AccountTransaction_PickupRequest");
+                    b.HasOne("DicomApp.DAL.DB.Game")
+                        .WithMany("ShipmentWarehouseGame")
+                        .HasForeignKey("GameId1");
 
-                    b.HasOne("DicomApp.DAL.DB.Account", "Receiver")
-                        .WithMany("AccountTransactionReceiver")
-                        .HasForeignKey("ReceiverId")
-                        .HasConstraintName("FK_AccountTransaction_Account1");
-
-                    b.HasOne("DicomApp.DAL.DB.Account", "Sender")
-                        .WithMany("AccountTransactionSender")
-                        .HasForeignKey("SenderId")
-                        .HasConstraintName("FK_AccountTransaction_Account");
-
-                    b.HasOne("DicomApp.DAL.DB.Shipment", "Shipment")
-                        .WithMany("AccountTransaction")
-                        .HasForeignKey("ShipmentId")
-                        .HasConstraintName("FK_AccountTransaction_Shipment");
+                    b.HasOne("DicomApp.DAL.DB.CommonUser", "Gamer")
+                        .WithMany("AdvertisementsGamer")
+                        .HasForeignKey("GamerId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DicomApp.DAL.DB.Status", "Status")
-                        .WithMany("AccountTransaction")
+                        .WithMany("Advertisements")
                         .HasForeignKey("StatusId")
-                        .HasConstraintName("FK_AccountTransaction_Status");
-
-                    b.HasOne("DicomApp.DAL.DB.Account", "Vendor")
-                        .WithMany("AccountTransactionVendor")
-                        .HasForeignKey("VendorId")
-                        .HasConstraintName("FK_AccountTransaction_Account2");
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("DicomApp.DAL.DB.CashTransfer", b =>
+            modelBuilder.Entity("DicomApp.DAL.DB.AdvertisementPhotos", b =>
                 {
-                    b.HasOne("DicomApp.DAL.DB.City", "Area")
-                        .WithMany("CashTransfer")
-                        .HasForeignKey("AreaId")
-                        .HasConstraintName("FK_CashTransfer_City");
-
-                    b.HasOne("DicomApp.DAL.DB.CommonUser", "CreatedByNavigation")
-                        .WithMany("CashTransferCreatedByNavigation")
-                        .HasForeignKey("CreatedBy")
-                        .HasConstraintName("FK_CashTransfer_CommonUser");
-
-                    b.HasOne("DicomApp.DAL.DB.CommonUser", "LastModifiedByNavigation")
-                        .WithMany("CashTransferLastModifiedByNavigation")
-                        .HasForeignKey("LastModifiedBy")
-                        .HasConstraintName("FK_CashTransfer_CommonUser1");
-
-                    b.HasOne("DicomApp.DAL.DB.Account", "Receiver")
-                        .WithMany("CashTransfer")
-                        .HasForeignKey("ReceiverId")
-                        .HasConstraintName("FK_CashTransfer_Account");
-
-                    b.HasOne("DicomApp.DAL.DB.Zone", "Zone")
-                        .WithMany("CashTransfer")
-                        .HasForeignKey("ZoneId")
-                        .HasConstraintName("FK_CashTransfer_Zone");
-                });
-
-            modelBuilder.Entity("DicomApp.DAL.DB.City", b =>
-                {
-                    b.HasOne("DicomApp.DAL.DB.Branch", "Branch")
-                        .WithMany("CityNavigation")
-                        .HasForeignKey("BranchId")
-                        .HasConstraintName("FK_Branch_City");
-
-                    b.HasOne("DicomApp.DAL.DB.Zone", "Zone")
-                        .WithMany("City")
-                        .HasForeignKey("ZoneId")
-                        .HasConstraintName("FK_City_Zone");
+                    b.HasOne("DicomApp.DAL.DB.Advertisement", "Advertisement")
+                        .WithMany("AdvertisementPhotos")
+                        .HasForeignKey("AdvertisementId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("DicomApp.DAL.DB.CommonUser", b =>
                 {
-                    b.HasOne("DicomApp.DAL.DB.Branch", "Branch")
-                        .WithMany("CommonUser")
-                        .HasForeignKey("BranchId")
-                        .HasConstraintName("FK_Branch_CommonUser");
+                    b.HasOne("DicomApp.DAL.DB.Country", "Country")
+                        .WithMany("Users")
+                        .HasForeignKey("CountryId");
 
                     b.HasOne("DicomApp.DAL.DB.Role", "Role")
                         .WithMany("CommonUser")
@@ -1968,24 +1295,6 @@ namespace DicomApp.DAL.Migrations
                         .HasConstraintName("FK_Common_UserDevice_Common_User");
                 });
 
-            modelBuilder.Entity("DicomApp.DAL.DB.Complain", b =>
-                {
-                    b.HasOne("DicomApp.DAL.DB.CommonUser", "ActionByNavigation")
-                        .WithMany("ComplainActionByNavigation")
-                        .HasForeignKey("ActionBy")
-                        .HasConstraintName("FK_Complains_ActionBy");
-
-                    b.HasOne("DicomApp.DAL.DB.CommonUser", "Employee")
-                        .WithMany("ComplainEmployee")
-                        .HasForeignKey("EmployeeId")
-                        .HasConstraintName("FK_Complains_Employee");
-
-                    b.HasOne("DicomApp.DAL.DB.CommonUser", "Vendor")
-                        .WithMany("ComplainVendor")
-                        .HasForeignKey("VendorId")
-                        .HasConstraintName("FK_Complains_Vendor");
-                });
-
             modelBuilder.Entity("DicomApp.DAL.DB.ContactUs", b =>
                 {
                     b.HasOne("DicomApp.DAL.DB.CommonUser", "User")
@@ -1996,20 +1305,19 @@ namespace DicomApp.DAL.Migrations
 
             modelBuilder.Entity("DicomApp.DAL.DB.FollowUp", b =>
                 {
+                    b.HasOne("DicomApp.DAL.DB.Advertisement", "Advertisement")
+                        .WithMany("FollowUp")
+                        .HasForeignKey("AdvertisementId")
+                        .HasConstraintName("FK_FollowUp_Shipment");
+
                     b.HasOne("DicomApp.DAL.DB.CommonUser", "CreatedByNavigation")
                         .WithMany("FollowUp")
                         .HasForeignKey("CreatedBy")
                         .HasConstraintName("FK_Visit_FollowUp_CommonUser");
 
-                    b.HasOne("DicomApp.DAL.DB.FollowUpType", "FollowUpType")
+                    b.HasOne("DicomApp.DAL.DB.GamerService")
                         .WithMany("FollowUp")
-                        .HasForeignKey("FollowUpTypeId")
-                        .HasConstraintName("FK_FollowUp_FollowUpType");
-
-                    b.HasOne("DicomApp.DAL.DB.Shipment", "Shipment")
-                        .WithMany("FollowUp")
-                        .HasForeignKey("ShipmentId")
-                        .HasConstraintName("FK_FollowUp_Shipment");
+                        .HasForeignKey("GamerServiceId");
                 });
 
             modelBuilder.Entity("DicomApp.DAL.DB.Game", b =>
@@ -2018,6 +1326,47 @@ namespace DicomApp.DAL.Migrations
                         .WithMany("Game")
                         .HasForeignKey("CategoryId")
                         .HasConstraintName("FK_Game_Category");
+                });
+
+            modelBuilder.Entity("DicomApp.DAL.DB.GameCharge", b =>
+                {
+                    b.HasOne("DicomApp.DAL.DB.Game", "Game")
+                        .WithMany("GameCharges")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("DicomApp.DAL.DB.GamerService", b =>
+                {
+                    b.HasOne("DicomApp.DAL.DB.GameCharge", "GameCharge")
+                        .WithMany("GamerServices")
+                        .HasForeignKey("GameChargeId");
+
+                    b.HasOne("DicomApp.DAL.DB.Game", "Game")
+                        .WithMany("GamerServices")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DicomApp.DAL.DB.CommonUser", "Gamer")
+                        .WithMany("GamerServices")
+                        .HasForeignKey("GamerId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DicomApp.DAL.DB.Status", "Status")
+                        .WithMany("GamerServices")
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("DicomApp.DAL.DB.Invoice", b =>
+                {
+                    b.HasOne("DicomApp.DAL.DB.Advertisement", "Advertisement")
+                        .WithOne("Invoice")
+                        .HasForeignKey("DicomApp.DAL.DB.Invoice", "AdvertisementId");
+
+                    b.HasOne("DicomApp.DAL.DB.GamerService", "GamerService")
+                        .WithOne("Invoice")
+                        .HasForeignKey("DicomApp.DAL.DB.Invoice", "GamerServiceId");
                 });
 
             modelBuilder.Entity("DicomApp.DAL.DB.Notification", b =>
@@ -2033,67 +1382,6 @@ namespace DicomApp.DAL.Migrations
                         .HasConstraintName("FK_Notification_Notification");
                 });
 
-            modelBuilder.Entity("DicomApp.DAL.DB.PickupRequest", b =>
-                {
-                    b.HasOne("DicomApp.DAL.DB.City", "Area")
-                        .WithMany("PickupRequest")
-                        .HasForeignKey("AreaId")
-                        .HasConstraintName("FK_PickupRequest_City");
-
-                    b.HasOne("DicomApp.DAL.DB.Branch", "Branch")
-                        .WithMany("PickupRequest")
-                        .HasForeignKey("BranchId")
-                        .HasConstraintName("FK_Branch_PickupRequest");
-
-                    b.HasOne("DicomApp.DAL.DB.CommonUser", "DeliveryMan")
-                        .WithMany("PickupRequestDeliveryMan")
-                        .HasForeignKey("DeliveryManId")
-                        .HasConstraintName("FK_PickupRequest_CommonUser2");
-
-                    b.HasOne("DicomApp.DAL.DB.PickupRequestType", "PickupRequestType")
-                        .WithMany("PickupRequest")
-                        .HasForeignKey("PickupRequestTypeId")
-                        .HasConstraintName("FK_PickupRequestType_PickupRequest");
-
-                    b.HasOne("DicomApp.DAL.DB.Status", "Status")
-                        .WithMany("PickupRequest")
-                        .HasForeignKey("StatusId")
-                        .HasConstraintName("FK_PickupRequest_StatusId");
-
-                    b.HasOne("DicomApp.DAL.DB.CommonUser", "Vendor")
-                        .WithMany("PickupRequestVendor")
-                        .HasForeignKey("VendorId")
-                        .HasConstraintName("FK_PickupRequest_CommonUser");
-
-                    b.HasOne("DicomApp.DAL.DB.Zone", "Zone")
-                        .WithMany("PickupRequest")
-                        .HasForeignKey("ZoneId")
-                        .HasConstraintName("FK_PickupRequest_Zone");
-                });
-
-            modelBuilder.Entity("DicomApp.DAL.DB.PickupRequestItem", b =>
-                {
-                    b.HasOne("DicomApp.DAL.DB.PickupRequest", "PickupRequest")
-                        .WithMany("PickupRequestItem")
-                        .HasForeignKey("PickupRequestId")
-                        .HasConstraintName("FK_PickupRequestItem_PickupRequest");
-
-                    b.HasOne("DicomApp.DAL.DB.Shipment", "Shipment")
-                        .WithMany("PickupRequestItem")
-                        .HasForeignKey("ShipmentId")
-                        .HasConstraintName("FK_PickupRequestItem_Shipment");
-
-                    b.HasOne("DicomApp.DAL.DB.Status", "Status")
-                        .WithMany("PickupRequestItem")
-                        .HasForeignKey("StatusId")
-                        .HasConstraintName("FK_PickupRequestItem_StatusId");
-
-                    b.HasOne("DicomApp.DAL.DB.VendorProduct", "VendorProduct")
-                        .WithMany("PickupRequestItem")
-                        .HasForeignKey("VendorProductId")
-                        .HasConstraintName("FK_PickupRequestItem_VendorProduct");
-                });
-
             modelBuilder.Entity("DicomApp.DAL.DB.RoleAppService", b =>
                 {
                     b.HasOne("DicomApp.DAL.DB.AppService", "AppService")
@@ -2107,126 +1395,54 @@ namespace DicomApp.DAL.Migrations
                         .HasConstraintName("FK_RoleAppService_Role1");
                 });
 
-            modelBuilder.Entity("DicomApp.DAL.DB.Shipment", b =>
+            modelBuilder.Entity("DicomApp.DAL.DB.Testimonial", b =>
                 {
-                    b.HasOne("DicomApp.DAL.DB.City", "Area")
-                        .WithMany("Shipment")
-                        .HasForeignKey("AreaId")
-                        .HasConstraintName("FK_Shipment_City");
-
-                    b.HasOne("DicomApp.DAL.DB.Branch", "Branch")
-                        .WithMany("Shipment")
-                        .HasForeignKey("BranchId")
-                        .HasConstraintName("FK_Shipment_Branch");
-
-                    b.HasOne("DicomApp.DAL.DB.CashTransfer", "CashTransfer")
-                        .WithMany("Shipment")
-                        .HasForeignKey("CashTransferId")
-                        .HasConstraintName("FK_Shipment_CashTransfer");
-
-                    b.HasOne("DicomApp.DAL.DB.CommonUser", "Customer")
-                        .WithMany("ShipmentCustomer")
-                        .HasForeignKey("CustomerId")
-                        .HasConstraintName("FK_Shipment_CommonUser");
-
-                    b.HasOne("DicomApp.DAL.DB.CommonUser", "DeliveryMan")
-                        .WithMany("ShipmentDeliveryMan")
-                        .HasForeignKey("DeliveryManId")
-                        .HasConstraintName("FK_Shipment_Shipment");
-
-                    b.HasOne("DicomApp.DAL.DB.Game", "Game")
-                        .WithMany("ShipmentGame")
-                        .HasForeignKey("GameId")
-                        .HasConstraintName("FK_Shipment_Game");
+                    b.HasOne("DicomApp.DAL.DB.CommonUser", "CreatedByNavigation")
+                        .WithMany("Testimonials")
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DicomApp.DAL.DB.CommonUser", "LastModifiedByNavigation")
-                        .WithMany("ShipmentLastModifiedByNavigation")
+                        .WithMany()
+                        .HasForeignKey("LastModifiedByNavigationId");
+                });
+
+            modelBuilder.Entity("DicomApp.DAL.DB.Transaction", b =>
+                {
+                    b.HasOne("DicomApp.DAL.DB.Account")
+                        .WithMany("AccountTransactionReceiver")
+                        .HasForeignKey("AccountId");
+
+                    b.HasOne("DicomApp.DAL.DB.Account")
+                        .WithMany("AccountTransactionSender")
+                        .HasForeignKey("AccountId1");
+
+                    b.HasOne("DicomApp.DAL.DB.Account")
+                        .WithMany("AccountTransactionVendor")
+                        .HasForeignKey("AccountId2");
+
+                    b.HasOne("DicomApp.DAL.DB.Advertisement", "Advertisement")
+                        .WithMany("Transactions")
+                        .HasForeignKey("AdvertisementId");
+
+                    b.HasOne("DicomApp.DAL.DB.CommonUser", "Buyer")
+                        .WithMany()
+                        .HasForeignKey("BuyerId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DicomApp.DAL.DB.CommonUser", "CreatedByNavigation")
+                        .WithMany("AccountTransactionCreatedByNavigation")
+                        .HasForeignKey("CreatedBy")
+                        .HasConstraintName("FK_AccountTransaction_CommonUser");
+
+                    b.HasOne("DicomApp.DAL.DB.CommonUser", "LastModifiedByNavigation")
+                        .WithMany("AccountTransactionLastModifiedByNavigation")
                         .HasForeignKey("LastModifiedBy")
-                        .HasConstraintName("FK_Shipment_CommonUser3");
+                        .HasConstraintName("FK_AccountTransaction_CommonUser1");
 
-                    b.HasOne("DicomApp.DAL.DB.PickupRequest", "PickupRequest")
-                        .WithMany("Shipment")
-                        .HasForeignKey("PickupRequestId")
-                        .HasConstraintName("FK_Shipment_PickupRequest");
-
-                    b.HasOne("DicomApp.DAL.DB.ShipmentService", "ShipmentService")
-                        .WithMany("Shipment")
-                        .HasForeignKey("ShipmentServiceId")
-                        .HasConstraintName("FK_Shipment_ShipmentService");
-
-                    b.HasOne("DicomApp.DAL.DB.ShipmentType", "ShipmentType")
-                        .WithMany("Shipment")
-                        .HasForeignKey("ShipmentTypeId")
-                        .HasConstraintName("FK_Shipment_ShipmentType");
-
-                    b.HasOne("DicomApp.DAL.DB.Status", "Status")
-                        .WithMany("Shipment")
-                        .HasForeignKey("StatusId")
-                        .HasConstraintName("FK_Shipment_Status");
-
-                    b.HasOne("DicomApp.DAL.DB.CommonUser", "Vendor")
-                        .WithMany("ShipmentVendor")
-                        .HasForeignKey("VendorId")
-                        .HasConstraintName("FK_Shipment_CommonUser1");
-
-                    b.HasOne("DicomApp.DAL.DB.Game", "WarehouseGame")
-                        .WithMany("ShipmentWarehouseGame")
-                        .HasForeignKey("WarehouseGameId")
-                        .HasConstraintName("FK_Shipment_WarehouseGameId");
-
-                    b.HasOne("DicomApp.DAL.DB.Zone", "Zone")
-                        .WithMany("Shipment")
-                        .HasForeignKey("ZoneId")
-                        .HasConstraintName("FK_Shipment_Zone");
-                });
-
-            modelBuilder.Entity("DicomApp.DAL.DB.ShipmentCustomerFollowUp", b =>
-                {
-                    b.HasOne("DicomApp.DAL.DB.CommonUser", "CreatedByNavigation")
-                        .WithMany("ShipmentCustomerFollowUp")
-                        .HasForeignKey("CreatedBy")
-                        .HasConstraintName("FK_ShipmentCustomerFollowup_CommonUser");
-
-                    b.HasOne("DicomApp.DAL.DB.Shipment", "Shipment")
-                        .WithMany("ShipmentCustomerFollowUp")
-                        .HasForeignKey("ShipmentId")
-                        .HasConstraintName("FK_ShipmentCustomerFollowup_Shipment");
-                });
-
-            modelBuilder.Entity("DicomApp.DAL.DB.ShipmentItem", b =>
-                {
-                    b.HasOne("DicomApp.DAL.DB.Shipment", "Shipment")
-                        .WithMany("ShipmentItem")
-                        .HasForeignKey("ShipmentId")
-                        .HasConstraintName("FK_ShipmentItem_Shipment");
-
-                    b.HasOne("DicomApp.DAL.DB.Status", "Status")
-                        .WithMany("ShipmentItem")
-                        .HasForeignKey("StatusId")
-                        .HasConstraintName("FK_ShipmentItem_StatusId");
-
-                    b.HasOne("DicomApp.DAL.DB.VendorProduct", "VendorProduct")
-                        .WithMany("ShipmentItem")
-                        .HasForeignKey("VendorProductId")
-                        .HasConstraintName("FK_ShipmentItem_VendorProduct");
-                });
-
-            modelBuilder.Entity("DicomApp.DAL.DB.ShipmentProblem", b =>
-                {
-                    b.HasOne("DicomApp.DAL.DB.CommonUser", "CreatedByNavigation")
-                        .WithMany("ShipmentProblem")
-                        .HasForeignKey("CreatedBy")
-                        .HasConstraintName("FK_ShipmentProblem_CommonUser");
-
-                    b.HasOne("DicomApp.DAL.DB.ProblemType", "ProblemType")
-                        .WithMany("ShipmentProblem")
-                        .HasForeignKey("ProblemTypeId")
-                        .HasConstraintName("FK_ShipmentProblem_ProblemType");
-
-                    b.HasOne("DicomApp.DAL.DB.Shipment", "Shipment")
-                        .WithMany("ShipmentProblem")
-                        .HasForeignKey("ShipmentId")
-                        .HasConstraintName("FK_ShipmentProblem_Shipment");
+                    b.HasOne("DicomApp.DAL.DB.GamerService", "Service")
+                        .WithMany("Transactions")
+                        .HasForeignKey("ServiceId");
                 });
 
             modelBuilder.Entity("DicomApp.DAL.DB.UserLocation", b =>
@@ -2235,40 +1451,6 @@ namespace DicomApp.DAL.Migrations
                         .WithMany("UserLocation")
                         .HasForeignKey("UserId")
                         .HasConstraintName("FK_UserLocation_Common_User");
-                });
-
-            modelBuilder.Entity("DicomApp.DAL.DB.VendorProduct", b =>
-                {
-                    b.HasOne("DicomApp.DAL.DB.CommonUser", "Vendor")
-                        .WithMany("VendorProduct")
-                        .HasForeignKey("VendorId")
-                        .HasConstraintName("FK_VendorProduct_CommonUser");
-                });
-
-            modelBuilder.Entity("DicomApp.DAL.DB.Zone", b =>
-                {
-                    b.HasOne("DicomApp.DAL.DB.Branch", "Branch")
-                        .WithMany("Zone")
-                        .HasForeignKey("BranchId")
-                        .HasConstraintName("FK_Branch_Zone");
-
-                    b.HasOne("DicomApp.DAL.DB.CommonUser", "CreatedByNavigation")
-                        .WithMany("ZoneCreatedByNavigation")
-                        .HasForeignKey("CreatedBy")
-                        .HasConstraintName("FK_Zone_CommonUser");
-
-                    b.HasOne("DicomApp.DAL.DB.CommonUser", "LastModifiedByNavigation")
-                        .WithMany("ZoneLastModifiedByNavigation")
-                        .HasForeignKey("LastModifiedBy")
-                        .HasConstraintName("FK_Zone_CommonUser1");
-                });
-
-            modelBuilder.Entity("DicomApp.DAL.DB.ZoneTax", b =>
-                {
-                    b.HasOne("DicomApp.DAL.DB.Zone", "Zone")
-                        .WithMany("ZoneTax")
-                        .HasForeignKey("ZoneId")
-                        .HasConstraintName("FK_ZoneTax_Zone");
                 });
 #pragma warning restore 612, 618
         }

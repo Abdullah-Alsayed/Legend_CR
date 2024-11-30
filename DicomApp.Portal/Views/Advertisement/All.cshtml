@@ -1,0 +1,57 @@
+﻿
+@using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs
+@using DicomApp.CommonDefinitions.DTO
+@using DicomApp.Helpers
+@model ViewModel<AdsDTO>
+
+<main>
+    <div class="container-fluid site-width">
+        <div class="row Red-Row">
+            <div class="col-12 col-lg-12 col-xl-12 col-sm-12">
+                <div class="sub-header py-5 d-flex">
+                    <div>
+                        <span class="Header-Titel">Advertisement List</span>
+                    </div>
+                    <div class="Shipment-Filter">
+                        <ul id="Shipment-Filter-Ul">
+                            <li id="All" class="Active" data-status="@((int)StatusTypeEnum.All)"> <a onclick="FilterByStatus('All','Advertisement','All',@((int)StatusTypeEnum.All))" href="javascript:;">All</a></li>
+                            <li id="InProgress-Advertisement" data-status="@((int)StatusTypeEnum.InProgress)"> <a onclick="FilterByStatus('All','Advertisement','InProgress-Advertisement', @((int)StatusTypeEnum.InProgress))" href="javascript:;">InProgress</a></li>
+                            <li id="Accept-Advertisement" data-status="@((int)StatusTypeEnum.Accept)"> <a onclick="FilterByStatus('All','Advertisement','Accept-Advertisement', @((int)StatusTypeEnum.Accept))" href="javascript:;">Accept</a></li>
+                            <li id="Published-Advertisement" data-status="@((int)StatusTypeEnum.Published)"><a onclick="FilterByStatus('All','Advertisement','Published-Advertisement',@((int)StatusTypeEnum.Published))" href="javascript:;">Published</a></li>
+                            <li id="Reject-Advertisement" data-status="@((int)StatusTypeEnum.Reject)"> <a onclick="FilterByStatus('All','Advertisement','Reject-Advertisement', @((int)StatusTypeEnum.Reject))" href="javascript:;">Reject</a></li>
+                            <li id="Sold-Advertisement" data-status="@((int)StatusTypeEnum.Sold)"> <a onclick="FilterByStatus('All','Advertisement','Sold-Advertisement', @((int)StatusTypeEnum.Sold))" href="javascript:;">Sold</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="Shipment-container">
+        <div class="row Red-Row">
+            @{
+                await Html.RenderPartialAsync("_ToolsRow", new OptionDTO
+            {
+                Action = "All",
+                Controller = "Advertisement",
+                Columns = 6,
+                Lookup = Model.Lookup,
+                SelectListType = new byte[]
+            {
+                (byte)EnumSelectListType.Level,
+                (byte)EnumSelectListType.Price,
+                (byte)EnumSelectListType.Game,
+                (byte)EnumSelectListType.Gamer,
+            },
+            });
+            }
+        </div>
+    </div>
+    <div class="col-12">
+        <span id="Ajaxloader" class="Ajaxloader d-none"></span>
+    </div>
+    <div class="Table-container">
+        <table class="table" id="Table">
+            <partial name="_All" model="@Model.ObjDTOs" />
+        </table>
+    </div>
+</main>

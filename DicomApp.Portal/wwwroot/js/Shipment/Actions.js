@@ -57,20 +57,19 @@ function Postpone(shipID, Date, From, To, Note, IsConfirmed, Model, TableTD, Tab
     });
 }
 
-function EditAddress(shipID) {
-    let Address = $("#CustomerAddressTxt_" + shipID).val();
-    let Location = $("#LocationTxt_" + shipID).val();
-    let Landmark = $("#LandmarkTxt_" + shipID).val();
-    let Floor = $("#FloorTxt_" + shipID).val();
-    let Apartment = $("#ApartmentTxt_" + shipID).val();
-    url = `/Shipment/EditAddress?shipID=${shipID}&Address=${Address}&Location=${Location}&Landmark=${Landmark}&Floor=${Floor}&Apartment=${Apartment}`;
+function EditBasicData(AdsID) {
+    let Description = $("#DescriptionTxt_" + AdsID).val();
+    let UserName = $("#UserNameTxt_" + AdsID).val();
+    let Password = $("#PasswordTxt_" + AdsID).val();
+    let Level = $("#LevelTxt_" + AdsID).val();
+    url = `/Advertisement/EditBasicData?adsID=${AdsID}&Description=${Description}&UserName=${UserName}&Password=${Password}&Level=${Level}`;
     $.ajax({
         type: 'POST',
         url: url,
         async: true,
         success: function (response) {
-            $('#divEditAddress_' + shipID).modal('hide');
-            $("#CustomerRefAdress_" + shipID).text(response);
+            $('#divEditBasic_' + AdsID).modal('hide');
+            $("#CustomerRefAdress_" + AdsID).text(response);
             Swal.fire({
                 title: response.message,
                 icon: 'success',
@@ -224,7 +223,7 @@ function UnassignedShipmnet(shipID) {
         confirmButtonText: "Confirm",
     }).then((result) => {
         if (result.isConfirmed) {
-            url = `/Shipment/Unassigned?ShipmentID=${shipID}`;
+            url = `/Shipment/Unassigned?AdvertisementId=${shipID}`;
             $.ajax({
                 type: 'POST',
                 url: url,

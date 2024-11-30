@@ -1,8 +1,8 @@
 ﻿
 @using DicomApp.CommonDefinitions.DTO;
-@using DicomApp.CommonDefinitions.DTO.ShipmentDTOs;
+@using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
 @using DicomApp.Helpers;
-@model List<ShipDTO>
+@model List<AdsDTO>
 @{
     Layout = "~/Views/Shared/_PrintLayout.cshtml";
 }
@@ -24,10 +24,10 @@
             {
                 <tr>
                     <td>@item.RefId</td>
-                    <td>@item.CustomerDetailsDTO.CustomerName</td>
-                    <td>@item.ShipmentServiceName</td>
-                    <td>@item.NoOfItems</td>
-                    <td>@item.SettingDTO.Weight KG</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0 KG</td>
                 </tr>
             }
         }

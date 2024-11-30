@@ -1,4 +1,5 @@
-﻿using DicomApp.CommonDefinitions.DTO.CashDTOs;
+﻿using DicomApp.CommonDefinitions.DTO;
+using DicomApp.CommonDefinitions.DTO.CashDTOs;
 
 namespace DicomApp.CommonDefinitions.Responses
 {

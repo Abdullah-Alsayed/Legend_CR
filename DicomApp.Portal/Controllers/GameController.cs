@@ -98,6 +98,20 @@ namespace DicomApp.Portal.Controllers
                 return Json(false);
         }
 
+        [HttpGet]
+        public IActionResult Details(int id)
+        {
+            var GameRequest = new GameRequest
+            {
+                RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
+                UserID = AuthHelper.GetClaimValue(User, "UserID"),
+                context = _context,
+                GameDTO = new GameDTO { Id = id }
+            };
+            var GameResponse = GameService.GetGame(GameRequest);
+            return View(GameResponse.GameDTO);
+        }
+
         [AuthorizePerRole(SystemConstants.Permission.ListGame)]
         public IActionResult GameList(
             DateTime? From,
@@ -159,8 +173,18 @@ namespace DicomApp.Portal.Controllers
         [AuthorizePerRole(SystemConstants.Permission.ListGame)]
         public IActionResult GetGameList(int ID)
         {
-            var Game = _context.Game.Where(p => p.CategoryId == ID).ToList();
-            return Json(Game);
+            var GameRequest = new GameRequest
+            {
+                RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
+                UserID = AuthHelper.GetClaimValue(User, "UserID"),
+                context = _context,
+                GameDTO = new GameDTO { CategoryId = ID },
+                IsDesc = true,
+                OrderByColumn = "Id",
+                applyFilter = true
+            };
+            var gameResponse = GameService.GetGames(GameRequest);
+            return Json(gameResponse.GameDTOs);
         }
 
         [AuthorizePerRole(SystemConstants.Permission.GameDelete)]

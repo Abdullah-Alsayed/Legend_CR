@@ -1,0 +1,138 @@
+﻿
+@using DicomApp.CommonDefinitions.DTO;
+@using DicomApp.DAL.DB
+@using DicomApp.Helpers;
+@using DicomApp.BL.Services;
+@model ViewModel<UserDTO>
+
+<main>
+    <form id="Gamer-Form" asp-action="SaveGamer" asp-controller="User" method="post" class="needs-validation" novalidate>
+        <input type="hidden" id="@nameof(UserDTO.Id)" value="@(Model.ObjDTO != null ? Model.ObjDTO.Id : 0)">
+        <div class="container-fluid site-width">
+            <div class="Shipment-container">
+                <div class="row Red-Row">
+                    <div class="col-lg-4">
+                        <h6 class="my-4 ml-2 font-w-500">Gamers Details</h6>
+                        <div class="Shipment-Details-Section">
+                            <div class="col-lg-12 mt-2 mb-2">
+                                <label class="Shipment-Details-label mb-2">Name</label>
+                                <input class="form-control" type="text" id="@nameof(UserDTO.Name)" name="@nameof(UserDTO.Name)" value="@Model.ObjDTO.Name" placeholder="Name" required>
+                                <div class="invalid-feedback">
+                                    Please enter Gamer Name
+                                </div>
+                            </div>
+                            <div class="col-lg-12 mt-2 mb-2">
+                                <label class="Shipment-Details-label mb-2">Email</label>
+                                <input class="form-control" type="text" id="@nameof(UserDTO.Email)" name="@nameof(UserDTO.Email)" value="@Model.ObjDTO.Email" required placeholder="Email">
+                                <div class="invalid-feedback">
+                                    Please enter your Email
+                                </div>
+                             </div>
+                            <div class="col-lg-12 mt-2 mb-2">
+                                <label class="Shipment-Details-label mb-2">Password</label>
+                                <input class="form-control"  type="password" id="@nameof(UserDTO.Password)" name="@nameof(UserDTO.Password)" value="@Model.ObjDTO.Password" placeholder="Password" required>
+                                <div class="invalid-feedback">
+                                    Please enter your Password
+                                </div>
+                            </div>
+                            <div class="col-lg-12 mt-2 mb-2">
+                                <label class="Shipment-Details-label mb-2">Telegram UserName</label>
+                                <input class="form-control" type="text" id="@nameof(UserDTO.TelegramUserName)" name="@nameof(UserDTO.TelegramUserName)" value="@Model.ObjDTO.TelegramUserName" placeholder="Telegram UserName">
+                            </div>
+                            <div class="col-lg-12 mt-2 mb-2">
+                                <label class="Shipment-Details-label mb-2">Phone Number</label>
+                                <input class="form-control" type="number" id="@nameof(UserDTO.PhoneNumber)" name="@nameof(UserDTO.PhoneNumber)" value="@Model.ObjDTO.PhoneNumber" maxlength="15" placeholder="Phone Number" required>
+                                <div class="invalid-feedback">
+                                    Please enter Phone Number
+                                </div>
+                            </div>
+                            <div class="col-lg-12 mt-2 mb-2">
+                                <label class="Shipment-Details-label mb-2">Country</label>
+                                @Html.DropDownList("CountryId", new SelectList(@Model.Lookup.CountryDTOs, nameof(Country.CountryId), nameof(Country.NameEn)), "---  Countries ---", new { @class = "input-Model" })
+                                <div class="invalid-feedback">
+                                    Please enter Country
+                                </div>
+                            </div>
+                            <div class="col-lg-6 mt-2 mb-2">
+                                <label class="Shipment-Details-label mb-2">Age</label>
+                                <input class="form-control" type="number" min="7" max="100" required id="@nameof(UserDTO.Age)" name="@nameof(UserDTO.Age)" value="@Model.ObjDTO.Age" placeholder="Age">
+                                <div class="invalid-feedback">
+                                    Please enter Age
+                                </div>
+                            </div>
+                            <div class="col-lg-6 mt-2 mb-2">
+                                <label class="Shipment-Details-label mb-2">Gender</label>
+                                <select class="form-control" required id="@nameof(UserDTO.Gender)" name="@nameof(UserDTO.Gender)"  placeholder="Gender">
+                         
+                                    <option value="">--- Select Gender ---</option>
+                                    <option selected="@(Model.ObjDTO.Gender == GenderEnum.Male)" value="@GenderEnum.Male">Male</option>
+                                    <option selected="@(Model.ObjDTO.Gender == GenderEnum.None)" value="@GenderEnum.Female">Female</option>
+                                </select>
+                                <div class="invalid-feedback">
+                                    Please enter Gender
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <h6 class="my-4 ml-2 font-w-500">Bank Account Details</h6>
+                        <div class="Shipment-Details-Section pb-4">
+                            <div class="row Red-Row">
+                                <div class="col-lg-6 mt-2 mb-2">
+                                    <label class="Shipment-Details-label mb-2">Bank Name</label>
+                                    <input class="form-control" type="text" id="@nameof(UserDTO.Bank)" name="@nameof(UserDTO.Bank)" value="@Model.ObjDTO.Bank" placeholder="Bank Name">
+                                </div>
+                                <div class="col-lg-6 mt-2 mb-2">
+                                    <label class="Shipment-Details-label mb-2">Account Name</label>
+                                    <input class="form-control" type="text" id="@nameof(UserDTO.AccountName)" name="@nameof(UserDTO.AccountName)" value="@Model.ObjDTO.AccountName" placeholder="Account Name">
+                                </div>
+                                <div class="col-lg-6 mt-2 mb-2">
+                                    <label class="Shipment-Details-label mb-2">Account Number</label>
+                                    <input class="form-control" type="number" id="@nameof(UserDTO.AccountNumber)" value="@Model.ObjDTO.AccountNumber" name="@nameof(UserDTO.AccountNumber)" placeholder="Account Number">
+                                </div>
+                                <div class="col-lg-6 mt-2 mb-2">
+                                    <label class="Shipment-Details-label mb-2">IBAN Number</label>
+                                    <input class="form-control" type="number" id="@nameof(UserDTO.IBANNumber)" name="@nameof(UserDTO.IBANNumber)" value="@Model.ObjDTO.IBANNumber" placeholder="IBAN Number">
+                                </div>
+                            </div>
+                        </div>
+                        <h6 class="my-4 ml-2 font-w-500">Wallet Details</h6>    
+                        <div class="Shipment-Details-Section pb-4">
+                            <div class="row Red-Row">
+                                <div class="col-lg-6 mt-2 mb-2">
+                                    <label class="Shipment-Details-label mb-2">Wallet Number</label>
+                                    <input class="form-control" type="number" name="@nameof(UserDTO.WalletNumber)" value="@Model.ObjDTO.WalletNumber" id="@nameof(UserDTO.WalletNumber)" placeholder="Wallet Number">
+                                </div>
+                                <div class="col-lg-6 mt-2 mb-2">
+                                    <label class="Shipment-Details-label mb-2">InstaPay Account Name</label>
+                                    <input class="form-control" type="text" name="@nameof(UserDTO.InstaPayAccountName)" value="@Model.ObjDTO.InstaPayAccountName" id="@nameof(UserDTO.InstaPayAccountName)" placeholder="InstaPay Account Name">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12 pt-3">
+                            <button class="Red-Btn-OutLine OutLine-white Btn-Model.ObjDTO" onclick="OpenFileInput('Gamer-Form')" type="button">
+                                Update logo
+                            </button>
+
+                            <img src="/dist/images/Partial.png" id="DisplayImg" width="200" class="d-none" onclick="OpenFileInput('Gamer-Form')" />
+                            <input id="ImgFile" data-id="ImgFile" name="file" type="file" onchange="DisplayUpdateImg(event)" accept="image/gif, image/jpeg, image/png" hidden class="img" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row Red-Row">
+                    <div class="col-lg-12 col-12 ml-3 Buttons-Submit-Section">
+                        <input type="hidden" name="@nameof(UserDTO.Id)" id="@nameof(UserDTO.Id)" value="@Model.ObjDTO.Id" />
+                        <input type="hidden" name="@nameof(UserDTO.RoleID)" id="@nameof(UserDTO.RoleID)" value="@Model.ObjDTO.RoleID" />
+                        <button type="button" onclick="GamerForm('SaveGamer')" id="BtnSend" class="Red-Btn">
+                            <img class="mr-2" src="~/dist/images/Icons/Shipped.png" />Confirm
+                            <span class="Spinner spinner-border spinner-border-sm ml-2 mb-1 d-none" role="status" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</main>

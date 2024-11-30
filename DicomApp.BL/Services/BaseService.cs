@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
+using System.Threading.Tasks;
 using DicomApp.CommonDefinitions.DTO;
 using DicomApp.CommonDefinitions.Requests;
 using DicomApp.CommonDefinitions.Responses;
@@ -24,19 +25,19 @@ namespace DicomApp.BL.Services
         )
         {
             var QType = typeof(Q);
+            orderByColumn = char.ToUpper(orderByColumn[0]) + orderByColumn.Substring(1);
             // Dynamically creates a call like this: query.OrderBy(p => p.SortColumn)
             var parameter = Expression.Parameter(QType, "p");
             Expression resultExpression = null;
-            var property = QType.GetProperty(orderByColumn ?? IDColumn);
+            var property = QType.GetProperty(orderByColumn ?? "ID");
             // this is the part p.SortColumn
             var propertyAccess = Expression.MakeMemberAccess(parameter, property);
             // this is the part p => p.SortColumn
             var orderByExpression = Expression.Lambda(propertyAccess, parameter);
 
-            // finally, call the "OrderBy" / "OrderByDescending" method with the order by lamba expression
             resultExpression = Expression.Call(
                 typeof(Queryable),
-                isDesc ? OrderByDescCommand : OrderByCommand,
+                isDesc ? "OrderByDescending" : "OrderBy",
                 new Type[] { QType, property.PropertyType },
                 query.Expression,
                 Expression.Quote(orderByExpression)
@@ -68,9 +69,14 @@ namespace DicomApp.BL.Services
                     .Replace('<', ' ')
                     .Trim();
 
-                //check if user role can access this service
                 bool canAccess = true;
-                //canAccess = CheckRoleAccessability(request.RoleID, serviceName, request._context, created: request.CreatedBy, message: request.Message);
+                //canAccess = CheckRoleAccessability(
+                //    request.RoleID,
+                //    serviceName,
+                //    request.context,
+                //    created: request.UserID,
+                //    message: request.Message
+                //);
                 if (!canAccess)
                 {
                     response.Message = "Not allowed";
@@ -79,6 +85,49 @@ namespace DicomApp.BL.Services
                     return response;
                 }
                 response = myMethod(request);
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                response.Success = false;
+                LogHelper.LogException(ex.Message, ex.StackTrace);
+            }
+
+            return response;
+        }
+
+        public static async Task<RS> RunBaseAsync<RQ, RS>(
+            RQ request,
+            RS response,
+            Func<RQ, Task<RS>> myMethod
+        )
+            where RQ : BaseRequest
+            where RS : BaseResponse
+        {
+            try
+            {
+                var methodName = myMethod.Method.Name;
+                var serviceName = methodName
+                    .Substring(0, methodName.LastIndexOf(">"))
+                    .Replace('<', ' ')
+                    .Trim();
+
+                bool canAccess = true;
+                //canAccess = CheckRoleAccessability(
+                //    request.RoleID,
+                //    serviceName,
+                //    request.context,
+                //    created: request.UserID,
+                //    message: request.Message
+                //);
+                if (!canAccess)
+                {
+                    response.Message = "Not allowed";
+                    response.Success = false;
+                    response.StatusCode = HttpStatusCode.MethodNotAllowed;
+                    return response;
+                }
+                response = await myMethod(request);
             }
             catch (Exception ex)
             {
@@ -103,26 +152,30 @@ namespace DicomApp.BL.Services
                 context = new ShippingDBContext(GetDBContextConnectionOptions(connectionString));
 
             var role = context.Role.FirstOrDefault(x => x.Id == roleID);
-            if (role.Name == SystemConstants.Role.SuperAdmin)
+            if (role != null && role.Name == SystemConstants.Role.SuperAdmin)
                 return true;
 
             var canAccess = true;
 
-            var service = context.AppService.FirstOrDefault(c =>
-                !c.IsDeleted && c.Name == serviceName
-            );
+            var service = context
+                .RoleAppService.Include(x => x.AppService)
+                .FirstOrDefault(c =>
+                    !c.IsDeleted && c.RoleId == roleID && c.AppService.Name == serviceName
+                );
             if (service != null)
                 return true;
 
-            if (!service.AllowAnonymous)
+            if (service != null && !service.AppService.AllowAnonymous)
             {
                 if (roleID == 0)
                     return false;
-                else if (service.ShowToUser.Value)
+                else if (service.AppService.ShowToUser.Value)
                     canAccess = context.RoleAppService.Any(c =>
                         c.RoleId == roleID && c.AppServiceId == service.Id && c.Enabled
                     );
             }
+            else
+                return false;
             return canAccess;
         }
 

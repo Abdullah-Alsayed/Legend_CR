@@ -1,0 +1,28 @@
+﻿@using DicomApp.CommonDefinitions.DTO;
+@using DicomApp.CommonDefinitions.DTO;
+@model List<TestimonialDTO>
+
+@if (Model != null && Model.Count > 0)
+{
+    foreach (var item in Model)
+    {
+        <tr id="Testimonial_@item.TestimonialId">
+            <td id="Comment">@item.Comment</td>
+            <td id="Rate">@for (int i = 0; i < item.Rate; i++)
+                {
+                    <i class="fa fa-star Gold-color" aria-hidden="true"></i>
+                }
+            </td>
+            <td class="td-small text-center text-nowrap pl-1 pr-1 Date-Table">@item.CreatedAt.ToString("dd MMM yyyy")</td>
+            <td id="Name"><b>@item.UserDTO.Name</b> <img width="50px" src="/dist/images/@item.UserDTO.ImgUrl"/> </td>
+            <td>
+                <div class="Actions-Buttons">
+                    <ul class="">
+                        <li onclick="OpenModal(@item.TestimonialId ,'DeleteTestimonial-Model')" class="Red-Bg"><i class="icon-trash F-Medium"></i></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    }
+}
+<input type="hidden" value="@(Model != null ? Model.Count : 0)" id="DataCount" />

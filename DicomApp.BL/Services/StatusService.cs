@@ -23,7 +23,7 @@ namespace DicomApp.BL.Services
                         var query = request.context.Status.Select(c => new StatusDTO
                         {
                             Id = c.Id,
-                            Name = c.NameEN
+                            NameEN = c.NameEN
                         });
 
                         response.StatusDTOs = query.ToList();

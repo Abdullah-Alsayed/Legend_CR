@@ -1,7 +1,7 @@
-﻿using DicomApp.DAL.DB;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using DicomApp.DAL.DB;
 
 namespace DicomApp.CommonDefinitions.Records
 {
@@ -22,7 +22,6 @@ namespace DicomApp.CommonDefinitions.Records
         public int? ZoneId { get; set; }
         public string ZoneNameEn { get; set; }
         public string ZoneNameAr { get; set; }
-        public ZoneTax ZoneTax { get; set; }
         public double ShippingFees { get; set; }
         public string Search { get; set; }
         public bool? IsDeleted { get; set; }

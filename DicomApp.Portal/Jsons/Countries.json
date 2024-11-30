@@ -1,0 +1,134 @@
+﻿[
+    {
+        "NameEn": "Algeria",
+        "NameAr": "الجزائر",
+        "FlagUrl": "https://flagsapi.com/DZ/shiny/64.png",
+        "CountryCode": "DZ"
+    },
+    {
+        "NameEn": "Bahrain",
+        "NameAr": "البحرين",
+        "FlagUrl": "https://flagsapi.com/BH/shiny/64.png",
+        "CountryCode": "BH"
+    },
+    {
+        "NameEn": "Comoros",
+        "NameAr": "جزر القمر",
+        "FlagUrl": "https://flagsapi.com/KM/shiny/64.png",
+        "CountryCode": "KM"
+    },
+    {
+        "NameEn": "Djibouti",
+        "NameAr": "جيبوتي",
+        "FlagUrl": "https://flagsapi.com/DJ/shiny/64.png",
+        "CountryCode": "DJ"
+    },
+    {
+        "NameEn": "Egypt",
+        "NameAr": "مصر",
+        "FlagUrl": "https://flagsapi.com/EG/shiny/64.png",
+        "CountryCode": "EG"
+    },
+    {
+        "NameEn": "Iraq",
+        "NameAr": "العراق",
+        "FlagUrl": "https://flagsapi.com/IQ/shiny/64.png",
+        "CountryCode": "IQ"
+    },
+    {
+        "NameEn": "Jordan",
+        "NameAr": "الأردن",
+        "FlagUrl": "https://flagsapi.com/JO/shiny/64.png",
+        "CountryCode": "JO"
+    },
+    {
+        "NameEn": "Kuwait",
+        "NameAr": "الكويت",
+        "FlagUrl": "https://flagsapi.com/KW/shiny/64.png",
+        "CountryCode": "KW"
+    },
+    {
+        "NameEn": "Lebanon",
+        "NameAr": "لبنان",
+        "FlagUrl": "https://flagsapi.com/LB/shiny/64.png",
+        "CountryCode": "LB"
+    },
+    {
+        "NameEn": "Libya",
+        "NameAr": "ليبيا",
+        "FlagUrl": "https://flagsapi.com/LY/shiny/64.png",
+        "CountryCode": "LY"
+    },
+    {
+        "NameEn": "Mauritania",
+        "NameAr": "موريتانيا",
+        "FlagUrl": "https://flagsapi.com/MR/shiny/64.png",
+        "CountryCode": "MR"
+    },
+    {
+        "NameEn": "Morocco",
+        "NameAr": "المغرب",
+        "FlagUrl": "https://flagsapi.com/MA/shiny/64.png",
+        "CountryCode": "MA"
+    },
+    {
+        "NameEn": "Oman",
+        "NameAr": "عمان",
+        "FlagUrl": "https://flagsapi.com/OM/shiny/64.png",
+        "CountryCode": "OM"
+    },
+    {
+        "NameEn": "Palestine",
+        "NameAr": "فلسطين",
+        "FlagUrl": "https://flagsapi.com/PS/shiny/64.png",
+        "CountryCode": "PS"
+    },
+    {
+        "NameEn": "Qatar",
+        "NameAr": "قطر",
+        "FlagUrl": "https://flagsapi.com/QA/shiny/64.png",
+        "CountryCode": "QA"
+    },
+    {
+        "NameEn": "Saudi Arabia",
+        "NameAr": "السعودية",
+        "FlagUrl": "https://flagsapi.com/SA/shiny/64.png",
+        "CountryCode": "SA"
+    },
+    {
+        "NameEn": "Somalia",
+        "NameAr": "الصومال",
+        "FlagUrl": "https://flagsapi.com/SO/shiny/64.png",
+        "CountryCode": "SO"
+    },
+    {
+        "NameEn": "Sudan",
+        "NameAr": "السودان",
+        "FlagUrl": "https://flagsapi.com/SD/shiny/64.png",
+        "CountryCode": "SD"
+    },
+    {
+        "NameEn": "Syria",
+        "NameAr": "سوريا",
+        "FlagUrl": "https://flagsapi.com/SY/shiny/64.png",
+        "CountryCode": "SY"
+    },
+    {
+        "NameEn": "Tunisia",
+        "NameAr": "تونس",
+        "FlagUrl": "https://flagsapi.com/TN/shiny/64.png",
+        "CountryCode": "TN"
+    },
+    {
+        "NameEn": "United Arab Emirates",
+        "NameAr": "الإمارات",
+        "FlagUrl": "https://flagsapi.com/AE/shiny/64.png",
+        "CountryCode": "AE"
+    },
+    {
+        "NameEn": "Yemen",
+        "NameAr": "اليمن",
+        "FlagUrl": "https://flagsapi.com/YE/shiny/64.png",
+        "CountryCode": "YE"
+    }
+]
