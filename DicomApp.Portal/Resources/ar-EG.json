@@ -1,4 +1,7 @@
 ﻿{
+  "operationSuccess": "نجاح العملية",
+  "notFound": "غير موجود",
+  "youCantUpdatePrice": "لا يمكنك تحديث السعر",
   "Test": "اختبار",
   "home": "الصفحة الرئيسية",
   "addAccount": "إضافة حساب",
@@ -121,5 +124,23 @@
   "NOV": "نوفمبر",
   "DEC": "ديسمبر",
   "totalAdvertisementCount": "إجمالي عدد الإعلانات",
-  "ratingAverage": "متوسط التقييم"
+  "ratingAverage": "متوسط التقييم",
+  "updateService": "تحديث الخدمة {0}",
+  "newService": "خدمة جديدة {0}",
+  "createInvoice": "إنشاء فاتورة {0}",
+  "refundInvoice": "استرداد الفاتورة {0}",
+  "forbidden": "ليس لديك صلاحيه",
+  "Add": "إضافة",
+  "Edit": "تعديل",
+  "Delete": "حذف",
+  "ChangeStatus": "تغيير الحالة",
+  "Game": "لعبة",
+  "User": "مستخدم",
+  "Advertisement": "إعلان",
+  "GameService": "خدمة اللعبة",
+  "Invoice": "فاتورة",
+  "user": "مستخدم",
+  "action": "إجراء",
+  "entity": "نوع",
+  "date": "تاريخ"
 }

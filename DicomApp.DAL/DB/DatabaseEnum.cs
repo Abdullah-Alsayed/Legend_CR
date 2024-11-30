@@ -30,4 +30,21 @@ namespace DicomApp.DAL.DB
         Paypal,
         Attachments
     }
+
+    public enum EntityTypeEnum
+    {
+        Game,
+        User,
+        Advertisement,
+        GameService,
+        Invoice
+    }
+
+    public enum ActionTypeEnum
+    {
+        Add,
+        Edit,
+        Delete,
+        ChangeStatus
+    }
 }

@@ -284,44 +284,49 @@ function displayPermissions(className) {
 
 
 function MenuNavigation(event, ActionName, ControllerName, paramters = "") {
-    event.preventDefault();
-    if (event.target.tagName === "A") {
-        ControllerName = event.target.href.split('/')[3];
-        ActionName = event.target.href.split('/')[4];
-    }
-    else if (event.target.tagName === "IMG") {
-        ControllerName = event.target.baseURI.split('/')[3];
-        ActionName = event.target.baseURI.split('/')[4];
-    }
-    if (paramters != "")
-        window.history.pushState(null, null, `/${ControllerName}/${ActionName}?${paramters}`);
-     else
-        window.history.pushState(null, null, `/${ControllerName}/${ActionName}`);
+    if (ControllerName == "User" && ActionName == "Authorization")
+        window.location.href = '/User/Authorization';
+    else {
 
-    $('#MainLoder').fadeIn(100);
-    $('#Footer').hide();
-    $("#MainView").hide();
-    $.ajax({
-        type: "GET",
-        url: `/${ControllerName}/${ActionName}?${paramters}`,
-        contentType: 'application/html; charset=utf-8',
-        data: { ActionType: "PartialView" },
-        dataType: 'html',
-        success: function (result) {
-            $(".Nested-sidebar-menu").addClass("d-none");
-            $('.cursor-pointer').removeClass('active');
-            SelectNavActive();
-            $('#MainView').html(result);
-            $("#MainView").fadeIn(1000);
-            $('#MainLoder').fadeOut(1000);
-            $(".se-pre-con").css("display", "none")
-            ValidationForm();
-            SortClintSide();
-        },
-        error: function (Error) {
-            alert(Error)
+        event.preventDefault();
+        if (event.target.tagName === "A") {
+            ControllerName = event.target.href.split('/')[3];
+            ActionName = event.target.href.split('/')[4];
         }
-    });
+        else if (event.target.tagName === "IMG") {
+            ControllerName = event.target.baseURI.split('/')[3];
+            ActionName = event.target.baseURI.split('/')[4];
+        }
+        if (paramters != "")
+            window.history.pushState(null, null, `/${ControllerName}/${ActionName}?${paramters}`);
+        else
+            window.history.pushState(null, null, `/${ControllerName}/${ActionName}`);
+
+        $('#MainLoder').fadeIn(100);
+        $('#Footer').hide();
+        $("#MainView").hide();
+        $.ajax({
+            type: "GET",
+            url: `/${ControllerName}/${ActionName}?${paramters}`,
+            contentType: 'application/html; charset=utf-8',
+            data: { ActionType: "PartialView" },
+            dataType: 'html',
+            success: function (result) {
+                $(".Nested-sidebar-menu").addClass("d-none");
+                $('.cursor-pointer').removeClass('active');
+                SelectNavActive();
+                $('#MainView').html(result);
+                $("#MainView").fadeIn(1000);
+                $('#MainLoder').fadeOut(1000);
+                $(".se-pre-con").css("display", "none")
+                ValidationForm();
+                SortClintSide();
+            },
+            error: function (Error) {
+                alert(Error)
+            }
+        });
+    }
 }
 
 $(document).ready(function () {
@@ -872,8 +877,8 @@ function UpdateRoleAppService(ControllerName, ActionName, FormID) {
             if (result.success == false)
                 alertError();
 
-            else
-                alertSuccess('Saved Successfully');
+            else alertSuccess('Saved Successfully');
+           
         },
         error: function (error) {
             alertError();

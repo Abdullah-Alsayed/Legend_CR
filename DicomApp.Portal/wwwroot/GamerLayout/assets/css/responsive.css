@@ -205,10 +205,9 @@
 		max-width: 510px;
 	}
 	.news-content {
-    right: 20px;
-    left: 20px;
-    bottom: 45px;
-}
+		right: 70px;
+		bottom: 45px;
+	}
 
 .news-date {
     left: 20px;

@@ -10,7 +10,6 @@ namespace DicomApp.DAL.DB
             AccountTransactionReceiver = new HashSet<Transaction>();
             AccountTransactionSender = new HashSet<Transaction>();
             AccountTransactionVendor = new HashSet<Transaction>();
-            CashTransfer = new HashSet<CashTransfer>();
         }
 
         public int AccountId { get; set; }
@@ -37,6 +36,5 @@ namespace DicomApp.DAL.DB
         public virtual ICollection<Transaction> AccountTransactionReceiver { get; set; }
         public virtual ICollection<Transaction> AccountTransactionSender { get; set; }
         public virtual ICollection<Transaction> AccountTransactionVendor { get; set; }
-        public virtual ICollection<CashTransfer> CashTransfer { get; set; }
     }
 }

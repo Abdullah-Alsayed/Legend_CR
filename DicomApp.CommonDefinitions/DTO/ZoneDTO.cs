@@ -1,7 +1,7 @@
-﻿using DicomApp.CommonDefinitions.Records;
-using DicomApp.DAL.DB;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using DicomApp.CommonDefinitions.Records;
+using DicomApp.DAL.DB;
 
 namespace DicomApp.CommonDefinitions.DTO
 {
@@ -18,14 +18,13 @@ namespace DicomApp.CommonDefinitions.DTO
         public bool IsDeleted { get; set; }
         public string Description { get; set; }
         public int? BranchId { get; set; }
-        public virtual ZoneTax ZoneTax { get; set; }
 
         public virtual ICollection<CityDTO> City { get; set; }
 
-        // For Search Only 
+        // For Search Only
         public string Search { get; set; }
         public double Tax { get; set; }
 
-       public List<int> AreaList { get; set; }
+        public List<int> AreaList { get; set; }
     }
 }

@@ -73,16 +73,6 @@ namespace DicomApp.BL.Services
                                 InstaPayAccountName = c.InstaPayAccountName,
                                 ZoneId = c.ZoneId,
                                 IsDeleted = c.IsDeleted,
-                                ZoneName = c.ZoneId.HasValue
-                                    ? request
-                                        .context.Zone.FirstOrDefault(u => u.Id == c.ZoneId)
-                                        .NameAr
-                                    : "",
-                                AreaName = c.AreaId.HasValue
-                                    ? request
-                                        .context.City.FirstOrDefault(a => a.Id == c.AreaId)
-                                        .CityNameAr
-                                    : "",
                                 Country =
                                     c.Country != null
                                         ? new CountryDTO
@@ -400,9 +390,7 @@ namespace DicomApp.BL.Services
                         if (user != null)
                         {
                             var UserExist = request.context.CommonUser.Any(m =>
-                                m.Email == request.UserDTO.Email
-                                && m.Id != user.Id
-                                && m.IsDeleted == false
+                                m.Email == request.UserDTO.Email && m.Id != user.Id && !m.IsDeleted
                             );
                             if (!UserExist)
                             {
@@ -712,16 +700,6 @@ namespace DicomApp.BL.Services
             if (filter.Id > 0)
                 query = query.Where(c => c.Id == filter.Id);
 
-            if (filter.RoleID == (long)EnumRole.Gamer)
-                query = query.Where(c => c.RoleID == filter.RoleID);
-
-            if (filter.RoleID == (int)EnumRole.Employee)
-                query = query.Where(u =>
-                    u.RoleID != (int)EnumRole.Gamer
-                    && u.RoleID != (int)EnumRole.Customer
-                    && !u.IsDeleted
-                );
-
             if (
                 filter.RoleID > 0
                 && filter.RoleID != (int)EnumRole.Gamer
@@ -730,7 +708,7 @@ namespace DicomApp.BL.Services
                 query = query.Where(c => c.RoleID == filter.RoleID);
 
             if (filter.StaffOnly)
-                query = query.Where(c => c.RoleID != (int)EnumRole.Gamer);
+                query = query.Where(c => c.RoleName != SystemConstants.Role.Gamer);
 
             if (!string.IsNullOrWhiteSpace(filter.Email))
                 query = query.Where(c => c.Email.Contains(filter.Email));

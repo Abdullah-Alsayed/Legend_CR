@@ -1,4 +1,7 @@
 ﻿{
+  "operationSuccess": "operation Success",
+  "notFound": "notFound",
+  "youCantUpdatePrice": "you Cant Update Price",
   "Test": "Testing",
   "home": "Home",
   "addAccount": "Add Account",
@@ -39,7 +42,6 @@
   "yourFullName": "Your Full Name",
   "purchase": "Purchase",
   "payUsingCredit": "or pay using credit card",
-  "notFound": "Not Found",
   "topAccounts": "Top Accounts",
   "all": "All",
   "more": "More",
@@ -61,7 +63,6 @@
   "paymentFail": "Payment Fail",
   "paymentFailMessage": "Your payment was Fail",
   "latestAccounts": "Latest Accounts",
-
   "lessThanPrice": "less Than Price",
   "greeterThanPrice": "Greeter Than Price",
   "lessThanLevel": "Less Than Level",
@@ -73,8 +74,6 @@
   "thereAreNoAccounts": "There Are No Accounts",
   "dashboard": "Dashboard",
   "payUsingWallet": "pay Using Wallet",
-
-
   "resetPasswordMessage": "Please reset your password by clicking",
   "here": "here",
   "resetPassword": "Reset Password",
@@ -89,8 +88,6 @@
   "confirmPassword": "Confirm Password",
   "telegram": "Telegram",
   "newAdvertisement": "New Advertisement successfully added",
-
-
   "totalAccounts": "Total Accounts",
   "soldAccounts": "Sold Accounts",
   "pendingAccounts": "Pending Accounts",
@@ -126,6 +123,23 @@
   "NOV": "November",
   "DEC": "December",
   "totalAdvertisementCount": "Total Advertisement Count",
-  "ratingAverage": "rating Average"
-
+  "ratingAverage": "rating Average",
+  "updateService": "update Service {0}",
+  "newService": "new Service {0}",
+  "createInvoice": "create Invoice {0}",
+  "refundInvoice": "refund Invoice {0}",
+  "forbidden": "You do not have permission",
+  "Add": "Add",
+  "Edit": "Edit",
+  "Delete": "Delete",
+  "ChangeStatus": "Change Status",
+  "Game": "Game",
+  "User": "User",
+  "Advertisement": "Advertisement",
+  "GameService": "Game Service",
+  "Invoice": "Invoice",
+  "user": "User",
+  "action": "Action",
+  "entity": "Type",
+  "date": "Date"
 } 

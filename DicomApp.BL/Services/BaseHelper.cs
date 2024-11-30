@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
 using DicomApp.CommonDefinitions.DTO;
 using DicomApp.CommonDefinitions.Requests;
 using DicomApp.DAL.DB;
 using DicomApp.Helpers;
-using DicomDB.BL.Services;
 using DicomDB.CommonDefinitions.Requests;
 using Microsoft.AspNetCore.Http;
 using Rotativa.AspNetCore;
@@ -92,11 +90,6 @@ namespace DicomApp.BL.Services
         {
             var lookup = new LookupDTO();
 
-            if (LookType.Contains((byte)EnumSelectListType.Zone))
-                lookup.ZoneDTOs = ZoneService
-                    .GetZones(new ZoneRequest { context = Context })
-                    .ZoneDTOs;
-
             if (LookType.Contains((byte)EnumSelectListType.Courier))
                 lookup.CourierDTOs = UserService
                     .GetAllUsers(
@@ -164,14 +157,6 @@ namespace DicomApp.BL.Services
                     .ListRole(new RoleRequest { context = Context })
                     .RoleDTOs;
 
-            if (LookType.Contains((byte)EnumSelectListType.Area))
-                lookup.AreaDTOs = CityService
-                    .GetCity(new CityRequest { context = Context })
-                    .CityDTOs;
-            if (LookType.Contains((byte)EnumSelectListType.Countries))
-                lookup.CountryDTOs = CountryService
-                    .GetCountry(new CountryRequest { context = Context })
-                    .CountryDTOs;
             return lookup;
         }
 

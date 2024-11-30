@@ -102,59 +102,6 @@ namespace DicomApp.Portal.Controllers
                 return View();
         }
 
-        [AllowAnonymous]
-        [HttpGet]
-        public IActionResult GetTotalPrice(int AreaID, int GameID)
-        {
-            double ShippingFees = 0;
-            double GameFees = 0;
-            string ZoneName = "";
-
-            if (AreaID > 0)
-            {
-                var Area = _context.City.FirstOrDefault(z => z.Id == AreaID);
-                ZoneTax zonetax = _context.ZoneTax.FirstOrDefault(z => z.ZoneId == Area.ZoneId);
-                var zone = _context.Zone.FirstOrDefault(z => z.Id == zonetax.ZoneId);
-
-                ShippingFees = zonetax.Tax;
-                ZoneName = zone.NameEn;
-            }
-
-            if (GameID > 0)
-            {
-                var Game = _context.Game.FirstOrDefault(p => p.Id == GameID);
-            }
-
-            return Json(
-                new
-                {
-                    ShippingFees = ShippingFees,
-                    ZoneName = ZoneName,
-                    GameFees = GameFees
-                }
-            );
-        }
-
-        [AllowAnonymous]
-        [HttpGet]
-        public IActionResult GetAreaFees(int AreaID)
-        {
-            double ShippingFees = 0;
-            string ZoneName = "";
-
-            if (AreaID > 0)
-            {
-                var Area = _context.City.FirstOrDefault(z => z.Id == AreaID);
-                ZoneTax zonetax = _context.ZoneTax.FirstOrDefault(z => z.ZoneId == Area.ZoneId);
-                var zone = _context.Zone.FirstOrDefault(z => z.Id == zonetax.ZoneId);
-
-                ShippingFees = zonetax.Tax;
-                ZoneName = zone.NameEn;
-            }
-
-            return Json(new { ShippingFees = ShippingFees, ZoneName = ZoneName });
-        }
-
         [AuthorizePerRole(SystemConstants.Permission.EditGamerService)]
         public IActionResult Edit(int adsID, string ActionType = null)
         {

@@ -97,8 +97,6 @@ namespace DicomApp.Portal.Controllers
             var response = BL.Services.AdvertisementService.AddAdvertisement(request);
 
             ViewBag.Vendors = GeneralHelper.GetUsers(SystemConstants.Role.Gamer, _context);
-            ViewBag.branch = _context.Branch.ToList();
-            ViewBag.areas = _context.City.ToList();
 
             return Json(new { message = response.Message, success = response.Success });
         }
@@ -116,59 +114,6 @@ namespace DicomApp.Portal.Controllers
                 return PartialView("/Views/Shared/Advertisement/_AddOrder.cshtml");
             else
                 return View();
-        }
-
-        [AllowAnonymous]
-        [HttpGet]
-        public IActionResult GetTotalPrice(int AreaID, int GameID)
-        {
-            double ShippingFees = 0;
-            double GameFees = 0;
-            string ZoneName = "";
-
-            if (AreaID > 0)
-            {
-                var Area = _context.City.FirstOrDefault(z => z.Id == AreaID);
-                ZoneTax zonetax = _context.ZoneTax.FirstOrDefault(z => z.ZoneId == Area.ZoneId);
-                var zone = _context.Zone.FirstOrDefault(z => z.Id == zonetax.ZoneId);
-
-                ShippingFees = zonetax.Tax;
-                ZoneName = zone.NameEn;
-            }
-
-            if (GameID > 0)
-            {
-                var Game = _context.Game.FirstOrDefault(p => p.Id == GameID);
-            }
-
-            return Json(
-                new
-                {
-                    ShippingFees = ShippingFees,
-                    ZoneName = ZoneName,
-                    GameFees = GameFees
-                }
-            );
-        }
-
-        [AllowAnonymous]
-        [HttpGet]
-        public IActionResult GetAreaFees(int AreaID)
-        {
-            double ShippingFees = 0;
-            string ZoneName = "";
-
-            if (AreaID > 0)
-            {
-                var Area = _context.City.FirstOrDefault(z => z.Id == AreaID);
-                ZoneTax zonetax = _context.ZoneTax.FirstOrDefault(z => z.ZoneId == Area.ZoneId);
-                var zone = _context.Zone.FirstOrDefault(z => z.Id == zonetax.ZoneId);
-
-                ShippingFees = zonetax.Tax;
-                ZoneName = zone.NameEn;
-            }
-
-            return Json(new { ShippingFees = ShippingFees, ZoneName = ZoneName });
         }
 
         [AuthorizePerRole(SystemConstants.Permission.EditAdvertisement)]

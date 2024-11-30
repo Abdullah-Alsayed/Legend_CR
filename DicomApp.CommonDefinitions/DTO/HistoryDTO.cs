@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+using DicomApp.DAL.DB;
 
-namespace DicomApp.DAL.DB
+namespace DicomApp.CommonDefinitions.DTO
 {
-    public partial class FollowUp
+    public class HistoryDTO
     {
         public int Id { get; set; }
         public int? AdvertisementId { get; set; }
@@ -12,11 +11,12 @@ namespace DicomApp.DAL.DB
         public EntityTypeEnum EntityType { get; set; }
         public ActionTypeEnum ActionType { get; set; }
 
-        [ForeignKey((nameof(CreatedByNavigation)))]
         public int CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; }
+        public UserDTO User { get; set; }
 
-        public virtual CommonUser CreatedByNavigation { get; set; }
-        public virtual Advertisement Advertisement { get; set; }
+        public string Search { get; set; }
+        public DateTime? DateFrom { get; set; }
+        public DateTime? DateTo { get; set; }
     }
 }

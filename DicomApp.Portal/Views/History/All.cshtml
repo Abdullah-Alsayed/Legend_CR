@@ -1,0 +1,64 @@
+﻿@using DicomApp.CommonDefinitions.DTO;
+@using DicomApp.CommonDefinitions.DTO;
+@using DicomApp.Helpers;
+@using DicomApp.BL.Services;
+@using DicomApp.DAL.DB;
+@using DicomApp.Portal.Controllers
+@using Microsoft.Extensions.Localization
+@model List<HistoryDTO>
+@inject IStringLocalizer<HistoryController> Localizer
+
+<main>
+    <div class="container-fluid site-width">
+        <!-- START: Filter-->
+        <div class="row Red-Row">
+            <div class="col-12 col-lg-12 col-xl-12 col-sm-12">
+                <div class="sub-header mb-3">
+                    <span class="Header-Titel">History Management</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="Shipment-container">
+        <!-- Start: Filter-->
+        <div class="row Red-Row">
+            @{
+                await Html.RenderPartialAsync("_ToolsRow", new OptionDTO
+            {
+                Action = "All",
+                Controller = "History",
+                SelectListType = new byte[] { 0 }
+            });
+            }
+        </div>
+        <!-- END  : Filter-->
+        <div class="col-12">
+            <span id="Ajaxloader" class="Ajaxloader d-none"></span>
+        </div>
+        <div class="Table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td>@Localizer["user"]</td>
+                        <td>@Localizer["action"]</td>
+                        <td>@Localizer["entity"]</td>
+                        <td>@Localizer["date"]</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <partial name="_Table" model="Model" />
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="10">
+                            @{
+                                await Html.RenderPartialAsync("_Pagination", new OptionDTO { Action = "All", Controller = "History", Count = Model != null ? Model.Count : 0 });
+                            }
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</main>
+

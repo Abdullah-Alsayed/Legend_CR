@@ -22,6 +22,12 @@
         UserLogoFileIsNull
     }
 
+    public enum InvoiceTypeEnum
+    {
+        Advertisement,
+        GamerService
+    }
+
     public enum EnumRole : int
     {
         Admin = 1,

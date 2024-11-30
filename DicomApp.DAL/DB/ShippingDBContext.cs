@@ -13,52 +13,27 @@ namespace DicomApp.DAL.DB
 
         public virtual DbSet<Account> Account { get; set; }
         public virtual DbSet<Transaction> Transaction { get; set; }
-
         public virtual DbSet<Testimonial> Testimonial { get; set; }
-
         public virtual DbSet<GameCharge> GameCharges { get; set; }
         public virtual DbSet<AppService> AppService { get; set; }
-        public virtual DbSet<Branch> Branch { get; set; }
-        public virtual DbSet<CashTransfer> CashTransfer { get; set; }
-        public virtual DbSet<City> City { get; set; }
         public virtual DbSet<CommonResource> CommonResource { get; set; }
         public virtual DbSet<CommonUser> CommonUser { get; set; }
         public virtual DbSet<CommonUserDevice> CommonUserDevice { get; set; }
-        public virtual DbSet<Complain> Complain { get; set; }
         public virtual DbSet<ContactUs> ContactUs { get; set; }
         public virtual DbSet<FollowUp> FollowUp { get; set; }
-        public virtual DbSet<FollowUpType> FollowUpType { get; set; }
         public virtual DbSet<Notification> Notification { get; set; }
         public virtual DbSet<Game> Game { get; set; }
         public virtual DbSet<GamerService> GamerService { get; set; }
         public virtual DbSet<Category> Category { get; set; }
-        public virtual DbSet<PickupRequest> PickupRequest { get; set; }
-        public virtual DbSet<PickupRequestType> PickupRequestType { get; set; }
-        public virtual DbSet<ProblemType> ProblemType { get; set; }
         public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<RoleAppService> RoleAppService { get; set; }
         public virtual DbSet<Advertisement> Advertisement { get; set; }
-        public virtual DbSet<ShipmentCustomerFollowUp> ShipmentCustomerFollowUp { get; set; }
-        public virtual DbSet<ShipmentType> ShipmentType { get; set; }
+
         public virtual DbSet<Status> Status { get; set; }
         public virtual DbSet<UserLocation> UserLocation { get; set; }
-        public virtual DbSet<Userhubconnection> Userhubconnection { get; set; }
-        public virtual DbSet<VendorProduct> VendorProduct { get; set; }
-        public virtual DbSet<Warehouse> Warehouse { get; set; }
-        public virtual DbSet<Zone> Zone { get; set; }
-        public virtual DbSet<ZoneTax> ZoneTax { get; set; }
         public virtual DbSet<AdvertisementPhotos> AdvertisementPhotos { get; set; }
         public virtual DbSet<Invoice> Invoices { get; set; }
         public virtual DbSet<Country> Countries { get; set; }
-
-        //        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //        {
-        //            if (!optionsBuilder.IsConfigured)
-        //            {
-        //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-        //                optionsBuilder.UseSqlServer("Server=.;Database=ShippingDB_Online1;Trusted_Connection=True;");
-        //            }
-        //        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -168,123 +143,6 @@ namespace DicomApp.DAL.DB
                 entity.Property(e => e.Title).IsRequired().HasMaxLength(150);
             });
 
-            modelBuilder.Entity<Branch>(entity =>
-            {
-                entity.Property(e => e.BranchName).IsRequired();
-
-                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
-            });
-
-            modelBuilder.Entity<CashTransfer>(entity =>
-            {
-                entity
-                    .Property(e => e.CreatedAt)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
-
-                entity.Property(e => e.Email).HasMaxLength(150);
-
-                entity
-                    .Property(e => e.LastModifiedAt)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
-
-                entity.Property(e => e.Name).IsRequired().HasMaxLength(250);
-
-                entity.Property(e => e.Otp).HasColumnName("OTP").HasMaxLength(100);
-
-                entity.Property(e => e.Phone).HasMaxLength(100);
-
-                entity.Property(e => e.RefId).HasMaxLength(100);
-
-                entity
-                    .HasOne(d => d.Area)
-                    .WithMany(p => p.CashTransfer)
-                    .HasForeignKey(d => d.AreaId)
-                    .HasConstraintName("FK_CashTransfer_City");
-
-                entity
-                    .HasOne(d => d.CreatedByNavigation)
-                    .WithMany(p => p.CashTransferCreatedByNavigation)
-                    .HasForeignKey(d => d.CreatedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_CashTransfer_CommonUser");
-
-                entity
-                    .HasOne(d => d.LastModifiedByNavigation)
-                    .WithMany(p => p.CashTransferLastModifiedByNavigation)
-                    .HasForeignKey(d => d.LastModifiedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_CashTransfer_CommonUser1");
-
-                entity
-                    .HasOne(d => d.Receiver)
-                    .WithMany(p => p.CashTransfer)
-                    .HasForeignKey(d => d.ReceiverId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_CashTransfer_Account");
-
-                entity
-                    .HasOne(d => d.Zone)
-                    .WithMany(p => p.CashTransfer)
-                    .HasForeignKey(d => d.ZoneId)
-                    .HasConstraintName("FK_CashTransfer_Zone");
-            });
-
-            modelBuilder.Entity<City>(entity =>
-            {
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.Address).HasMaxLength(150);
-
-                entity.Property(e => e.CityName).HasColumnName("City_Name").HasMaxLength(150);
-
-                entity
-                    .Property(e => e.CityNameAr)
-                    .IsRequired()
-                    .HasColumnName("City_Name_AR")
-                    .HasMaxLength(150);
-
-                entity
-                    .Property(e => e.CreatedAt)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
-
-                entity.Property(e => e.CreatedBy).IsRequired().HasMaxLength(100);
-
-                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
-
-                entity
-                    .Property(e => e.LastModifiedAt)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
-
-                entity.Property(e => e.LastModifiedBy).IsRequired().HasMaxLength(100);
-
-                entity.Property(e => e.Lat).HasMaxLength(50);
-
-                entity.Property(e => e.Lng).HasMaxLength(50);
-
-                entity
-                    .Property(e => e.StateId)
-                    .HasColumnName("State_ID")
-                    .HasDefaultValueSql("((1))");
-
-                entity.Property(e => e.ZoneId).HasColumnName("ZoneID");
-
-                entity
-                    .HasOne(d => d.Branch)
-                    .WithMany(p => p.CityNavigation)
-                    .HasForeignKey(d => d.BranchId)
-                    .HasConstraintName("FK_Branch_City");
-
-                entity
-                    .HasOne(d => d.Zone)
-                    .WithMany(p => p.City)
-                    .HasForeignKey(d => d.ZoneId)
-                    .HasConstraintName("FK_City_Zone");
-            });
-
             modelBuilder.Entity<CommonResource>(entity =>
             {
                 entity.ToTable("Common_Resource");
@@ -374,12 +232,6 @@ namespace DicomApp.DAL.DB
                 entity.Property(e => e.RoleId).HasColumnName("RoleID");
 
                 entity
-                    .HasOne(d => d.Branch)
-                    .WithMany(p => p.CommonUser)
-                    .HasForeignKey(d => d.BranchId)
-                    .HasConstraintName("FK_Branch_CommonUser");
-
-                entity
                     .HasOne(d => d.Role)
                     .WithMany(p => p.CommonUser)
                     .HasForeignKey(d => d.RoleId)
@@ -450,38 +302,6 @@ namespace DicomApp.DAL.DB
                     .HasConstraintName("FK_Common_UserDevice_Common_User");
             });
 
-            modelBuilder.Entity<Complain>(entity =>
-            {
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.Date).HasColumnType("datetime");
-
-                entity.Property(e => e.Department).HasMaxLength(150);
-
-                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
-
-                entity.Property(e => e.IsSolved).HasDefaultValueSql("((0))");
-
-                entity
-                    .HasOne(d => d.ActionByNavigation)
-                    .WithMany(p => p.ComplainActionByNavigation)
-                    .HasForeignKey(d => d.ActionBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Complains_ActionBy");
-
-                entity
-                    .HasOne(d => d.Employee)
-                    .WithMany(p => p.ComplainEmployee)
-                    .HasForeignKey(d => d.EmployeeId)
-                    .HasConstraintName("FK_Complains_Employee");
-
-                entity
-                    .HasOne(d => d.Vendor)
-                    .WithMany(p => p.ComplainVendor)
-                    .HasForeignKey(d => d.VendorId)
-                    .HasConstraintName("FK_Complains_Vendor");
-            });
-
             modelBuilder.Entity<ContactUs>(entity =>
             {
                 entity.Property(e => e.Email).IsRequired().HasMaxLength(150).IsUnicode(false);
@@ -510,25 +330,10 @@ namespace DicomApp.DAL.DB
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.Comment).HasMaxLength(500);
-
                 entity
                     .Property(e => e.CreatedAt)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
-
-                entity
-                    .Property(e => e.LastModifiedAt)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
-
-                entity.Property(e => e.Lat).HasMaxLength(50);
-
-                entity.Property(e => e.Lng).HasMaxLength(50);
-
-                entity.Property(e => e.StatusId).HasColumnName("StatusID");
-
-                entity.Property(e => e.Title).HasMaxLength(100);
 
                 entity
                     .HasOne(d => d.CreatedByNavigation)
@@ -542,13 +347,6 @@ namespace DicomApp.DAL.DB
                     .WithMany(p => p.FollowUp)
                     .HasForeignKey(d => d.AdvertisementId)
                     .HasConstraintName("FK_FollowUp_Shipment");
-            });
-
-            modelBuilder.Entity<FollowUpType>(entity =>
-            {
-                entity.Property(e => e.FollowUpTypeId).HasColumnName("FollowUpTypeID");
-
-                entity.Property(e => e.TypeName).IsRequired().HasMaxLength(50);
             });
 
             modelBuilder.Entity<Notification>(entity =>
@@ -650,89 +448,6 @@ namespace DicomApp.DAL.DB
                     .HasMaxLength(150);
             });
 
-            modelBuilder.Entity<PickupRequest>(entity =>
-            {
-                entity
-                    .Property(e => e.CreatedAt)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
-
-                entity
-                    .Property(e => e.PickupDate)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
-
-                entity.Property(e => e.RefId).HasColumnName("RefID");
-
-                entity
-                    .Property(e => e.TimeFrom)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
-
-                entity
-                    .Property(e => e.TimeTo)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
-
-                entity.Property(e => e.VendorName).IsRequired();
-
-                entity.Property(e => e.VendorPhone).IsRequired().HasMaxLength(250);
-
-                entity
-                    .HasOne(d => d.Area)
-                    .WithMany(p => p.PickupRequest)
-                    .HasForeignKey(d => d.AreaId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PickupRequest_City");
-
-                entity
-                    .HasOne(d => d.Branch)
-                    .WithMany(p => p.PickupRequest)
-                    .HasForeignKey(d => d.BranchId)
-                    .HasConstraintName("FK_Branch_PickupRequest");
-
-                entity
-                    .HasOne(d => d.DeliveryMan)
-                    .WithMany(p => p.PickupRequestDeliveryMan)
-                    .HasForeignKey(d => d.DeliveryManId)
-                    .HasConstraintName("FK_PickupRequest_CommonUser2");
-
-                entity
-                    .HasOne(d => d.PickupRequestType)
-                    .WithMany(p => p.PickupRequest)
-                    .HasForeignKey(d => d.PickupRequestTypeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PickupRequestType_PickupRequest");
-
-                entity
-                    .HasOne(d => d.Vendor)
-                    .WithMany(p => p.PickupRequestVendor)
-                    .HasForeignKey(d => d.VendorId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PickupRequest_CommonUser");
-
-                entity
-                    .HasOne(d => d.Zone)
-                    .WithMany(p => p.PickupRequest)
-                    .HasForeignKey(d => d.ZoneId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PickupRequest_Zone");
-            });
-
-            modelBuilder.Entity<PickupRequestType>(entity =>
-            {
-                entity.Property(e => e.Name).IsRequired().HasMaxLength(500);
-            });
-
-            modelBuilder.Entity<ProblemType>(entity =>
-            {
-                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
-
-                entity.Property(e => e.NameAr).HasMaxLength(150);
-
-                entity.Property(e => e.NameEn).HasMaxLength(150);
-            });
-
             modelBuilder.Entity<Role>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
@@ -817,35 +532,6 @@ namespace DicomApp.DAL.DB
                     .HasConstraintName("FK_Shipment_Game");
             });
 
-            modelBuilder.Entity<ShipmentCustomerFollowUp>(entity =>
-            {
-                entity
-                    .Property(e => e.CreatedAt)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
-
-                entity.Property(e => e.NextCallOn).HasColumnType("datetime");
-
-                entity.Property(e => e.NextCallTimeFrom).HasColumnType("datetime");
-
-                entity
-                    .Property(e => e.NextCallTimeTo)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
-
-                entity
-                    .HasOne(d => d.CreatedByNavigation)
-                    .WithMany(p => p.ShipmentCustomerFollowUp)
-                    .HasForeignKey(d => d.CreatedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ShipmentCustomerFollowup_CommonUser");
-            });
-
-            modelBuilder.Entity<ShipmentType>(entity =>
-            {
-                entity.Property(e => e.Name).IsRequired();
-            });
-
             modelBuilder.Entity<Status>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
@@ -924,100 +610,6 @@ namespace DicomApp.DAL.DB
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
             });
-
-            modelBuilder.Entity<VendorProduct>(entity =>
-            {
-                entity
-                    .Property(e => e.CreatedAt)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
-
-                entity.Property(e => e.Name).IsRequired();
-
-                entity.Property(e => e.Size).HasMaxLength(150);
-
-                entity
-                    .HasOne(d => d.Vendor)
-                    .WithMany(p => p.VendorProduct)
-                    .HasForeignKey(d => d.VendorId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_VendorProduct_CommonUser");
-            });
-
-            modelBuilder.Entity<Warehouse>(entity =>
-            {
-                entity.Property(e => e.WarehouseName).IsRequired();
-            });
-
-            modelBuilder.Entity<Zone>(entity =>
-            {
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity
-                    .Property(e => e.CreatedAt)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
-
-                entity
-                    .Property(e => e.LastModifiedAt)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
-
-                entity.Property(e => e.NameAr).HasColumnName("Name_Ar").HasMaxLength(150);
-
-                entity.Property(e => e.NameEn).HasColumnName("Name_En").HasMaxLength(150);
-
-                entity
-                    .HasOne(d => d.Branch)
-                    .WithMany(p => p.Zone)
-                    .HasForeignKey(d => d.BranchId)
-                    .HasConstraintName("FK_Branch_Zone");
-
-                entity
-                    .HasOne(d => d.CreatedByNavigation)
-                    .WithMany(p => p.ZoneCreatedByNavigation)
-                    .HasForeignKey(d => d.CreatedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Zone_CommonUser");
-
-                entity
-                    .HasOne(d => d.LastModifiedByNavigation)
-                    .WithMany(p => p.ZoneLastModifiedByNavigation)
-                    .HasForeignKey(d => d.LastModifiedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Zone_CommonUser1");
-            });
-
-            modelBuilder.Entity<ZoneTax>(entity =>
-            {
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity
-                    .Property(e => e.CreatedAt)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
-
-                entity
-                    .Property(e => e.LastModifiedAt)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
-
-                entity.Property(e => e.ZoneId).HasColumnName("ZoneID");
-
-                entity
-                    .HasOne(d => d.Zone)
-                    .WithMany(p => p.ZoneTax)
-                    .HasForeignKey(d => d.ZoneId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ZoneTax_Zone");
-            });
-
-            //modelBuilder
-            //    .Entity<CommonUser>()
-            //    .HasOne(cu => cu.Country)
-            //    .WithMany(c => c.Users)
-            //    .HasForeignKey(cu => cu.CountryId)
-            //    .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

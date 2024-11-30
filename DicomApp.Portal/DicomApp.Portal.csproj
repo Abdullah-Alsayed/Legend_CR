@@ -20,7 +20,6 @@
   <ItemGroup>
     <Content Remove="Views\User\Register.cshtml" />
     <Content Remove="Views\Vendor\OrderReportsPrint.cshtml" />
-    <Content Remove="Views\Warehouse\_CashOrderListPartial.cshtml" />
   </ItemGroup>
 
   <!--<ItemGroup>
@@ -56,12 +55,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Views\Admin\AreaList.cshtml" />
-    <None Include="Views\Admin\ZoneList.cshtml" />
-    <None Include="Views\Admin\ZoneTax.cshtml" />
-    <None Include="Views\City\Create.cshtml" />
-    <None Include="Views\City\Edit.cshtml" />
-    <None Include="Views\City\Index.cshtml" />
     <None Include="Views\Dashboard\About.cshtml" />
     <None Include="Views\Dashboard\AccountDashboard.cshtml" />
     <None Include="Views\Dashboard\Alerts.cshtml" />
@@ -69,11 +62,6 @@
     <None Include="Views\Dashboard\Index3.cshtml" />
     <None Include="Views\Dashboard\_AccountDashboard.cshtml" />
     <None Include="Views\Dashboard\_MainPartial.cshtml" />
-    <None Include="Views\Category\AddCategory.cshtml" />
-    <None Include="Views\Category\CategoryForm.cshtml" />
-    <None Include="Views\Category\CategoryList.cshtml" />
-    <None Include="Views\Product\ProductForm.cshtml" />
-    <None Include="Views\Product\ProductList.cshtml" />
     <None Include="Views\Role\AddRole.cshtml" />
     <None Include="Views\Role\Components\RoleVComponent\Default.cshtml" />
     <None Include="Views\Role\EditRole.cshtml" />
@@ -127,21 +115,6 @@
   <ItemGroup>
     <Folder Include="wwwroot\dist\Fonts\" />
     <Folder Include="Resources\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Update="Views\Report\Stock\Stock.cshtml">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Update="Views\Report\Stock\StockPDF.cshtml">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Update="Views\Report\Stock\_Stock.cshtml">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
   </ItemGroup>
 
 </Project>

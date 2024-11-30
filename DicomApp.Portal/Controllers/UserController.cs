@@ -79,8 +79,6 @@ namespace DicomApp.Portal.Controllers
             else
                 ViewBag.error = roleResponse.Message;
 
-            ViewBag.areas = _context.City.ToList();
-
             //var sectionRequest = new SectionRequest
             //{
             //    RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
@@ -355,8 +353,8 @@ namespace DicomApp.Portal.Controllers
             );
             var currRoleName = AuthHelper.GetClaimStringValue(User, "RoleName");
             if (
-                currRoleName == SystemConstants.Role.SuperAdmin
-                || currRoleName == SystemConstants.Role.Admin
+                currRoleName != SystemConstants.Role.SuperAdmin
+                || currRoleName != SystemConstants.Role.Admin
             )
                 ViewData.Lookup.RoleDTOs = ViewData
                     .Lookup.RoleDTOs.Where(r =>
@@ -590,7 +588,9 @@ namespace DicomApp.Portal.Controllers
                 RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
                 UserID = AuthHelper.GetClaimValue(User, "UserID"),
                 context = _context,
-                UserDTO = model
+                UserDTO = model,
+                avatarService = _avatarService,
+                WebRootPath = hosting.WebRootPath
             };
 
             var userResponse = await UserService.AddUser(userRequest);
@@ -637,9 +637,6 @@ namespace DicomApp.Portal.Controllers
 
             if (userResponse.Success)
             {
-                ViewBag.areas = _context.City.ToList();
-                ViewBag.Zone = _context.Zone.ToList();
-
                 if (ActionType == SystemConstants.ActionType.PartialView)
                     return PartialView("_EditUser", userResponse.UserDTOs[0]);
                 else
@@ -719,7 +716,7 @@ namespace DicomApp.Portal.Controllers
         }
 
         [AllowAnonymous]
-        public async Task<ActionResult> EditLanguage(string language)
+        public async Task<ActionResult> EditLanguage(string language, string navigate)
         {
             var userRequest = new UserRequest
             {
@@ -762,7 +759,10 @@ namespace DicomApp.Portal.Controllers
                 language,
                 new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
             );
-            return RedirectToAction("Main", "Gamer");
+            if (navigate == SystemConstants.Layout.Dashboard)
+                return RedirectToAction("Main", "Dashboard");
+            else
+                return RedirectToAction("Main", "Gamer");
         }
 
         [AllowAnonymous]

@@ -40,7 +40,7 @@ namespace DicomApp.CommonDefinitions.DTO.AdvertisementDTOs
         public CashTransferDTO CashTransfer { get; set; }
         public List<string> AdvertisementPhotos { get; set; }
         public List<TransactionDTO> AccountTransaction { get; set; }
-        public List<FollowUpDTO> FollowUp { get; set; }
+        public List<HistoryDTO> FollowUp { get; set; }
         public bool SELECTED { get; set; }
 
         // Filter

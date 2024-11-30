@@ -78,37 +78,18 @@ namespace DicomApp.BL.Services
                             }
                         }
                         //Add follow up
-                        var follow = new FollowUpDTO
+                        var follow = new HistoryDTO
                         {
-                            Title = "Advertisement Added",
+                            Message = request.Localizer["newAdvertisement", ship.RefId],
                             CreatedBy = request.UserID,
                             AdvertisementId = ship.AdvertisementId,
-                            StatusId = ship.StatusId
+                            CreatedAt = DateTime.Now,
+                            ActionType = ActionTypeEnum.Add,
+                            EntityType = EntityTypeEnum.Advertisement
                         };
                         FollowUpService.Add(follow, request.context);
-
-                        //Add notification
-                        request.context.Notification.Add(
-                            new Notification
-                            {
-                                Body = "New Advertisement " + ship.RefId + " added",
-                                CreationDate = DateTime.Now,
-                                Icon = ship.RefId,
-                                SenderId = request.UserID,
-                                Title = "New Advertisement",
-                                RecipientRoleId = request
-                                    .context.Role.FirstOrDefault(x =>
-                                        x.Name == SystemConstants.Role.Admin
-                                    )
-                                    ?.Id,
-                                IsDeleted = false,
-                                IsSeen = false,
-                                RecipientId = 0,
-                            }
-                        );
-
                         request.context.SaveChanges();
-                        response.Message = request.Localizer["newAdvertisement"];
+                        response.Message = request.Localizer["newAdvertisement", ship.RefId];
                         response.Success = true;
                         response.StatusCode = HttpStatusCode.OK;
                     }
@@ -148,7 +129,9 @@ namespace DicomApp.BL.Services
                             && status.StatusType >= 2
                         )
                         {
-                            response.Message = "you Cant Update Price";
+                            response.Message = request.Localizer[
+                                SystemConstants.Message.CantUpdatePrice
+                            ];
                             response.Success = false;
                             response.AdsDTO = request.AdsDTO;
                             return response;
@@ -173,37 +156,19 @@ namespace DicomApp.BL.Services
                         request.context.SaveChanges();
 
                         //Add follow up
-                        var follow = new FollowUpDTO
+                        var follow = new HistoryDTO
                         {
-                            Title = "Advertisement Updated",
+                            Message = request.Localizer["updateAdvertisement", ship.RefId],
                             CreatedBy = request.UserID,
                             AdvertisementId = ship.AdvertisementId,
-                            StatusId = ship.StatusId
+                            CreatedAt = DateTime.Now,
+                            ActionType = ActionTypeEnum.Edit,
+                            EntityType = EntityTypeEnum.Advertisement
                         };
                         FollowUpService.Add(follow, request.context);
 
-                        //Add notification
-                        request.context.Notification.Add(
-                            new Notification
-                            {
-                                Body = "Advertisement " + ship.RefId + " updated",
-                                CreationDate = DateTime.Now,
-                                Icon = ship.RefId,
-                                SenderId = request.UserID,
-                                Title = "Advertisement updated",
-                                RecipientRoleId = request
-                                    .context.Role.FirstOrDefault(x =>
-                                        x.Name == SystemConstants.Role.SuperAdmin
-                                    )
-                                    ?.Id,
-                                IsDeleted = false,
-                                IsSeen = false,
-                                RecipientId = 0,
-                            }
-                        );
-
                         request.context.SaveChanges();
-                        response.Message = "Advertisement " + ship.RefId + " successfully updated";
+                        response.Message = request.Localizer["updateAdvertisement", ship.RefId];
                         response.Success = true;
                         response.AdsDTO = request.AdsDTO;
                         response.StatusCode = HttpStatusCode.OK;
@@ -247,41 +212,25 @@ namespace DicomApp.BL.Services
                             request.context.SaveChanges();
 
                             //Add follow up
-                            var follow = new FollowUpDTO
+                            var follow = new HistoryDTO
                             {
-                                Title = "Advertisement Data Update",
+                                Message = request.Localizer["updateAdvertisement", ship.RefId],
                                 CreatedBy = request.UserID,
                                 AdvertisementId = ship.AdvertisementId,
-                                StatusId = ship.StatusId
+                                CreatedAt = DateTime.Now,
+                                ActionType = ActionTypeEnum.Edit,
+                                EntityType = EntityTypeEnum.Advertisement
                             };
                             FollowUpService.Add(follow, request.context);
 
-                            //Add notification
-                            request.context.Notification.Add(
-                                new Notification
-                                {
-                                    Body = "Advertisement " + ship.RefId + " updated",
-                                    CreationDate = DateTime.Now,
-                                    Icon = ship.RefId,
-                                    SenderId = request.UserID,
-                                    Title = "Advertisement updated",
-                                    RecipientRoleId = (int)EnumRole.SuperAdmin,
-                                    IsDeleted = false,
-                                    IsSeen = false,
-                                    RecipientId = 0,
-                                }
-                            );
-
                             request.context.SaveChanges();
-
-                            response.Message =
-                                "Advertisement " + ship.RefId + " successfully updated";
+                            response.Message = request.Localizer["updateAdvertisement", ship.RefId];
                             response.Success = true;
                             response.StatusCode = HttpStatusCode.OK;
                         }
                         else
                         {
-                            response.Message = "Advertisement Not Found";
+                            response.Message = request.Localizer[SystemConstants.Message.NotFound];
                             response.Success = false;
                             response.StatusCode = HttpStatusCode.OK;
                         }
@@ -322,41 +271,25 @@ namespace DicomApp.BL.Services
                             request.context.SaveChanges();
 
                             //Add follow up
-                            var follow = new FollowUpDTO
+                            var follow = new HistoryDTO
                             {
-                                Title = "Advertisement Data Update",
+                                Message = request.Localizer["rejectAdvertisement", ship.RefId],
                                 CreatedBy = request.UserID,
                                 AdvertisementId = ship.AdvertisementId,
-                                StatusId = ship.StatusId
+                                CreatedAt = DateTime.Now,
+                                ActionType = ActionTypeEnum.ChangeStatus,
+                                EntityType = EntityTypeEnum.Advertisement
                             };
                             FollowUpService.Add(follow, request.context);
 
-                            //Add notification
-                            request.context.Notification.Add(
-                                new Notification
-                                {
-                                    Body = "Advertisement " + ship.RefId + " updated",
-                                    CreationDate = DateTime.Now,
-                                    Icon = ship.RefId,
-                                    SenderId = request.UserID,
-                                    Title = "Advertisement updated",
-                                    RecipientRoleId = (int)EnumRole.SuperAdmin,
-                                    IsDeleted = false,
-                                    IsSeen = false,
-                                    RecipientId = 0,
-                                }
-                            );
-
                             request.context.SaveChanges();
-
-                            response.Message =
-                                "Advertisement " + ship.RefId + " successfully updated";
+                            response.Message = request.Localizer["rejectAdvertisement", ship.RefId];
                             response.Success = true;
                             response.StatusCode = HttpStatusCode.OK;
                         }
                         else
                         {
-                            response.Message = "Advertisement Not Found";
+                            response.Message = request.Localizer[SystemConstants.Message.NotFound];
                             response.Success = false;
                             response.StatusCode = HttpStatusCode.OK;
                         }
@@ -400,34 +333,19 @@ namespace DicomApp.BL.Services
                             request.context.SaveChanges();
 
                             //Add follow up
-                            var follow = new FollowUpDTO
+                            var follow = new HistoryDTO
                             {
-                                Title = "Advertisement Data Update",
+                                Message = request.Localizer[
+                                    "changeStatusAdvertisement",
+                                    ship.RefId
+                                ],
                                 CreatedBy = request.UserID,
                                 AdvertisementId = ship.AdvertisementId,
-                                StatusId = ship.StatusId
+                                CreatedAt = DateTime.Now,
+                                ActionType = ActionTypeEnum.ChangeStatus,
+                                EntityType = EntityTypeEnum.Advertisement
                             };
                             FollowUpService.Add(follow, request.context);
-
-                            //Add notification
-                            request.context.Notification.Add(
-                                new Notification
-                                {
-                                    Body = "Advertisement " + ship.RefId + " updated",
-                                    CreationDate = DateTime.Now,
-                                    Icon = ship.RefId,
-                                    SenderId = request.UserID,
-                                    Title = "Advertisement updated",
-                                    RecipientRoleId = request
-                                        .context.Role.FirstOrDefault(x =>
-                                            x.Name == SystemConstants.Role.SuperAdmin
-                                        )
-                                        ?.Id,
-                                    IsDeleted = false,
-                                    IsSeen = false,
-                                    RecipientId = 0,
-                                }
-                            );
 
                             request.context.SaveChanges();
                             response.AdsDTO = new AdsDTO
@@ -437,14 +355,16 @@ namespace DicomApp.BL.Services
                                 Password = ship.Password,
                                 Gamer = new UserDTO { Email = ship.Gamer.Email }
                             };
-                            response.Message =
-                                "Advertisement " + ship.RefId + " successfully updated";
+                            response.Message = request.Localizer[
+                                "changeStatusAdvertisement",
+                                ship.RefId
+                            ];
                             response.Success = true;
                             response.StatusCode = HttpStatusCode.OK;
                         }
                         else
                         {
-                            response.Message = "Advertisement Not Found";
+                            response.Message = request.Localizer[SystemConstants.Message.NotFound];
                             response.Success = false;
                             response.StatusCode = HttpStatusCode.OK;
                         }
@@ -513,16 +433,6 @@ namespace DicomApp.BL.Services
                                 NameAR = s.Status.NameAR,
                                 NameEN = s.Game.NameEn
                             },
-                            FollowUp = s
-                                .FollowUp.Select(f => new FollowUpDTO
-                                {
-                                    Comment = f.Comment,
-                                    CreatedAt = f.CreatedAt,
-                                    Title = f.Title,
-                                    CreatedBy = f.CreatedBy,
-                                    CreatedByName = f.CreatedByNavigation.Name,
-                                })
-                                .ToList(),
                             Game = new GameDTO
                             {
                                 Id = s.Game.Id,
@@ -628,16 +538,6 @@ namespace DicomApp.BL.Services
                                 NameAR = s.Status.NameAR,
                                 NameEN = s.Status.NameEN
                             },
-                            FollowUp = s
-                                .FollowUp.Select(f => new FollowUpDTO
-                                {
-                                    Comment = f.Comment,
-                                    CreatedAt = f.CreatedAt,
-                                    Title = f.Title,
-                                    CreatedBy = f.CreatedBy,
-                                    CreatedByName = f.CreatedByNavigation.Name,
-                                })
-                                .ToList(),
                             Game = new GameDTO
                             {
                                 Id = s.Game.Id,
@@ -869,33 +769,6 @@ namespace DicomApp.BL.Services
                     };
                     break;
             }
-
-            return result;
-        }
-
-        public static bool CanReturnToVendor(Advertisement ship, List<FollowUp> lstShipFollowup)
-        {
-            var result = true;
-            var canNotReturnStatus = new List<int>
-            {
-                (int)EnumStatus.Ready_For_Return,
-                (int)EnumStatus.Assigned_For_Return,
-                (int)EnumStatus.Out_For_Return,
-                (int)EnumStatus.Returned,
-                (int)EnumStatus.Ready_For_Refund,
-                (int)EnumStatus.Assigned_For_Refund,
-                (int)EnumStatus.Out_For_Refund,
-                (int)EnumStatus.Refunded
-            };
-
-            #region check can return
-            if (canNotReturnStatus.Contains(ship.StatusId))
-                result = false;
-
-            if (lstShipFollowup.Any(f => f.StatusId == (int)EnumStatus.Returned))
-                result = false;
-
-            #endregion
 
             return result;
         }

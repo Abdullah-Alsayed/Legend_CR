@@ -73,6 +73,8 @@ namespace DicomApp.Helpers
             public const string AddGameCharge = "AddGameCharge";
             public const string EditGameCharge = "EditGameCharge";
             public const string GameChargeDelete = "GameChargeDelete";
+
+            public const string History = "History";
         }
 
         public static class Languages
@@ -129,8 +131,16 @@ namespace DicomApp.Helpers
 
         public static class Message
         {
-            public static string Success = "success";
+            public static string Success = "operationSuccess";
             public static string Field = "field";
+            public static string NotFound = "notFound";
+            public static string CantUpdatePrice = "youCantUpdatePrice";
+        }
+
+        public static class Layout
+        {
+            public static string Dashboard = "Dashboard";
+            public static string Gamer = "gamer";
         }
     }
 }
