@@ -108,22 +108,35 @@ function PreviousPage(ControllerName, ActionName, Filter) {
 
 function Filter(ActionName, ControllerName) {
     PageIndex = 0;
-    var Url = GetPramter(ControllerName, ActionName, 'Table');
-    $("#Ajaxloader").css("display", "inline-block").fadeIn(20000)
-    $("#Ajaxloader").removeClass("d-none");
+    var Url = GetPramter(ControllerName, ActionName, ControllerName == "Gamer" && ActionName == "All" ? 'PartialView' :'Table' );
+    if (ControllerName != "Gamer" && ActionName != "All")
+     {
+        $("#Ajaxloader").css("display", "inline-block").fadeIn(500)
+        $("#Ajaxloader").removeClass("d-none");
+    } else {
+        $("#AllAccountsList-Section").fadeOut(500);
+        $(".Account-Spinner").css("display", "inline-block").fadeIn(500);
+        $(".Account-Spinner").removeClass("d-none");
+    }
     $.ajax({
         url: Url,
         type: "GET",
         contentType: "application/json; charset=utf-8",
         success: function (result) {
-            if  (ActionName == "All") {
+            if (ControllerName == "Gamer" && ActionName == "All")
+            {
+                $("#AllAccountsList-Section").fadeIn(500);
+                $("#AllAccountsList-Section").html(result);
+            }
+            else if  (ActionName == "All") {
                 $("#Table").html(result);
             }
             else {
                 $("tbody").html(result);
             }
             ResetTdSort();
-            $("#Ajaxloader").fadeOut(1000);
+            $("#Ajaxloader").fadeOut(500);
+            $(".Account-Spinner").fadeOut(500);
             var DataCount = $(`#DataCount`).val();
             $(`#DataCount-Span`).text(`Showing : ${DataCount}`);
         },
@@ -271,44 +284,49 @@ function displayPermissions(className) {
 
 
 function MenuNavigation(event, ActionName, ControllerName, paramters = "") {
-    event.preventDefault();
-    if (event.target.tagName === "A") {
-        ControllerName = event.target.href.split('/')[3];
-        ActionName = event.target.href.split('/')[4];
-    }
-    else if (event.target.tagName === "IMG") {
-        ControllerName = event.target.baseURI.split('/')[3];
-        ActionName = event.target.baseURI.split('/')[4];
-    }
-    if (paramters != "")
-        window.history.pushState(null, null, `/${ControllerName}/${ActionName}?${paramters}`);
-     else
-        window.history.pushState(null, null, `/${ControllerName}/${ActionName}`);
+    if (ControllerName == "User" && ActionName == "Authorization")
+        window.location.href = '/User/Authorization';
+    else {
 
-    $('#MainLoder').fadeIn(100);
-    $('#Footer').hide();
-    $("#MainView").hide();
-    $.ajax({
-        type: "GET",
-        url: `/${ControllerName}/${ActionName}?${paramters}`,
-        contentType: 'application/html; charset=utf-8',
-        data: { ActionType: "PartialView" },
-        dataType: 'html',
-        success: function (result) {
-            $(".Nested-sidebar-menu").addClass("d-none");
-            $('.cursor-pointer').removeClass('active');
-            SelectNavActive();
-            $('#MainView').html(result);
-            $("#MainView").fadeIn(1000);
-            $('#MainLoder').fadeOut(1000);
-            $(".se-pre-con").css("display", "none")
-            ValidationForm();
-            SortClintSide();
-        },
-        error: function (Error) {
-            alert(Error)
+        event.preventDefault();
+        if (event.target.tagName === "A") {
+            ControllerName = event.target.href.split('/')[3];
+            ActionName = event.target.href.split('/')[4];
         }
-    });
+        else if (event.target.tagName === "IMG") {
+            ControllerName = event.target.baseURI.split('/')[3];
+            ActionName = event.target.baseURI.split('/')[4];
+        }
+        if (paramters != "")
+            window.history.pushState(null, null, `/${ControllerName}/${ActionName}?${paramters}`);
+        else
+            window.history.pushState(null, null, `/${ControllerName}/${ActionName}`);
+
+        $('#MainLoder').fadeIn(100);
+        $('#Footer').hide();
+        $("#MainView").hide();
+        $.ajax({
+            type: "GET",
+            url: `/${ControllerName}/${ActionName}?${paramters}`,
+            contentType: 'application/html; charset=utf-8',
+            data: { ActionType: "PartialView" },
+            dataType: 'html',
+            success: function (result) {
+                $(".Nested-sidebar-menu").addClass("d-none");
+                $('.cursor-pointer').removeClass('active');
+                SelectNavActive();
+                $('#MainView').html(result);
+                $("#MainView").fadeIn(1000);
+                $('#MainLoder').fadeOut(1000);
+                $(".se-pre-con").css("display", "none")
+                ValidationForm();
+                SortClintSide();
+            },
+            error: function (Error) {
+                alert(Error)
+            }
+        });
+    }
 }
 
 $(document).ready(function () {
@@ -505,21 +523,28 @@ function ChangeUserPassword(Id) {
 }
 
 
-function GamerForm()
+function GamerForm(actionName = "SaveGamer", navigation = true)
 {
     if ($('#Gamer-Form').valid()) {
+        $("#BtnSend").attr("disabled", true);
+        $("#BtnLabel").addClass("d-none"); // Hide label
+        $(".loader").removeClass("d-none"); // Show loader
 
-    $(".Spinner").removeClass("d-none");
     var id = $('#Id').val();
     let formData = new FormData($(`#Gamer-Form`)[0]);
   
-    let files = $(`#Gamer-Form input[type='file']`)[0].files;
-    for (let i = 0; i < files.length; i++) {
-        formData.append('files', files[i]);
-    }
+        let fileInput = $(`#Gamer-Form input[type='file']`);
+        if (fileInput.length > 0) {
+            let files = fileInput[0].files;
 
+            if (files.length > 0) {
+                for (let i = 0; i < files.length; i++) {
+                    formData.append('files', files[i]);
+                }
+            }
+        }
         $.ajax({
-            url: `/User/SaveGamer`,
+            url: `/User/${actionName}`,
             type: "POST",
             data: formData,
             contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
@@ -530,17 +555,23 @@ function GamerForm()
                 $(".Spinner").addClass("d-none");
                 if (result.success)
                 {
-                    alertSuccess(result.message);
-                    MenuNavigation(event, 'ListGamer', 'User');
+                    alertSuccessTop(result.message,4000);
+                    $("#UserNamelable").text(result.userDTO.name);
+                    $("#UpdateUserData").modal('hide');
+                    if (navigation) 
+                        MenuNavigation(event, 'ListGamer', 'User');
                 }
                 else
                     alertError(result.message);
-
             },
             error: function (err) {
-                $(".Spinner").addClass("d-none");
                 alert("try again!")
                 console.log(err);
+            }, complete: function () {
+                $(".loader").addClass("d-none"); // Hide loader
+                $("#BtnSend").attr("disabled", false); // Enable button back
+                // Show button label back
+                $("#BtnLabel").removeClass("d-none"); // Show original label
             }
         });   
     }
@@ -645,11 +676,13 @@ function ComparePassword() {
     }
 }
 
-function AddEntity(ControllerName, ActionName, FormID) {
+function AddEntity(ControllerName, ActionName, FormID, Navigation = true) {
     if ($(`#${FormID}`).valid()) {
         let Count = $(`tbody tr`).length;
         $("#BtnSend").prop('disabled', true);
         $(".Spinner").removeClass("d-none");
+        $(".custom-loader").removeClass("d-none");
+
         let formData = formSerialize(FormID);
         $.ajax({
             url: `/${ControllerName}/${ActionName}`,
@@ -662,6 +695,7 @@ function AddEntity(ControllerName, ActionName, FormID) {
                     alertError(result.message);
                     $("#BtnSend").prop('disabled', false);
                     $(".Spinner").addClass("d-none");
+                    $(".custom-loader").addClass("d-none");
                 }
                 else {
                     ResetForm(FormID);
@@ -672,17 +706,20 @@ function AddEntity(ControllerName, ActionName, FormID) {
                        else
                         $('#AddInvoice-Model').modal('hide');
 
-
+                        if (Navigation) {
                         $(".modal-backdrop").remove();
                         MenuNavigation(event, "All", ControllerName);
+                        }
                     }
                      else
                         $(`tbody`).prepend(result);
 
                     $(`#${FormID} img`).attr('src', '');
                     $(`#DataCount-Span`).text(`Showing : ${+(++Count)}`);
+                    $(".custom-loader").addClass("d-none");
 
-                    alertSuccess()
+                    alertSuccess();
+                    $(".form-container").fadeOut();
                 }
             },
             complete: function () {
@@ -691,6 +728,7 @@ function AddEntity(ControllerName, ActionName, FormID) {
                 alertError();
                 $("#BtnSend").prop('disabled', false);
                 $(".Spinner").addClass("d-none");
+                $(".custom-loader").addClass("d-none");
             }
         })
     } else {
@@ -762,13 +800,14 @@ function DeleteEntity(ControllerName, ActionName, Tr, id = 0) {
     })
 }
 
-function UpdateStatus(ControllerName, ActionName, Tr, id = 0, status =0) {
+function UpdateStatus(ControllerName, ActionName, Tr, id = 0, status = 0) {
     if (id == 0)
         id = $("#EntityId").val();
 
+    let price = $(`#Price_${id}`).val();
     $.ajax({
         type: "PUT",
-        url: `/${ControllerName}/${ActionName}/?ID=${id}&&status=${status}`,
+        url: `/${ControllerName}/${ActionName}/?ID=${id}&status=${status}&price=${price}`,
         success: function (result) {
             if (result.success == false) {
                 alertError(result.message);
@@ -838,8 +877,8 @@ function UpdateRoleAppService(ControllerName, ActionName, FormID) {
             if (result.success == false)
                 alertError();
 
-            else
-                alertSuccess('Saved Successfully');
+            else alertSuccess('Saved Successfully');
+           
         },
         error: function (error) {
             alertError();
@@ -1191,7 +1230,33 @@ function OpenEditGameModel(id, Modal) {
         }
     });
 }
-
+function OpenEditGameChargeModel(id, Model) {
+    $.ajax({
+        type: "GET",
+        url: `/GameCharge/EditGameCharge/${id}`,
+        success: function (result) {
+            if (!result) {
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'failed try again',
+                    showConfirmButton: false,
+                    timer: 4000
+                });
+            }
+            else {
+                $(`#${Model} #Id`).val(result.id);
+                $(`#${Model} #Price`).val(result.price);
+                $(`#${Model} #Count`).val(result.count);
+                $(`#${Model} #Discount`).val(result.discount);
+                $(`#${Model} #GameId`).val(result.gameId);
+                $(`#${Model} #Img`).val(result.img);
+                $(`#${Model} #EditGameChargeImg`).attr("src", `/dist/images/${result.img}`);
+                $(`#${Model}`).modal('show');
+            }
+        }
+    });
+}
 function EditGame(Modal, FormID) {
     if ($(`#${FormID}`).valid()) {
         $("#BtnSend").prop('disabled', true);
@@ -1235,6 +1300,62 @@ function EditGame(Modal, FormID) {
                         $(`#${Tr} #ImgUrl img`).attr('src', `/dist/images/Fake-Img2.png`);
                     else
                         $(`#${Tr} #ImgUrl img`).attr('src', `/dist/images/${result.model.imgUrl}`);
+
+                    $(`#${Modal}`).modal('hide');
+                    $("#BtnSend").prop('disabled', false);
+                    $(".Spinner").addClass("d-none");
+                    alertSuccess();
+                }
+
+            }
+        })
+    }
+    else {
+        $(`#${FormID}`).submit();
+        $("label:contains('This field is required.')").css("display", "none");
+        $(".Spinner").addClass("d-none");
+    }
+}
+
+function EditChargeGame(Modal, FormID) {
+    if ($(`#${FormID}`).valid()) {
+        $("#BtnSend").prop('disabled', true);
+        $(".Spinner").removeClass("d-none");
+        let GameId = $(`#${Modal} #Id`).val();
+        let Tr = `Tr_${GameId}`
+        let formData = formSerialize(FormID);
+        $.ajax({
+            type: "POST",
+            url: `/GameCharge/EditGameCharge`,
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (result) {
+                if (!result.success) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        title: 'failed try again',
+                        showConfirmButton: false,
+                        timer: 4000
+                    });
+                    $(".Spinner").addClass("d-none");
+                }
+                else {
+                    let file = document.querySelector(`#${FormID} #ImgFile`);
+
+                    $(`#${Tr} #Price`).text(result.model.price);
+                    $(`#${Tr} #Count`).text(result.model.count);
+                    $(`#${Tr} #Discount`).text(result.model.discount);
+                    $(`#${Tr} #Game`).html(`<b>${result.model.game.nameEn}</b> <img src="/dist/images/${result.model.game.imgUrl}" width="50px"></img>`);
+
+                    if (file.files.length > 0)
+                        $(`#${Tr} #ImgUrl img`).attr('src', URL.createObjectURL(file.files[0]));
+
+                    else if (result.model.img == null)
+                        $(`#${Tr} #ImgUrl img`).attr('src', `/dist/images/Fake-Img2.png`);
+                    else
+                        $(`#${Tr} #ImgUrl img`).attr('src', `/dist/images/${result.model.img}`);
 
                     $(`#${Modal}`).modal('hide');
                     $("#BtnSend").prop('disabled', false);
@@ -2381,7 +2502,7 @@ function ResetForm(FormID) {
 }
 
 // Sweet Alert PopUp Messege
-function alertSuccess(title = 'Success', timer = 3000) {
+function alertSuccess(title = 'Success', timer = 3000 ) {
     Swal.fire({
         position: 'center',
         icon: 'success',
@@ -2390,7 +2511,15 @@ function alertSuccess(title = 'Success', timer = 3000) {
         timer: timer
     });
 }
-
+function alertSuccessTop(title = 'Success', timer = 3000) {
+    Swal.fire({
+        position: 'top',
+        icon: 'success',
+        title: title,
+        showConfirmButton: false,
+        timer: timer
+    });
+}
 function alertError(title = 'Failed, try again', timer = 3000) {
     Swal.fire({
         position: 'center',
@@ -2400,6 +2529,51 @@ function alertError(title = 'Failed, try again', timer = 3000) {
         timer: timer
     });
 }
+function ToastSuccess(title = 'Success', timer = 3000)
+{
+    const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: timer,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+        }
+    });
+    Toast.fire({
+        icon: "success",
+        title: title
+    });
+}
+function ToastError(title = 'Error', timer = 3000) {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: timer,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+        }
+    });
+    Toast.fire({
+        icon: "error",
+        title: title
+    });
+}
+
+function authenticatedCheck(isAuthenticated, modal = null) {
+    if (isAuthenticated == 'false') {
+        $('#Login-PupUp-Modal').modal('show');
+        if (modal != null) {
+        $(`#${modal}`).modal('hide');
+        }
+        return false;
+    } else return true;
+}
 
 
-function showConfirmationDialog(n, t, i) { $("#modal-dialog-confirmation-messageTitle").text(n); $("#modal-dialog-confirmation-messageText").html(t); $("#modal-dialog-confirmation-aConfirm").unbind("click"); $("#modal-dialog-confirmation-aConfirm").click(function () { $("#modal-dialog-confirmation").modal("hide"); i() }); $("#modal-dialog-confirmation").modal("show") } $(document).ready(function () { $(".date-popup").datepicker({ keyboardNavigation: !1, forceParse: !1, todayHighlight: !0 }) });
+//function showConfirmationDialog(n, t, i) { $("#modal-dialog-confirmation-messageTitle").text(n); $("#modal-dialog-confirmation-messageText").html(t); $("#modal-dialog-confirmation-aConfirm").unbind("click"); $("#modal-dialog-confirmation-aConfirm").click(function () { $("#modal-dialog-confirmation").modal("hide"); i() }); $("#modal-dialog-confirmation").modal("show") } $(document).ready(function () { $(".date-popup").datepicker({ keyboardNavigation: !1, forceParse: !1, todayHighlight: !0 }) });

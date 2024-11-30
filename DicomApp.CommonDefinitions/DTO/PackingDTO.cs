@@ -27,5 +27,6 @@ namespace DicomApp.CommonDefinitions.DTO
         public string CategoryName { get; set; }
         public DateTime? DateFrom { get; set; }
         public DateTime? DateTo { get; set; }
+        public List<GameChargeDTO> GameChargesDto { get; set; }
     }
 }

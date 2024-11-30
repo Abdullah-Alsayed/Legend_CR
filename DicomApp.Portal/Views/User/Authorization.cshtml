@@ -1,10 +1,13 @@
-﻿
+﻿@using DicomApp.Helpers
+@using DicomApp.Portal.Controllers
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<GamerController> Localizer
 @{
-    Layout = null;
+    var roleName = AuthHelper.GetRoleName(User);
+    Layout = (roleName == SystemConstants.Role.Gamer) ? "" : "_Layout";
 }
 
 <!DOCTYPE html>
-
 <html>
 <head>
     <style>
@@ -14,7 +17,6 @@
             height: 100;
             margin: 0;
             padding: 0;
-            font-family: 'Limelight', cursive;
             color: #38434A;
         }
 
@@ -61,10 +63,8 @@
             background: #F3F2EE;
             border: 10px solid #DAD2C9;
             border-radius: 3px;
-            font-size: 50px;
-            line-height: 3;
+            font-size:28px;
             text-align: center;
-            text-shadow: 0 2px #F5AE4E;
         }
 
             .door::before {
@@ -382,13 +382,14 @@
         }
 
     </style>
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width" />	<link rel="icon" type="image/png" href="/dist/images/logo.png" />
+
     <title>Authorization</title>
 </head>
 <body>
     <div class='hover'>
         <div class='background'>
-            <div class='door'>403</div>
+            <div class='door'>@Localizer["forbidden"]</div>
             <div class='rug'></div>
         </div>
         <div class='foreground'>

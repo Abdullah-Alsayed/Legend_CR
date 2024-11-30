@@ -27,6 +27,8 @@ namespace DicomApp.DAL.DB
         public int? DeleteBy { get; set; }
 
         public virtual Category Category { get; set; }
+        public virtual ICollection<GameCharge> GameCharges { get; set; }
+
         public virtual ICollection<GamerService> GamerServices { get; set; }
         public virtual ICollection<Advertisement> Advertisements { get; set; }
         public virtual ICollection<Advertisement> ShipmentWarehouseGame { get; set; }

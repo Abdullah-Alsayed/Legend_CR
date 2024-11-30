@@ -157,17 +157,19 @@ namespace DicomApp.BL.Services
 
             var canAccess = true;
 
-            var service = context.AppService.FirstOrDefault(c =>
-                !c.IsDeleted && c.Name == serviceName
-            );
+            var service = context
+                .RoleAppService.Include(x => x.AppService)
+                .FirstOrDefault(c =>
+                    !c.IsDeleted && c.RoleId == roleID && c.AppService.Name == serviceName
+                );
             if (service != null)
                 return true;
 
-            if (service != null && !service.AllowAnonymous)
+            if (service != null && !service.AppService.AllowAnonymous)
             {
                 if (roleID == 0)
                     return false;
-                else if (service.ShowToUser.Value)
+                else if (service.AppService.ShowToUser.Value)
                     canAccess = context.RoleAppService.Any(c =>
                         c.RoleId == roleID && c.AppServiceId == service.Id && c.Enabled
                     );

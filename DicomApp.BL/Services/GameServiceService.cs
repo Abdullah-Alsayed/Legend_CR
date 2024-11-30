@@ -25,21 +25,33 @@ namespace DicomApp.BL.Services
                 {
                     try
                     {
+                        var statusType = request.ServiceDTO.GameChargeId.HasValue
+                            ? (int)StatusTypeEnum.Accept
+                            : (int)StatusTypeEnum.InProgress;
+
                         var status = request.context.Status.FirstOrDefault(x =>
-                            x.StatusType == (int)StatusTypeEnum.InProgress
+                            x.StatusType == statusType
                         );
+                        var gameCharge = request.context.GameCharges.FirstOrDefault(x =>
+                            x.Id == request.ServiceDTO.GameChargeId
+                        );
+
                         var serv = new GamerService()
                         {
                             StatusId = status?.Id ?? 0,
+                            CurrentLevel = request.ServiceDTO.CurrentLevel,
                             GamerId = request.ServiceDTO.GamerId,
                             GameId = request.ServiceDTO.GameId,
                             GameServiceType = request.ServiceDTO.GameServiceType,
+                            GameChargeId = request.ServiceDTO.GameChargeId,
                             Description = request.ServiceDTO.Description,
                             UserName = request.ServiceDTO.UserName,
                             Password = request.ServiceDTO.Password,
-                            Price = request.ServiceDTO.Price,
-                            Level = req.ServiceDTO.Level,
-                            Rank = req.ServiceDTO.Rank,
+                            Price =
+                                gameCharge != null
+                                    ? (gameCharge.Price - gameCharge.Discount)
+                                    : request.ServiceDTO.Price,
+                            Level = request.ServiceDTO.Level,
                             CreatedAt = DateTime.Now,
                             CreatedBy = request.UserID,
                             IsDeleted = false,
@@ -51,41 +63,24 @@ namespace DicomApp.BL.Services
                             serv.GamerServiceId
                         );
                         //Add follow up
-                        var follow = new FollowUpDTO
+                        var follow = new HistoryDTO
                         {
-                            Title = "Gamer Service Added",
+                            Message = request.Localizer["newGameService", serv.RefId],
                             CreatedBy = request.UserID,
-                            GameServiceId = serv.GamerServiceId,
-                            StatusId = serv.StatusId
+                            CreatedAt = DateTime.Now,
+                            ActionType = ActionTypeEnum.Add,
+                            EntityType = EntityTypeEnum.GameService
                         };
                         FollowUpService.Add(follow, request.context);
-
-                        //Add notification
-                        request.context.Notification.Add(
-                            new Notification
-                            {
-                                Body = "New Gamer Service " + serv.RefId + " added",
-                                CreationDate = DateTime.Now,
-                                Icon = serv.RefId,
-                                SenderId = request.UserID,
-                                Title = "New GamerService",
-                                RecipientRoleId = request
-                                    .context.Role.FirstOrDefault(x =>
-                                        x.Name == SystemConstants.Role.Admin
-                                    )
-                                    ?.Id,
-                                IsDeleted = false,
-                                IsSeen = false,
-                                RecipientId = 0,
-                            }
-                        );
 
                         request.context.SaveChanges();
                         response.ServiceDTO = new ServiceDTO
                         {
-                            GamerServiceId = serv.GamerServiceId
+                            Price = serv.Price,
+                            GamerServiceId = serv.GamerServiceId,
+                            GameServiceType = serv.GameServiceType,
                         };
-                        response.Message = "New GamerService " + serv.RefId + " successfully added";
+                        response.Message = request.Localizer[SystemConstants.Message.Success];
                         response.Success = true;
                         response.StatusCode = HttpStatusCode.OK;
                     }
@@ -125,7 +120,9 @@ namespace DicomApp.BL.Services
                             && status.StatusType >= 2
                         )
                         {
-                            response.Message = "you Cant Update Price";
+                            response.Message = request.Localizer[
+                                SystemConstants.Message.CantUpdatePrice
+                            ];
                             response.Success = false;
                             response.ServiceDTO = request.ServiceDTO;
                             return response;
@@ -139,44 +136,25 @@ namespace DicomApp.BL.Services
                         serv.Password = request.ServiceDTO.Password;
                         serv.Price = request.ServiceDTO.Price;
                         serv.Level = request.ServiceDTO.Level;
-                        serv.Rank = request.ServiceDTO.Rank;
+                        serv.CurrentLevel = request.ServiceDTO.CurrentLevel;
                         serv.StatusId = request.ServiceDTO.StatusId;
                         serv.LastModifiedAt = DateTime.Now;
                         serv.LastModifiedBy = request.UserID;
                         request.context.SaveChanges();
 
                         //Add follow up
-                        var follow = new FollowUpDTO
+                        var follow = new HistoryDTO
                         {
-                            Title = "Gamer Service Updated",
+                            Message = request.Localizer["updateGameService", serv.RefId],
                             CreatedBy = request.UserID,
-                            GameServiceId = serv.GamerServiceId,
-                            StatusId = serv.StatusId
+                            CreatedAt = DateTime.Now,
+                            ActionType = ActionTypeEnum.Edit,
+                            EntityType = EntityTypeEnum.GameService
                         };
                         FollowUpService.Add(follow, request.context);
 
-                        //Add notification
-                        request.context.Notification.Add(
-                            new Notification
-                            {
-                                Body = "Gamer Service " + serv.RefId + " updated",
-                                CreationDate = DateTime.Now,
-                                Icon = serv.RefId,
-                                SenderId = request.UserID,
-                                Title = "Gamer Service updated",
-                                RecipientRoleId = request
-                                    .context.Role.FirstOrDefault(x =>
-                                        x.Name == SystemConstants.Role.SuperAdmin
-                                    )
-                                    ?.Id,
-                                IsDeleted = false,
-                                IsSeen = false,
-                                RecipientId = 0,
-                            }
-                        );
-
                         request.context.SaveChanges();
-                        response.Message = "GamerService " + serv.RefId + " successfully updated";
+                        response.Message = request.Localizer[SystemConstants.Message.Success];
                         response.Success = true;
                         response.ServiceDTO = request.ServiceDTO;
                         response.StatusCode = HttpStatusCode.OK;
@@ -212,7 +190,7 @@ namespace DicomApp.BL.Services
                             serv.UserName = request.ServiceDTO.UserName;
                             serv.Password = request.ServiceDTO.Password;
                             serv.Level = request.ServiceDTO.Level;
-                            serv.Rank = request.ServiceDTO.Rank;
+                            serv.CurrentLevel = request.ServiceDTO.CurrentLevel;
 
                             serv.LastModifiedAt = DateTime.Now;
                             serv.LastModifiedBy = request.UserID;
@@ -220,41 +198,25 @@ namespace DicomApp.BL.Services
                             request.context.SaveChanges();
 
                             //Add follow up
-                            var follow = new FollowUpDTO
+                            var follow = new HistoryDTO
                             {
-                                Title = "Gamer Service Data Update",
+                                Message = request.Localizer["updateGameService", serv.RefId],
                                 CreatedBy = request.UserID,
-                                GameServiceId = serv.GamerServiceId,
-                                StatusId = serv.StatusId
+                                CreatedAt = DateTime.Now,
+                                ActionType = ActionTypeEnum.Edit,
+                                EntityType = EntityTypeEnum.GameService
                             };
                             FollowUpService.Add(follow, request.context);
 
-                            //Add notification
-                            request.context.Notification.Add(
-                                new Notification
-                                {
-                                    Body = "Gamer Service " + serv.RefId + " updated",
-                                    CreationDate = DateTime.Now,
-                                    Icon = serv.RefId,
-                                    SenderId = request.UserID,
-                                    Title = "GamerService updated",
-                                    RecipientRoleId = (int)EnumRole.SuperAdmin,
-                                    IsDeleted = false,
-                                    IsSeen = false,
-                                    RecipientId = 0,
-                                }
-                            );
-
                             request.context.SaveChanges();
 
-                            response.Message =
-                                "GamerService " + serv.RefId + " successfully updated";
+                            response.Message = request.Localizer[SystemConstants.Message.Success];
                             response.Success = true;
                             response.StatusCode = HttpStatusCode.OK;
                         }
                         else
                         {
-                            response.Message = "Gamer Service Not Found";
+                            response.Message = request.Localizer[SystemConstants.Message.NotFound];
                             response.Success = false;
                             response.StatusCode = HttpStatusCode.OK;
                         }
@@ -295,41 +257,24 @@ namespace DicomApp.BL.Services
                             request.context.SaveChanges();
 
                             //Add follow up
-                            var follow = new FollowUpDTO
+                            var follow = new HistoryDTO
                             {
-                                Title = "GamerService Data Update",
+                                Message = request.Localizer["rejectGameService", serv.RefId],
                                 CreatedBy = request.UserID,
-                                GameServiceId = serv.GamerServiceId,
-                                StatusId = serv.StatusId
+                                CreatedAt = DateTime.Now,
+                                ActionType = ActionTypeEnum.Edit,
+                                EntityType = EntityTypeEnum.GameService
                             };
                             FollowUpService.Add(follow, request.context);
 
-                            //Add notification
-                            request.context.Notification.Add(
-                                new Notification
-                                {
-                                    Body = "GamerService " + serv.RefId + " updated",
-                                    CreationDate = DateTime.Now,
-                                    Icon = serv.RefId,
-                                    SenderId = request.UserID,
-                                    Title = "GamerService updated",
-                                    RecipientRoleId = (int)EnumRole.SuperAdmin,
-                                    IsDeleted = false,
-                                    IsSeen = false,
-                                    RecipientId = 0,
-                                }
-                            );
-
                             request.context.SaveChanges();
-
-                            response.Message =
-                                "GamerService " + serv.RefId + " successfully updated";
+                            response.Message = request.Localizer[SystemConstants.Message.Success];
                             response.Success = true;
                             response.StatusCode = HttpStatusCode.OK;
                         }
                         else
                         {
-                            response.Message = "GamerService Not Found";
+                            response.Message = request.Localizer[SystemConstants.Message.NotFound];
                             response.Success = false;
                             response.StatusCode = HttpStatusCode.OK;
                         }
@@ -365,50 +310,43 @@ namespace DicomApp.BL.Services
                         if (status != null && serv != null)
                         {
                             serv.StatusId = status.Id;
+                            if (
+                                request.ServiceDTO.Price > 0
+                                && request.ServiceDTO.GameServiceType == GameServiceType.Push
+                            )
+                                serv.Price = request.ServiceDTO.Price;
+
                             serv.LastModifiedAt = DateTime.Now;
                             serv.LastModifiedBy = request.UserID;
                             request.context.SaveChanges();
 
                             //Add follow up
-                            var follow = new FollowUpDTO
+                            var follow = new HistoryDTO
                             {
-                                Title = "Gamer Service Data Update",
+                                Message = request.Localizer["updateGameService", serv.RefId],
                                 CreatedBy = request.UserID,
-                                GameServiceId = serv.GamerServiceId,
-                                StatusId = serv.StatusId
+                                CreatedAt = DateTime.Now,
+                                ActionType = ActionTypeEnum.Edit,
+                                EntityType = EntityTypeEnum.GameService
                             };
                             FollowUpService.Add(follow, request.context);
-
-                            //Add notification
-                            request.context.Notification.Add(
-                                new Notification
-                                {
-                                    Body = "Gamer Service " + serv.RefId + " updated",
-                                    CreationDate = DateTime.Now,
-                                    Icon = serv.RefId,
-                                    SenderId = request.UserID,
-                                    Title = "GamerService updated",
-                                    RecipientRoleId = request
-                                        .context.Role.FirstOrDefault(x =>
-                                            x.Name == SystemConstants.Role.SuperAdmin
-                                        )
-                                        ?.Id,
-                                    IsDeleted = false,
-                                    IsSeen = false,
-                                    RecipientId = 0,
-                                }
-                            );
-
                             request.context.SaveChanges();
-
-                            response.Message =
-                                "Gamer Service " + serv.RefId + " successfully updated";
+                            response.ServiceDTO = new ServiceDTO
+                            {
+                                GamerServiceId = serv.GamerServiceId,
+                                GameChargeId = serv.GameChargeId,
+                                Price = serv.Price,
+                                GameServiceType = serv.GameServiceType,
+                                StatusType = status.StatusType,
+                                GamerId = serv.GamerId,
+                            };
+                            response.Message = request.Localizer[SystemConstants.Message.Success];
                             response.Success = true;
                             response.StatusCode = HttpStatusCode.OK;
                         }
                         else
                         {
-                            response.Message = "Gamer Service Not Found";
+                            response.Message = request.Localizer[SystemConstants.Message.NotFound];
                             response.Success = false;
                             response.StatusCode = HttpStatusCode.OK;
                         }
@@ -462,7 +400,7 @@ namespace DicomApp.BL.Services
                             CreatedBy = s.CreatedBy,
                             Price = s.Price,
                             Level = s.Level,
-                            Rank = s.Rank,
+                            CurrentLevel = s.CurrentLevel,
                             RefId = s.RefId,
                             GameId = s.GameId,
                             StatusId = s.StatusId,
@@ -476,16 +414,6 @@ namespace DicomApp.BL.Services
                                 NameAR = s.Status.NameAR,
                                 NameEN = s.Game.NameEn
                             },
-                            FollowUp = s
-                                .FollowUp.Select(f => new FollowUpDTO
-                                {
-                                    Comment = f.Comment,
-                                    CreatedAt = f.CreatedAt,
-                                    Title = f.Title,
-                                    CreatedBy = f.CreatedBy,
-                                    CreatedByName = f.CreatedByNavigation.Name,
-                                })
-                                .ToList(),
                             Game = new GameDTO
                             {
                                 Id = s.Game.Id,
@@ -560,7 +488,7 @@ namespace DicomApp.BL.Services
                             CreatedAt = s.CreatedAt,
                             CreatedBy = s.CreatedBy,
                             Level = s.Level,
-                            Rank = s.Rank,
+                            CurrentLevel = s.CurrentLevel,
                             Price = s.Price,
                             RefId = s.RefId,
                             GameId = s.GameId,
@@ -575,16 +503,6 @@ namespace DicomApp.BL.Services
                                 NameAR = s.Status.NameAR,
                                 NameEN = s.Status.NameEN
                             },
-                            FollowUp = s
-                                .FollowUp.Select(f => new FollowUpDTO
-                                {
-                                    Comment = f.Comment,
-                                    CreatedAt = f.CreatedAt,
-                                    Title = f.Title,
-                                    CreatedBy = f.CreatedBy,
-                                    CreatedByName = f.CreatedByNavigation.Name,
-                                })
-                                .ToList(),
                             Game = new GameDTO
                             {
                                 Id = s.Game.Id,
@@ -683,7 +601,8 @@ namespace DicomApp.BL.Services
                     || c.UserName.ToLower().Contains(filter.Search)
                     || c.Description.Contains(filter.Search)
                     || c.Password.Contains(filter.Search)
-                    || c.Rank.Contains(filter.Search)
+                    || c.Level.Contains(filter.Search)
+                    || c.CurrentLevel.Contains(filter.Search)
                 );
             }
 
@@ -708,11 +627,11 @@ namespace DicomApp.BL.Services
             if (filter.Price != 0)
                 query = query.Where(c => c.Price > filter.Price);
 
-            if (filter.LessLevel != 0)
-                query = query.Where(c => c.Level < filter.LessLevel);
+            //if (filter.LessLevel != 0)
+            //    query = query.Where(c => c.Level < filter.LessLevel);
 
-            if (filter.GreeterLevel != 0)
-                query = query.Where(c => c.Level > filter.GreeterLevel);
+            //if (filter.GreeterLevel != 0)
+            //    query = query.Where(c => c.Level > filter.GreeterLevel);
 
             if (filter.LessPrice != 0)
                 query = query.Where(c => c.Price < filter.LessPrice);
@@ -811,33 +730,6 @@ namespace DicomApp.BL.Services
                     };
                     break;
             }
-
-            return result;
-        }
-
-        public static bool CanReturnToVendor(GamerService serv, List<FollowUp> lstShipFollowup)
-        {
-            var result = true;
-            var canNotReturnStatus = new List<int>
-            {
-                (int)EnumStatus.Ready_For_Return,
-                (int)EnumStatus.Assigned_For_Return,
-                (int)EnumStatus.Out_For_Return,
-                (int)EnumStatus.Returned,
-                (int)EnumStatus.Ready_For_Refund,
-                (int)EnumStatus.Assigned_For_Refund,
-                (int)EnumStatus.Out_For_Refund,
-                (int)EnumStatus.Refunded
-            };
-
-            #region check can return
-            if (canNotReturnStatus.Contains(serv.StatusId))
-                result = false;
-
-            if (lstShipFollowup.Any(f => f.StatusId == (int)EnumStatus.Returned))
-                result = false;
-
-            #endregion
 
             return result;
         }

@@ -1,45 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
+using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
+using DicomApp.DAL.DB;
 
 namespace DicomApp.CommonDefinitions.DTO.CashDTOs
 {
-    public class AccountTransactionDTO
+    public class TransactionDTO
     {
-        public int AccountTransactionId { get; set; }
+        public int TransactionId { get; set; }
         public string RefId { get; set; }
-        public string ShipRefId { get; set; }
-        public string PickupRefId { get; set; }
-
-        public string CashTransferRefId { get; set; }
         public byte TypeId { get; set; }
-        public int? SenderId { get; set; }
-        public int ReceiverId { get; set; }
-        public int? VendorId { get; set; }
-        public string VendorName { get; set; }
-        public int? StatusId { get; set; }
-        public string StatusName { get; set; }
         public int? AdvertisementId { get; set; }
-        public int? PickupRequestId { get; set; }
-        public double GameFees { get; set; }
-        public double WeightFees { get; set; }
-        public double SizeFees { get; set; }
-        public double PartialDeliveryFees { get; set; }
-        public double CancelFees { get; set; }
-        public double PickupFees { get; set; }
-        public double ShippingFees { get; set; }
-        public double? ShippingFeesPaid { get; set; }
-        public double VendorCash { get; set; }
-        public double Total { get; set; }
-        public int? CashTransferId { get; set; }
-        public double? RefundCash { get; set; }
-        public double? RefundFees { get; set; }
-
+        public int BuyerId { get; set; }
+        public int Amount { get; set; }
+        public bool IsSuccess { get; set; }
         public DateTime CreatedAt { get; set; }
         public int CreatedBy { get; set; }
-        public int LastModifiedBy { get; set; }
+        public int? LastModifiedBy { get; set; }
         public DateTime LastModifiedAt { get; set; }
         public bool IsDeleted { get; set; }
+        public string Search { get; set; }
+        public string PaymentId { get; set; }
+        public int? ServiceId { get; set; }
+        public TransactionTypeEnum TransactionType { get; set; }
+        public TransactionSourceEnum TransactionSource { get; set; }
+        public string Attachment { get; set; }
 
-        public StatusDTO StatusDTO { get; set; }
+        public AdsDTO Advertisement { get; set; }
+        public DateTime? DateFrom { get; set; }
+        public DateTime? DateTo { get; set; }
     }
 }

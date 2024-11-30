@@ -13,6 +13,7 @@ using DicomApp.DAL.DB;
 using DicomApp.Helpers;
 using DicomApp.Helpers.Services.GenrateAvatar;
 using Microsoft.EntityFrameworkCore;
+using Telegram.Bot.Types;
 
 namespace DicomApp.BL.Services
 {
@@ -66,21 +67,12 @@ namespace DicomApp.BL.Services
                                 AccountName = c.AccountName,
                                 AccountNumber = c.AccountNumber,
                                 Bank = c.Bank,
+                                Language = c.Language,
                                 IBANNumber = c.IbanNumber,
                                 ImgUrl = c.ImgUrl,
                                 InstaPayAccountName = c.InstaPayAccountName,
                                 ZoneId = c.ZoneId,
                                 IsDeleted = c.IsDeleted,
-                                ZoneName = c.ZoneId.HasValue
-                                    ? request
-                                        .context.Zone.FirstOrDefault(u => u.Id == c.ZoneId)
-                                        .NameAr
-                                    : "",
-                                AreaName = c.AreaId.HasValue
-                                    ? request
-                                        .context.City.FirstOrDefault(a => a.Id == c.AreaId)
-                                        .CityNameAr
-                                    : "",
                                 Country =
                                     c.Country != null
                                         ? new CountryDTO
@@ -91,7 +83,8 @@ namespace DicomApp.BL.Services
                                             NameAr = c.Country.NameAr,
                                             NameEn = c.Country.NameEn
                                         }
-                                        : null
+                                        : null,
+                                TelegramUserName = c.TelegramUserName,
                             });
 
                         if (request.applyFilter)
@@ -148,6 +141,7 @@ namespace DicomApp.BL.Services
                                 AreaId = c.AreaId,
                                 Lat = c.Lat,
                                 Lng = c.Lng,
+                                Language = c.Language,
                                 ModificationDate = c.ModificationDate,
                                 Code = c.Code,
                                 AddressDetails = c.AddressDetails,
@@ -170,6 +164,7 @@ namespace DicomApp.BL.Services
                                 InstaPayAccountName = c.InstaPayAccountName,
                                 ZoneId = c.ZoneId,
                                 IsDeleted = c.IsDeleted,
+                                TelegramUserName = c.TelegramUserName,
                             })
                             .LastOrDefault();
 
@@ -201,10 +196,15 @@ namespace DicomApp.BL.Services
                 {
                     try
                     {
-                        var query = request
-                            .context.CommonUser.Where(c =>
-                                !c.IsDeleted && c.Id == request.UserDTO.Id
+                        var query = !string.IsNullOrEmpty(request.UserDTO.Email)
+                            ? request.context.CommonUser.Where(c =>
+                                !c.IsDeleted && c.Email == request.UserDTO.Email
                             )
+                            : request.context.CommonUser.Where(c =>
+                                !c.IsDeleted && c.Id == request.UserDTO.Id
+                            );
+
+                        var user = query
                             .Select(c => new UserDTO
                             {
                                 Id = c.Id,
@@ -222,6 +222,7 @@ namespace DicomApp.BL.Services
                                 ConfirmPassword = c.Password,
                                 IsLoggedIn = c.IsLoggedIn,
                                 Address = c.Address,
+                                Language = c.Language,
                                 AreaId = c.AreaId,
                                 Lat = c.Lat,
                                 Lng = c.Lng,
@@ -247,10 +248,10 @@ namespace DicomApp.BL.Services
                                 InstaPayAccountName = c.InstaPayAccountName,
                                 ZoneId = c.ZoneId,
                                 IsDeleted = c.IsDeleted,
-                            });
-
-                        res.UserDTO = query.FirstOrDefault();
-
+                                TelegramUserName = c.TelegramUserName,
+                            })
+                            .FirstOrDefault();
+                        res.UserDTO = user;
                         res.Message = HttpStatusCode.OK.ToString();
                         res.Success = true;
                         res.StatusCode = HttpStatusCode.OK;
@@ -309,7 +310,8 @@ namespace DicomApp.BL.Services
                                     RoleID = user.user.RoleId,
                                     RoleName = user.role.Name,
                                     PhoneNumber = user.user.PhoneNumber,
-                                    Password = user.user.Password
+                                    Password = user.user.Password,
+                                    Language = user.user.Language,
                                 }
                             };
                         }
@@ -388,21 +390,22 @@ namespace DicomApp.BL.Services
                         if (user != null)
                         {
                             var UserExist = request.context.CommonUser.Any(m =>
-                                m.Email == request.UserDTO.Email
-                                && m.Email != user.Email
-                                && m.IsDeleted == false
+                                m.Email == request.UserDTO.Email && m.Id != user.Id && !m.IsDeleted
                             );
                             if (!UserExist)
                             {
                                 user.ModificationDate = DateTime.Now;
                                 user.ModifiedBy = request.UserID;
-                                user.RoleId = request.UserDTO.RoleID;
+                                if (request.UserDTO.RoleID != 0)
+                                    user.RoleId = request.UserDTO.RoleID;
+
                                 user.Name = request.UserDTO.Name;
                                 user.Email = request.UserDTO.Email;
                                 user.PhoneNumber = request.UserDTO.PhoneNumber;
                                 user.AreaId = request.UserDTO.AreaId;
                                 user.ZoneId = request.UserDTO.ZoneId;
                                 user.Address = request.UserDTO.Address;
+                                user.Name = request.UserDTO.Name;
                                 user.FullName = request.UserDTO.FullName;
                                 user.AddressDetails = request.UserDTO.AddressDetails;
                                 user.ProductType = request.UserDTO.ProductType;
@@ -423,9 +426,14 @@ namespace DicomApp.BL.Services
                                 user.AccountName = request.UserDTO.AccountName;
                                 user.AccountNumber = request.UserDTO.AccountNumber;
                                 user.ImgUrl = request.UserDTO.ImgUrl;
+                                user.TelegramUserName = request.UserDTO.TelegramUserName;
+                                user.Gender = request.UserDTO.Gender;
+                                user.Age = request.UserDTO.Age;
+                                user.Language = request.UserDTO.Language;
 
                                 request.context.SaveChanges();
 
+                                res.UserDTO = request.UserDTO;
                                 res.Message = "User updated successfully";
                                 res.Success = true;
                                 res.StatusCode = HttpStatusCode.OK;
@@ -436,6 +444,46 @@ namespace DicomApp.BL.Services
                                 res.Success = false;
                                 res.StatusCode = HttpStatusCode.OK;
                             }
+                        }
+                        else
+                        {
+                            res.Message = "Invalid update user";
+                            res.Success = false;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        res.Message = ex.Message;
+                        res.Success = false;
+                        LogHelper.LogException(ex.Message, ex.StackTrace);
+                    }
+                    return res;
+                }
+            );
+            return res;
+        }
+
+        public static UserResponse EditLanguage(UserRequest request)
+        {
+            var res = new UserResponse();
+            RunBase(
+                request,
+                res,
+                (UserRequest req) =>
+                {
+                    try
+                    {
+                        var user = request.context.CommonUser.Find(request.UserID);
+
+                        if (user != null)
+                        {
+                            user.Language = request.UserDTO.Language;
+                            request.context.SaveChanges();
+
+                            res.UserDTO = request.UserDTO;
+                            res.Message = "User updated successfully";
+                            res.Success = true;
+                            res.StatusCode = HttpStatusCode.OK;
                         }
                         else
                         {
@@ -569,6 +617,7 @@ namespace DicomApp.BL.Services
                         User.WalletNumber = request.UserDTO.WalletNumber;
                         User.InstaPayAccountName = request.UserDTO.InstaPayAccountName;
                         User.ImgUrl = request.UserDTO.ImgUrl;
+                        User.Language = request.UserDTO.Language;
 
                         if (request.UserDTO.File == null)
                         {
@@ -651,16 +700,6 @@ namespace DicomApp.BL.Services
             if (filter.Id > 0)
                 query = query.Where(c => c.Id == filter.Id);
 
-            if (filter.RoleID == (long)EnumRole.Gamer)
-                query = query.Where(c => c.RoleID == filter.RoleID);
-
-            if (filter.RoleID == (int)EnumRole.Employee)
-                query = query.Where(u =>
-                    u.RoleID != (int)EnumRole.Gamer
-                    && u.RoleID != (int)EnumRole.Customer
-                    && !u.IsDeleted
-                );
-
             if (
                 filter.RoleID > 0
                 && filter.RoleID != (int)EnumRole.Gamer
@@ -669,7 +708,7 @@ namespace DicomApp.BL.Services
                 query = query.Where(c => c.RoleID == filter.RoleID);
 
             if (filter.StaffOnly)
-                query = query.Where(c => c.RoleID != (int)EnumRole.Gamer);
+                query = query.Where(c => c.RoleName != SystemConstants.Role.Gamer);
 
             if (!string.IsNullOrWhiteSpace(filter.Email))
                 query = query.Where(c => c.Email.Contains(filter.Email));

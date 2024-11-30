@@ -10,7 +10,10 @@
     if (User.Identity.IsAuthenticated)
     {
         roleID = AuthHelper.GetClaimValue(User, "RoleID");
+        var roleName = AuthHelper.GetRoleName(User);
         userID = @AuthHelper.GetClaimValue(User, "UserID");
+        if (roleName == SystemConstants.Role.Gamer)
+            ViewContext.HttpContext.Response.Redirect(Url.Action("Main", "Gamer"));        
     }
 }
 <!DOCTYPE html>
@@ -18,8 +21,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width" />
-    <title>RED Express</title>
-    <link rel="shortcut icon" href="~/dist/images/favicon.ico" />
+    <title>Legend CR</title>
+	<link rel="icon" type="image/png" href="/dist/images/logo.png" />
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <partial name="_MainCssFiles" />
         <script src="~/dist/vendors/jquery/jquery-3.3.1.min.js"></script>
@@ -45,35 +48,23 @@
                 <li class="dropdown Main-logo"><img src="/dist/images/logo.png" width="60px" /></li>
                 <li class="dropdown active">
                     <ul id="NavigationList">
-                        @if (BaseService.CheckRoleAccessability(roleID, "Menu_RedDashboard", connectionString: connectionString))
+                        @if (BaseService.CheckRoleAccessability(roleID, "Dashboard", connectionString: connectionString))
                         {
                             <li id="Dashboard-li" class="cursor-pointer" onclick="NavActive('Dashboard-li')">
-                                <a href="/Home/Index" class="Navigation">
+                                <a href="/Dashboard/Main" class="Navigation">
                                     <img class="Img-Ul" src="~/dist/images/Icons/Dashboard.png" />
                                     Dashboard
                                 </a>
                             </li>
                         }
-                        @if (roleID == (int)EnumRole.Admin || roleID == (int)EnumRole.SuperAdmin || roleID == (int)EnumRole.AccountManager)
-                        {
-                            if (BaseService.CheckRoleAccessability(roleID, "Menu_AccountDashboard", connectionString: connectionString))
-                            {
-                                <li class="cursor-pointer">
-                                    <a href="/Home/AccountDashboard" class="Navigation">
-                                        <img class="Img-Ul" src="~/dist/images/Icons/Dashboard.png" />
-                                        Gamer Dashboard
-                                    </a>
-                                </li>
-                            }
-                        }
                         <li class="cursor-pointer" onclick="OpenSection('REDManagement-Ul')">
                             <a><img class="Img-Ul" src="~/dist/images/Icons/REDManagement.png" />Management</a>
                             <ul id="REDManagement-Ul" class="d-none Nested-sidebar-menu">
-                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_Staff", connectionString: connectionString))
+                                @if (BaseService.CheckRoleAccessability(roleID, SystemConstants.Permission.ListStaff, connectionString: connectionString))
                                 {
                                     <li><a class="MenuNavigation Navigation" href="/User/ListUser">Staff</a></li>
                                 }
-                                @if (BaseService.CheckRoleAccessability(roleID, "Menu_Vendors", connectionString: connectionString))
+                                @if (BaseService.CheckRoleAccessability(roleID, SystemConstants.Permission.ListGamer, connectionString: connectionString))
                                 {
                                     <li><a class="MenuNavigation Navigation" href="/User/ListGamer">Gamers</a></li>
                                 }
@@ -84,6 +75,10 @@
                                 @if (BaseService.CheckRoleAccessability(roleID, SystemConstants.Permission.ListGame, connectionString: connectionString))
                                 {
                                     <li><a class="MenuNavigation Navigation" href="/Game/GameList">Game</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, SystemConstants.Permission.ListGame, connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/GameCharge/GameChargeList">Game Charge</a></li>
                                 }
                                 @if (BaseService.CheckRoleAccessability(roleID, SystemConstants.Permission.CategoryList, connectionString: connectionString))
                                 {
@@ -105,7 +100,7 @@
                                 }
                             </ul>
                         </li>
-                        @if (BaseService.CheckRoleAccessability(roleID, "Menu_Products", connectionString: connectionString))
+                        @if (BaseService.CheckRoleAccessability(roleID, SystemConstants.Permission.ListGamerService, connectionString: connectionString))
                         {
                             <li class="cursor-pointer">
                                 <a href="/GamerService/All" class="Navigation">
@@ -114,16 +109,43 @@
                                 </a>
                             </li>
                         }
-                        @if (BaseService.CheckRoleAccessability(roleID, "Menu_Products", connectionString: connectionString))
+                        <li class="cursor-pointer" onclick="OpenSection('TransactionManagement-Ul')">
+                            <a><img class="Img-Ul" src="~/dist/images/Icons/Invoicing-Cash.png" /> Transaction</a>
+                            <ul id="TransactionManagement-Ul" class="d-none Nested-sidebar-menu">
+                                @if (BaseService.CheckRoleAccessability(roleID, SystemConstants.Permission.ListInvoice, connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Invoice/All">Invoice</a></li>
+                                }
+                                @if (BaseService.CheckRoleAccessability(roleID, SystemConstants.Permission.ListTransaction, connectionString: connectionString))
+                                {
+                                    <li><a class="MenuNavigation Navigation" href="/Invoice/AllTransaction">Transaction</a></li>
+                                }
+                            </ul>
+                        </li>
+                        @if (BaseService.CheckRoleAccessability(roleID, SystemConstants.Permission.ListTestimonial, connectionString: connectionString))
                         {
                             <li class="cursor-pointer">
-                                <a href="/Invoice/All" class="Navigation">
+                                <a href="/Testimonial/All" class="Navigation">
                                     <img class="Img-Ul" src="~/dist/images/Icons/Invoicing-Cash.png" />
-                                    Invoicing & Cash
+                                    Testimonial
                                 </a>
                             </li>
                         }
-                       
+                        @if (BaseService.CheckRoleAccessability(roleID, SystemConstants.Permission.History, connectionString: connectionString))
+                        {
+                            <li class="cursor-pointer">
+                                <a href="/History/All" class="Navigation">
+                                    <img class="Img-Ul" src="~/dist/images/Icons/Invoicing-Cash.png" />
+                                    History
+                                </a>
+                            </li>
+                        }
+                        <li id="Dashboard-li" class="cursor-pointer">
+                            <a href="/Gamer/Main">
+                                <img class="Img-Ul" src="~/dist/images/Icons/Dashboard.png" />
+                                User Layout
+                            </a>
+                        </li>
                         <li style="padding-top: 100%;"><a href="~/User/Logout"><img class="Img-Ul" src="~/dist/images/Icons/Logout.png" /> Logout</a></li>
                     </ul>
                 </li>
@@ -137,16 +159,32 @@
 
     <!-- Top Navigation Bar -->
     <div class="navbar-section">
-        <div class="row Red-Row User-Section">
-            <div class="col-sm-12 col-lg-4 col-xl-5 col-12 Search">
-                <i class="fas fa-search cursor-pointer Icon-Search" onclick="TrackShipment()"></i>
-                <input type="text" class="Txt-Search" id="TrackShipment" placeholder="Track Advertisement " />
-                <i class="fas fa-angle-right cursor-pointer Icon-Arow-Right" onclick="TrackShipment()"></i>
-            </div>
+        <div class="row Red-Row User-Section justify-content-end">
             <div class="col-sm-9 col-lg-8 col-xl-7 col-12 Notifcation">
-                <select>
-                    <option>ENG</option>
-                </select>
+                <div style="margin:5px 20px 0px 0px">
+                    <label class="popup">
+                        <input type="checkbox" />
+                        <div tabindex="0" class="burger">
+                            <img src="~/gamerlayout/assets/img/translation.png" />
+                        </div>
+                        <nav class="popup-window" style="background-color:#1d232c;border:none">
+                            <ul>
+                                <li>
+                                    <a style="color:#eef0f4 !important" href="@Url.Action("EditLanguage","User",new { language = SystemConstants.Languages.Arabic , navigate = SystemConstants.Layout.Dashboard })">
+                                        <img src="~/gamerlayout/assets/img/ar-flag.png" />
+                                        عربي
+                                    </a>
+                                </li>
+                                <li>
+                                    <a style="color:#eef0f4 !important" href="@Url.Action("EditLanguage","User",new { language = SystemConstants.Languages.English,navigate = SystemConstants.Layout.Dashboard })">
+                                        <img src="~/gamerlayout/assets/img/En-Flag.png" />
+                                        English
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </label>
+                </div>
                 @if (BaseService.CheckRoleAccessability(roleID, "NotificationVComponent", connectionString: connectionString))
                 {
                     @await Component.InvokeAsync("NotificationVComponent", new { pageIndex = 0 })
@@ -155,7 +193,7 @@
                 <div class="User-Info" data-toggle="modal" data-target="#ChangePasswordModal">
                     <img src="/dist/images/logo.png" width="31" />
                     <p class="font-weight-bold" onclick="MenuNavigation(event,'ChangePassword','User')" style="font-size:13px">Welcome</p>
-                    <p>@AuthHelper.GetUserName(User)</p>
+                    <p>@AuthHelper.GetClaimStringValue(User)</p>
                 </div>
             </div>
         </div>

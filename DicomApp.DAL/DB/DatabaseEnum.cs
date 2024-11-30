@@ -16,4 +16,35 @@ namespace DicomApp.DAL.DB
         Push = 1,
         Charge
     }
+
+    public enum TransactionTypeEnum
+    {
+        Account,
+        Push,
+        Change,
+        None
+    }
+
+    public enum TransactionSourceEnum
+    {
+        Paypal,
+        Attachments
+    }
+
+    public enum EntityTypeEnum
+    {
+        Game,
+        User,
+        Advertisement,
+        GameService,
+        Invoice
+    }
+
+    public enum ActionTypeEnum
+    {
+        Add,
+        Edit,
+        Delete,
+        ChangeStatus
+    }
 }

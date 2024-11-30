@@ -32,7 +32,7 @@ namespace DicomApp.CommonDefinitions.DTO.CashDTOs
         public bool IsDeleted { get; set; }
         public string TransIDs { get; set; }
 
-        public IEnumerable<AccountTransactionDTO> AccountTransactionDTOs { get; set; }
+        public IEnumerable<TransactionDTO> AccountTransactionDTOs { get; set; }
         public List<int> PaidShipsIDs { get; set; }
         public string Search { get; set; }
         public DateTime DateFrom { get; set; }

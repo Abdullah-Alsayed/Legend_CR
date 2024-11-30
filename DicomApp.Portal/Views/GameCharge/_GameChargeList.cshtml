@@ -1,0 +1,27 @@
+﻿
+@using DicomApp.CommonDefinitions.DTO;
+@using DicomApp.CommonDefinitions.DTO;
+@model List<GameChargeDTO>
+
+@if (Model != null && Model.Count > 0)
+{
+    foreach (var item in Model)
+    {
+        <tr id="Tr_@item.Id">
+            <td id="Price">@item.Price</td>
+            <td id="Count">@item.Count</td>
+            <td id="Discount"><b>@item.Discount</b></td>
+            <td id="Game"><b>@item.Game?.NameEn</b> <img src="/dist/images/@item.Game?.ImgUrl" width="50px"></img> </td>
+            <td id="ImgUrl"><img src="/dist/images/@item.Img" width="150" /></td>
+            <td>
+                <div class="Actions-Buttons">
+                    <ul class="">
+                        <li class="Green-Bg" onclick="OpenEditGameChargeModel(@item.Id,'EditGameCharge-Model')"><a href="javascript:;"><i class="icon-note F-Medium text-white"></i></a></li>
+                        <li onclick="OpenModal(@item.Id ,'DeleteGameCharge-Model')" class="Red-Bg"><i class="icon-trash F-Medium"></i></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    }
+}
+<input type="hidden" value="@(Model != null ? Model.Count : 0)" id="DataCount" />

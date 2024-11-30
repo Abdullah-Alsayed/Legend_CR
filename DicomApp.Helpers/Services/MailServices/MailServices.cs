@@ -23,6 +23,7 @@ namespace ECommerce.Core.Services.MailServices
                 message.To.Add(new MailAddress(emailDto.Email));
                 message.Subject = emailDto.Subject;
                 message.Body = emailDto.Body;
+                message.IsBodyHtml = true;
                 SmtpClient smtpClient = new SmtpClient(_emailSettings.Host, _emailSettings.Port);
                 smtpClient.UseDefaultCredentials = false;
                 smtpClient.EnableSsl = true;

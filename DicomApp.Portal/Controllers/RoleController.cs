@@ -47,9 +47,8 @@ namespace DicomApp.Portal.Controllers
             var roleResponse = RoleService.ListRole(roleRequest);
             roleResponse.RoleDTOs = roleResponse
                 .RoleDTOs.Where(r =>
-                    r.Id != (int)EnumRole.SuperAdmin
-                    && r.Id != (int)EnumRole.Admin
-                    && r.Id != (int)EnumRole.Gamer
+                    r.Name != SystemConstants.Role.SuperAdmin
+                    && r.Name != SystemConstants.Role.Gamer
                 )
                 .ToList();
 

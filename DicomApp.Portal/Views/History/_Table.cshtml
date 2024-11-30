@@ -1,0 +1,21 @@
+﻿@using DicomApp.CommonDefinitions.DTO;
+@using DicomApp.CommonDefinitions.DTO;
+@using DicomApp.Portal.Controllers
+@using Microsoft.Extensions.Localization
+@model List<HistoryDTO>
+@inject IStringLocalizer<HistoryController> Localizer
+
+
+@if (Model != null && Model.Count > 0)
+{
+    foreach (var item in Model)
+    {
+        <tr id="Testimonial_@item.Id">
+            <td id="Name"><b>@item.User.Name</b> <img width="50px" src="/dist/images/@item.User.ImgUrl" /> </td>
+            <td id="ActionType"> @Localizer[item.ActionType.ToString()]</td>
+            <td id="EntityType"> @Localizer[item.EntityType.ToString()]</td>
+            <td class="td-small text-center text-nowrap pl-1 pr-1 Date-Table">@item.CreatedAt.ToString("dd MMM yyyy") <br /> @item.CreatedAt.ToShortTimeString()</td>
+        </tr>
+    }
+}
+<input type="hidden" value="@(Model != null ? Model.Count : 0)" id="DataCount" />

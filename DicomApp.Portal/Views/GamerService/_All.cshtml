@@ -35,7 +35,7 @@
                 <td class="td-small text-center pl-1 pr-1">@ads.GameServiceType</td>
                 <td class="td-small text-center text-nowrap pl-1 pr-1">@ads.Price EGP</td>
                 <td class="td-small text-center text-nowrap pl-1 pr-1">@ads.Level</td>
-                <td class="td-small text-center text-nowrap pl-1 pr-1">@ads.Rank</td>
+                <td class="td-small text-center text-nowrap pl-1 pr-1">@ads.CurrentLevel</td>
                 <partial name="~/Views/Shared/Advertisement/_StatusSwitch.cshtml" model="@ads.Status"></partial>
             </tr>
         }
@@ -51,9 +51,9 @@
     <tr>
         <td colspan="13">
             @{
-                await Html.RenderPartialAsync("_Pagination", new OptionDTO { Action = "All", Controller = "GamerService", Count = Model.Count, StatusId = (int)EnumStatus.All });
+                await Html.RenderPartialAsync("_Pagination", new OptionDTO { Action = "All", Controller = "GamerService", Count = Model?.Count??0, StatusId = (int)EnumStatus.All });
             }
         </td>
     </tr>
 </tfoot>
-<input type="hidden" value="@Model.Count" id="DataCount" />
+<input type="hidden" value="@Model?.Count??0" id="DataCount" />

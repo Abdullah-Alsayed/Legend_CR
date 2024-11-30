@@ -23,7 +23,7 @@ namespace DicomApp.CommonDefinitions.DTO.CashDTOs
         public int? LastModifiedBy { get; set; }
         public DateTime LastModifiedAt { get; set; }
         public bool IsDeleted { get; set; }
-        public IEnumerable<AccountTransactionDTO> TransactionDTOs { get; set; }
+        public IEnumerable<TransactionDTO> TransactionDTOs { get; set; }
         public string Search { get; set; }
     }
 }

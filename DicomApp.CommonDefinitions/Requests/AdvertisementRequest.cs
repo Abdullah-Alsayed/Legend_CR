@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
-using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
-using Microsoft.AspNetCore.Http;
+﻿using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
+using Microsoft.Extensions.Localization;
 
 namespace DicomApp.CommonDefinitions.Requests
 {
@@ -11,5 +9,6 @@ namespace DicomApp.CommonDefinitions.Requests
         public int Top { get; set; }
 
         public AdsDTO AdsDTO { get; set; } = new AdsDTO();
+        public IStringLocalizer Localizer { get; set; }
     }
 }

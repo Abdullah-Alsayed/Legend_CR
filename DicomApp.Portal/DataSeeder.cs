@@ -17,17 +17,24 @@ namespace DicomApp.Portal
     {
         public static async Task Seed(ShippingDBContext dBContext)
         {
-            await SeedStatus(dBContext);
+            try
+            {
+                await SeedStatus(dBContext);
 
-            await SeedRoles(dBContext);
+                await SeedRoles(dBContext);
 
-            await SeedUser(dBContext);
+                await SeedUser(dBContext);
 
-            await SeedCategorys(dBContext);
+                await SeedCategorys(dBContext);
 
-            await SeedCountries(dBContext);
+                await SeedCountries(dBContext);
 
-            await dBContext.SaveChangesAsync();
+                await dBContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
 
         private static async Task SeedCategorys(ShippingDBContext dBContext)
@@ -92,7 +99,7 @@ namespace DicomApp.Portal
                     Editable = false,
                     Name = SystemConstants.Role.SuperAdmin,
                     CreationDate = System.DateTime.Now,
-                    IsDeleted = false
+                    IsDeleted = false,
                 },
                 new Role
                 {

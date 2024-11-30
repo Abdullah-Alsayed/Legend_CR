@@ -13,7 +13,7 @@
             <td class="font-weight-bold td-small text-nowrap" id="Td-Name">@item.Name</td>
             <td class="font-weight-bold td-small" id="Td-Role">@item.RoleName</td>
             <td class="td-small">@item.Email</td>
-            <td class="td-small">@item.Country.NameEn</td>
+            <td class="td-small">@(item.Country?.NameEn??"")</td>
             <td class="td-small">@item.PhoneNumber</td>
             <td class="td-small">@item.CreationDate.ToString("dd/MM/yyyy")</td>
             <td class="td-small pt-5">

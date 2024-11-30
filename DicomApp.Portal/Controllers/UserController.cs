@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using DicomApp.BL.Services;
 using DicomApp.BLL;
 using DicomApp.CommonDefinitions.DTO;
-using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
 using DicomApp.CommonDefinitions.Requests;
 using DicomApp.CommonDefinitions.Responses;
 using DicomApp.DAL.DB;
@@ -16,14 +15,16 @@ using DicomApp.Helpers;
 using DicomApp.Helpers.Services.GenrateAvatar;
 using DicomApp.Helpers.Services.GetCounter;
 using DicomApp.Portal.Helpers;
+using ECommerce.Core.Services.MailServices;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
+using Microsoft.Extensions.Localization;
+using Telegram.Bot.Types;
 
 namespace DicomApp.Portal.Controllers
 {
@@ -34,15 +35,21 @@ namespace DicomApp.Portal.Controllers
         private readonly AvatarService _avatarService;
         private readonly IApiCountryService _countryService;
         private readonly IHostingEnvironment hosting;
+        private readonly IMailServices _emailSender;
+        private readonly IStringLocalizer<UserController> _stringLocalizer;
 
         public UserController(
             ShippingDBContext context,
             IHostingEnvironment hosting,
             AvatarService avatarService,
-            IApiCountryService countryService
+            IApiCountryService countryService,
+            IMailServices mailServices,
+            IStringLocalizer<UserController> stringLocalizer
         )
         {
             _context = context;
+            _stringLocalizer = stringLocalizer;
+            _emailSender = mailServices;
             this.hosting = hosting;
             _avatarService = avatarService;
             _countryService = countryService;
@@ -72,8 +79,6 @@ namespace DicomApp.Portal.Controllers
             else
                 ViewBag.error = roleResponse.Message;
 
-            ViewBag.areas = _context.City.ToList();
-
             //var sectionRequest = new SectionRequest
             //{
             //    RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
@@ -92,6 +97,12 @@ namespace DicomApp.Portal.Controllers
 
         [AllowAnonymous]
         public IActionResult Register()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
+        public IActionResult Create()
         {
             return View();
         }
@@ -117,7 +128,8 @@ namespace DicomApp.Portal.Controllers
                     new Claim("Name", user.Name ?? ""),
                     new Claim("Email", user.Email ?? ""),
                     new Claim("RoleID", user.RoleID.ToString()),
-                    new Claim("RoleName", user.RoleName)
+                    new Claim("RoleName", user.RoleName),
+                    new Claim("Language", user.Language ?? SystemConstants.Languages.Arabic)
                 };
 
                 var claimsIdentity = new ClaimsIdentity(
@@ -135,7 +147,7 @@ namespace DicomApp.Portal.Controllers
                 if (user.RoleName == SystemConstants.Role.Gamer)
                     return RedirectToAction("Main", "Gamer");
                 else
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("main", "Dashboard");
             }
             ViewBag.error = loginResponse.Message;
             return View(model);
@@ -207,7 +219,116 @@ namespace DicomApp.Portal.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();
-            return RedirectToAction("Login");
+            return RedirectToAction("Main", "Gamer");
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordDTO model)
+        {
+            if (ModelState.IsValid)
+            {
+                var userResponse = UserService.GetUser(
+                    new UserRequest
+                    {
+                        context = _context,
+                        UserDTO = new UserDTO { Email = model.Email }
+                    }
+                );
+                if (userResponse.UserDTO == null)
+                    return RedirectToAction("ForgotPasswordConfirmation");
+
+                // Generate the token using a custom method
+                var token = GeneratePasswordResetToken();
+
+                // Build the reset URL
+                var callbackUrl = Url.Action(
+                    "ResetPassword",
+                    "User",
+                    new { token, email = userResponse.UserDTO.Email },
+                    protocol: Request.Scheme
+                );
+
+                // Send the email
+                var result = await _emailSender.SendAsync(
+                    new EmailDto
+                    {
+                        Body =
+                            $"{_stringLocalizer["resetPasswordMessage"]} <a href='{callbackUrl}'>{_stringLocalizer["here"]}</a>.",
+                        Email = model.Email,
+                        Subject = $"{_stringLocalizer["resetPassword"]}"
+                    }
+                );
+
+                return RedirectToAction("ForgotPasswordConfirmation");
+            }
+
+            return View(model);
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
+        public IActionResult ForgotPasswordConfirmation()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ResetPassword(string token = null)
+        {
+            if (token == null)
+            {
+                return BadRequest("A token must be supplied for password reset.");
+            }
+            var model = new ResetPasswordDTO { Token = token };
+            return View(model);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public IActionResult ResetPassword(ResetPasswordDTO model)
+        {
+            var userRespons = UserService.GetUser(
+                new UserRequest
+                {
+                    context = _context,
+                    UserDTO = new UserDTO { Email = model.EmailUser }
+                }
+            );
+            if (userRespons.UserDTO == null)
+                return RedirectToAction("ResetPasswordConfirmation");
+
+            // Update the user's password
+            var userRequest = new UserRequest
+            {
+                RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
+                UserID = AuthHelper.GetClaimValue(User, "UserID"),
+                context = _context,
+                UserDTO = new UserDTO
+                {
+                    Id = userRespons.UserDTO.Id,
+                    ConfirmPassword = model.Password,
+                    NewPassword = model.Password
+                },
+            };
+
+            var userResponse = UserService.ChangePassword(userRequest);
+            return RedirectToAction("ResetPasswordConfirmation");
+        }
+
+        [AllowAnonymous]
+        public IActionResult ResetPasswordConfirmation()
+        {
+            return View();
         }
 
         public IActionResult NotFound()
@@ -230,10 +351,10 @@ namespace DicomApp.Portal.Controllers
                 new List<byte> { (byte)EnumSelectListType.Role },
                 _context
             );
-            var currRoleName = AuthHelper.GetUserName(User, "RoleID");
+            var currRoleName = AuthHelper.GetClaimStringValue(User, "RoleName");
             if (
-                currRoleName == SystemConstants.Role.SuperAdmin
-                || currRoleName == SystemConstants.Role.Admin
+                currRoleName != SystemConstants.Role.SuperAdmin
+                || currRoleName != SystemConstants.Role.Admin
             )
                 ViewData.Lookup.RoleDTOs = ViewData
                     .Lookup.RoleDTOs.Where(r =>
@@ -467,7 +588,9 @@ namespace DicomApp.Portal.Controllers
                 RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
                 UserID = AuthHelper.GetClaimValue(User, "UserID"),
                 context = _context,
-                UserDTO = model
+                UserDTO = model,
+                avatarService = _avatarService,
+                WebRootPath = hosting.WebRootPath
             };
 
             var userResponse = await UserService.AddUser(userRequest);
@@ -491,10 +614,10 @@ namespace DicomApp.Portal.Controllers
                 UserDTO = new UserDTO() { Id = Id },
                 applyFilter = true,
             };
-            var UserData = UserService.GetAllUsers(userRequest);
+            var UserData = UserService.GetUser(userRequest);
 
             if (UserData.Success)
-                return Json(UserData.UserDTOs.FirstOrDefault());
+                return Json(UserData.UserDTO);
             else
                 return Json(false);
         }
@@ -514,9 +637,6 @@ namespace DicomApp.Portal.Controllers
 
             if (userResponse.Success)
             {
-                ViewBag.areas = _context.City.ToList();
-                ViewBag.Zone = _context.Zone.ToList();
-
                 if (ActionType == SystemConstants.ActionType.PartialView)
                     return PartialView("_EditUser", userResponse.UserDTOs[0]);
                 else
@@ -546,6 +666,103 @@ namespace DicomApp.Portal.Controllers
                 TempData["ErrorMsg"] = userResponse.Message;
 
             return RedirectToAction("ListUser");
+        }
+
+        [AuthorizePerRole(SystemConstants.Permission.EditStaff)]
+        [HttpPost]
+        public async Task<ActionResult> EditUserInfo(UserDTO model)
+        {
+            model.ImgUrl = BaseHelper.UploadImg(model.File, hosting.WebRootPath, model.ImgUrl);
+            var userRequest = new UserRequest
+            {
+                RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
+                UserID = AuthHelper.GetClaimValue(User, "UserID"),
+                context = _context,
+                UserDTO = model
+            };
+            var userResponse = UserService.EditUser(userRequest);
+            if (userResponse.Success)
+            {
+                var currentUser = HttpContext.User;
+                var claimsIdentity = currentUser.Identity as ClaimsIdentity;
+
+                if (claimsIdentity != null)
+                {
+                    claimsIdentity.RemoveClaim(
+                        claimsIdentity.FindFirst(SystemConstants.Claims.Name)
+                    );
+                    claimsIdentity.RemoveClaim(
+                        claimsIdentity.FindFirst(SystemConstants.Claims.Email)
+                    );
+
+                    // Add updated claims
+                    claimsIdentity.AddClaim(
+                        new Claim(SystemConstants.Claims.Name, userResponse.UserDTO.Name ?? "")
+                    );
+                    claimsIdentity.AddClaim(
+                        new Claim(SystemConstants.Claims.Email, userResponse.UserDTO.Email ?? "")
+                    );
+
+                    // Update the authentication cookie
+                    await HttpContext.SignInAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        new ClaimsPrincipal(claimsIdentity),
+                        new AuthenticationProperties { AllowRefresh = true }
+                    );
+                }
+            }
+
+            return Json(userResponse);
+        }
+
+        [AllowAnonymous]
+        public async Task<ActionResult> EditLanguage(string language, string navigate)
+        {
+            var userRequest = new UserRequest
+            {
+                RoleID = AuthHelper.GetClaimValue(User, "RoleID"),
+                UserID = AuthHelper.GetClaimValue(User, "UserID"),
+                context = _context,
+                UserDTO = new UserDTO { Language = language }
+            };
+            var userResponse = UserService.EditLanguage(userRequest);
+            if (userResponse.Success)
+            {
+                var currentUser = HttpContext.User;
+                var claimsIdentity = currentUser.Identity as ClaimsIdentity;
+
+                if (claimsIdentity != null)
+                {
+                    // Remove existing claims
+                    claimsIdentity.RemoveClaim(
+                        claimsIdentity.FindFirst(SystemConstants.Claims.Language)
+                    );
+
+                    // Add updated claims
+                    claimsIdentity.AddClaim(
+                        new Claim(
+                            SystemConstants.Claims.Language,
+                            userResponse.UserDTO.Language ?? ""
+                        )
+                    );
+
+                    // Update the authentication cookie
+                    await HttpContext.SignInAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        new ClaimsPrincipal(claimsIdentity),
+                        new AuthenticationProperties { AllowRefresh = true }
+                    );
+                }
+            }
+            Response.Cookies.Append(
+                "PreferredLanguage",
+                language,
+                new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
+            );
+            if (navigate == SystemConstants.Layout.Dashboard)
+                return RedirectToAction("Main", "Dashboard");
+            else
+                return RedirectToAction("Main", "Gamer");
         }
 
         [AllowAnonymous]
@@ -619,6 +836,17 @@ namespace DicomApp.Portal.Controllers
         public IActionResult Authorization()
         {
             return View();
+        }
+
+        public string GeneratePasswordResetToken()
+        {
+            // Generate a random token (you can use more secure methods like JWT if needed)
+            using (var rng = new RNGCryptoServiceProvider())
+            {
+                byte[] tokenData = new byte[32];
+                rng.GetBytes(tokenData);
+                return Convert.ToBase64String(tokenData);
+            }
         }
     }
 }

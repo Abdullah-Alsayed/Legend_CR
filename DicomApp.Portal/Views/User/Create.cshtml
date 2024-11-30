@@ -1,0 +1,117 @@
+﻿@using DicomApp.CommonDefinitions.DTO;
+@using DicomApp.DAL.DB
+@using DicomApp.Portal.Controllers
+@using Microsoft.Extensions.Localization
+@model UserDTO
+@inject IStringLocalizer<UserController> _stringLocalizer
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<!-- START: Head-->
+<head>
+    <meta charset="UTF-8">
+    <title>Legend CR</title>
+    <link rel="shortcut icon" href="~/dist/images/logo.png" />
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!-- START: Template CSS-->
+    <link rel="stylesheet" href="~/dist/vendors/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/dist/vendors/jquery-ui/jquery-ui.min.css">
+    <link rel="stylesheet" href="~/dist/vendors/jquery-ui/jquery-ui.theme.min.css">
+    <link rel="stylesheet" href="~/dist/vendors/simple-line-icons/css/simple-line-icons.css">
+    <link rel="stylesheet" href="~/dist/vendors/flags-icon/css/flag-icon.min.css">
+    <!-- END Template CSS-->
+    <!-- START: Page CSS-->
+    <link rel="stylesheet" href="~/dist/vendors/social-button/bootstrap-social.css" />
+    <!-- END: Page CSS-->
+    <!-- START: Custom CSS-->
+    <link href="~/dist/css/main-new.css" rel="stylesheet" />
+    <link href="~/dist/css/red.css" rel="stylesheet" />
+  
+    <!-- END: Custom CSS-->
+</head>
+<!-- END Head-->
+<!-- START: Body-->
+<body id="main-container" class="default">
+    <!-- START: Main Content-->
+    <div class="Form-Container">
+      <div class="Form-Section">
+            <form method="post" asp-action="@Url.Action("Register")" id="Register-form" class="row lockscreen">
+                <div class="login-form col-12 col-sm-12 ">
+                <div class="">
+                    <center><img src="~/dist/images/cub.png" /></center>
+                        <h1 class="text-center">@_stringLocalizer["register"]</h1>
+                </div>
+                    <div class="Register-Section">
+                        <div class="form-group">
+                            <label for="Name">@_stringLocalizer["name"]</label>
+                            @Html.TextBoxFor(model => model.Name, new { @placeholder = $"{@_stringLocalizer["pleaseEnter"]} {_stringLocalizer["name"]}", @id = "Name", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "validation-message" })
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Email">@_stringLocalizer["name"]</label>
+                            @Html.TextBoxFor(model => model.Email, new { @type = "email",@placeholder = $"{@_stringLocalizer["pleaseEnter"]} {_stringLocalizer["email"]}", @id = "emailaddress", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "validation-message" })
+                        </div>
+                        <div class="form-group">
+                            <label for="PhoneNumber">@_stringLocalizer["phoneNumber"]</label>
+                            @Html.TextBoxFor(model => model.PhoneNumber, new { @placeholder = $"{@_stringLocalizer["pleaseEnter"]} {_stringLocalizer["phoneNumber"]}", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "validation-message" })
+                        </div>
+
+                        <div class="form-group">
+                            <label for="TelegramUserName">@_stringLocalizer["telegram"]</label>
+                            @Html.TextBoxFor(model => model.TelegramUserName, new { @placeholder = $"{@_stringLocalizer["pleaseEnter"]} {_stringLocalizer["telegram"]}", @id = "TelegramUserName", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.TelegramUserName, "", new { @class = "validation-message" })
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="password">@_stringLocalizer["password"]</label>
+                            @Html.PasswordFor(model => model.Password, new { @placeholder = $"{@_stringLocalizer["pleaseEnter"]} {_stringLocalizer["password"]}", @class = "form-control", @id = "password" })
+                            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "validation-message" })
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="ConfirmPassword">@_stringLocalizer["confirmPassword"]</label>
+                            @Html.PasswordFor(model => model.ConfirmPassword, new { @placeholder = $"{@_stringLocalizer["pleaseEnter"]} {_stringLocalizer["confirmPassword"]}", @class = "form-control", @id = "ConfirmPassword" })
+                            @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "validation-message" })
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Gender">@_stringLocalizer["gender"]</label>
+                            <select class="form-control" required id="@nameof(UserDTO.Gender)" name="@nameof(UserDTO.Gender)" placeholder="Gender">
+                                <option value="">---@_stringLocalizer["pleaseSelect"] @_stringLocalizer["gender"]---</option>
+                                <option value="@GenderEnum.Male">@_stringLocalizer["male"]</option>
+                                <option value="@GenderEnum.Female">@_stringLocalizer["female"]</option>
+                            </select>                      
+                            @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "validation-message" })
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Age">@_stringLocalizer["age"]</label>
+                            @Html.TextBoxFor(model => model.Age, new { @type = "number", @placeholder = $"{@_stringLocalizer["pleaseEnter"]} {_stringLocalizer["age"]}", @id = "Age", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Age, "", new { @class = "validation-message" })
+                        </div>
+                    </div>
+                    <a class="Regester" href="@Url.Action("Login")">@_stringLocalizer["haveAccount"]</a>
+                    <div class="form-group mb-0">
+                        <button class="login-button w-100" onclick="Enter(event,'Register')" type="button">
+                            @_stringLocalizer["create"]
+                            <span class="Spinner spinner-border spinner-border-sm ml-2 mb-1 d-none" role="status" aria-hidden="true"></span>
+                        </button>
+                </div>
+                    <div id="ErrorMessage" class="mt-2 mt-4 text-center text-white"></div>
+            </div>
+        </form>
+    </div>
+    </div>
+
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.2.0.min.js"></script>
+    <script src="~/dist/js/jquery.validate.min.js"></script>
+    <script src="~/dist/js/jquery.validate.unobtrusive.min.js"></script>
+    <script src="/js/User/Index.js"></script>
+</body>
+<!-- END: Body-->
+</html>

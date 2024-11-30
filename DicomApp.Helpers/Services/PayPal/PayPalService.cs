@@ -11,11 +11,14 @@ namespace DicomApp.Helpers.Services.PayPal
     public class PayPalService : IPayPalService
     {
         readonly IConfiguration configuration;
-        readonly string _accessToken;
 
         public PayPalService(IConfiguration configuration)
         {
             this.configuration = configuration;
+        }
+
+        public async Task<Payment> ExecutePaymentAsync(string payerID, string paymentID)
+        {
             var clientId = configuration["PayPal:ClientId"];
             var clientSecret = configuration["PayPal:ClientSecret"];
             var mode = configuration["PayPal:Mode"];
@@ -27,15 +30,12 @@ namespace DicomApp.Helpers.Services.PayPal
                 { "clientSecret", clientSecret }
             };
 
-            _accessToken = new OAuthTokenCredential(
+            var _accessToken = new OAuthTokenCredential(
                 clientId,
                 clientSecret,
                 config
             ).GetAccessToken();
-        }
 
-        public async Task<Payment> ExecutePaymentAsync(string payerID, string paymentID)
-        {
             var apiContext = new APIContext(_accessToken)
             {
                 Config = ConfigManager.Instance.GetProperties()
@@ -54,6 +54,23 @@ namespace DicomApp.Helpers.Services.PayPal
             string cancelUrl
         )
         {
+            var clientId = configuration["PayPal:ClientId"];
+            var clientSecret = configuration["PayPal:ClientSecret"];
+            var mode = configuration["PayPal:Mode"];
+
+            var config = new Dictionary<string, string>
+            {
+                { "mode", mode },
+                { "clientId", clientId },
+                { "clientSecret", clientSecret }
+            };
+
+            var _accessToken = new OAuthTokenCredential(
+                clientId,
+                clientSecret,
+                config
+            ).GetAccessToken();
+
             var finalAmount = amount.ToString("0.00");
             var apiContext = new APIContext(_accessToken);
             var items = new ItemList

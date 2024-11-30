@@ -66,6 +66,13 @@
                             </div>
                         </div>
                         <div class="col-lg-6 mt-3">
+                            <label class="Shipment-Details-label">Old Price</label>
+                            <input type="number" min="1" max="1000000" class="input-Number" asp-for="OldPrice" placeholder="OldPrice" required value="@Model.OldPrice" />
+                            <div class="invalid-feedback">
+                                Please enter Old Price
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-3">
                             <label class="Shipment-Details-label">Game</label>
                             @Html.DropDownListFor(model => model.GameId, new SelectList(ViewBag.GameList, nameof(GameDTO.Id), nameof(GameDTO.NameEn)), "--- Select Game ---", new { @class = "form-control", @required = "required" })
                             <div class="invalid-feedback">
@@ -98,7 +105,8 @@
                             }
                         </div>
                     </div>
-                    <div class="d-flex justify-content-end">
+                </div>
+                <div class="col-lg-2 d-flex">
                         <div class="col-lg-12 Buttons-Submit-Section">
                             <button onclick="EditAdvertisement('Edit','Advertisement','EditAdvertisement')" type="button" id="BtnSend" class="Red-Btn">Update Only</button>
                         </div>
@@ -110,7 +118,6 @@
                         }
                    
                     </div>
-                </div>
             </div>
         </form>
     </div>

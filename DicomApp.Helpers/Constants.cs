@@ -52,6 +52,7 @@ namespace DicomApp.Helpers
             public const string ListInvoice = "ListInvoice";
             public const string AddInvoice = "AddInvoice";
             public const string RefundInvoice = "RefundInvoice";
+            public const string ListTransaction = "ListTransaction";
 
             //User
             public const string ListStaff = "ListStaff";
@@ -64,6 +65,22 @@ namespace DicomApp.Helpers
 
             // Gamer
             public const string Main = "Main";
+
+            //Testimonial
+            public const string ListTestimonial = "ListTestimonial";
+
+            //GameCharge
+            public const string AddGameCharge = "AddGameCharge";
+            public const string EditGameCharge = "EditGameCharge";
+            public const string GameChargeDelete = "GameChargeDelete";
+
+            public const string History = "History";
+        }
+
+        public static class Languages
+        {
+            public const string Arabic = "ar-EG";
+            public const string English = "en-US";
         }
 
         public static class Claims
@@ -73,6 +90,7 @@ namespace DicomApp.Helpers
             public const string Email = "Email";
             public const string RoleID = "RoleID";
             public const string RoleName = "RoleName";
+            public const string Language = "Language";
         }
 
         public static class ActionType
@@ -109,6 +127,20 @@ namespace DicomApp.Helpers
             public static string Admin = "Admin";
             public static string Gamer = "Gamer";
             public static string Default = "Fake-Img.png";
+        }
+
+        public static class Message
+        {
+            public static string Success = "operationSuccess";
+            public static string Field = "field";
+            public static string NotFound = "notFound";
+            public static string CantUpdatePrice = "youCantUpdatePrice";
+        }
+
+        public static class Layout
+        {
+            public static string Dashboard = "Dashboard";
+            public static string Gamer = "gamer";
         }
     }
 }

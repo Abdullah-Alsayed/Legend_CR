@@ -1,17 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using DicomApp.BL.Services;
 using DicomApp.CommonDefinitions.DTO;
+using DicomApp.CommonDefinitions.DTO.CashDTOs;
 using DicomApp.CommonDefinitions.Requests;
+using DicomApp.CommonDefinitions.Responses;
 using DicomApp.DAL.DB;
+using DicomApp.DAL.Migrations;
 using DicomApp.Helpers;
+using DicomApp.Helpers.Services.PayPal;
+using DicomApp.Helpers.Services.Telegram;
 using DicomApp.Portal.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using PayPal;
 using Rotativa.AspNetCore;
 using Rotativa.AspNetCore.Options;
+using Telegram.Bot.Types;
+using static DicomApp.Helpers.SystemConstants;
 
 namespace DicomApp.Portal.Controllers
 {
@@ -19,36 +29,62 @@ namespace DicomApp.Portal.Controllers
     {
         private readonly ShippingDBContext _context;
         private readonly IHostingEnvironment _hosting;
+        private readonly IPayPalService _payPalService;
+        private readonly ITelegramService _telegramService;
+        readonly IConfiguration _configuration;
 
-        public GamerServiceController(ShippingDBContext context, IHostingEnvironment hosting)
+        public GamerServiceController(
+            ShippingDBContext context,
+            IHostingEnvironment hosting,
+            IPayPalService payPalService,
+            ITelegramService telegramService,
+            IConfiguration configuration
+        )
         {
             _context = context;
             _hosting = hosting;
+            _configuration = configuration;
+            _payPalService = payPalService;
+            _telegramService = telegramService;
         }
 
         #region GamerService actions
 
         [AuthorizePerRole(SystemConstants.Permission.AddGamerService)]
         [HttpPost]
-        public IActionResult Add(ServiceDTO model)
+        public async Task<IActionResult> Add(ServiceDTO model)
         {
-            var request = new GamerServiceRequest();
-            request.context = _context;
-            request.RoleID = AuthHelper.GetClaimValue(User, "RoleID");
-            request.UserID = AuthHelper.GetClaimValue(User, "UserID");
-            request.ServiceDTO = model;
-            request.RoutPath = _hosting.WebRootPath;
+            var response = new GamerServiceResponse();
+            try
+            {
+                var roleName = AuthHelper.GetRoleName(User, SystemConstants.Claims.RoleName);
+                var request = new GamerServiceRequest();
+                var roleID = AuthHelper.GetClaimValue(User, SystemConstants.Claims.RoleID);
+                var userID = AuthHelper.GetClaimValue(User, SystemConstants.Claims.UserID);
+                request.context = _context;
+                request.RoleID = roleID;
+                request.UserID = userID;
+                request.ServiceDTO = model;
+                request.RoutPath = _hosting.WebRootPath;
 
-            if (request.RoleID == (int)EnumRole.Gamer)
-                model.GamerId = request.UserID;
+                if (roleName == SystemConstants.Role.Gamer)
+                    model.GamerId = request.UserID;
 
-            var response = BL.Services.GamerServiceService.AddGamerService(request);
-            //request.PageIndex = 0;
-            //request.PageSize = BaseHelper.Constants.PageSize;
-            //request.IsDesc = true;
-            //request.OrderByColumn = nameof(GamerService.CreatedAt);
-            //var Getresponse = BL.Services.GamerServiceService.GetAllGamerServices(request);
-            return Json(response);
+                response = BL.Services.GamerServiceService.AddGamerService(request);
+                if (model.GameChargeId.HasValue)
+                    await AddPayment(userID, roleID, response);
+
+                //request.PageIndex = 0;
+                //request.PageSize = BaseHelper.Constants.PageSize;
+                //request.IsDesc = true;
+                //request.OrderByColumn = nameof(GamerService.CreatedAt);
+                //var Getresponse = BL.Services.GamerServiceService.GetAllGamerServices(request);
+                return Json(response);
+            }
+            catch (Exception)
+            {
+                return Json(response);
+            }
         }
 
         [AuthorizePerRole(SystemConstants.Permission.AddGamerService)]
@@ -64,59 +100,6 @@ namespace DicomApp.Portal.Controllers
                 return PartialView("/Views/GamerService/_AddOrder.cshtml");
             else
                 return View();
-        }
-
-        [AllowAnonymous]
-        [HttpGet]
-        public IActionResult GetTotalPrice(int AreaID, int GameID)
-        {
-            double ShippingFees = 0;
-            double GameFees = 0;
-            string ZoneName = "";
-
-            if (AreaID > 0)
-            {
-                var Area = _context.City.FirstOrDefault(z => z.Id == AreaID);
-                ZoneTax zonetax = _context.ZoneTax.FirstOrDefault(z => z.ZoneId == Area.ZoneId);
-                var zone = _context.Zone.FirstOrDefault(z => z.Id == zonetax.ZoneId);
-
-                ShippingFees = zonetax.Tax;
-                ZoneName = zone.NameEn;
-            }
-
-            if (GameID > 0)
-            {
-                var Game = _context.Game.FirstOrDefault(p => p.Id == GameID);
-            }
-
-            return Json(
-                new
-                {
-                    ShippingFees = ShippingFees,
-                    ZoneName = ZoneName,
-                    GameFees = GameFees
-                }
-            );
-        }
-
-        [AllowAnonymous]
-        [HttpGet]
-        public IActionResult GetAreaFees(int AreaID)
-        {
-            double ShippingFees = 0;
-            string ZoneName = "";
-
-            if (AreaID > 0)
-            {
-                var Area = _context.City.FirstOrDefault(z => z.Id == AreaID);
-                ZoneTax zonetax = _context.ZoneTax.FirstOrDefault(z => z.ZoneId == Area.ZoneId);
-                var zone = _context.Zone.FirstOrDefault(z => z.Id == zonetax.ZoneId);
-
-                ShippingFees = zonetax.Tax;
-                ZoneName = zone.NameEn;
-            }
-
-            return Json(new { ShippingFees = ShippingFees, ZoneName = ZoneName });
         }
 
         [AuthorizePerRole(SystemConstants.Permission.EditGamerService)]
@@ -173,16 +156,78 @@ namespace DicomApp.Portal.Controllers
 
         [AuthorizePerRole(SystemConstants.Permission.ChangStatusGamerService)]
         [HttpPut]
-        public ActionResult ChangStatusGamerService(int ID, int status)
+        public async Task<ActionResult> ChangStatusGamerService(int ID, int status, int price)
         {
+            var userID = AuthHelper.GetClaimValue(User, "UserID");
+            var roleID = AuthHelper.GetClaimValue(User, "RoleID");
             var request = new GamerServiceRequest();
             request.context = _context;
-            request.RoleID = AuthHelper.GetClaimValue(User, "RoleID");
-            request.UserID = AuthHelper.GetClaimValue(User, "UserID");
+            request.RoleID = roleID;
+            request.UserID = userID;
             request.ServiceDTO.GamerServiceId = ID;
             request.ServiceDTO.StatusType = status;
+            request.ServiceDTO.Price = price;
             var response = BL.Services.GamerServiceService.ChangStatusGamerService(request);
+            if (
+                response.Success
+                && response.ServiceDTO.GameServiceType == GameServiceType.Push
+                && response.ServiceDTO.StatusType == (int)StatusTypeEnum.Accept
+            )
+                await AddPayment(userID, roleID, response);
+
             return Json(response.Message);
+        }
+
+        private async Task AddPayment(int userID, int roleID, GamerServiceResponse response)
+        {
+            var returnUrl =
+                $"{_configuration["AppDomain"]}/Payment/SuccessPay?ServiceId={response.ServiceDTO.GamerServiceId}";
+            var cancelUrl = $"{_configuration["AppDomain"]}/Payment/CancelPay";
+            var createPayment = await _payPalService.PurchaseAccountAsync(
+                response.ServiceDTO.Price,
+                returnUrl,
+                cancelUrl
+            );
+            var approverUrl = createPayment
+                ?.links?.Find(x => x.rel.ToLower() == "approval_url")
+                ?.href;
+            if (!string.IsNullOrEmpty(approverUrl))
+            {
+                TransactionService.AddTransaction(
+                    new TransactionRequest
+                    {
+                        UserID = userID,
+                        RoleID = roleID,
+                        context = _context,
+                        TransactionDTO = new TransactionDTO
+                        {
+                            ServiceId = response.ServiceDTO.GamerServiceId,
+                            PaymentId = createPayment.id,
+                            Amount = response.ServiceDTO.GamerServiceId,
+                            BuyerId = response.ServiceDTO.GamerId,
+                            TransactionSource = TransactionSourceEnum.Paypal,
+                            TransactionType =
+                                response.ServiceDTO.GameServiceType == GameServiceType.Charge
+                                    ? TransactionTypeEnum.Change
+                                    : TransactionTypeEnum.Push
+                        }
+                    }
+                );
+                var userResponse = UserService.GetUser(
+                    new UserRequest
+                    {
+                        context = _context,
+                        UserDTO = new UserDTO { Id = response.ServiceDTO.GamerId }
+                    }
+                );
+                if (userResponse.Success)
+                {
+                    var messageResult = await _telegramService.SendMessage(
+                        userResponse.UserDTO.TelegramUserName,
+                        $"Pay on this Link {approverUrl}"
+                    );
+                }
+            }
         }
 
         [AuthorizePerRole(SystemConstants.Permission.RejectGamerService)]
@@ -205,8 +250,8 @@ namespace DicomApp.Portal.Controllers
             string Description,
             string UserName,
             string Password,
-            int Level,
-            string Rank
+            string Level,
+            string CurrentLevel
         )
         {
             var request = new GamerServiceRequest
@@ -221,7 +266,7 @@ namespace DicomApp.Portal.Controllers
                     UserName = UserName,
                     Password = Password,
                     Level = Level,
-                    Rank = Rank
+                    CurrentLevel = CurrentLevel
                 }
             };
 

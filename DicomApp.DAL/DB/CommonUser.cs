@@ -12,26 +12,17 @@ namespace DicomApp.DAL.DB
         {
             AccountCreatedByNavigation = new HashSet<Account>();
             AccountLastModifiedByNavigation = new HashSet<Account>();
-            AccountTransactionCreatedByNavigation = new HashSet<AccountTransaction>();
-            AccountTransactionLastModifiedByNavigation = new HashSet<AccountTransaction>();
+            AccountTransactionCreatedByNavigation = new HashSet<Transaction>();
+            AccountTransactionLastModifiedByNavigation = new HashSet<Transaction>();
             AccountUser = new HashSet<Account>();
-            CashTransferCreatedByNavigation = new HashSet<CashTransfer>();
-            CashTransferLastModifiedByNavigation = new HashSet<CashTransfer>();
+
             CommonUserDevice = new HashSet<CommonUserDevice>();
-            ComplainActionByNavigation = new HashSet<Complain>();
-            ComplainEmployee = new HashSet<Complain>();
-            ComplainVendor = new HashSet<Complain>();
+
             ContactUs = new HashSet<ContactUs>();
             FollowUp = new HashSet<FollowUp>();
             Notification = new HashSet<Notification>();
-            PickupRequestDeliveryMan = new HashSet<PickupRequest>();
-            PickupRequestVendor = new HashSet<PickupRequest>();
             ShipmentCustomer = new HashSet<Advertisement>();
-            ShipmentCustomerFollowUp = new HashSet<ShipmentCustomerFollowUp>();
             UserLocation = new HashSet<UserLocation>();
-            VendorProduct = new HashSet<VendorProduct>();
-            ZoneCreatedByNavigation = new HashSet<Zone>();
-            ZoneLastModifiedByNavigation = new HashSet<Zone>();
             GamerServices = new HashSet<GamerService>();
         }
 
@@ -51,8 +42,6 @@ namespace DicomApp.DAL.DB
         public bool IsLoggedIn { get; set; }
         public string TelegramUserName { get; set; }
 
-        [ForeignKey(nameof(Country))]
-        public int? CountryId { get; set; }
         public int Age { get; set; }
         public GenderEnum Gender { get; set; }
 
@@ -81,6 +70,7 @@ namespace DicomApp.DAL.DB
         public int? BranchId { get; set; }
         public string Bank { get; set; }
         public string AccountName { get; set; }
+        public string Language { get; set; }
         public int? AccountNumber { get; set; }
         public int? IbanNumber { get; set; }
         public int? WalletNumber { get; set; }
@@ -89,38 +79,31 @@ namespace DicomApp.DAL.DB
         public string ImgUrl { get; set; }
         public string HashedPassword { get; set; }
 
-        public virtual Branch Branch { get; set; }
         public virtual Role Role { get; set; }
-
         public virtual Country Country { get; set; }
+
         public virtual ICollection<Account> AccountCreatedByNavigation { get; set; }
         public virtual ICollection<Account> AccountLastModifiedByNavigation { get; set; }
-        public virtual ICollection<AccountTransaction> AccountTransactionCreatedByNavigation { get; set; }
-        public virtual ICollection<AccountTransaction> AccountTransactionLastModifiedByNavigation { get; set; }
+        public virtual ICollection<Transaction> AccountTransactionCreatedByNavigation { get; set; }
+        public virtual ICollection<Transaction> AccountTransactionLastModifiedByNavigation { get; set; }
         public virtual ICollection<Account> AccountUser { get; set; }
-        public virtual ICollection<CashTransfer> CashTransferCreatedByNavigation { get; set; }
-        public virtual ICollection<CashTransfer> CashTransferLastModifiedByNavigation { get; set; }
         public virtual ICollection<CommonUserDevice> CommonUserDevice { get; set; }
-        public virtual ICollection<Complain> ComplainActionByNavigation { get; set; }
-        public virtual ICollection<Complain> ComplainEmployee { get; set; }
-        public virtual ICollection<Complain> ComplainVendor { get; set; }
         public virtual ICollection<ContactUs> ContactUs { get; set; }
         public virtual ICollection<FollowUp> FollowUp { get; set; }
         public virtual ICollection<Notification> Notification { get; set; }
-        public virtual ICollection<PickupRequest> PickupRequestDeliveryMan { get; set; }
-        public virtual ICollection<PickupRequest> PickupRequestVendor { get; set; }
         public virtual ICollection<Advertisement> ShipmentCustomer { get; set; }
-        public virtual ICollection<ShipmentCustomerFollowUp> ShipmentCustomerFollowUp { get; set; }
         public virtual ICollection<UserLocation> UserLocation { get; set; }
-        public virtual ICollection<VendorProduct> VendorProduct { get; set; }
-        public virtual ICollection<Zone> ZoneCreatedByNavigation { get; set; }
-        public virtual ICollection<Zone> ZoneLastModifiedByNavigation { get; set; }
+
         public virtual ICollection<GamerService> GamerServices { get; set; }
+
+        [InverseProperty("CreatedByNavigation")]
+        public virtual ICollection<Testimonial> Testimonials { get; set; }
 
         [InverseProperty("Gamer")]
         public virtual ICollection<Advertisement> AdvertisementsGamer { get; set; }
 
         [InverseProperty("Buyer")]
         public virtual ICollection<Advertisement> AdvertisementsBuyer { get; set; }
+        public int? CountryId { get; set; }
     }
 }

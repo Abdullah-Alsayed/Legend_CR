@@ -23,6 +23,7 @@ namespace DicomApp.CommonDefinitions.DTO.AdvertisementDTOs
         public int Level { get; set; }
         public string Rank { get; set; }
         public int Price { get; set; }
+        public int OldPrice { get; set; }
 
         public DateTime CreatedAt { get; set; }
         public int CreatedBy { get; set; }
@@ -38,8 +39,8 @@ namespace DicomApp.CommonDefinitions.DTO.AdvertisementDTOs
         public List<IFormFile> Files { get; set; }
         public CashTransferDTO CashTransfer { get; set; }
         public List<string> AdvertisementPhotos { get; set; }
-        public List<AccountTransactionDTO> AccountTransaction { get; set; }
-        public List<FollowUpDTO> FollowUp { get; set; }
+        public List<TransactionDTO> AccountTransaction { get; set; }
+        public List<HistoryDTO> FollowUp { get; set; }
         public bool SELECTED { get; set; }
 
         // Filter

@@ -43,18 +43,23 @@ namespace DicomApp.BL.Services
                                 Inv.AdvertisementId = advertisement.AdvertisementId;
                                 Inv.Price = advertisement.Price;
                                 advertisement.StatusId = status.Id;
-                                var follow = new FollowUpDTO
+                                var follow = new HistoryDTO
                                 {
-                                    Title = "Invoice Added",
+                                    Message = request
+                                        .Localizer["createInvoice", Inv.RefId]
+                                        .ToString(),
                                     CreatedBy = request.UserID,
                                     AdvertisementId = advertisement.AdvertisementId,
+                                    EntityType = EntityTypeEnum.Invoice,
+                                    ActionType = ActionTypeEnum.Add,
+                                    CreatedAt = DateTime.Now
                                 };
                                 FollowUpService.Add(follow, request.context);
                             }
                             else
                                 return new InvoiceResponse()
                                 {
-                                    Message = "Not Found",
+                                    Message = request.Localizer[SystemConstants.Message.NotFound],
                                     Success = false
                                 };
                         }
@@ -72,7 +77,7 @@ namespace DicomApp.BL.Services
                             else
                                 return new InvoiceResponse()
                                 {
-                                    Message = "Not Found",
+                                    Message = request.Localizer[SystemConstants.Message.NotFound],
                                     Success = false
                                 };
                         }
@@ -102,7 +107,7 @@ namespace DicomApp.BL.Services
                         );
 
                         request.context.SaveChanges();
-                        response.Message = "New Invoice " + Inv.RefId + " successfully added";
+                        response.Message = request.Localizer[SystemConstants.Message.Success];
                         response.Success = true;
                         response.StatusCode = HttpStatusCode.OK;
                     }
@@ -161,12 +166,17 @@ namespace DicomApp.BL.Services
                             CreatedBy = s.CreatedBy,
                             LastModifiedAt = s.LastModifiedAt,
                             LastModifiedBy = s.LastModifiedBy,
-                            GamerService = s.GamerServiceId.HasValue
-                                ? new ServiceDTO
-                                {
-                                    GameServiceType = s.GamerService.GameServiceType
-                                }
-                                : null,
+                            GamerService =
+                                s.GamerService != null
+                                    ? new ServiceDTO
+                                    {
+                                        GameServiceType = s.GamerService.GameServiceType
+                                    }
+                                    : null,
+                            Advertisement =
+                                s.Advertisement != null
+                                    ? new AdsDTO { RefId = s.Advertisement.RefId }
+                                    : null
                         });
                         response.InvoiceDTOs = query.ToList();
                         response.Message = HttpStatusCode.OK.ToString();
@@ -214,11 +224,14 @@ namespace DicomApp.BL.Services
                                 if (advertisement != null && publishStatus != null)
                                 {
                                     advertisement.StatusId = publishStatus.Id;
-                                    var follow = new FollowUpDTO
+                                    //Add follow up
+                                    var follow = new HistoryDTO
                                     {
-                                        Title = "Invoice Refund",
+                                        Message = request.Localizer["refundInvoice", invoice.RefId],
                                         CreatedBy = request.UserID,
-                                        AdvertisementId = advertisement.AdvertisementId,
+                                        CreatedAt = DateTime.Now,
+                                        ActionType = ActionTypeEnum.Edit,
+                                        EntityType = EntityTypeEnum.Invoice
                                     };
                                     FollowUpService.Add(follow, request.context);
                                 }
@@ -242,7 +255,9 @@ namespace DicomApp.BL.Services
                                 else
                                     return new InvoiceResponse()
                                     {
-                                        Message = "Not Found",
+                                        Message = request.Localizer[
+                                            SystemConstants.Message.NotFound
+                                        ],
                                         Success = false
                                     };
                             }
@@ -270,13 +285,18 @@ namespace DicomApp.BL.Services
                             );
 
                             request.context.SaveChanges();
-                            response.Message =
-                                "Invoice " + invoice.RefId + " successfully Refunded";
+                            response.Message = response.Message = request.Localizer[
+                                SystemConstants.Message.Success
+                            ];
                             response.Success = true;
                             response.StatusCode = HttpStatusCode.OK;
                         }
                         else
-                            return new InvoiceResponse() { Message = "Not Found", Success = false };
+                            return new InvoiceResponse()
+                            {
+                                Message = request.Localizer[SystemConstants.Message.NotFound],
+                                Success = false
+                            };
                     }
                     catch (Exception ex)
                     {

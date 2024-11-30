@@ -20,7 +20,6 @@
   <ItemGroup>
     <Content Remove="Views\User\Register.cshtml" />
     <Content Remove="Views\Vendor\OrderReportsPrint.cshtml" />
-    <Content Remove="Views\Warehouse\_CashOrderListPartial.cshtml" />
   </ItemGroup>
 
   <!--<ItemGroup>
@@ -33,6 +32,7 @@
     <PackageReference Include="ExcelDataReader" Version="3.5.0" />
     <PackageReference Include="ExcelDataReader.DataSet" Version="3.5.0" />
     <PackageReference Include="log4net" Version="2.0.8" />
+    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.3.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
@@ -51,27 +51,17 @@
     <PackageReference Include="Select.HtmlToPdf.NetCore" Version="23.1.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
+    <PackageReference Include="Telegram.Bot" Version="19.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Views\Admin\AreaList.cshtml" />
-    <None Include="Views\Admin\ZoneList.cshtml" />
-    <None Include="Views\Admin\ZoneTax.cshtml" />
-    <None Include="Views\City\Create.cshtml" />
-    <None Include="Views\City\Edit.cshtml" />
-    <None Include="Views\City\Index.cshtml" />
-    <None Include="Views\Home\About.cshtml" />
-    <None Include="Views\Home\AccountDashboard.cshtml" />
-    <None Include="Views\Home\Alerts.cshtml" />
-    <None Include="Views\Home\Index.cshtml" />
-    <None Include="Views\Home\Index3.cshtml" />
-    <None Include="Views\Home\_AccountDashboard.cshtml" />
-    <None Include="Views\Home\_IndexPartial.cshtml" />
-    <None Include="Views\Category\AddCategory.cshtml" />
-    <None Include="Views\Category\CategoryForm.cshtml" />
-    <None Include="Views\Category\CategoryList.cshtml" />
-    <None Include="Views\Product\ProductForm.cshtml" />
-    <None Include="Views\Product\ProductList.cshtml" />
+    <None Include="Views\Dashboard\About.cshtml" />
+    <None Include="Views\Dashboard\AccountDashboard.cshtml" />
+    <None Include="Views\Dashboard\Alerts.cshtml" />
+    <None Include="Views\Dashboard\Main.cshtml" />
+    <None Include="Views\Dashboard\Index3.cshtml" />
+    <None Include="Views\Dashboard\_AccountDashboard.cshtml" />
+    <None Include="Views\Dashboard\_MainPartial.cshtml" />
     <None Include="Views\Role\AddRole.cshtml" />
     <None Include="Views\Role\Components\RoleVComponent\Default.cshtml" />
     <None Include="Views\Role\EditRole.cshtml" />
@@ -110,7 +100,6 @@
     <None Include="wwwroot\GamerLayout\assets\js\jquery.min.js" />
     <None Include="wwwroot\GamerLayout\assets\js\jquery.slicknav.min.js" />
     <None Include="wwwroot\GamerLayout\assets\js\main.js" />
-    <None Include="wwwroot\GamerLayout\assets\js\owl.carousel.min.js" />
     <None Include="wwwroot\GamerLayout\assets\js\wow\wow.js" />
     <None Include="wwwroot\GamerLayout\assets\js\wow\wow.min.js" />
     <None Include="wwwroot\js\User\Index.js" />
@@ -125,21 +114,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\dist\Fonts\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Update="Views\Report\Stock\Stock.cshtml">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Update="Views\Report\Stock\StockPDF.cshtml">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Update="Views\Report\Stock\_Stock.cshtml">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
+    <Folder Include="Resources\" />
   </ItemGroup>
 
 </Project>

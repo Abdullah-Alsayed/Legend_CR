@@ -201,19 +201,33 @@ function ShowHidePartialDelivery() {
 }
 
 
-function OpenPurchasePopUp(accounId) {
+function OpenPurchasePopUp(accounId = 0, gameChargeId=0) {
     $('#purchase-modal').modal('show');
     $('#PupUpAccountId').val(accounId);
+    $('#PupUpgameChargeId').val(gameChargeId);
 }
 
-function BayByPayPal() {
+//function isAuthenticated(isAuthenticated) {
+//    if (isAuthenticated != 'false') {
+//        $('#Login-PupUp-Modal').modal('show');
+//        return false;
+//    }
+//}
+function BayByPayPal(isAuthenticated = 'false')
+{
+
+    var result = authenticatedCheck(isAuthenticated,"purchase-modal");
+    if (!result)
+        return false;
+        
     $('.custom-loader').toggleClass('d-none');
     $('#paypal-Btn').toggleClass('d-none');
     var accountId = $('#PupUpAccountId').val();
+    var gameChargeId = $('#PupUpgameChargeId').val();
     $.ajax({
         type: "POST",
-        url: `/gamer/Paypal`,
-        data: { accountId: accountId },
+        url: `/payment/Paypal`,
+        data: { accountId: accountId, gameChargeId: gameChargeId },
         success: function (result) {
           
             if (result.success)
@@ -233,6 +247,69 @@ function BayByPayPal() {
     })
 
 }
+function AccountCheckout(isAuthenticated = 'false') {
+   
+    var result = authenticatedCheck(isAuthenticated,"purchase-modal");
+    if (!result)
+        return false;
+
+    let formData = new FormData();
+
+    // Get the selected files
+    let files = $('#Attachment-files')[0].files;
+
+    // Append each file to the FormData
+    formData.append('file', files[0]);
+
+    // Get the hidden input values
+    let accountId = $('#PupUpAccountId').val();
+    formData.append('AccountId', accountId);
+
+    let gameChargeId = $('#PupUpgameChargeId').val();
+    formData.append('GameChargeId', gameChargeId);
+
+    let checkoutButton = $('#Account-checkout');
+    let checkoutLabel = $('#Account-checkout-Label');
+    let loader = $('.loader');
+
+    checkoutButton.prop('disabled', true);
+    checkoutLabel.addClass('d-none'); // Hide the label
+    loader.removeClass('d-none'); // Show the loader
+
+    if (files.length === 0) {
+        ToastError('Please select a file to upload.');
+        checkoutButton.prop('disabled', false);
+        checkoutLabel.removeClass('d-none'); // Show the label back
+        loader.addClass('d-none'); // Hide the loader
+        return; // Stop the function if no file is selected
+    }
+
+    $.ajax({
+        url: '/Payment/PayFromAttatchment',
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            if (response.success) {
+                $('#Attachment-files-Lable').text('');
+                $("#Attachment-files").val('');
+                ToastSuccess(response.message);
+            }
+            else
+                ToastError(response.message);
+
+        },
+        error: function (xhr, status, error) {
+            console.log('Error: ' + error);
+            ToastError(response.message);
+        }, complete: function () {
+            checkoutButton.prop('disabled', false);
+            checkoutLabel.removeClass('d-none'); // Show the label back
+            loader.addClass('d-none'); // Hide the loader        
+        }
+    });
+}
 function ServiceTypeChange() {
     //let Service = $("#ShipmentServiceId").val();
     //if (Service === "3") {
@@ -245,20 +322,24 @@ function ServiceTypeChange() {
 function AddAdvertisement(ActionName, ControllerName, FormName) {
     $(".invalid-feedback").removeClass("d-none");
     if ($(`#${FormName}`).valid()) {
-
+            $(".Spinner").removeClass("d-none");
             $("#BtnSend").prop('disabled', true);
             $('#MainLoder').fadeIn(100);
             $("#MainView").hide();
+        $("#BtnAdvertisementLabel").addClass("d-none"); // Hide label
+        $(".loader").removeClass("d-none"); // Show loader
 
             // Create FormData object
             let formData = new FormData($(`#${FormName}`)[0]);
 
             // Append files to formData
-            let files = $(`#${FormName} input[type='file']`)[0].files;
-            for (let i = 0; i < files.length; i++) {
-                formData.append('files', files[i]);
+        //let files = $(`#${FormName} input[type='file']`)[0].files;
+        validFiles = validFiles.filter((file, index, self) =>
+            index === self.findIndex((f) => f.name === file.name && f.size === file.size)
+        );
+            for (let i = 0; i < validFiles.length; i++) {
+                formData.append('files', validFiles[i]);
             }
-
             $.ajax({
                 url: `/${ControllerName}/${ActionName}`,
                 contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
@@ -266,27 +347,17 @@ function AddAdvertisement(ActionName, ControllerName, FormName) {
                 data: formData,
                 processData: false, 
                 contentType: false, 
-                dataType: 'html',
+                dataType: 'json',
                 success: function (response) {
-                    $(".buy-ticket").css("display","none");
-                    if (response.includes('successfully')) {
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: response,
-                            showConfirmButton: false,
-                            timer: 5000
-                        });
+                    $(".buy-ticket").css("display", "none");
+                    $(".Spinner").addClass("d-none");
+                    if (response.success) {
+                        validFiles = [];
+                        alertSuccess(response.message,5000)
                     }
-                    else {
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'error',
-                            title: response,
-                            showConfirmButton: false,
-                            timer: 5000
-                        });
-                    }
+                    else 
+                        alertError(response.message, 5000)
+                    
 
                     $("#MainView").fadeIn(1000);
                     $('#MainLoder').fadeOut(1000);
@@ -309,6 +380,10 @@ function AddAdvertisement(ActionName, ControllerName, FormName) {
                     $(".se-pre-con").css("display", "none");
                     $("#MainView").show();
                     $("#BtnSend").prop('disabled', false);
+                }, complete: function () {
+                    $(".loader").addClass("d-none"); // Hide loader on error
+                    $("#BtnSend").attr("disabled", false); // Enable button back
+                    $("#BtnAdvertisementLabel").removeClass("d-none"); // Show original label
                 }
             })
         }
@@ -399,11 +474,10 @@ function EditAdvertisement(ActionName, ControllerName, FormName) {
         $("label:contains('This field is required.')").fadeOut();
     }
 }
-
-function updateAdvertisementFiles() {
+var validFiles = [];
+function updateAdvertisementFiles(language = "ar-EG") {
     var files = $("#Advertisement-files")[0].files;
     var filesArray = Array.from(files);
-    var validFiles = [];
     var imageCount = $('#Advertisement-Imgs img').length;
 
     filesArray.forEach(function (file) {
@@ -429,14 +503,51 @@ function updateAdvertisementFiles() {
             }
         }
     });
+    if (type === "payment") 
+      $('#Advertisement-files-Lable-payment').text(imageCount + ' file(s) selected');
+     else 
+      $('#Advertisement-files-Lable').text(imageCount + ' file(s) selected');
 
-    $('#Advertisement-files-Lable').text(imageCount + ' file(s) selected');
+    
+    if (validFiles.length < filesArray.length) {
+        alert('Some files were not added. Ensure each file is an image, less than 2MB, and you select a maximum of 5 files.');
+    }
+}
+function UploadAttachmentFiles(language = "ar-EG") {
+    var files = $("#Attachment-files")[0].files;
+    var filesArray = Array.from(files);
+    var imageCount = $('#Attachment-Imgs img').length;
+
+    filesArray.forEach(function (file) {
+        var fileType = file.type.split('/')[0];
+        if (fileType === 'image' && file.size <= 2 * 1024 * 1024) {
+            if (imageCount < 5) {
+                validFiles.push(file);
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var img = $('<img>', {
+                        src: e.target.result,
+                        class: 'uploaded-img',
+                        click: function () {
+                            $(this).remove();
+                            imageCount--;
+                            $('#Attachment-files-Lable').text(imageCount + ' file(s) selected');
+                        }
+                    });
+                    $('#Attachment-Imgs').append(img);
+                };
+                reader.readAsDataURL(file);
+                imageCount++;
+            }
+        }
+    });
+        $('#Attachment-files-Lable').text(imageCount + ' file(s) selected');
+
 
     if (validFiles.length < filesArray.length) {
         alert('Some files were not added. Ensure each file is an image, less than 2MB, and you select a maximum of 5 files.');
     }
 }
-
 function deleteAllFiles() {
     $('#Advertisement-Imgs').empty();
     $('#Advertisement-files-Lable').text('Not selected file');
@@ -453,4 +564,42 @@ function GetFeesSummary() {
         $("#lblTotalFees").html((Number(RefundCash) + Number(data.shippingFees)) + " EGP");
         $("#spanTotalFees").html((Number(RefundCash) + Number(data.shippingFees)) + " EGP");
     })
+}
+
+function ConfirmTransaction(transactionId, advertisementId) {
+    let confirmButton = $(`#BtnConfirm_${transactionId}`);
+    let spinner = confirmButton.find('.Spinner');
+    let modalId = `#ConfirmTransaction-Model_${transactionId}`; // Modal ID
+
+    // Disable the button and show the spinner
+    confirmButton.prop('disabled', true);
+    spinner.removeClass('d-none');
+
+    $.ajax({
+        url: '/Payment/AcceptPayment', 
+        type: 'POST',
+        data: { Id: transactionId },
+        success: function (response) {
+            if (response.success) {
+                $(`tr[data-AdvertisementId="${advertisementId}"]`).fadeOut(500, function () {
+                    $(this).remove();
+                });
+                alertSuccess(response.message); 
+            }
+            else {
+                alertError(response.message); 
+            }
+        },
+        error: function () {
+            alert('Error occurred while processing the request.');
+        },
+        complete: function () {
+            // Close the modal
+            $(modalId).modal('hide');
+
+            confirmButton.prop('disabled', false);
+            spinner.addClass('d-none');
+
+        }
+    });
 }

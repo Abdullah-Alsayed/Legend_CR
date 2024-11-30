@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 using DicomApp.CommonDefinitions.DTO.AdvertisementDTOs;
 using DicomApp.DAL.DB;
 using Microsoft.AspNetCore.Http;
@@ -88,6 +89,8 @@ namespace DicomApp.CommonDefinitions.DTO
         public string Search { get; set; }
         public string LocationUrl { get; set; }
         public string Landmark { get; set; }
+        public string Language { get; set; }
+
         public int? Floor { get; set; }
         public int? Apartment { get; set; }
         public DateTime CreationDate { get; set; }

@@ -64,7 +64,7 @@ namespace DicomApp.Portal.Helpers
                             );
                         else
                             context.Result = new RedirectToActionResult(
-                                actionName: "Login",
+                                actionName: "Authorization",
                                 "User",
                                 new object()
                             );
