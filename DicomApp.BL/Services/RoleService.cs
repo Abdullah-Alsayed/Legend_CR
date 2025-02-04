@@ -208,8 +208,8 @@ namespace DicomApp.BL.Services
                             var role = AddOrEditRole(request.UserID, request.RoleDTO);
                             request.context.Role.Add(role);
                             request.context.SaveChanges();
-                            var appservices = request.context.AppService.ToList();
-                            foreach (var item in appservices)
+                            var appServices = request.context.AppService.ToList();
+                            foreach (var item in appServices)
                             {
                                 var approle = new RoleAppService()
                                 {
@@ -220,6 +220,7 @@ namespace DicomApp.BL.Services
                                     IsDeleted = false,
                                     RoleId = role.Id
                                 };
+                                request.context.RoleAppService.Add(approle);
                             }
                             request.context.SaveChanges();
                             res.Message = HttpStatusCode.OK.ToString();
