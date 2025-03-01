@@ -27,14 +27,14 @@ namespace DicomApp.Portal.Controllers
     [Authorize]
     public class GamerController : Controller
     {
-        private readonly ShippingDBContext _context;
+        private readonly LegendDBContext _context;
         readonly IPayPalService _payPalService;
         readonly IConfiguration _configuration;
         readonly IMailServices _mailServices;
         readonly IStringLocalizer<GamerController> _stringLocalizer;
 
         public GamerController(
-            ShippingDBContext context,
+            LegendDBContext context,
             IPayPalService payPalService,
             IConfiguration configuration,
             IMailServices mailServices,

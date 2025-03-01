@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -10,20 +9,20 @@ using DicomApp.BL.Services;
 using DicomApp.CommonDefinitions.DTO;
 using DicomApp.CommonDefinitions.Requests;
 using DicomApp.DAL.DB;
+using DicomApp.Helpers;
+using DicomApp.Portal.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Authorization;
-using DicomApp.Helpers;
-using DicomApp.Portal.Helpers;
 
 namespace DicomApp.Portal.Controllers
 {
-
     public class Common_ResourceController : Controller
     {
-        private readonly ShippingDBContext _context;
-        public Common_ResourceController(ShippingDBContext context)
+        private readonly LegendDBContext _context;
+
+        public Common_ResourceController(LegendDBContext context)
         {
             _context = context;
         }
@@ -35,12 +34,8 @@ namespace DicomApp.Portal.Controllers
             request.RoleID = AuthHelper.GetClaimValue(User, "RoleID");
             request.UserID = AuthHelper.GetClaimValue(User, "UserID");
             var Common_ResourceResponse = Common_ResourceService.ListCommon_Resource(request);
-            return Ok(new
-            {
-                Common_ResourceResponse
-            });
+            return Ok(new { Common_ResourceResponse });
         }
-
 
         [HttpPost]
         public ActionResult DeleteCommon_Resource([FromBody] Common_ResourceRequest request)
@@ -49,13 +44,8 @@ namespace DicomApp.Portal.Controllers
             request.RoleID = AuthHelper.GetClaimValue(User, "RoleID");
             request.UserID = AuthHelper.GetClaimValue(User, "UserID");
             var Common_ResourceResponse = Common_ResourceService.DeleteCommon_Resource(request);
-            return Ok(new
-            {
-                Common_ResourceResponse
-            });
+            return Ok(new { Common_ResourceResponse });
         }
-
-
 
         [HttpPost]
         [AuthorizePerRole("AddCommon_Resource")]
@@ -65,16 +55,8 @@ namespace DicomApp.Portal.Controllers
             request.RoleID = AuthHelper.GetClaimValue(User, "RoleID");
             request.UserID = AuthHelper.GetClaimValue(User, "UserID");
             var Common_ResourceResponse = Common_ResourceService.AddCommon_Resource(request);
-            return Ok(new
-            {
-                Common_ResourceResponse
-            });
+            return Ok(new { Common_ResourceResponse });
         }
-
-
-
-
-
 
         [HttpPost]
         [AuthorizePerRole("EditCommon_Resource")]
@@ -84,12 +66,7 @@ namespace DicomApp.Portal.Controllers
             request.RoleID = AuthHelper.GetClaimValue(User, "RoleID");
             request.UserID = AuthHelper.GetClaimValue(User, "UserID");
             var Common_ResourceResponse = Common_ResourceService.EditCommon_Resource(request);
-            return Ok(new
-            {
-                Common_ResourceResponse
-            });
+            return Ok(new { Common_ResourceResponse });
         }
-
-
     }
 }

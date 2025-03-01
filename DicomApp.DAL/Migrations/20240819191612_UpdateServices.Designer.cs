@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DicomApp.DAL.Migrations
 {
-    [DbContext(typeof(ShippingDBContext))]
+    [DbContext(typeof(LegendDBContext))]
     [Migration("20240819191612_UpdateServices")]
     partial class UpdateServices
     {

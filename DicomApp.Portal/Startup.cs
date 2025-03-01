@@ -90,7 +90,7 @@ namespace DicomApp.Portal
             });
             services.AddSession();
             services.AddHttpClient<AvatarService>();
-            services.AddDbContext<ShippingDBContext>(options =>
+            services.AddDbContext<LegendDBContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DicomAppDBEntities"))
             );
 

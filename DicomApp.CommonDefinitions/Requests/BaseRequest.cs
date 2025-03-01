@@ -5,7 +5,7 @@ namespace DicomApp.CommonDefinitions.Requests
 {
     public class BaseRequest
     {
-        public ShippingDBContext context;
+        public LegendDBContext context;
         public IStringLocalizer Localizer { get; set; }
 
         public const int DefaultPageSize = 20;

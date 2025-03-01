@@ -15,7 +15,7 @@ namespace DicomApp.Portal
 {
     public static class DataSeeder
     {
-        public static async Task Seed(ShippingDBContext dBContext)
+        public static async Task Seed(LegendDBContext dBContext)
         {
             try
             {
@@ -37,7 +37,7 @@ namespace DicomApp.Portal
             }
         }
 
-        private static async Task SeedCategorys(ShippingDBContext dBContext)
+        private static async Task SeedCategorys(LegendDBContext dBContext)
         {
             if (!await dBContext.Category.AnyAsync())
             {
@@ -70,7 +70,7 @@ namespace DicomApp.Portal
             }
         }
 
-        private static async Task SeedUser(ShippingDBContext dBContext)
+        private static async Task SeedUser(LegendDBContext dBContext)
         {
             var role = await dBContext.Role.FirstOrDefaultAsync(x =>
                 x.Name == SystemConstants.Role.SuperAdmin
@@ -90,7 +90,7 @@ namespace DicomApp.Portal
                 );
         }
 
-        private static async Task SeedRoles(ShippingDBContext dBContext)
+        private static async Task SeedRoles(LegendDBContext dBContext)
         {
             var roles = new List<Role>()
             {
@@ -124,7 +124,7 @@ namespace DicomApp.Portal
             }
         }
 
-        private static async Task SeedStatus(ShippingDBContext dBContext)
+        private static async Task SeedStatus(LegendDBContext dBContext)
         {
             var status = new List<Status>()
             {
@@ -170,7 +170,7 @@ namespace DicomApp.Portal
                 await dBContext.Status.AddRangeAsync(status);
         }
 
-        private static async Task SeedCountries(ShippingDBContext dBContext)
+        private static async Task SeedCountries(LegendDBContext dBContext)
         {
             if (!await dBContext.Countries.AnyAsync())
             {

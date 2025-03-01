@@ -23,9 +23,9 @@ namespace DicomApp.Portal.Controllers
     [Authorize]
     public class RoleController : Controller
     {
-        private readonly ShippingDBContext _context;
+        private readonly LegendDBContext _context;
 
-        public RoleController(ShippingDBContext context)
+        public RoleController(LegendDBContext context)
         {
             _context = context;
         }

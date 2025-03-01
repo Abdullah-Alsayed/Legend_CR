@@ -11,7 +11,7 @@ namespace DicomApp.BL.Services
 {
     public class FollowUpService : BaseService
     {
-        public static void Add(HistoryDTO followUpDTO, ShippingDBContext context)
+        public static void Add(HistoryDTO followUpDTO, LegendDBContext context)
         {
             context.FollowUp.Add(
                 new FollowUp

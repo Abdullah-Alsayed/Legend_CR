@@ -20,12 +20,12 @@ namespace DicomApp.Portal.Controllers
 {
     public class AdvertisementController : Controller
     {
-        private readonly ShippingDBContext _context;
+        private readonly LegendDBContext _context;
         private readonly IHostingEnvironment _hosting;
         private readonly IStringLocalizer<AdvertisementController> _stringLocalizer;
 
         public AdvertisementController(
-            ShippingDBContext context,
+            LegendDBContext context,
             IHostingEnvironment hosting,
             IStringLocalizer<AdvertisementController> stringLocalizer
         )

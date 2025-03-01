@@ -10,7 +10,7 @@ namespace DicomApp.Helpers
 {
     public static class GeneralHelper
     {
-        public static List<CommonUser> GetUsers(string RoleName, ShippingDBContext _context)
+        public static List<CommonUser> GetUsers(string RoleName, LegendDBContext _context)
         {
             var UserList = _context
                 .CommonUser.Where(p => !p.IsDeleted && p.Role.Name == RoleName)

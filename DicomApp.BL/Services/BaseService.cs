@@ -142,14 +142,14 @@ namespace DicomApp.BL.Services
         public static bool CheckRoleAccessability(
             long roleID,
             string serviceName,
-            ShippingDBContext context = null,
+            LegendDBContext context = null,
             string connectionString = null,
             long created = 0,
             string message = ""
         )
         {
             if (context == null)
-                context = new ShippingDBContext(GetDBContextConnectionOptions(connectionString));
+                context = new LegendDBContext(GetDBContextConnectionOptions(connectionString));
 
             var role = context.Role.FirstOrDefault(x => x.Id == roleID);
             if (role != null && role.Name == SystemConstants.Role.SuperAdmin)
@@ -179,12 +179,12 @@ namespace DicomApp.BL.Services
             return canAccess;
         }
 
-        public static DbContextOptions<ShippingDBContext> GetDBContextConnectionOptions(
+        public static DbContextOptions<LegendDBContext> GetDBContextConnectionOptions(
             string connectionString
         )
         {
             return SqlServerDbContextOptionsExtensions
-                .UseSqlServer(new DbContextOptionsBuilder<ShippingDBContext>(), connectionString)
+                .UseSqlServer(new DbContextOptionsBuilder<LegendDBContext>(), connectionString)
                 .Options;
         }
     }

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DicomApp.DAL.Migrations
 {
-    [DbContext(typeof(ShippingDBContext))]
+    [DbContext(typeof(LegendDBContext))]
     [Migration("20240827194108_AddLanguage")]
     partial class AddLanguage
     {

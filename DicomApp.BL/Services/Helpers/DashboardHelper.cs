@@ -283,7 +283,7 @@ namespace DicomApp.BL.Services.Helpers
             return ReturnData ?? new ChartDTO[0];
         }
 
-        private static ChartDTO[] ChartPackagingStock(ShippingDBContext context, int TopCount)
+        private static ChartDTO[] ChartPackagingStock(LegendDBContext context, int TopCount)
         {
             var Game = GameService.GetGames(new GameRequest() { context = context }).GameDTOs;
             ChartDTO[] ReturnData = null;

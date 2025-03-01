@@ -16,9 +16,9 @@ namespace DicomApp.Portal.Controllers
     [Authorize]
     public class TestimonialController : Controller
     {
-        private readonly ShippingDBContext _context;
+        private readonly LegendDBContext _context;
 
-        public TestimonialController(ShippingDBContext context) => _context = context;
+        public TestimonialController(LegendDBContext context) => _context = context;
 
         [HttpPost]
         public IActionResult Create(string Comment, int Rating)

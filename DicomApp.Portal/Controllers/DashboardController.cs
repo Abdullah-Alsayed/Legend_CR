@@ -21,9 +21,9 @@ namespace DicomApp.Portal.Controllers
     [Authorize]
     public class DashboardController : Controller
     {
-        private readonly ShippingDBContext _context;
+        private readonly LegendDBContext _context;
 
-        public DashboardController(ShippingDBContext context) => _context = context;
+        public DashboardController(LegendDBContext context) => _context = context;
 
         public IActionResult Alerts()
         {

@@ -86,7 +86,7 @@ namespace DicomApp.BL.Services
         /// <param name="LookType">Select Entitys Need</param>
         /// <param name="Context"></param>
         /// <returns></returns>
-        public static LookupDTO GetLookup(List<byte> LookType, ShippingDBContext Context)
+        public static LookupDTO GetLookup(List<byte> LookType, LegendDBContext Context)
         {
             var lookup = new LookupDTO();
 

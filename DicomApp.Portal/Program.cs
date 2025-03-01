@@ -25,7 +25,7 @@ namespace DicomApp.Portal
                 using (var scope = host.Services.CreateScope())
                 {
                     var services = scope.ServiceProvider;
-                    var context = services.GetRequiredService<ShippingDBContext>();
+                    var context = services.GetRequiredService<LegendDBContext>();
                     if (context != null)
                         await DataSeeder.Seed(context);
                     else

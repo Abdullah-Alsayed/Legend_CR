@@ -23,9 +23,9 @@ namespace DicomApp.Portal.Controllers
 {
     public class HistoryController : Controller
     {
-        private readonly ShippingDBContext _context;
+        private readonly LegendDBContext _context;
 
-        public HistoryController(ShippingDBContext context)
+        public HistoryController(LegendDBContext context)
         {
             _context = context;
         }

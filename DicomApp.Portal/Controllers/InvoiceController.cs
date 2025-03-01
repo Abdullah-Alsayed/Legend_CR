@@ -15,9 +15,9 @@ namespace DicomApp.Portal.Controllers
 {
     public class InvoiceController : Controller
     {
-        private readonly ShippingDBContext _context;
+        private readonly LegendDBContext _context;
 
-        public InvoiceController(ShippingDBContext context) => _context = context;
+        public InvoiceController(LegendDBContext context) => _context = context;
 
         public IActionResult GetItemIds(int invoiceType)
         {

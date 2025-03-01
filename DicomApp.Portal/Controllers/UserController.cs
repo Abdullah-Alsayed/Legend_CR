@@ -31,7 +31,7 @@ namespace DicomApp.Portal.Controllers
     [Authorize]
     public class UserController : Controller
     {
-        private readonly ShippingDBContext _context;
+        private readonly LegendDBContext _context;
         private readonly AvatarService _avatarService;
         private readonly IApiCountryService _countryService;
         private readonly IHostingEnvironment hosting;
@@ -39,7 +39,7 @@ namespace DicomApp.Portal.Controllers
         private readonly IStringLocalizer<UserController> _stringLocalizer;
 
         public UserController(
-            ShippingDBContext context,
+            LegendDBContext context,
             IHostingEnvironment hosting,
             AvatarService avatarService,
             IApiCountryService countryService,

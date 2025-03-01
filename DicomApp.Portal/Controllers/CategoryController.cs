@@ -17,10 +17,10 @@ namespace DicomApp.Portal.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly ShippingDBContext _context;
+        private readonly LegendDBContext _context;
         private readonly IHostingEnvironment hosting;
 
-        public CategoryController(ShippingDBContext context, IHostingEnvironment hosting)
+        public CategoryController(LegendDBContext context, IHostingEnvironment hosting)
         {
             _context = context;
             this.hosting = hosting;

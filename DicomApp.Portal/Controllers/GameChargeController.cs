@@ -17,10 +17,10 @@ namespace DicomApp.Portal.Controllers
     [Authorize]
     public class GameChargeController : Controller
     {
-        private readonly ShippingDBContext _context;
+        private readonly LegendDBContext _context;
         private readonly IHostingEnvironment hosting;
 
-        public GameChargeController(ShippingDBContext context, IHostingEnvironment hosting)
+        public GameChargeController(LegendDBContext context, IHostingEnvironment hosting)
         {
             _context = context;
             this.hosting = hosting;

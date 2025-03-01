@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace DicomApp.DAL.DB
 {
-    public partial class ShippingDBContext : DbContext
+    public partial class LegendDBContext : DbContext
     {
-        public ShippingDBContext() { }
+        public LegendDBContext() { }
 
-        public ShippingDBContext(DbContextOptions<ShippingDBContext> options)
+        public LegendDBContext(DbContextOptions<LegendDBContext> options)
             : base(options) { }
 
         public virtual DbSet<Account> Account { get; set; }
