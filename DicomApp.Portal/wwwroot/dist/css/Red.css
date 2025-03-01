@@ -32,7 +32,11 @@
     --Mauve: #1B59F899;
     --Gold: #f6e37d;
 }
-
+.dark-Select {
+    background: #24262d !important;
+    color: white !important;
+    border: #24262d !important;
+}
 * {
     outline: none;
 }

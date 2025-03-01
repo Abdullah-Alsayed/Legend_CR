@@ -99,6 +99,7 @@ namespace DicomApp.Portal.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Details(int id)
         {
             var GameRequest = new GameRequest

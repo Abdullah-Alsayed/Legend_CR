@@ -136,6 +136,7 @@ namespace DicomApp.Portal.Controllers
                 return View(mainResponse);
         }
 
+        [AllowAnonymous]
         public IActionResult All(
             string Search,
             string OrderByColumn,

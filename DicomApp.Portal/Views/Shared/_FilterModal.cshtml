@@ -155,7 +155,7 @@
                                 {
                                     <div class="col-lg-@Model.Columns pt-3">
                                         <label class="Label-Model">@Localizer["games"].ToString()</label>
-                                        @Html.DropDownList("GameId", new SelectList(Model.Lookup.GameDTOs, nameof(GameDTO.Id), Model.Language == SystemConstants.Languages.Arabic ? nameof(GameDTO.NameAr) : nameof(GameDTO.NameEn)), $"--- {Localizer["games"].ToString()} ---", new { @class = "", @required = "required" })
+                                        @Html.DropDownList("GameId", new SelectList(Model.Lookup.GameDTOs, nameof(GameDTO.Id), Model.Language == SystemConstants.Languages.Arabic ? nameof(GameDTO.NameAr) : nameof(GameDTO.NameEn)), $"--- {Localizer["games"].ToString()} ---", new { @class = "form-control dark-Select", @required = "required" })
                                     </div>
                                 }
                                 if (Model.SelectListType.Contains((byte)EnumSelectListType.GameServiceType))
