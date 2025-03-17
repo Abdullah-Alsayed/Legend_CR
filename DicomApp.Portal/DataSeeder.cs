@@ -85,6 +85,7 @@ namespace DicomApp.Portal
                         Email = "admin@admin.com",
                         Password = "123",
                         RoleId = role.Id,
+                        ImgUrl = "User.png",
                         PhoneNumber = "01111111111",
                     }
                 );
