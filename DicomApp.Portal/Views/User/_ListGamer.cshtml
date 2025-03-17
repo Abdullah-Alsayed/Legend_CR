@@ -17,7 +17,7 @@
             </td>
             <td class="text-nowrap Date-Table">@item.CreationDate.ToString("MMM") @item.CreationDate.ToString("dd"),@item.CreationDate.ToString("yyy")</td>
             <td id="Td-ProductType">
-                @(item.Country?.NameEn??"N/A") <img src="@(item.Country.FlagUrl ?? "flag.png")" width="25" />
+                @(item.Country?.NameEn??"N/A") <img src="@(item.Country?.FlagUrl ?? "flag.png")" width="25" />
             </td>
             <td class="text-center"><img src="/dist/images/Icons/@(item.Gender == GenderEnum.Male?"Male.png":"Female.png")"></td>
             <td class="text-center">@item.PhoneNumber</td>
