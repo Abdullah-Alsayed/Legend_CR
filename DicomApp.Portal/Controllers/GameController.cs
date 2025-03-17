@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using DicomApp.BL.Services;
 using DicomApp.CommonDefinitions.DTO;
 using DicomApp.CommonDefinitions.Requests;
@@ -11,6 +12,7 @@ using DicomApp.Portal.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using static Microsoft.AspNetCore.Hosting.Internal.HostingApplication;
 
 namespace DicomApp.Portal.Controllers
 {
@@ -24,6 +26,13 @@ namespace DicomApp.Portal.Controllers
         {
             _context = context;
             this.hosting = hosting;
+        }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> SeedData()
+        {
+            await DataSeeder.Seed(_context);
+            return Json(true);
         }
 
         [HttpPost]

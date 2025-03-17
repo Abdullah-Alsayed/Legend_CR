@@ -17,13 +17,13 @@
             </td>
             <td class="text-nowrap Date-Table">@item.CreationDate.ToString("MMM") @item.CreationDate.ToString("dd"),@item.CreationDate.ToString("yyy")</td>
             <td id="Td-ProductType">
-                @item.Country.NameEn <img src="@item.Country.FlagUrl" width="25" />
+                @(item.Country?.NameEn??"N/A") <img src="@(item.Country.FlagUrl ?? "flag.png")" width="25" />
             </td>
             <td class="text-center"><img src="/dist/images/Icons/@(item.Gender == GenderEnum.Male?"Male.png":"Female.png")"></td>
             <td class="text-center">@item.PhoneNumber</td>
             <td class="text-center">@item.Email</td>
             <td class="text-center">@item.TelegramUserName</td>
-            <td class="text-center">@item.InstaPayAccountName</td>
+            <td class="text-center">@item.InstaPayAccountName</td>  
             <td class="text-center">@item.WalletNumber</td>
             <td class="text-center"><img id="Td-Img" width="50" src="@(!string.IsNullOrEmpty(item.ImgUrl) ? "/dist/images/" + @item.ImgUrl:"/dist/images/Icons/User.png")" /></td>
             <td>
