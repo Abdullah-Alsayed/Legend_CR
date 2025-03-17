@@ -157,6 +157,11 @@ namespace DicomApp.BL.Services
                     .ListRole(new RoleRequest { context = Context })
                     .RoleDTOs;
 
+            if (LookType.Contains((byte)EnumSelectListType.Countries))
+                lookup.CountryDTOs = CountryService
+                    .GetCountries(new CountryRequest { context = Context })
+                    .CountryDTOs;
+
             return lookup;
         }
 
